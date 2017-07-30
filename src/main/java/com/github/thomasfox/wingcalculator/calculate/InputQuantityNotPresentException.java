@@ -2,6 +2,8 @@ package com.github.thomasfox.wingcalculator.calculate;
 
 public class InputQuantityNotPresentException extends CalculatorException
 {
+  private static final long serialVersionUID = 1L;
+
   private final PhysicalQuantity missingQuantity;
 
   public InputQuantityNotPresentException(PhysicalQuantity missingQuantity)
