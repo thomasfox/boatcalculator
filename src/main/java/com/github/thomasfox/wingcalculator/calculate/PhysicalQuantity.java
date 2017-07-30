@@ -15,7 +15,9 @@ public enum PhysicalQuantity
   WING_VELOCITY("Geschwindigkeit des Flügels durch das Wasser", "m/s"),
   KINEMATIC_VISCOSITY("Kinematische Viskosität von Wasser", "m^2/s", null, 0.000001d),
   DENSITY("Dichte von Wasser", "kg/m^3", null, 1000d),
-  IMMERSION_DEPTH("Eintauchtiefe des Flügels", "m", "für horizontal verlaufende Flügel");
+  IMMERSION_DEPTH("Eintauchtiefe des Flügels", "m", "für horizontal verlaufende Flügel"),
+  ANGLE_OF_ATTACK("Anstellwinkel", "°"),
+  NCRIT("The log of the amplification factor of the most-amplified frequency which triggers transition", null, "für XFOIL-Berechnungen");
 
   private String displayName;
 
