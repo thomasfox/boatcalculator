@@ -1,50 +1,76 @@
 package com.github.thomasfox.wingcalculator.interpolate;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
- * Interpolates a quantity from some known points of a function.
- * The nearest points are connected by straight lines.
+ * Interpolates a quantity from some known points of a relation between x and y.
+ * The known points are connected by straight lines.
+ * The first intersection between where a line matches the given x value
+ * is returned.
  */
 public class Interpolator
 {
-  public double interpolate(double xValue, LinkedHashMap<Double, Double> knownValues)
+  /**
+   * Calculates a matching y value for the given x value.
+   *
+   * @param xValue the x value for which the y value should be calculated.
+   * @param knownValues the known relation points.
+   *       The key of a point is the x coordiante,
+   *       the value of a point is the y coordinate.
+   *
+   * @return the interpolated function (y) value for the x value.
+   *
+   * @throws InterpolatorException if an error occurs while interpolating.
+   */
+  public double interpolate(double xValue, List<XYPoint> knownValues)
   {
-    Map.Entry<Double, Double> lastValue = null;
-    for (Map.Entry<Double, Double> currentValue : knownValues.entrySet())
+    if (knownValues == null)
     {
-      if (currentValue.getKey() == null)
+      throw new InterpolatorException("The list of known values is null");
+    }
+    if (knownValues.isEmpty())
+    {
+      throw new InterpolatorException("The list of known values is empty");
+    }
+
+    XYPoint lastValue = null;
+    double minEncounteredX = knownValues.get(0).getX();
+    double maxEncounteredX = minEncounteredX;
+
+    for (XYPoint currentValue : knownValues)
+    {
+      if (currentValue == null)
       {
-        throw new InterpolatorException("The known values contain null as key");
+        throw new InterpolatorException("The list of known values contains null");
       }
-      if (lastValue != null && currentValue.getKey() <= lastValue.getKey())
+      if (xValue == currentValue.getX())
       {
-        throw new InterpolatorException("The known values x values are not strictly monotonous");
+        return currentValue.getY();
       }
-      if (currentValue.getValue() == null)
+
+      minEncounteredX = Math.min(currentValue.getX(), minEncounteredX);
+      maxEncounteredX = Math.max(currentValue.getX(), maxEncounteredX);
+
+      if (lastValue == null)
       {
-        throw new InterpolatorException("The known values contain null as value");
+        lastValue = currentValue;
+        continue;
       }
-      if (xValue == currentValue.getKey())
+
+      Double currentMinX = Math.min(currentValue.getX(), lastValue.getX());
+      Double currentMaxX = Math.max(currentValue.getX(), lastValue.getX());
+      if (xValue < currentMinX || xValue > currentMaxX)
       {
-        double result = currentValue.getValue();
-        return result;
+        lastValue = currentValue;
+        continue;
       }
-      if (xValue < currentValue.getKey())
-      {
-        if (lastValue == null)
-        {
-          throw new InterpolatorException("The provided xValue, " + xValue
-              + ", is below the interpolation interval which lower bound is " + currentValue.getKey());
-        }
-        double relativeWeightOfCurrentValue = (xValue - lastValue.getKey()) / (currentValue.getKey() - lastValue.getKey());
-        double result = relativeWeightOfCurrentValue * currentValue.getValue() + (1d - relativeWeightOfCurrentValue) * lastValue.getValue();
-        return result;
-      }
-      lastValue = currentValue;
+
+      double relativeWeightOfCurrentValue = (xValue - lastValue.getX()) / (currentValue.getX() - lastValue.getX());
+      double result = relativeWeightOfCurrentValue * currentValue.getY() + (1d - relativeWeightOfCurrentValue) * lastValue.getY();
+      return result;
     }
     throw new InterpolatorException("The provided xValue, " + xValue
-        + ", is above the interpolation interval which upper bound is " + lastValue.getKey());
+        + ", does not match the interpolation interval ["
+        + minEncounteredX + "," + maxEncounteredX + "]");
   }
 }

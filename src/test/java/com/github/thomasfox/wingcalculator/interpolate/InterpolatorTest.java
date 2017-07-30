@@ -3,7 +3,8 @@ package com.github.thomasfox.wingcalculator.interpolate;
 import static  org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class InterpolatorTest
   public void testInterpolate()
   {
     // arrange
-    LinkedHashMap<Double, Double> knownValues = getDefaultKnownValues();
+    List<XYPoint> knownValues = getDefaultKnownValues();
 
     // act & assert
     double result = sut.interpolate(0.723d, knownValues);
@@ -37,7 +38,7 @@ public class InterpolatorTest
   public void testInterpolate_lowerBound()
   {
     // arrange
-    LinkedHashMap<Double, Double> knownValues = getDefaultKnownValues();
+    List<XYPoint> knownValues = getDefaultKnownValues();
 
     // act & assert
     double result = sut.interpolate(0d, knownValues);
@@ -48,11 +49,11 @@ public class InterpolatorTest
   public void testInterpolate_belowLowerBound()
   {
     // arrange
-    LinkedHashMap<Double, Double> knownValues = getDefaultKnownValues();
+    List<XYPoint> knownValues = getDefaultKnownValues();
 
     // assert
     expectedExeption.expect(InterpolatorException.class);
-    expectedExeption.expectMessage("is below the interpolation interval which lower bound is");
+    expectedExeption.expectMessage("does not match the interpolation interval");
 
     // act
     sut.interpolate(-0.000001d, knownValues);
@@ -62,7 +63,7 @@ public class InterpolatorTest
   public void testInterpolate_upperBound()
   {
     // arrange
-    LinkedHashMap<Double, Double> knownValues = getDefaultKnownValues();
+    List<XYPoint> knownValues = getDefaultKnownValues();
 
     // act & assert
     double result = sut.interpolate(3d, knownValues);
@@ -73,23 +74,23 @@ public class InterpolatorTest
   public void testInterpolate_aboveUpperBound()
   {
     // arrange
-    LinkedHashMap<Double, Double> knownValues = getDefaultKnownValues();
+    List<XYPoint> knownValues = getDefaultKnownValues();
 
     // assert
     expectedExeption.expect(InterpolatorException.class);
-    expectedExeption.expectMessage("is above the interpolation interval which upper bound is");
+    expectedExeption.expectMessage("does not match the interpolation interval");
 
     // act
     sut.interpolate(3.000001d, knownValues);
   }
 
-  private LinkedHashMap<Double, Double> getDefaultKnownValues()
+  private List<XYPoint> getDefaultKnownValues()
   {
-    LinkedHashMap<Double, Double> knownValues = new LinkedHashMap<>();
-    knownValues.put(0d, 0d);
-    knownValues.put(1d, 1d);
-    knownValues.put(2d, 3d);
-    knownValues.put(3d, 0d);
+    List<XYPoint> knownValues = new ArrayList<>();
+    knownValues.add(new SimpleXYPoint(0d, 0d));
+    knownValues.add(new SimpleXYPoint(1d, 1d));
+    knownValues.add(new SimpleXYPoint(2d, 3d));
+    knownValues.add(new SimpleXYPoint(3d, 0d));
     return knownValues;
   }
 }
