@@ -69,4 +69,14 @@ public enum PhysicalQuantity
   {
     return fixedValue;
   }
+
+  public String getDisplayNameIncludingUnit()
+  {
+    String result = displayName;
+    if (unit != null)
+    {
+      result += " [" + unit + "]";
+    }
+    return result;
+  }
 }
