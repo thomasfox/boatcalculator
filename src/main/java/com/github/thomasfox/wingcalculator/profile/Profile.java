@@ -5,12 +5,15 @@ import java.util.Collections;
 import java.util.List;
 
 import com.github.thomasfox.wingcalculator.interpolate.Interpolator;
+import com.github.thomasfox.wingcalculator.interpolate.SimpleXYPoint;
 import com.github.thomasfox.wingcalculator.interpolate.XYPoint;
 
 import lombok.NonNull;
 
 public class Profile
 {
+  private final int CALCULATION_STEPS = 50;
+
   private final String name;
 
   private final List<XYPoint> points;
@@ -80,4 +83,27 @@ public class Profile
     return Math.min(y1, y2);
   }
 
+  /**
+   * Gibt den geometrischen Schwerpunkt des Profils zurück.
+   *
+   * @return den geometrischen Schwerpunkt, nicht null.
+   */
+  public XYPoint getBalancePoint()
+  {
+    double resultX = 0;
+    double resultY = 0;
+    double area = 0;
+    double xStep = 1d / CALCULATION_STEPS;
+    for (double x = xStep / 2; x < 1; x += xStep)
+    {
+      double minY = getLowerY(x);
+      double maxY = getUpperY(x);
+      double thickness = maxY - minY;
+      double centerY = (minY + maxY) / 2;
+      area += thickness * xStep;
+      resultX += x * thickness * xStep;
+      resultY += centerY * thickness * xStep;
+    }
+    return new SimpleXYPoint(resultX / area, resultY / area);
+  }
 }

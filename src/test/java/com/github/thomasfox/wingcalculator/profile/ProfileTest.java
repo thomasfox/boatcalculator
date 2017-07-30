@@ -1,6 +1,7 @@
 package com.github.thomasfox.wingcalculator.profile;
 
 import static  org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 import java.io.InputStreamReader;
 import java.util.List;
@@ -74,5 +75,13 @@ public class ProfileTest
   {
     double lowerY = sut.getLowerY(1d);
     assertThat(lowerY).isEqualTo(0d);
+  }
+
+  @Test
+  public void testGetBalancePoint()
+  {
+    XYPoint result = sut.getBalancePoint();
+    assertThat(result.getX()).isEqualTo(0.5d, within(0.00000001d));
+    assertThat(result.getY()).isEqualTo(-0.01d, within(0.00000001d));
   }
 }
