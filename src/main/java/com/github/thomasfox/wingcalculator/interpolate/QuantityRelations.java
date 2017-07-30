@@ -36,4 +36,27 @@ public class QuantityRelations
    * May be null.
    */
   private final PhysicalQuantity keyQuantity;
+
+  public Double interpolateValueFrom(
+      PhysicalQuantity wantedQuantity,
+      PhysicalQuantity providedQuantity,
+      Double providedValue)
+  {
+    List<XYPoint> interpolationPoints = new ArrayList<>();
+    for (Map<PhysicalQuantity, Double> relatedValues : relatedQuantityValues)
+    {
+      Double xValue = relatedValues.get(providedQuantity);
+      if (xValue == null)
+      {
+        throw new InterpolatorException("Quantity " + providedQuantity + " not found");
+      }
+      Double yValue = relatedValues.get(wantedQuantity);
+      if (yValue == null)
+      {
+        throw new InterpolatorException("Quantity " + wantedQuantity + " not found");
+      }
+      interpolationPoints.add(new SimpleXYPoint(xValue, yValue));
+    }
+    return new Interpolator().interpolate(providedValue, interpolationPoints);
+  }
 }
