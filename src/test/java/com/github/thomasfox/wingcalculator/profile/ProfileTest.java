@@ -84,4 +84,13 @@ public class ProfileTest
     assertThat(result.getX()).isEqualTo(0.5d, within(0.00000001d));
     assertThat(result.getY()).isEqualTo(-0.01d, within(0.00000001d));
   }
+
+
+  @Test
+  public void testGetSecondMomentOfArea()
+  {
+    double result = sut.getSecondMomentOfArea();
+    assertThat(result).isEqualTo(5.33333333e-6d, within(0.00000001d));
+  }
+
 }

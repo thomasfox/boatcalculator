@@ -106,4 +106,27 @@ public class Profile
     }
     return new SimpleXYPoint(resultX / area, resultY / area);
   }
+
+  /**
+   * Gibt das Trägheitsmoment für die Biegesteifigkeit zurück.
+   *
+   * @return das Trägheitsmoment, nicht null.
+   */
+  public double getSecondMomentOfArea()
+  {
+    double balanceY = getBalancePoint().getY();
+    double result = 0;
+    double xStep = 1d / CALCULATION_STEPS;
+    for (double x = xStep / 2; x < 1; x += xStep)
+    {
+      double minY = getLowerY(x);
+      double maxY = getUpperY(x);
+      double distance1FromCenter = (balanceY - minY);
+      double distance2FromCenter = (maxY - balanceY);
+      // Stammfunktion von <^2 ist 1/3 x^3, xStep und 1/3 werden unten hinzugefügt
+      result += (distance1FromCenter * distance1FromCenter * distance1FromCenter)
+          + (distance2FromCenter *distance2FromCenter * distance2FromCenter);
+    }
+    return xStep * result / 3;
+  }
 }
