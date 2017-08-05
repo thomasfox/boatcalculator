@@ -108,7 +108,7 @@ public class Profile
   }
 
   /**
-   * Gibt das Trägheitsmoment für die Biegesteifigkeit für ein Profil der Länge 1 zurück.
+   * Gibt das Trägheitsmoment für die Biegesteifigkeit für ein Profil der Tiefe 1 zurück.
    *
    * @return das Trägheitsmoment, nicht null.
    */
