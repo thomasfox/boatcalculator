@@ -56,6 +56,11 @@ public class Profile
     return maxY - minY;
   }
 
+  public String getName()
+  {
+    return name;
+  }
+
   private double getY(double x, List<XYPoint> points)
   {
     if (x < 0 || x > 1)
