@@ -35,6 +35,23 @@ public abstract class Calculator
     return calculateWithoutChecks(input);
   }
 
+  public boolean areNeededQuantitiesPresent(Map<PhysicalQuantity, Double> input)
+  {
+    for (PhysicalQuantity inputQuantity : inputQuantities)
+    {
+      if (getValueOf(inputQuantity, input) == null)
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public boolean isOutputPresent(Map<PhysicalQuantity, Double> input)
+  {
+    return (getValueOf(outputQuantity, input) != null);
+  }
+
   protected void checkNeededQuantitiesArePresent(Map<PhysicalQuantity, Double> input)
   {
     for (PhysicalQuantity inputQuantity : inputQuantities)
