@@ -12,8 +12,7 @@ import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
  */
 public class BendingCalculator extends Calculator
 {
-
-  protected BendingCalculator()
+  public BendingCalculator()
   {
     super(PhysicalQuantity.WING_WIDTH,
         PhysicalQuantity.BENDING_FORCE,

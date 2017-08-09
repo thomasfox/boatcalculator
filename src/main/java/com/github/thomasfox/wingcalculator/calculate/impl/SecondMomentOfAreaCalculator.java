@@ -12,8 +12,7 @@ import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
  */
 public class SecondMomentOfAreaCalculator extends Calculator
 {
-
-  protected SecondMomentOfAreaCalculator()
+  public SecondMomentOfAreaCalculator()
   {
     super(PhysicalQuantity.WING_DEPTH,
         PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA);

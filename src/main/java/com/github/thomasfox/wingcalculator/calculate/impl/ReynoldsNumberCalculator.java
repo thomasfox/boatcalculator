@@ -10,8 +10,7 @@ import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
  */
 public class ReynoldsNumberCalculator extends Calculator
 {
-
-  protected ReynoldsNumberCalculator()
+  public ReynoldsNumberCalculator()
   {
     super(PhysicalQuantity.REYNOLDS_NUMBER,
         PhysicalQuantity.WING_VELOCITY,

@@ -11,7 +11,7 @@ import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
  */
 public class InducedResistanceCoefficientCalculator extends Calculator
 {
-  protected InducedResistanceCoefficientCalculator()
+  public InducedResistanceCoefficientCalculator()
   {
     super(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT,
         PhysicalQuantity.WING_WIDTH,
