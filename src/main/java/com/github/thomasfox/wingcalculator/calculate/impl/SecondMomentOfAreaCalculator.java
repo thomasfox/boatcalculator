@@ -14,7 +14,7 @@ public class SecondMomentOfAreaCalculator extends Calculator
 {
   public SecondMomentOfAreaCalculator()
   {
-    super(PhysicalQuantity.WING_DEPTH,
+    super(PhysicalQuantity.SECOND_MOMENT_OF_AREA,
         PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA);
   }
 
