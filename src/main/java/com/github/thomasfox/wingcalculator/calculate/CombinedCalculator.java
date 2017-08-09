@@ -1,5 +1,6 @@
 package com.github.thomasfox.wingcalculator.calculate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,7 @@ import com.github.thomasfox.wingcalculator.calculate.impl.SecondMomentOfAreaCalc
 
 public class CombinedCalculator
 {
-  public List<Calculator> calculators;
+  public List<Calculator> calculators = new ArrayList<>();
 
   public CombinedCalculator()
   {
