@@ -14,11 +14,11 @@ import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
 
 public class QuantityInput
 {
-  JLabel label = new JLabel();
+  private final JLabel label = new JLabel();
 
-  JTextField textField = new JTextField();
+  private final JTextField textField = new JTextField();
 
-  PhysicalQuantity quantity;
+  private final PhysicalQuantity quantity;
 
   private Double value;
 
@@ -44,6 +44,17 @@ public class QuantityInput
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = row;
     frame.add(textField, gridBagConstraints);
+  }
+
+  public void removeFromFrame(JFrame frame)
+  {
+    frame.remove(label);
+    frame.remove(textField);
+  }
+
+  public PhysicalQuantity getQuantity()
+  {
+    return quantity;
   }
 
   public Double getValue()
@@ -78,6 +89,18 @@ public class QuantityInput
     setValue(newValue);
   }
 
+  private Double parseValue(String value)
+  {
+    try
+    {
+      return Double.parseDouble(value);
+    }
+    catch (NumberFormatException e)
+    {
+      return null;
+    }
+  }
+
   private class QuantityInputDocumentListener implements DocumentListener
   {
     @Override
@@ -102,7 +125,7 @@ public class QuantityInput
     {
       try
       {
-        setValue(document.getText(0, document.getLength()));
+        value = parseValue(document.getText(0, document.getLength()));
       }
       catch (BadLocationException e)
       {
