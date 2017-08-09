@@ -3,16 +3,21 @@ package com.github.thomasfox.wingcalculator.gui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 import com.github.thomasfox.wingcalculator.calculate.CombinedCalculator;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.wingcalculator.profile.Profile;
+import com.github.thomasfox.wingcalculator.profile.ProfileSelector;
 
 public class SwingGui
 {
@@ -24,6 +29,10 @@ public class SwingGui
 
   private final JButton calculateButton;
 
+  private final ProfileSelector profileSelector = new ProfileSelector();
+
+  private final JComboBox<String> profileSelect;
+
   private final CombinedCalculator combinedCalculator = new CombinedCalculator();
 
   private final int rowAfterButton;
@@ -33,10 +42,11 @@ public class SwingGui
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.getContentPane().setLayout(new GridBagLayout());
 
-    quantityInputs.add(new QuantityInput(PhysicalQuantity.LIFT, 0d));
+
+    quantityInputs.add(new QuantityInput(PhysicalQuantity.LIFT, 1000d));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_WIDTH, 2d));
-    quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_VELOCITY, 3d));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_DEPTH, 0.1d));
+    quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_VELOCITY, 3d));
 
     int row = 0;
     for (QuantityInput quantityInput : quantityInputs)
@@ -45,8 +55,27 @@ public class SwingGui
       row++;
     }
 
-    calculateButton = new JButton("Ok");
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = row;
+    frame.add(new JLabel("Profil"), gridBagConstraints);
+    profileSelect = new JComboBox<>();
+    profileSelect.addItem(null);
+    List<String> profiles = profileSelector.getProfileNames(new File("profiles"));
+    for (String profile : profiles)
+    {
+      profileSelect.addItem(profile);
+    }
+    gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = row;
+    frame.add(profileSelect, gridBagConstraints);
+    row++;
+
+    calculateButton = new JButton("Ok");
+    gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = row;
@@ -76,6 +105,12 @@ public class SwingGui
     for (QuantityInput quantityInput : quantityInputs)
     {
       knownQuantities.put(quantityInput.getQuantity(), quantityInput.getValue());
+    }
+    Object profileName = profileSelect.getSelectedItem();
+    if (profileName != null)
+    {
+      Profile profile = profileSelector.load(new File("profiles"), (String) profileName);
+      knownQuantities.put(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA, profile.getSecondMomentOfArea());
     }
     Map<PhysicalQuantity, Double> calculatedValues = combinedCalculator.calculate(knownQuantities);
 
