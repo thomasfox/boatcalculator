@@ -24,12 +24,13 @@ public class CombinedCalculator
 
   public Map<PhysicalQuantity, Double> calculate(Map<PhysicalQuantity, Double> input)
   {
-    boolean changed = false;
+    boolean changed;
     int cutoff = 100;
     Map<PhysicalQuantity, Double> allKnownValues = new HashMap<>(input);
-    Map<PhysicalQuantity, Double> result = new HashMap<>(input);
+    Map<PhysicalQuantity, Double> result = new HashMap<>();
     do
     {
+      changed = false;
       for (Calculator calculator: calculators)
       {
         if (!calculator.areNeededQuantitiesPresent(allKnownValues))
