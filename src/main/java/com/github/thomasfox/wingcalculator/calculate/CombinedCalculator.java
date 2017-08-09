@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.github.thomasfox.wingcalculator.calculate.impl.BendingCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.InducedResistanceCoefficientCalculator;
+import com.github.thomasfox.wingcalculator.calculate.impl.LiftCoefficientCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.ReynoldsNumberCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.SecondMomentOfAreaCalculator;
 
@@ -20,6 +21,7 @@ public class CombinedCalculator
     calculators.add(new InducedResistanceCoefficientCalculator());
     calculators.add(new BendingCalculator());
     calculators.add(new SecondMomentOfAreaCalculator());
+    calculators.add(new LiftCoefficientCalculator());
   }
 
   public Map<PhysicalQuantity, Double> calculate(Map<PhysicalQuantity, Double> input)
