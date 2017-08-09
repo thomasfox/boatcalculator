@@ -34,26 +34,22 @@ public enum PhysicalQuantity
   private PhysicalQuantity(String displayName, String unit)
   {
     this.displayName = displayName;
-
     this.unit = unit;
   }
 
   private PhysicalQuantity(String displayName, String unit, String description)
   {
     this.displayName = displayName;
-
     this.unit = unit;
-
     this.description = description;
   }
 
   private PhysicalQuantity(String displayName, String unit, String description, Double fixedValue)
   {
     this.displayName = displayName;
-
     this.unit = unit;
-
     this.description = description;
+    this.fixedValue = fixedValue;
   }
 
   public String getDisplayName()
