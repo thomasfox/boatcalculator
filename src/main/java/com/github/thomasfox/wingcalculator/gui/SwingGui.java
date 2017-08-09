@@ -44,6 +44,7 @@ public class SwingGui
 
 
     quantityInputs.add(new QuantityInput(PhysicalQuantity.LIFT, 1000d));
+    quantityInputs.add(new QuantityInput(PhysicalQuantity.BENDING_FORCE, 1000d));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_WIDTH, 2d));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_DEPTH, 0.1d));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_VELOCITY, 3d));
