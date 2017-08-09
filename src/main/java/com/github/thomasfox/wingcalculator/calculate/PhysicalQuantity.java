@@ -18,8 +18,9 @@ public enum PhysicalQuantity
   IMMERSION_DEPTH("Eintauchtiefe des Flügels", "m", "für horizontal verlaufende Flügel"),
   ANGLE_OF_ATTACK("Anstellwinkel", "°"),
   NCRIT("The log of the amplification factor of the most-amplified frequency which triggers transition", null, "für XFOIL-Berechnungen"),
-  MODULUS_OF_ELASTICITY("E-Modul", "N/m^2"),
+  MODULUS_OF_ELASTICITY("E-Modul", "N/m^2", "CFK unidirektional parallel zur Faserrichtung, reduziert wg. Handlaminiert", 100000000000d),
   BENDING_FORCE("Biegekraft", "N", "am Ende eines Flügels angreifende Kraft. Der Flügel ist am anderen Ende fest eingepsannt"),
+  BENDING("Durchbiegung", "m", "am Ende eines Flügels. Der Flügel ist am anderen Ende fest eingepsannt"),
   SECOND_MOMENT_OF_AREA("Flächenmoment 2. Ordnung für den Flügelquerschnitt", "m^4", "Integral y^2 dx dy"),
   NORMALIZED_SECOND_MOMENT_OF_AREA("Flächenmoment 2. Ordnung", null, "Integral y^2 dx dy für ein Profil der Tiefe 1 und gleichem Tiefe/Dickenverhältnis wie das eigentliche Profil");
 

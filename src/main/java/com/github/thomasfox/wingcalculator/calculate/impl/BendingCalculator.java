@@ -14,7 +14,8 @@ public class BendingCalculator extends Calculator
 {
   public BendingCalculator()
   {
-    super(PhysicalQuantity.WING_WIDTH,
+    super(PhysicalQuantity.BENDING,
+        PhysicalQuantity.WING_WIDTH,
         PhysicalQuantity.BENDING_FORCE,
         PhysicalQuantity.MODULUS_OF_ELASTICITY,
         PhysicalQuantity.SECOND_MOMENT_OF_AREA);
