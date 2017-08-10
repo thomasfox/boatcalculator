@@ -59,4 +59,17 @@ public class QuantityRelations
     }
     return new Interpolator().interpolate(providedValue, interpolationPoints);
   }
+
+  public String printFixedQuantities()
+  {
+    StringBuilder result = new StringBuilder();
+    for (Map.Entry<PhysicalQuantity, Double> fixedQuantity : fixedQuantities.entrySet())
+    {
+      result.append(fixedQuantity.getKey().getDisplayNameIncludingUnit())
+      .append(" = ")
+      .append(fixedQuantity.getValue())
+      .append("   ");
+    }
+    return result.toString();
+  }
 }
