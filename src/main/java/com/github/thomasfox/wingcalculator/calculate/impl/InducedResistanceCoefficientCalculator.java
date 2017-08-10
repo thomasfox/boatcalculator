@@ -22,9 +22,9 @@ public class InducedResistanceCoefficientCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
   {
-    double wingWidth = getValueOf(PhysicalQuantity.WING_WIDTH, input);
-    double wingDepth = getValueOf(PhysicalQuantity.WING_DEPTH, input);
-    double liftCoefficient = getValueOf(PhysicalQuantity.LIFT_COEFFICIENT, input);
+    double wingWidth = PhysicalQuantity.WING_WIDTH.getValueFromAvailableQuantities(input);
+    double wingDepth = PhysicalQuantity.WING_DEPTH.getValueFromAvailableQuantities(input);
+    double liftCoefficient = PhysicalQuantity.LIFT_COEFFICIENT.getValueFromAvailableQuantities(input);
 
     double aspectRatio = wingWidth / wingDepth;
     double result = liftCoefficient * liftCoefficient / Math.PI / aspectRatio;

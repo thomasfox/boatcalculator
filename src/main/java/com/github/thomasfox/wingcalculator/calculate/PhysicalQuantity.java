@@ -1,5 +1,7 @@
 package com.github.thomasfox.wingcalculator.calculate;
 
+import java.util.Map;
+
 public enum PhysicalQuantity
 {
   INDUCED_RESISTANCE("Induzierter Widerstand", "N"),
@@ -18,7 +20,7 @@ public enum PhysicalQuantity
   DENSITY("Dichte von Wasser", "kg/m^3", null, 1000d),
   IMMERSION_DEPTH("Eintauchtiefe des Flügels", "m", "für horizontal verlaufende Flügel"),
   ANGLE_OF_ATTACK("Anstellwinkel", "°"),
-  NCRIT("The log of the amplification factor of the most-amplified frequency which triggers transition", null, "für XFOIL-Berechnungen"),
+  NCRIT("nCrit", null, "The log of the amplification factor of the most-amplified frequency which triggers transition for XFOIL Calculations", 9.0d),
   MODULUS_OF_ELASTICITY("E-Modul", "N/m^2", "CFK unidirektional parallel zur Faserrichtung, reduziert wg. Handlaminiert", 100000000000d),
   BENDING_FORCE("Biegekraft", "N", "am Ende eines Flügels angreifende Kraft. Der Flügel ist am anderen Ende fest eingepsannt"),
   BENDING("Durchbiegung", "m", "am Ende eines Flügels. Der Flügel ist am anderen Ende fest eingepsannt"),
@@ -82,5 +84,14 @@ public enum PhysicalQuantity
       result += " [" + unit + "]";
     }
     return result;
+  }
+
+  public Double getValueFromAvailableQuantities(Map<PhysicalQuantity, Double> availableQuantities)
+  {
+    if (fixedValue != null)
+    {
+      return fixedValue;
+    }
+    return availableQuantities.get(this);
   }
 }

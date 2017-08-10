@@ -39,7 +39,7 @@ public abstract class Calculator
   {
     for (PhysicalQuantity inputQuantity : inputQuantities)
     {
-      if (getValueOf(inputQuantity, input) == null)
+      if (inputQuantity.getValueFromAvailableQuantities(input) == null)
       {
         return false;
       }
@@ -49,14 +49,14 @@ public abstract class Calculator
 
   public boolean isOutputPresent(Map<PhysicalQuantity, Double> input)
   {
-    return (getValueOf(outputQuantity, input) != null);
+    return (outputQuantity.getValueFromAvailableQuantities(input) != null);
   }
 
   protected void checkNeededQuantitiesArePresent(Map<PhysicalQuantity, Double> input)
   {
     for (PhysicalQuantity inputQuantity : inputQuantities)
     {
-      if (getValueOf(inputQuantity, input) == null)
+      if (inputQuantity.getValueFromAvailableQuantities(input) == null)
       {
         throw new InputQuantityNotPresentException(inputQuantity);
       }
@@ -66,15 +66,6 @@ public abstract class Calculator
   protected void checkQuantitiesAreInValidRanges(Map<PhysicalQuantity, Double> input)
   {
     // do nothing per default
-  }
-
-  protected Double getValueOf(PhysicalQuantity quantity, Map<PhysicalQuantity, Double> availableQuantities)
-  {
-    if (quantity.getFixedValue() != null)
-    {
-      return quantity.getFixedValue();
-    }
-    return availableQuantities.get(quantity);
   }
 
   protected abstract double calculateWithoutChecks(Map<PhysicalQuantity, Double> input);

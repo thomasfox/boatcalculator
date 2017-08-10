@@ -23,11 +23,11 @@ public class LiftCoefficientCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
   {
-    double lift = getValueOf(PhysicalQuantity.LIFT, input);
-    double wingWidth = getValueOf(PhysicalQuantity.WING_WIDTH, input);
-    double wingDepth = getValueOf(PhysicalQuantity.WING_DEPTH, input);
-    double velocity = getValueOf(PhysicalQuantity.WING_VELOCITY, input);
-    double density = getValueOf(PhysicalQuantity.DENSITY, input);
+    double lift = PhysicalQuantity.LIFT.getValueFromAvailableQuantities(input);
+    double wingWidth = PhysicalQuantity.WING_WIDTH.getValueFromAvailableQuantities(input);
+    double wingDepth = PhysicalQuantity.WING_DEPTH.getValueFromAvailableQuantities(input);
+    double velocity = PhysicalQuantity.WING_VELOCITY.getValueFromAvailableQuantities(input);
+    double density = PhysicalQuantity.DENSITY.getValueFromAvailableQuantities(input);
 
     double area = wingWidth * wingDepth;
     double result = 2 * lift / velocity / velocity / density / area;

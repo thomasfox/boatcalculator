@@ -22,8 +22,8 @@ public class ThicknessCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
   {
-    double wingDepth = getValueOf(PhysicalQuantity.WING_DEPTH, input);
-    double relativeThickness = getValueOf(PhysicalQuantity.WING_RELATIVE_THICKNESS, input);
+    double wingDepth = PhysicalQuantity.WING_DEPTH.getValueFromAvailableQuantities(input);
+    double relativeThickness = PhysicalQuantity.WING_RELATIVE_THICKNESS.getValueFromAvailableQuantities(input);
     return wingDepth*relativeThickness;
   }
 }

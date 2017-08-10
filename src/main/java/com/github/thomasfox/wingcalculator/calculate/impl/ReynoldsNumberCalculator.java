@@ -21,9 +21,9 @@ public class ReynoldsNumberCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
   {
-    double wingVelocity = getValueOf(PhysicalQuantity.WING_VELOCITY, input);
-    double wingDepth = getValueOf(PhysicalQuantity.WING_DEPTH, input);
-    double kinematicVelocity = getValueOf(PhysicalQuantity.KINEMATIC_VISCOSITY, input);
+    double wingVelocity = PhysicalQuantity.WING_VELOCITY.getValueFromAvailableQuantities(input);
+    double wingDepth = PhysicalQuantity.WING_DEPTH.getValueFromAvailableQuantities(input);
+    double kinematicVelocity = PhysicalQuantity.KINEMATIC_VISCOSITY.getValueFromAvailableQuantities(input);
     return wingVelocity * wingDepth / kinematicVelocity;
   }
 }
