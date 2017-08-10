@@ -10,6 +10,7 @@ import com.github.thomasfox.wingcalculator.calculate.impl.InducedResistanceCoeff
 import com.github.thomasfox.wingcalculator.calculate.impl.LiftCoefficientCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.ReynoldsNumberCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.SecondMomentOfAreaCalculator;
+import com.github.thomasfox.wingcalculator.calculate.impl.ThicknessCalculator;
 
 public class CombinedCalculator
 {
@@ -22,6 +23,7 @@ public class CombinedCalculator
     calculators.add(new BendingCalculator());
     calculators.add(new SecondMomentOfAreaCalculator());
     calculators.add(new LiftCoefficientCalculator());
+    calculators.add(new ThicknessCalculator());
   }
 
   public Map<PhysicalQuantity, Double> calculate(Map<PhysicalQuantity, Double> input)

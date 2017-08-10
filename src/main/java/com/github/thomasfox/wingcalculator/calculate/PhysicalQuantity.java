@@ -12,6 +12,7 @@ public enum PhysicalQuantity
   WING_WIDTH("Spannweite des Flügels", "m", "quer zur Profilierung, von einem Ende zum anderen"),
   WING_DEPTH("Tiefe des Flügels", "m", "quer zur Spannweite, gleich über die geamte Spannweite"),
   WING_THICKNESS("Dicke des Flügels", "m", "Dicke an der dicksten Stelle"),
+  WING_RELATIVE_THICKNESS("Relative Dicke des Flügels", null, "Dicke an der dicksten Stelle geteilt durch Profiltiefe"),
   WING_VELOCITY("Geschwindigkeit des Flügels durch das Wasser", "m/s"),
   KINEMATIC_VISCOSITY("Kinematische Viskosität von Wasser", "m^2/s", null, 0.000001d),
   DENSITY("Dichte von Wasser", "kg/m^3", null, 1000d),

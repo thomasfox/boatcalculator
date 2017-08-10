@@ -112,6 +112,7 @@ public class SwingGui
     {
       Profile profile = profileSelector.load(new File("profiles"), (String) profileName);
       knownQuantities.put(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA, profile.getSecondMomentOfArea());
+      knownQuantities.put(PhysicalQuantity.WING_RELATIVE_THICKNESS, profile.getThickness());
     }
     Map<PhysicalQuantity, Double> calculatedValues = combinedCalculator.calculate(knownQuantities);
 
