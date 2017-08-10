@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 
 import com.github.thomasfox.wingcalculator.calculate.CombinedCalculator;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.wingcalculator.profile.Profile;
 import com.github.thomasfox.wingcalculator.profile.ProfileSelector;
 
@@ -32,8 +33,6 @@ public class SwingGui
   private final ProfileSelector profileSelector = new ProfileSelector();
 
   private final JComboBox<String> profileSelect;
-
-  private final CombinedCalculator combinedCalculator = new CombinedCalculator();
 
   private final int rowAfterButton;
 
@@ -103,6 +102,7 @@ public class SwingGui
   public void calculateButtonPressed(ActionEvent e)
   {
     Map<PhysicalQuantity, Double> knownQuantities = new HashMap<>();
+    List<QuantityRelations> quantityRelationsList = new ArrayList<>();
     for (QuantityInput quantityInput : quantityInputs)
     {
       knownQuantities.put(quantityInput.getQuantity(), quantityInput.getValue());
@@ -110,10 +110,14 @@ public class SwingGui
     Object profileName = profileSelect.getSelectedItem();
     if (profileName != null)
     {
-      Profile profile = profileSelector.load(new File("profiles"), (String) profileName);
+      Profile profile = profileSelector.loadProfile(new File("profiles"), (String) profileName);
       knownQuantities.put(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA, profile.getSecondMomentOfArea());
       knownQuantities.put(PhysicalQuantity.WING_RELATIVE_THICKNESS, profile.getThickness());
+      quantityRelationsList.addAll(profileSelector.loadXfoilResults(new File("profiles"), (String) profileName));
     }
+
+    CombinedCalculator combinedCalculator = new CombinedCalculator(quantityRelationsList);
+
     Map<PhysicalQuantity, Double> calculatedValues = combinedCalculator.calculate(knownQuantities);
 
     for (QuantityOutput quantityOutput : quantityOutputs)

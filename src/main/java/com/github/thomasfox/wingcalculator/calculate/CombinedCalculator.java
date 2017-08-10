@@ -11,12 +11,16 @@ import com.github.thomasfox.wingcalculator.calculate.impl.LiftCoefficientCalcula
 import com.github.thomasfox.wingcalculator.calculate.impl.ReynoldsNumberCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.SecondMomentOfAreaCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.ThicknessCalculator;
+import com.github.thomasfox.wingcalculator.interpolate.InterpolatorException;
+import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
 
 public class CombinedCalculator
 {
   public List<Calculator> calculators = new ArrayList<>();
 
-  public CombinedCalculator()
+  public List<QuantityRelations> quantityRelationsList = new ArrayList<>();
+
+  public CombinedCalculator(List<QuantityRelations> quantityRelationsList)
   {
     calculators.add(new ReynoldsNumberCalculator());
     calculators.add(new InducedResistanceCoefficientCalculator());
@@ -24,6 +28,8 @@ public class CombinedCalculator
     calculators.add(new SecondMomentOfAreaCalculator());
     calculators.add(new LiftCoefficientCalculator());
     calculators.add(new ThicknessCalculator());
+
+    this.quantityRelationsList.addAll(quantityRelationsList);
   }
 
   public Map<PhysicalQuantity, Double> calculate(Map<PhysicalQuantity, Double> input)
@@ -49,6 +55,39 @@ public class CombinedCalculator
         allKnownValues.put(calculator.getOutputQuantity(), calculationResult);
         result.put(calculator.getOutputQuantity(), calculationResult);
         changed = true;
+      }
+      for (QuantityRelations quantityRelations : quantityRelationsList)
+      {
+        for (PhysicalQuantity keyQuantity : quantityRelations.getRelatedQuantities())
+        {
+          Double knownKeyValue = keyQuantity.getValueFromAvailableQuantities(allKnownValues);
+          if (knownKeyValue != null)
+          {
+            for (PhysicalQuantity relatedQuantity : quantityRelations.getRelatedQuantities())
+            {
+              Double knownRelatedValue = relatedQuantity.getValueFromAvailableQuantities(allKnownValues);
+              if (knownRelatedValue == null)
+              {
+                try
+                {
+                  Double relatedValue = quantityRelations.interpolateValueFrom(relatedQuantity, keyQuantity, knownKeyValue);
+                  allKnownValues.put(relatedQuantity, relatedValue);
+                  changed = true;
+                  result.put(relatedQuantity, relatedValue);
+                  System.out.println("Calculated " + relatedQuantity.getDisplayName()
+                  + " from quantityRelations " + quantityRelations.getName()
+                  + " with fixed quantities " + quantityRelations.printFixedQuantities());
+                }
+                catch (InterpolatorException e)
+                {
+                  System.out.println("Could not calculate " + relatedQuantity.getDisplayName()
+                  + " from quantityRelations " + quantityRelations.getName()
+                  + " with fixed quantities " + quantityRelations.printFixedQuantities());
+                }
+              }
+            }
+          }
+        }
       }
       cutoff--;
     }
