@@ -42,10 +42,10 @@ public class SwingGui
     frame.getContentPane().setLayout(new GridBagLayout());
 
 
-    quantityInputs.add(new QuantityInput(PhysicalQuantity.LIFT, 1000d));
+    quantityInputs.add(new QuantityInput(PhysicalQuantity.LIFT, 300d));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.BENDING_FORCE, 1000d));
-    quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_WIDTH, 2d));
-    quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_DEPTH, 0.1d));
+    quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_WIDTH, 1.5d));
+    quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_DEPTH, 0.17d));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_VELOCITY, 3d));
 
     int row = 0;
