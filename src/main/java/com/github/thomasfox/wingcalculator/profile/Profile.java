@@ -128,7 +128,7 @@ public class Profile
       double maxY = getUpperY(x);
       double distance1FromCenter = (balanceY - minY);
       double distance2FromCenter = (maxY - balanceY);
-      // Stammfunktion von <^2 ist 1/3 x^3, xStep und 1/3 werden unten hinzugefügt
+      // Stammfunktion von x^2 ist 1/3 x^3, xStep und 1/3 werden unten hinzugefügt
       result += (distance1FromCenter * distance1FromCenter * distance1FromCenter)
           + (distance2FromCenter *distance2FromCenter * distance2FromCenter);
     }
