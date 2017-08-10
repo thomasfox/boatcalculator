@@ -1,15 +1,21 @@
 package com.github.thomasfox.wingcalculator.profile;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
+import com.github.thomasfox.wingcalculator.xfoil.XfoilResultLoader;
+
 public class ProfileSelector
 {
-  private final DatFileLoader loader = new DatFileLoader();
+  private final DatFileLoader datLoader = new DatFileLoader();
+
+  private final XfoilResultLoader xfoilLoader = new XfoilResultLoader();
 
   public List<String> getProfileNames(File directory)
   {
@@ -20,17 +26,34 @@ public class ProfileSelector
     return result;
   }
 
-  public Profile load(File directory, String name)
+  public Profile loadProfile(File directory, String name)
   {
-    FileReader reader;
-    try
+    try (FileReader reader = new FileReader(new File(directory, name + ".dat")))
     {
-      reader = new FileReader(new File(directory, name + ".dat"));
+      return new Profile(name, datLoader.load(reader));
     }
-    catch (FileNotFoundException e)
+    catch (IOException e)
     {
       throw new RuntimeException(e);
     }
-    return new Profile(name, loader.load(reader));
+  }
+
+  public List<QuantityRelations> loadXfoilResults(File directory, String name)
+  {
+    String[] filenames = directory.list(
+        (dir, filename) -> filename.indexOf("-" + name + "-") != -1 && filename.endsWith(".txt"));
+    List<QuantityRelations> result = new ArrayList<>();
+    for (String filename : filenames)
+    {
+      try (FileReader reader = new FileReader(new File(directory, filename)))
+      {
+        result.add(xfoilLoader.load(reader));
+      }
+      catch (IOException e)
+      {
+        throw new RuntimeException(e);
+      }
+    }
+    return result;
   }
 }
