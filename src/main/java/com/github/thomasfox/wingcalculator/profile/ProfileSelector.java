@@ -20,6 +20,7 @@ public class ProfileSelector
   public List<String> getProfileNames(File directory)
   {
     String[] filenames = directory.list((dir, name) -> name.endsWith(".dat"));
+    Arrays.sort(filenames);
     List<String> result = Arrays.stream(filenames)
         .map(s -> s.substring(0, s.length() - 4))
         .collect(Collectors.toList());
