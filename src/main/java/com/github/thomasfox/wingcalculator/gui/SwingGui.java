@@ -169,9 +169,9 @@ public class SwingGui
       }
       result.append("\r\n");
     }
-    try
+    try (FileWriter resultsWriter = new FileWriter("results.csv"))
     {
-      new FileWriter("results.csv").append(result.toString().replaceAll("\\.", ",")).close();
+      resultsWriter.append(result.toString().replaceAll("\\.", ","));
     }
     catch (IOException e1)
     {
