@@ -34,11 +34,11 @@ public class Profile
       minX = Math.min(minX, points.get(i).getX());
       maxX = Math.max(maxX, points.get(i).getX());
     }
-    if (minX > 0 || minX < 0)
+    if (minX > 0.001 || minX < 0)
     {
       throw new IllegalArgumentException("Minimal X must be 0");
     }
-    if (maxX > 1 || maxX < 1)
+    if (maxX > 1.001 || maxX < 0.999)
     {
       throw new IllegalArgumentException("Maximal X must be 1");
     }
