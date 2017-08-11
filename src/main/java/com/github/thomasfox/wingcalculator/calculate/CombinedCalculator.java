@@ -8,9 +8,11 @@ import java.util.Map;
 import com.github.thomasfox.wingcalculator.calculate.impl.BendingCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.InducedResistanceCoefficientCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.LiftCoefficientCalculator;
+import com.github.thomasfox.wingcalculator.calculate.impl.ProfileDragCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.ReynoldsNumberCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.SecondMomentOfAreaCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.ThicknessCalculator;
+import com.github.thomasfox.wingcalculator.calculate.impl.WingDepthFromSecondMomentOfAreaCalculator;
 import com.github.thomasfox.wingcalculator.interpolate.InterpolatorException;
 import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
 
@@ -28,6 +30,8 @@ public class CombinedCalculator
     calculators.add(new SecondMomentOfAreaCalculator());
     calculators.add(new LiftCoefficientCalculator());
     calculators.add(new ThicknessCalculator());
+    calculators.add(new WingDepthFromSecondMomentOfAreaCalculator());
+    calculators.add(new ProfileDragCalculator());
 
     this.quantityRelationsList.addAll(quantityRelationsList);
   }

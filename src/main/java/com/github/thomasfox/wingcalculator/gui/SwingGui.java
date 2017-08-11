@@ -4,7 +4,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,13 +25,17 @@ import com.github.thomasfox.wingcalculator.profile.ProfileSelector;
 
 public class SwingGui
 {
+  private static final File PROFILE_DIRECTORY = new File("profiles");
+
   JFrame frame = new JFrame("wingCalculator");
 
   private final List<QuantityInput> quantityInputs = new ArrayList<>();
 
   private final List<QuantityOutput> quantityOutputs = new ArrayList<>();
 
-  private final JButton calculateButton;
+  private final JButton selectProfileButton;
+
+  private final JButton allProfilesButton;
 
   private final ProfileSelector profileSelector = new ProfileSelector();
 
@@ -45,8 +52,9 @@ public class SwingGui
     quantityInputs.add(new QuantityInput(PhysicalQuantity.LIFT, 300d));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.BENDING_FORCE, 1000d));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_WIDTH, 1.5d));
-    quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_DEPTH, 0.17d));
+    quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_DEPTH, null));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_VELOCITY, 3d));
+    quantityInputs.add(new QuantityInput(PhysicalQuantity.SECOND_MOMENT_OF_AREA, 5E-08));
 
     int row = 0;
     for (QuantityInput quantityInput : quantityInputs)
@@ -62,7 +70,7 @@ public class SwingGui
     frame.add(new JLabel("Profil"), gridBagConstraints);
     profileSelect = new JComboBox<>();
     profileSelect.addItem(null);
-    List<String> profiles = profileSelector.getProfileNames(new File("profiles"));
+    List<String> profiles = profileSelector.getProfileNames(PROFILE_DIRECTORY);
     for (String profile : profiles)
     {
       profileSelect.addItem(profile);
@@ -74,13 +82,20 @@ public class SwingGui
     frame.add(profileSelect, gridBagConstraints);
     row++;
 
-    calculateButton = new JButton("Ok");
+    selectProfileButton = new JButton("select Profile");
     gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = row;
-    calculateButton.addActionListener(this::calculateButtonPressed);
-    frame.add(calculateButton, gridBagConstraints);
+    selectProfileButton.addActionListener(this::selectProfileButtonPressed);
+    frame.add(selectProfileButton, gridBagConstraints);
+    allProfilesButton = new JButton("all Profiles");
+    gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = row;
+    allProfilesButton.addActionListener(this::allProfilesButtonPressed);
+    frame.add(allProfilesButton, gridBagConstraints);
     row++;
 
     rowAfterButton = row;
@@ -99,26 +114,17 @@ public class SwingGui
     });
   }
 
-  public void calculateButtonPressed(ActionEvent e)
+  public void selectProfileButtonPressed(ActionEvent e)
   {
-    Map<PhysicalQuantity, Double> knownQuantities = new HashMap<>();
-    List<QuantityRelations> quantityRelationsList = new ArrayList<>();
-    for (QuantityInput quantityInput : quantityInputs)
+    Object profileNameObject = profileSelect.getSelectedItem();
+    String profileName = null;
+    if (profileNameObject != null)
     {
-      knownQuantities.put(quantityInput.getQuantity(), quantityInput.getValue());
-    }
-    Object profileName = profileSelect.getSelectedItem();
-    if (profileName != null)
-    {
-      Profile profile = profileSelector.loadProfile(new File("profiles"), (String) profileName);
-      knownQuantities.put(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA, profile.getSecondMomentOfArea());
-      knownQuantities.put(PhysicalQuantity.WING_RELATIVE_THICKNESS, profile.getThickness());
-      quantityRelationsList.addAll(profileSelector.loadXfoilResults(new File("profiles"), (String) profileName));
+      profileName = profileNameObject.toString();
     }
 
-    CombinedCalculator combinedCalculator = new CombinedCalculator(quantityRelationsList);
-
-    Map<PhysicalQuantity, Double> calculatedValues = combinedCalculator.calculate(knownQuantities);
+    Map<PhysicalQuantity, Double> calculatedValues
+        = calculateForProfile(profileName);
 
     for (QuantityOutput quantityOutput : quantityOutputs)
     {
@@ -135,5 +141,63 @@ public class SwingGui
       outputRow++;
     }
     frame.pack();
+  }
+
+  public void allProfilesButtonPressed(ActionEvent e)
+  {
+    StringBuilder result = new StringBuilder();
+    List<PhysicalQuantity> quantities = null;
+    for (String profileName : profileSelector.getProfileNames(PROFILE_DIRECTORY))
+    {
+      Map<PhysicalQuantity, Double> calculatedValues
+          = calculateForProfile(profileName);
+      if (quantities == null)
+      {
+        quantities = new ArrayList<>(calculatedValues.keySet());
+        Collections.sort(quantities);
+        result.append("name").append(";");
+        for (PhysicalQuantity quantity : quantities)
+        {
+          result.append(quantity.getDisplayNameIncludingUnit()).append(";");
+        }
+        result.append("\r\n");
+      }
+      result.append(profileName).append(";");
+      for (PhysicalQuantity quantity : quantities)
+      {
+        result.append(calculatedValues.get(quantity)).append(";");
+      }
+      result.append("\r\n");
+    }
+    try
+    {
+      new FileWriter("results.csv").append(result.toString().replaceAll("\\.", ",")).close();
+    }
+    catch (IOException e1)
+    {
+      e1.printStackTrace();
+    }
+  }
+
+  private Map<PhysicalQuantity, Double> calculateForProfile(String profileName)
+  {
+    Map<PhysicalQuantity, Double> knownQuantities = new HashMap<>();
+    List<QuantityRelations> quantityRelationsList = new ArrayList<>();
+    for (QuantityInput quantityInput : quantityInputs)
+    {
+      knownQuantities.put(quantityInput.getQuantity(), quantityInput.getValue());
+    }
+    if (profileName != null)
+    {
+      Profile profile = profileSelector.loadProfile(PROFILE_DIRECTORY, profileName);
+      knownQuantities.put(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA, profile.getSecondMomentOfArea());
+      knownQuantities.put(PhysicalQuantity.WING_RELATIVE_THICKNESS, profile.getThickness());
+      quantityRelationsList.addAll(profileSelector.loadXfoilResults(PROFILE_DIRECTORY, profileName));
+    }
+
+    CombinedCalculator combinedCalculator = new CombinedCalculator(quantityRelationsList);
+
+    Map<PhysicalQuantity, Double> calculatedValues = combinedCalculator.calculate(knownQuantities);
+    return calculatedValues;
   }
 }
