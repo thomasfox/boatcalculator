@@ -4,9 +4,9 @@ import java.util.Map;
 
 public enum PhysicalQuantity
 {
-  INDUCED_RESISTANCE("Induzierter Widerstand", "N"),
+  INDUCED_DRAG("Induzierter Widerstand", "N"),
   INDUCED_DRAG_COEFFICIENT("Widerstandsbeiwert für den Induzierten Widerstand", null),
-  PROFILE_RESISTANCE("Profilwiderstand", "N"),
+  PROFILE_DRAG("Profilwiderstand", "N"),
   PROFILE_DRAG_COEFFICIENT("Widerstandsbeiwert für den Profilwiderstand", null),
   LIFT("Auftrieb", "N", "des gesamten Flügels"),
   LIFT_COEFFICIENT("Auftriebsbeiwert", null, "gemittelt nach Fläche über den gesamten Flügel"),
