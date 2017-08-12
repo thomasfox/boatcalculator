@@ -82,7 +82,7 @@ public class SwingGui
     frame.add(profileSelect, gridBagConstraints);
     row++;
 
-    selectProfileButton = new JButton("select Profile");
+    selectProfileButton = new JButton("selected Profile");
     gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 0;
