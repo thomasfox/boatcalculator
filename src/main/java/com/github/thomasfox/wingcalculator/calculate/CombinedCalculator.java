@@ -95,23 +95,14 @@ public class CombinedCalculator
 
       for (Map.Entry<PhysicalQuantity, List<XYPoint>> entry : interpolationValues.entrySet())
       {
-        if (entry.getValue().size() == 0)
+        Double interpolatedValue = getInterpolatedValueFor(
+            entry.getKey(),
+            knownValueForNonMatchingQuantity,
+            entry.getValue());
+        if (interpolatedValue != null)
         {
-          System.out.println("No points to interpolate " + entry.getKey().getDisplayName());
-        }
-        else if (entry.getValue().size() == 1)
-        {
-          System.out.println("Only one point to interpolate " + entry.getKey().getDisplayName()
-              + ", using " + entry.getValue().get(0).getX() + " instead of " + knownValueForNonMatchingQuantity);
-          allKnownValues.put(entry.getKey(), entry.getValue().get(0).getY());
-          result.put(entry.getKey(), entry.getValue().get(0).getY());
-          changed = true;
-        }
-        else
-        {
-          double interpolated = interpolator.interpolate(knownValueForNonMatchingQuantity, entry.getValue());
-          allKnownValues.put(entry.getKey(), interpolated);
-          result.put(entry.getKey(), interpolated);
+          allKnownValues.put(entry.getKey(), interpolatedValue);
+          result.put(entry.getKey(), interpolatedValue);
           changed = true;
         }
       }
@@ -119,6 +110,48 @@ public class CombinedCalculator
     }
     while(changed && cutoff > 0);
     return result;
+  }
+
+  private Double getInterpolatedValueFor(PhysicalQuantity quantityToInterpolate, Double xValue, List<XYPoint> from)
+  {
+    if (from.size() == 0)
+    {
+      System.out.println("No points to interpolate " + quantityToInterpolate.getDisplayName());
+      return null;
+    }
+    else if (from.size() == 1)
+    {
+      System.out.println("Only one point to interpolate " + quantityToInterpolate.getDisplayName()
+          + ", using " + from.get(0).getX() + " instead of " + xValue);
+      return from.get(0).getY();
+    }
+    else
+    {
+      double interpolated = Double.NaN;
+      try
+      {
+        interpolated = interpolator.interpolate(xValue, from);
+      }
+      catch (Exception e)
+      {
+        // probably outside interpolation interval, try find best-matching value
+        double distance = Double.POSITIVE_INFINITY;
+        double usedValue = Double.NaN;
+        for (XYPoint point : from)
+        {
+          double currentDistance = Math.abs(xValue - point.getX());
+          if (currentDistance < distance)
+          {
+            distance = currentDistance;
+            interpolated = point.getY();
+            usedValue = point.getX();
+          }
+        }
+        System.out.println("No matching interval to interpolate " + quantityToInterpolate.getDisplayName()
+            + ", using " + usedValue + " instead of " + xValue);
+      }
+      return interpolated;
+    }
   }
 
   private Map<PhysicalQuantity, List<XYPoint>> getInterpolationValuesForQuantityFromQuantityRelations(
