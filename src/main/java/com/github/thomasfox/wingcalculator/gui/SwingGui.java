@@ -49,7 +49,7 @@ public class SwingGui
     frame.getContentPane().setLayout(new GridBagLayout());
 
 
-    quantityInputs.add(new QuantityInput(PhysicalQuantity.LIFT, 300d));
+    quantityInputs.add(new QuantityInput(PhysicalQuantity.LIFT, 200d));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.BENDING_FORCE, 1000d));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_WIDTH, 1.5d));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_DEPTH, null));
@@ -146,6 +146,18 @@ public class SwingGui
   public void allProfilesButtonPressed(ActionEvent e)
   {
     StringBuilder result = new StringBuilder();
+
+    for (QuantityInput quantityInput : quantityInputs)
+    {
+      if (quantityInput.getValue() != null)
+      {
+        result.append(
+            quantityInput.getQuantity().getDisplayNameIncludingUnit()).append(":;")
+            .append(quantityInput.getValue()).append(";\r\n");
+      }
+    }
+    result.append("\r\n");
+
     List<PhysicalQuantity> quantities = null;
     for (String profileName : profileSelector.getProfileNames(PROFILE_DIRECTORY))
     {
