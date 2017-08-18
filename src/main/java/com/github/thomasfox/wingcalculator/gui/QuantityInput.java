@@ -1,34 +1,35 @@
 package com.github.thomasfox.wingcalculator.gui;
 
 import java.awt.GridBagConstraints;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.wingcalculator.iterate.DoubleIntervalIterator;
 
 public class QuantityInput
 {
   private final JLabel label = new JLabel();
 
-  private final JTextField textField = new JTextField();
+  private final JTextField fixedValueField = new JTextField();
+
+  private final JTextField scanFromField = new JTextField();
+
+  private final JTextField scanToField = new JTextField();
+
+  private final JTextField scanNumberOfStepsField = new JTextField();
 
   private final PhysicalQuantity quantity;
-
-  private Double value;
 
   public QuantityInput(PhysicalQuantity quantity, Double value)
   {
     this.quantity = quantity;
     setValue(value);
     label.setText(quantity.getDisplayNameIncludingUnit());
-    textField.getDocument().addDocumentListener(
-        new QuantityInputDocumentListener());
+    scanNumberOfStepsField.setText("20");
   }
 
   public void addToFrameInRow(JFrame frame, int row)
@@ -43,13 +44,34 @@ public class QuantityInput
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = row;
-    frame.add(textField, gridBagConstraints);
+    frame.add(fixedValueField, gridBagConstraints);
+
+    gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = row;
+    frame.add(scanFromField, gridBagConstraints);
+
+    gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 3;
+    gridBagConstraints.gridy = row;
+    frame.add(scanToField, gridBagConstraints);
+
+    gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 4;
+    gridBagConstraints.gridy = row;
+    frame.add(scanNumberOfStepsField, gridBagConstraints);
   }
 
   public void removeFromFrame(JFrame frame)
   {
     frame.remove(label);
-    frame.remove(textField);
+    frame.remove(fixedValueField);
+    frame.remove(scanFromField);
+    frame.remove(scanToField);
+    frame.remove(scanNumberOfStepsField);
   }
 
   public PhysicalQuantity getQuantity()
@@ -57,39 +79,79 @@ public class QuantityInput
     return quantity;
   }
 
-  public Double getValue()
-  {
-    return value;
-  }
-
   public void setValue(Double value)
   {
-    this.value = value;
     if (value == null)
     {
-      textField.setText("");
+      fixedValueField.setText("");
     }
     else
     {
-      textField.setText(value.toString());
+      fixedValueField.setText(value.toString());
     }
   }
 
-  public void setValue(String value)
+  public Double getValue()
   {
-    Double newValue;
-    try
-    {
-      newValue = Double.parseDouble(value);
-    }
-    catch (NumberFormatException e)
-    {
-      return;
-    }
-    setValue(newValue);
+    return parseDouble(fixedValueField.getText());
   }
 
-  private Double parseValue(String value)
+  public Double getScanFrom()
+  {
+    return parseDouble(scanFromField.getText());
+  }
+
+  public Double getScanTo()
+  {
+    return parseDouble(scanToField.getText());
+  }
+
+  public Integer getNumberOfScanSteps()
+  {
+    return parseInteger(scanNumberOfStepsField.getText());
+  }
+
+  public boolean isScan()
+  {
+    return getScanFrom() != null
+        && getScanTo() != null
+        && getNumberOfScanSteps() != null;
+  }
+
+  public String toCsvString()
+  {
+    if (isScan())
+    {
+      return getQuantity().getDisplayNameIncludingUnit() + ":;"
+          + "Scan From:;" + getScanFrom() + ";"
+          + "Scan To:;" + getScanTo() + ";"
+          + "Number of Scan Steps:;" + getNumberOfScanSteps() + ";\r\n";
+    }
+    else if (getValue() != null)
+    {
+      return getQuantity().getDisplayNameIncludingUnit() + ":;" + getValue() + ";\r\n";
+    }
+    else
+    {
+      return "";
+    }
+  }
+
+  public Iterator<Double> getIterator()
+  {
+    if (isScan())
+    {
+      return new DoubleIntervalIterator(getScanFrom(), getScanTo(), getNumberOfScanSteps());
+    }
+    Double value = getValue();
+    if (value != null)
+    {
+      return new DoubleIntervalIterator(value, value, 1);
+    }
+    return null;
+  }
+
+  private Double parseDouble(String value)
   {
     try
     {
@@ -101,37 +163,15 @@ public class QuantityInput
     }
   }
 
-  private class QuantityInputDocumentListener implements DocumentListener
+  private Integer parseInteger(String value)
   {
-    @Override
-    public void insertUpdate(DocumentEvent event)
+    try
     {
-      handleChange(event.getDocument());
+      return Integer.parseInt(value);
     }
-
-    @Override
-    public void removeUpdate(DocumentEvent event)
+    catch (NumberFormatException e)
     {
-      handleChange(event.getDocument());
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent event)
-    {
-      handleChange(event.getDocument());
-    }
-
-    private void handleChange(Document document)
-    {
-      try
-      {
-        value = parseValue(document.getText(0, document.getLength()));
-      }
-      catch (BadLocationException e)
-      {
-        // should not happen
-        throw new RuntimeException(e);
-      }
+      return null;
     }
   }
 }
