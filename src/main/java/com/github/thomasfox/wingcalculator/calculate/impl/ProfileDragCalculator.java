@@ -16,7 +16,7 @@ public class ProfileDragCalculator extends Calculator
         PhysicalQuantity.PROFILE_DRAG_COEFFICIENT,
         PhysicalQuantity.WING_WIDTH,
         PhysicalQuantity.WING_DEPTH,
-        PhysicalQuantity.WING_VELOCITY,
+        PhysicalQuantity.VELOCITY,
         PhysicalQuantity.DENSITY);
   }
 
@@ -26,7 +26,7 @@ public class ProfileDragCalculator extends Calculator
     double dragCoefficient = PhysicalQuantity.PROFILE_DRAG_COEFFICIENT.getValueFromAvailableQuantities(input);
     double wingWidth = PhysicalQuantity.WING_WIDTH.getValueFromAvailableQuantities(input);
     double wingDepth = PhysicalQuantity.WING_DEPTH.getValueFromAvailableQuantities(input);
-    double velocity = PhysicalQuantity.WING_VELOCITY.getValueFromAvailableQuantities(input);
+    double velocity = PhysicalQuantity.VELOCITY.getValueFromAvailableQuantities(input);
     double density = PhysicalQuantity.DENSITY.getValueFromAvailableQuantities(input);
 
     double area = wingWidth * wingDepth;

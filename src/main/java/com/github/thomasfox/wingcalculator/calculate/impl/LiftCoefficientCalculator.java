@@ -16,7 +16,7 @@ public class LiftCoefficientCalculator extends Calculator
         PhysicalQuantity.LIFT,
         PhysicalQuantity.WING_WIDTH,
         PhysicalQuantity.WING_DEPTH,
-        PhysicalQuantity.WING_VELOCITY,
+        PhysicalQuantity.VELOCITY,
         PhysicalQuantity.DENSITY);
   }
 
@@ -26,7 +26,7 @@ public class LiftCoefficientCalculator extends Calculator
     double lift = PhysicalQuantity.LIFT.getValueFromAvailableQuantities(input);
     double wingWidth = PhysicalQuantity.WING_WIDTH.getValueFromAvailableQuantities(input);
     double wingDepth = PhysicalQuantity.WING_DEPTH.getValueFromAvailableQuantities(input);
-    double velocity = PhysicalQuantity.WING_VELOCITY.getValueFromAvailableQuantities(input);
+    double velocity = PhysicalQuantity.VELOCITY.getValueFromAvailableQuantities(input);
     double density = PhysicalQuantity.DENSITY.getValueFromAvailableQuantities(input);
 
     double area = wingWidth * wingDepth;

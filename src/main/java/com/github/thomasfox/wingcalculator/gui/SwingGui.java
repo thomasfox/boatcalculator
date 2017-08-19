@@ -51,7 +51,7 @@ public class SwingGui
     quantityInputs.add(new QuantityInput(PhysicalQuantity.BENDING_FORCE, 1000d));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_WIDTH, 1.5d));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_DEPTH, null));
-    quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_VELOCITY, 3d));
+    quantityInputs.add(new QuantityInput(PhysicalQuantity.VELOCITY, 3d));
     quantityInputs.add(new QuantityInput(PhysicalQuantity.SECOND_MOMENT_OF_AREA, 5E-08));
 
     addLabelToFrame("Quantity", 0, 0);
