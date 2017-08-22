@@ -16,8 +16,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import com.github.thomasfox.wingcalculator.boat.Boat;
-import com.github.thomasfox.wingcalculator.boat.impl.Dinghy;
+import com.github.thomasfox.wingcalculator.boat.impl.Skiff29er;
 import com.github.thomasfox.wingcalculator.calculate.CombinedCalculator;
+import com.github.thomasfox.wingcalculator.calculate.NamedValueSet;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantityValue;
 import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
@@ -41,24 +42,17 @@ public class SwingGui
 
   private final int rowAfterButton;
 
-  private final Boat boat = new Dinghy();
+  private final Boat boat = new Skiff29er();
 
   public SwingGui()
   {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.getContentPane().setLayout(new GridBagLayout());
 
+    createPartInput(boat);
     for (BoatPart part : boat.getParts())
     {
-      PartInput partInput = new PartInput(part);
-      partInputs.add(partInput);
-      for (PhysicalQuantity physicalQuantity : part.getToInput())
-      {
-        if (part.getFixedValue(physicalQuantity) == null)
-        {
-          partInput.add(new QuantityInput(physicalQuantity, part.getStartValue(physicalQuantity)));
-        }
-      }
+      createPartInput(part);
     }
 
     int row = 0;
@@ -82,6 +76,19 @@ public class SwingGui
     rowAfterButton = row;
     frame.pack();
     frame.setVisible(true);
+  }
+
+  private void createPartInput(NamedValueSet valueSet)
+  {
+    PartInput partInput = new PartInput(valueSet);
+    partInputs.add(partInput);
+    for (PhysicalQuantity physicalQuantity : valueSet.getToInput())
+    {
+      if (valueSet.getFixedValue(physicalQuantity) == null)
+      {
+        partInput.add(new QuantityInput(physicalQuantity, valueSet.getStartValue(physicalQuantity)));
+      }
+    }
   }
 
   public static void main(String[] args)
@@ -118,7 +125,7 @@ public class SwingGui
     partOutputs.clear();
     for (PartInput partInput : partInputs)
     {
-      PartOutput partOutput = new PartOutput(partInput.getBoatPart());
+      PartOutput partOutput = new PartOutput(partInput.getValueSet().getName());
       partOutputs.add(partOutput);
       Map<PhysicalQuantity, Double> calculatedValues
          = calculateForProfile(partInput.getProfileName(), partInput, partOutput);
@@ -235,7 +242,7 @@ public class SwingGui
     {
       knownQuantities.put(quantityInput.getQuantity(), quantityInput.getValue());
     }
-    for (PhysicalQuantityValue quantityValue : input.getBoatPart().getFixedValues().getAsList())
+    for (PhysicalQuantityValue quantityValue : input.getValueSet().getFixedValues().getAsList())
     {
       knownQuantities.put(quantityValue.getPhysicalQuantity(), quantityValue.getValue());
     }

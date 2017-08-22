@@ -8,8 +8,8 @@ public class Daggerboard extends Wing
   public Daggerboard()
   {
     super(PartType.DAGGERBOARD);
-    setFixedValueNoOverwide(MaterialConstants.DENSITY_WATER);
-    setFixedValueNoOverwide(MaterialConstants.KINEMATIC_VISCOSITY_WATER);
+    setFixedValueNoOverwrite(MaterialConstants.DENSITY_WATER);
+    setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_WATER);
   }
 
 }

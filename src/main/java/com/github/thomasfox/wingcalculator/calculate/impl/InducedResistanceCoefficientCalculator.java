@@ -14,16 +14,16 @@ public class InducedResistanceCoefficientCalculator extends Calculator
   public InducedResistanceCoefficientCalculator()
   {
     super(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT,
-        PhysicalQuantity.WING_WIDTH,
-        PhysicalQuantity.WING_DEPTH,
+        PhysicalQuantity.WING_SPAN,
+        PhysicalQuantity.WING_CHORD,
         PhysicalQuantity.LIFT_COEFFICIENT);
   }
 
   @Override
   protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
   {
-    double wingWidth = PhysicalQuantity.WING_WIDTH.getValueFromAvailableQuantities(input);
-    double wingDepth = PhysicalQuantity.WING_DEPTH.getValueFromAvailableQuantities(input);
+    double wingWidth = PhysicalQuantity.WING_SPAN.getValueFromAvailableQuantities(input);
+    double wingDepth = PhysicalQuantity.WING_CHORD.getValueFromAvailableQuantities(input);
     double liftCoefficient = PhysicalQuantity.LIFT_COEFFICIENT.getValueFromAvailableQuantities(input);
 
     double aspectRatio = wingWidth / wingDepth;

@@ -8,8 +8,8 @@ public class Rudder extends Wing
   public Rudder()
   {
     super(PartType.RUDDER);
-    setFixedValueNoOverwide(MaterialConstants.DENSITY_WATER);
-    setFixedValueNoOverwide(MaterialConstants.KINEMATIC_VISCOSITY_WATER);
+    setFixedValueNoOverwrite(MaterialConstants.DENSITY_WATER);
+    setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_WATER);
   }
 
 }

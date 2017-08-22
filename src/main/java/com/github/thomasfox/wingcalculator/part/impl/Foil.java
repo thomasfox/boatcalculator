@@ -10,7 +10,7 @@ public abstract class Foil extends Wing
   {
     super(type);
     toInput.add(PhysicalQuantity.SECOND_MOMENT_OF_AREA);
-    setFixedValueNoOverwide(MaterialConstants.DENSITY_WATER);
-    setFixedValueNoOverwide(MaterialConstants.KINEMATIC_VISCOSITY_WATER);
+    setFixedValueNoOverwrite(MaterialConstants.DENSITY_WATER);
+    setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_WATER);
   }
 }

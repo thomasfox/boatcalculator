@@ -15,7 +15,7 @@ public class BendingCalculator extends Calculator
   public BendingCalculator()
   {
     super(PhysicalQuantity.BENDING,
-        PhysicalQuantity.WING_WIDTH,
+        PhysicalQuantity.WING_SPAN,
         PhysicalQuantity.BENDING_FORCE,
         PhysicalQuantity.MODULUS_OF_ELASTICITY,
         PhysicalQuantity.SECOND_MOMENT_OF_AREA);
@@ -24,7 +24,7 @@ public class BendingCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
   {
-    double wingWidth = PhysicalQuantity.WING_WIDTH.getValueFromAvailableQuantities(input);
+    double wingWidth = PhysicalQuantity.WING_SPAN.getValueFromAvailableQuantities(input);
     double bendingForce = PhysicalQuantity.BENDING_FORCE.getValueFromAvailableQuantities(input);
     double modulusOfElasicity = PhysicalQuantity.MODULUS_OF_ELASTICITY.getValueFromAvailableQuantities(input);
     double secondMomentOfArea = PhysicalQuantity.SECOND_MOMENT_OF_AREA.getValueFromAvailableQuantities(input);

@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import com.github.thomasfox.wingcalculator.part.BoatPart;
+import com.github.thomasfox.wingcalculator.calculate.NamedValueSet;
 import com.github.thomasfox.wingcalculator.part.impl.Wing;
 
 import lombok.Getter;
@@ -17,7 +17,7 @@ public class PartInput
 {
   @NonNull
   @Getter
-  private final BoatPart boatPart;
+  private final NamedValueSet valueSet;
 
   @Getter
   private final List<QuantityInput> quantityInputs = new ArrayList<>();
@@ -40,7 +40,7 @@ public class PartInput
     {
       SwingHelper.addSeparatorToFrame(frame, rowOffset + internalOffset++, 5);
     }
-    SwingHelper.addLabelToFrame(boatPart.getType().toString(), frame, 0, rowOffset + internalOffset++);
+    SwingHelper.addLabelToFrame(valueSet.getName(), frame, 0, rowOffset + internalOffset++);
     SwingHelper.addLabelToFrame(" ", frame, 0, rowOffset + internalOffset++);
     SwingHelper.addLabelToFrame("Fester Wert", frame, 1, rowOffset + internalOffset);
     SwingHelper.addLabelToFrame("Scan Von", frame, 2, rowOffset + internalOffset);
@@ -52,7 +52,7 @@ public class PartInput
       quantityInput.addToFrameInRow(frame, rowOffset + internalOffset + row++);
     }
     internalOffset += quantityInputs.size();
-    if (boatPart instanceof Wing)
+    if (valueSet instanceof Wing)
     {
       profileInput = new ProfileInput();
       profileInput.addToFrame(frame, rowOffset + internalOffset++);

@@ -8,8 +8,8 @@ public class Sail extends Wing
   public Sail()
   {
     super(PartType.SAIL);
-    setFixedValueNoOverwide(MaterialConstants.DENSITY_AIR);
-    setFixedValueNoOverwide(MaterialConstants.KINEMATIC_VISCOSITY_AIR);
+    setFixedValueNoOverwrite(MaterialConstants.DENSITY_AIR);
+    setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_AIR);
   }
 
 }

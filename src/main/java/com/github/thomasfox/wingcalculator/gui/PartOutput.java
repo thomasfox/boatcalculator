@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import com.github.thomasfox.wingcalculator.part.BoatPart;
-
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 public class PartOutput
 {
   @NonNull
-  private final BoatPart boatPart;
+  private final String name;
 
   @Getter
   private final List<QuantityOutput> quantityOutputs = new ArrayList<>();
@@ -41,7 +39,7 @@ public class PartOutput
       return 0;
     }
     SwingHelper.addSeparatorToFrame(frame, rowOffset, 5);
-    SwingHelper.addLabelToFrame(boatPart.getType().toString(), frame, 0, rowOffset + 1);
+    SwingHelper.addLabelToFrame(name, frame, 0, rowOffset + 1);
     SwingHelper.addLabelToFrame(" ", frame, 0, rowOffset + 2);
     int row = 0;
     for (QuantityOutput quantityOutput : quantityOutputs)

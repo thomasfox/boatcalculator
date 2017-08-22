@@ -17,8 +17,8 @@ public abstract class Wing extends BoatPart
   {
     super(type);
     toInput.add(PhysicalQuantity.LIFT);
-    toInput.add(PhysicalQuantity.WING_WIDTH);
-    toInput.add(PhysicalQuantity.WING_DEPTH);
+    toInput.add(PhysicalQuantity.WING_SPAN);
+    toInput.add(PhysicalQuantity.WING_CHORD);
     toInput.add(PhysicalQuantity.VELOCITY);
   }
 }
