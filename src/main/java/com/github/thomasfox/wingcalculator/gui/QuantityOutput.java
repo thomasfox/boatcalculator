@@ -7,6 +7,9 @@ import javax.swing.JLabel;
 
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
 
+import lombok.ToString;
+
+@ToString(of={"label", "value"})
 public class QuantityOutput
 {
   JLabel label = new JLabel();

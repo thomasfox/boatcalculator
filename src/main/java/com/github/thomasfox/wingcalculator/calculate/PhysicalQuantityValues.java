@@ -80,6 +80,16 @@ public class PhysicalQuantityValues
         .findFirst().orElse(null);
   }
 
+  public Double getValue(PhysicalQuantity physicalQuantity)
+  {
+    PhysicalQuantityValue physicalQuantityValue = getPhysicalQuantityValue(physicalQuantity);
+    if (physicalQuantityValue == null)
+    {
+      return null;
+    }
+    return physicalQuantityValue.getValue();
+  }
+
   public List<PhysicalQuantityValue> getAsList()
   {
     return Collections.unmodifiableList(values);

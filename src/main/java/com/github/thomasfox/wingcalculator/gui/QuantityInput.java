@@ -10,6 +10,9 @@ import javax.swing.JTextField;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.wingcalculator.iterate.DoubleIntervalIterator;
 
+import lombok.ToString;
+
+@ToString(of={"label"})
 public class QuantityInput
 {
   private final JLabel label = new JLabel();

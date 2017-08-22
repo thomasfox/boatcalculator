@@ -16,8 +16,8 @@ public enum PhysicalQuantity
   WING_THICKNESS("Dicke des Flügels", "m", "Dicke an der dicksten Stelle"),
   WING_RELATIVE_THICKNESS("Relative Dicke des Flügels", null, "Dicke an der dicksten Stelle geteilt durch Profiltiefe"),
   VELOCITY("Geschwindigkeit", "m/s"),
-  KINEMATIC_VISCOSITY("Kinematische Viskosität von Wasser", "m^2/s", null, 0.000001d), // Luft 15.2E-6
-  DENSITY("Dichte von Wasser", "kg/m^3", null, 1000d), // Luft 1.1894
+  KINEMATIC_VISCOSITY("Kinematische Viskosität", "m^2/s"),
+  DENSITY("Dichte", "kg/m^3"),
   IMMERSION_DEPTH("Eintauchtiefe des Flügels", "m", "für horizontal verlaufende Flügel"),
   ANGLE_OF_ATTACK("Anstellwinkel", "°"),
   NCRIT("nCrit", null, "The log of the amplification factor of the most-amplified frequency which triggers transition for XFOIL Calculations", 9.0d),

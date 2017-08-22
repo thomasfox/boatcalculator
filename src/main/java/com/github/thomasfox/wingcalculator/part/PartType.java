@@ -1,4 +1,4 @@
-package com.github.thomasfox.wingcalculator.boat;
+package com.github.thomasfox.wingcalculator.part;
 
 public enum PartType
 {

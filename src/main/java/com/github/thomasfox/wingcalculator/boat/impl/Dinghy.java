@@ -1,21 +1,24 @@
 package com.github.thomasfox.wingcalculator.boat.impl;
 
 import com.github.thomasfox.wingcalculator.boat.Boat;
-import com.github.thomasfox.wingcalculator.boat.BoatPart;
-import com.github.thomasfox.wingcalculator.boat.PartType;
+import com.github.thomasfox.wingcalculator.part.BoatPart;
+import com.github.thomasfox.wingcalculator.part.impl.Crew;
+import com.github.thomasfox.wingcalculator.part.impl.Daggerboard;
+import com.github.thomasfox.wingcalculator.part.impl.Hull;
+import com.github.thomasfox.wingcalculator.part.impl.Rudder;
+import com.github.thomasfox.wingcalculator.part.impl.Sail;
 
 public class Dinghy extends Boat
 {
+  protected BoatPart hull = new Hull();
 
-  protected BoatPart hull = new BoatPart(PartType.HULL);
+  protected BoatPart sail = new Sail();
 
-  protected BoatPart sail = new BoatPart(PartType.SAIL);
+  protected BoatPart crew = new Crew();
 
-  protected BoatPart crew = new BoatPart(PartType.CREW);
+  protected BoatPart daggerboard = new Daggerboard();
 
-  protected BoatPart daggerboard = new BoatPart(PartType.DAGGERBOARD);
-
-  protected BoatPart rudder = new BoatPart(PartType.RUDDER);
+  protected BoatPart rudder = new Rudder();
 
   public Dinghy()
   {

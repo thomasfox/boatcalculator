@@ -13,77 +13,64 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 
+import com.github.thomasfox.wingcalculator.boat.Boat;
+import com.github.thomasfox.wingcalculator.boat.impl.Dinghy;
 import com.github.thomasfox.wingcalculator.calculate.CombinedCalculator;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantityValue;
 import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
+import com.github.thomasfox.wingcalculator.part.BoatPart;
 import com.github.thomasfox.wingcalculator.profile.Profile;
 import com.github.thomasfox.wingcalculator.profile.ProfileSelector;
 
 public class SwingGui
 {
-  private static final File PROFILE_DIRECTORY = new File("profiles");
+  public static final File PROFILE_DIRECTORY = new File("profiles");
 
   JFrame frame = new JFrame("wingCalculator");
 
-  private final List<QuantityInput> quantityInputs = new ArrayList<>();
+  private final List<PartInput> partInputs = new ArrayList<>();
 
-  private final List<QuantityOutput> quantityOutputs = new ArrayList<>();
+  private final List<PartOutput> partOutputs = new ArrayList<>();
 
   private final JButton calculateButton;
 
   private final ProfileSelector profileSelector = new ProfileSelector();
 
-  private final JComboBox<String> profileSelect;
-
   private final int rowAfterButton;
+
+  private final Boat boat = new Dinghy();
 
   public SwingGui()
   {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.getContentPane().setLayout(new GridBagLayout());
 
-
-    quantityInputs.add(new QuantityInput(PhysicalQuantity.LIFT, 200d));
-    quantityInputs.add(new QuantityInput(PhysicalQuantity.BENDING_FORCE, 1000d));
-    quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_WIDTH, 1.5d));
-    quantityInputs.add(new QuantityInput(PhysicalQuantity.WING_DEPTH, null));
-    quantityInputs.add(new QuantityInput(PhysicalQuantity.VELOCITY, 3d));
-    quantityInputs.add(new QuantityInput(PhysicalQuantity.SECOND_MOMENT_OF_AREA, 5E-08));
-
-    addLabelToFrame("Quantity", 0, 0);
-    addLabelToFrame("Fixed Value", 1, 0);
-    addLabelToFrame("Scan From", 2, 0);
-    addLabelToFrame("Scan To", 3, 0);
-    addLabelToFrame("Scan Steps", 4, 0);
-
-    int row = 1;
-    for (QuantityInput quantityInput : quantityInputs)
+    for (BoatPart part : boat.getParts())
     {
-      quantityInput.addToFrameInRow(frame, row);
-      row++;
+      PartInput partInput = new PartInput(part);
+      partInputs.add(partInput);
+      for (PhysicalQuantity physicalQuantity : part.getToInput())
+      {
+        if (part.getFixedValue(physicalQuantity) == null)
+        {
+          partInput.add(new QuantityInput(physicalQuantity, part.getStartValue(physicalQuantity)));
+        }
+      }
     }
 
-    addLabelToFrame("Profile", 0, row);
-    profileSelect = new JComboBox<>();
-    profileSelect.addItem(null);
-    List<String> profiles = profileSelector.getProfileNames(PROFILE_DIRECTORY);
-    for (String profile : profiles)
+    int row = 0;
+    for (PartInput partInput : partInputs)
     {
-      profileSelect.addItem(profile);
+     row += partInput.addToFrameInRow(frame, row);
     }
-    GridBagConstraints gridBagConstraints = new GridBagConstraints();
-    gridBagConstraints.fill = GridBagConstraints.BOTH;
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = row;
-    frame.add(profileSelect, gridBagConstraints);
-    row++;
+
+    SwingHelper.addSeparatorToFrame(frame, row++, 5);
 
     calculateButton = new JButton("Berechnen");
-    gridBagConstraints = new GridBagConstraints();
+    GridBagConstraints gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = row;
@@ -95,15 +82,6 @@ public class SwingGui
     rowAfterButton = row;
     frame.pack();
     frame.setVisible(true);
-  }
-
-  private void addLabelToFrame(String label, int x, int y)
-  {
-    GridBagConstraints gridBagConstraints = new GridBagConstraints();
-    gridBagConstraints.fill = GridBagConstraints.BOTH;
-    gridBagConstraints.gridx = x;
-    gridBagConstraints.gridy = y;
-    frame.add(new JLabel(label), gridBagConstraints);
   }
 
   public static void main(String[] args)
@@ -119,58 +97,55 @@ public class SwingGui
 
   public void calculateButtonPressed(ActionEvent e)
   {
-    Object profileNameObject = profileSelect.getSelectedItem();
-    String profileName = null;
-    if (profileNameObject != null)
+    boolean scan = false;
+    for (PartInput partInput : partInputs)
     {
-      profileName = profileNameObject.toString();
-    }
-    boolean scan = (profileName == null);
-    for (QuantityInput quantityInput : quantityInputs)
-    {
-      scan = scan || quantityInput.isScan();
+      scan = scan || partInput.isScan();
     }
 
     if (scan)
     {
-      calculateScan(profileName);
+//      calculateScan(PartInput);
       return;
     }
 
-    Map<PhysicalQuantity, Double> calculatedValues
-        = calculateForProfile(profileName);
-
-    for (QuantityOutput quantityOutput : quantityOutputs)
-    {
-      quantityOutput.removeFromFrame(frame);
-    }
-    quantityOutputs.clear();
 
     int outputRow = 0;
-    for (Map.Entry<PhysicalQuantity, Double> calculatedValue : calculatedValues.entrySet())
+    for (PartOutput partOutput : partOutputs)
     {
-      QuantityOutput output = new QuantityOutput(calculatedValue.getKey(), calculatedValue.getValue());
-      quantityOutputs.add(output);
-      output.addToFrameInRow(frame, rowAfterButton + outputRow);
-      outputRow++;
+      partOutput.removeFromFrameAndReset(frame);
+    }
+    partOutputs.clear();
+    for (PartInput partInput : partInputs)
+    {
+      PartOutput partOutput = new PartOutput(partInput.getBoatPart());
+      partOutputs.add(partOutput);
+      Map<PhysicalQuantity, Double> calculatedValues
+         = calculateForProfile(partInput.getProfileName(), partInput, partOutput);
+      for (Map.Entry<PhysicalQuantity, Double> calculatedValue : calculatedValues.entrySet())
+      {
+        QuantityOutput output = new QuantityOutput(calculatedValue.getKey(), calculatedValue.getValue());
+        partOutput.getQuantityOutputs().add(output);
+      }
+      outputRow += partOutput.addToFrameInRow(frame, rowAfterButton + outputRow);
     }
     frame.pack();
   }
 
-  public void calculateScan(String profileName)
+  public void calculateScan(PartInput partInput)
   {
     StringBuilder result = new StringBuilder();
 
     List<PhysicalQuantity> calculatedQuantities = new ArrayList<>();
-    if (profileName != null)
+    if (partInput.getProfileName() != null)
     {
-      calculateScan(profileName, calculatedQuantities, new HashMap<>(), quantityInputs, result);
+      calculateScan(partInput.getProfileName(), calculatedQuantities, new HashMap<>(), partInput.getQuantityInputs(), result);
     }
     else
     {
       for (String selectedProfileName : profileSelector.getProfileNames(PROFILE_DIRECTORY))
       {
-        calculateScan(selectedProfileName, calculatedQuantities, new HashMap<>(), quantityInputs, result);
+        calculateScan(selectedProfileName, calculatedQuantities, new HashMap<>(), partInput.getQuantityInputs(), result);
       }
     }
     StringBuilder headline = new StringBuilder("Profil;");
@@ -191,7 +166,12 @@ public class SwingGui
     }
   }
 
-  private void calculateScan(String profileName, List<PhysicalQuantity> calculatedQuantities, Map<PhysicalQuantity, Double> fixedQuantities, List<QuantityInput> toScan, StringBuilder result)
+  private void calculateScan(
+      String profileName,
+      List<PhysicalQuantity> calculatedQuantities,
+      Map<PhysicalQuantity, Double> fixedQuantities,
+      List<QuantityInput> toScan,
+      StringBuilder result)
   {
     if (toScan.size() == 0)
     {
@@ -247,13 +227,17 @@ public class SwingGui
   }
 
 
-  private Map<PhysicalQuantity, Double> calculateForProfile(String profileName)
+  private Map<PhysicalQuantity, Double> calculateForProfile(String profileName, PartInput input, PartOutput output)
   {
     Map<PhysicalQuantity, Double> knownQuantities = new HashMap<>();
     List<QuantityRelations> quantityRelationsList = new ArrayList<>();
-    for (QuantityInput quantityInput : quantityInputs)
+    for (QuantityInput quantityInput : input.getQuantityInputs())
     {
       knownQuantities.put(quantityInput.getQuantity(), quantityInput.getValue());
+    }
+    for (PhysicalQuantityValue quantityValue : input.getBoatPart().getFixedValues().getAsList())
+    {
+      knownQuantities.put(quantityValue.getPhysicalQuantity(), quantityValue.getValue());
     }
     if (profileName != null)
     {
