@@ -12,5 +12,5 @@ public class MaterialConstants
       = new FixedPhysicalQuantityValue(PhysicalQuantity.DENSITY, 1000d);
 
   public static final PhysicalQuantityValue DENSITY_AIR
-      = new FixedPhysicalQuantityValue(PhysicalQuantity.DENSITY, 15.2E-6d);
+      = new FixedPhysicalQuantityValue(PhysicalQuantity.DENSITY, 1.2041d);
 }
