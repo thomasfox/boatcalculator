@@ -123,15 +123,34 @@ public class SwingGui
       partOutput.removeFromFrameAndReset(frame);
     }
     partOutputs.clear();
+    boolean changed;
+    int cutoff = 100;
+
+    do
+    {
+      changed = false;
+      for (PartInput partInput : partInputs)
+      {
+        boolean partChanged = calculateForProfile(partInput.getProfileName(), partInput);
+        changed = changed || partChanged;
+      }
+      for (PartInput partInput : partInputs)
+      {
+        boolean partChanged = partInput.getValueSet().fillEqualities();
+        changed = changed || partChanged;
+      }
+      cutoff--;
+    }
+    while (changed && cutoff > 0);
+
+
     for (PartInput partInput : partInputs)
     {
       PartOutput partOutput = new PartOutput(partInput.getValueSet().getName());
       partOutputs.add(partOutput);
-      Map<PhysicalQuantity, Double> calculatedValues
-         = calculateForProfile(partInput.getProfileName(), partInput, partOutput);
-      for (Map.Entry<PhysicalQuantity, Double> calculatedValue : calculatedValues.entrySet())
+      for (PhysicalQuantityValue calculatedValue : partInput.getValueSet().getCalculatedValues().getAsList())
       {
-        QuantityOutput output = new QuantityOutput(calculatedValue.getKey(), calculatedValue.getValue());
+        QuantityOutput output = new QuantityOutput(calculatedValue.getPhysicalQuantity(), calculatedValue.getValue());
         partOutput.getQuantityOutputs().add(output);
       }
       outputRow += partOutput.addToFrameInRow(frame, rowAfterButton + outputRow);
@@ -194,7 +213,7 @@ public class SwingGui
 
       CombinedCalculator combinedCalculator = new CombinedCalculator(quantityRelationsList);
 
-      Map<PhysicalQuantity, Double> calculatedValues = combinedCalculator.calculate(knownQuantities);
+      Map<PhysicalQuantity, Double> calculatedValues = new HashMap<>();//combinedCalculator.calculate(knownQuantities);
       knownQuantities.putAll(calculatedValues);
       for (PhysicalQuantity physicalQuantity : knownQuantities.keySet())
       {
@@ -234,17 +253,16 @@ public class SwingGui
   }
 
 
-  private Map<PhysicalQuantity, Double> calculateForProfile(String profileName, PartInput input, PartOutput output)
+  private boolean calculateForProfile(String profileName, PartInput input)
   {
     Map<PhysicalQuantity, Double> knownQuantities = new HashMap<>();
     List<QuantityRelations> quantityRelationsList = new ArrayList<>();
     for (QuantityInput quantityInput : input.getQuantityInputs())
     {
-      knownQuantities.put(quantityInput.getQuantity(), quantityInput.getValue());
-    }
-    for (PhysicalQuantityValue quantityValue : input.getValueSet().getFixedValues().getAsList())
-    {
-      knownQuantities.put(quantityValue.getPhysicalQuantity(), quantityValue.getValue());
+      if (quantityInput.getValue() != null && !input.getValueSet().isValueKnown(quantityInput.getQuantity()))
+      {
+        input.getValueSet().setStartValueNoOverwrite(quantityInput.getQuantity(), quantityInput.getValue());
+      }
     }
     if (profileName != null)
     {
@@ -256,7 +274,6 @@ public class SwingGui
 
     CombinedCalculator combinedCalculator = new CombinedCalculator(quantityRelationsList);
 
-    Map<PhysicalQuantity, Double> calculatedValues = combinedCalculator.calculate(knownQuantities);
-    return calculatedValues;
+    return combinedCalculator.calculate(input.getValueSet());
   }
 }

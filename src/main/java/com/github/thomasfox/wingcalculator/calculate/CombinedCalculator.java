@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.github.thomasfox.wingcalculator.calculate.impl.ApparentWindDirectionCalculator;
+import com.github.thomasfox.wingcalculator.calculate.impl.ApparentWindSpeedCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.BendingCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.InducedResistanceCoefficientCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.LiftCoefficientCalculator;
@@ -40,19 +42,25 @@ public class CombinedCalculator
     calculators.add(new ThicknessCalculator());
     calculators.add(new WingDepthFromSecondMomentOfAreaCalculator());
     calculators.add(new ProfileDragCalculator());
+    calculators.add(new ApparentWindDirectionCalculator());
+    calculators.add(new ApparentWindSpeedCalculator());
 
     this.quantityRelationsList.addAll(quantityRelationsList);
   }
 
-  public Map<PhysicalQuantity, Double> calculate(Map<PhysicalQuantity, Double> input)
+  public boolean calculate(NamedValueSet store)
   {
-    boolean changed;
+    boolean changedOverall = false;
+    boolean changedInCurrentIteration;
     int cutoff = 100;
-    Map<PhysicalQuantity, Double> allKnownValues = new HashMap<>(input);
-    Map<PhysicalQuantity, Double> result = new HashMap<>();
+    Map<PhysicalQuantity, Double> allKnownValues = new HashMap<>();
+    for (PhysicalQuantityValue physicalQuantityValue : store.getKnownValues().getAsList())
+    {
+      allKnownValues.put(physicalQuantityValue.getPhysicalQuantity(), physicalQuantityValue.getValue());
+    }
     do
     {
-      changed = false;
+      changedInCurrentIteration = false;
       for (Calculator calculator: calculators)
       {
         if (!calculator.areNeededQuantitiesPresent(allKnownValues))
@@ -65,8 +73,9 @@ public class CombinedCalculator
         }
         double calculationResult = calculator.calculate(allKnownValues);
         allKnownValues.put(calculator.getOutputQuantity(), calculationResult);
-        result.put(calculator.getOutputQuantity(), calculationResult);
-        changed = true;
+        store.setCalculatedValueNoOverwrite(calculator.getOutputQuantity(), calculationResult);
+        changedInCurrentIteration = true;
+        changedOverall = true;
       }
 
       // from here use quantityRelationsList to calculate unknown values
@@ -102,14 +111,15 @@ public class CombinedCalculator
         if (interpolatedValue != null)
         {
           allKnownValues.put(entry.getKey(), interpolatedValue);
-          result.put(entry.getKey(), interpolatedValue);
-          changed = true;
+          store.setCalculatedValueNoOverwrite(entry.getKey(), interpolatedValue);
+          changedInCurrentIteration = true;
+          changedOverall = true;
         }
       }
       cutoff--;
     }
-    while(changed && cutoff > 0);
-    return result;
+    while(changedInCurrentIteration && cutoff > 0);
+    return changedOverall;
   }
 
   private Double getInterpolatedValueFor(PhysicalQuantity quantityToInterpolate, Double xValue, List<XYPoint> from)
@@ -282,7 +292,10 @@ public class CombinedCalculator
 
     if (fixedQuantitiesOccurances.size() != 1)
     {
-      System.out.println("Matching quantities for " + quantityRelationsList + " are " + fixedQuantitiesOccurances.size());
+      if (fixedQuantitiesOccurances.size() != 0)
+      {
+        System.out.println("Matching quantities for " + quantityRelationsList + " are " + fixedQuantitiesOccurances.size());
+      }
       return null;
     }
     return fixedQuantitiesOccurances.entrySet().iterator().next();

@@ -6,8 +6,10 @@ import java.util.List;
 
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.ToString;
 
 @NoArgsConstructor
+@ToString
 public class PhysicalQuantityValues
 {
   /**

@@ -3,6 +3,8 @@ package com.github.thomasfox.wingcalculator.calculate;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.github.thomasfox.wingcalculator.equality.QuantityEquality;
+
 import lombok.Data;
 
 @Data
@@ -16,13 +18,39 @@ public abstract class NamedValueSet
 
   private final PhysicalQuantityValues calculatedValues = new PhysicalQuantityValues();
 
+  private final Set<QuantityEquality> quantityEqualities = new HashSet<>();
+
   public PhysicalQuantityValues getKnownValues()
   {
-    PhysicalQuantityValues result = new PhysicalQuantityValues(calculatedValues);
+    PhysicalQuantityValues result = new PhysicalQuantityValues(fixedValues);
     result.setValuesFailOnOverwrite(startValues);
     result.setValuesFailOnOverwrite(calculatedValues);
     return result;
   }
+
+  public abstract String getName();
+
+  public boolean isValueKnown(PhysicalQuantity toCheck)
+  {
+    return getKnownValue(toCheck) != null;
+  }
+
+  public PhysicalQuantityValue getKnownValue(PhysicalQuantity toGet)
+  {
+    PhysicalQuantityValue result = fixedValues.getPhysicalQuantityValue(toGet);
+    if (result != null)
+    {
+      return result;
+    }
+    result = startValues.getPhysicalQuantityValue(toGet);
+    if (result != null)
+    {
+      return result;
+    }
+    result = calculatedValues.getPhysicalQuantityValue(toGet);
+    return result;
+  }
+
 
   public void setFixedValueNoOverwrite(PhysicalQuantityValue toSet)
   {
@@ -32,6 +60,11 @@ public abstract class NamedValueSet
   public void setStartValueNoOverwrite(PhysicalQuantity physicalQuantity, double value)
   {
     startValues.setValueNoOverwrite(physicalQuantity, value);
+  }
+
+  public void setCalculatedValueNoOverwrite(PhysicalQuantity physicalQuantity, double value)
+  {
+    calculatedValues.setValueNoOverwrite(physicalQuantity, value);
   }
 
   public Double getFixedValue(PhysicalQuantity physicalQuantity)
@@ -44,5 +77,23 @@ public abstract class NamedValueSet
     return startValues.getValue(physicalQuantity);
   }
 
-  public abstract String getName();
+  public boolean fillEqualities()
+  {
+    boolean changed = false;
+    for (QuantityEquality quantityEquality : quantityEqualities)
+    {
+      if (!isValueKnown(quantityEquality.getTargetQuantity()))
+      {
+        PhysicalQuantityValue knownValue
+            = quantityEquality.getSourceSet().getKnownValue(
+                quantityEquality.getSourceQuantity());
+        if (knownValue != null)
+        {
+          calculatedValues.setValueNoOverwrite(quantityEquality.getTargetQuantity(), knownValue.getValue());
+          changed = true;
+        }
+      }
+    }
+    return changed;
+  }
 }

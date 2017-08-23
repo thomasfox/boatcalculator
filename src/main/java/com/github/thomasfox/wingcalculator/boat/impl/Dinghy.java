@@ -22,10 +22,10 @@ public class Dinghy extends Boat
 
   public Dinghy()
   {
-    parts.add(hull);
-    parts.add(sail);
-    parts.add(crew);
-    parts.add(daggerboard);
-    parts.add(rudder);
+    addPart(hull);
+    addPart(sail);
+    addPart(crew);
+    addPart(daggerboard);
+    addPart(rudder);
   }
 }

@@ -17,6 +17,8 @@ public enum PhysicalQuantity
   WING_RELATIVE_THICKNESS("Relative Dicke des Flügels", null, "Dicke an der dicksten Stelle geteilt durch Profiltiefe"),
   VELOCITY("Geschwindigkeit", "m/s"),
   POINTING_ANGLE("Steuerkurs", "°", "Winkel zwischen Symmetrieachse des Bootes und Windrichtung"),
+  APPARENT_WIND_ANGLE("Scheinbare Windrichtung", "°", "Winkel zwischen Symmetrieachse des Bootes und Scheinbarer Windrichtung"),
+  APPARENT_WIND_SPEED("Scheinbarer Wind", "m/s"),
   WIND_SPEED("Windgeschwindigkeit", "m/s", "Das Wasser wird als ruhendes Bezugssystem genommen"),
   KINEMATIC_VISCOSITY("Kinematische Viskosität", "m^2/s"),
   DENSITY("Dichte", "kg/m^3"),
