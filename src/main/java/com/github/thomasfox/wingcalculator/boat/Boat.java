@@ -44,6 +44,7 @@ public abstract class Boat extends NamedValueSet
     if (part instanceof Sail)
     {
       part.getQuantityEqualities().add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, this, PhysicalQuantity.VELOCITY));
+      part.getQuantityEqualities().add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, this, PhysicalQuantity.FLOW_DIRECTION));
     }
   }
 }

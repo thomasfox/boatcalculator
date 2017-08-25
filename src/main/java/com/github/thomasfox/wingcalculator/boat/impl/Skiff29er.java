@@ -12,5 +12,8 @@ public class Skiff29er extends Dinghy
     daggerboard.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.32d);
     sail.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 6d); // rough estimate
     sail.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 2d); // rough estimate
+    sail.setStartValueNoOverwrite(PhysicalQuantity.LIFT_COEFFICIENT, 1.2); // rough estimate
+    sail.setStartValueNoOverwrite(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT, 0.15); // rough estimate
+    sail.setStartValueNoOverwrite(PhysicalQuantity.ANGLE_OF_ATTACK, 20); // rough estimate
   }
 }
