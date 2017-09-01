@@ -11,10 +11,11 @@ import java.util.Set;
 import com.github.thomasfox.wingcalculator.calculate.impl.ApparentWindDirectionCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.ApparentWindSpeedCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.BendingCalculator;
-import com.github.thomasfox.wingcalculator.calculate.impl.LeverFromWeightCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.DrivingForceCalculator;
-import com.github.thomasfox.wingcalculator.calculate.impl.InducedResistanceCoefficientCalculator;
+import com.github.thomasfox.wingcalculator.calculate.impl.InducedDragCalculator;
+import com.github.thomasfox.wingcalculator.calculate.impl.InducedDragCoefficientCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.LateralForceCalculator;
+import com.github.thomasfox.wingcalculator.calculate.impl.LeverFromWeightCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.LiftCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.LiftCoefficientCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.ProfileDragCalculator;
@@ -41,7 +42,8 @@ public class CombinedCalculator
   public CombinedCalculator(List<QuantityRelations> quantityRelationsList)
   {
     calculators.add(new ReynoldsNumberCalculator());
-    calculators.add(new InducedResistanceCoefficientCalculator());
+    calculators.add(new InducedDragCoefficientCalculator());
+    calculators.add(new InducedDragCalculator());
     calculators.add(new BendingCalculator());
     calculators.add(new SecondMomentOfAreaCalculator());
     calculators.add(new LiftCoefficientCalculator());

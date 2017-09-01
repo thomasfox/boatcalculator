@@ -9,9 +9,9 @@ import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
  * https://de.wikipedia.org/wiki/Induzierter_Luftwiderstand
  * Laut Hoerner Oswaldfaktor in der Größenordnung von 1 % -> wird vernachlaessigt
  */
-public class InducedResistanceCoefficientCalculator extends Calculator
+public class InducedDragCoefficientCalculator extends Calculator
 {
-  public InducedResistanceCoefficientCalculator()
+  public InducedDragCoefficientCalculator()
   {
     super(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT,
         PhysicalQuantity.WING_SPAN,
