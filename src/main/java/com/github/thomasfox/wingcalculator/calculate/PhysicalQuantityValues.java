@@ -96,4 +96,9 @@ public class PhysicalQuantityValues
   {
     return Collections.unmodifiableList(values);
   }
+
+  public void clear()
+  {
+    values.clear();
+  }
 }

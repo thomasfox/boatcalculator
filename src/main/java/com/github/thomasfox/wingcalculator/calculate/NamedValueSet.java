@@ -108,4 +108,10 @@ public class NamedValueSet
     }
     return changed;
   }
+
+  public void clearStartAndCalculatedValues()
+  {
+    startValues.clear();
+    calculatedValues.clear();
+  }
 }

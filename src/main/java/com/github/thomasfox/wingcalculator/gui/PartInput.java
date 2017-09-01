@@ -78,4 +78,10 @@ public class PartInput
     }
     return profileInput.getProfileName();
   }
+
+  @Override
+  public String toString()
+  {
+    return valueSet.getName();
+  }
 }

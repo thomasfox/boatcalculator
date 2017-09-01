@@ -137,6 +137,12 @@ public class SwingGui
     boolean changed;
     int cutoff = 100;
 
+    for (PartInput partInput : partInputs)
+    {
+      partInput.getValueSet().clearStartAndCalculatedValues();
+    }
+
+
     do
     {
       changed = false;
