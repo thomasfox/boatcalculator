@@ -22,7 +22,6 @@ import com.github.thomasfox.wingcalculator.calculate.NamedValueSet;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantityValue;
 import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
-import com.github.thomasfox.wingcalculator.part.BoatPart;
 import com.github.thomasfox.wingcalculator.profile.Profile;
 import com.github.thomasfox.wingcalculator.profile.ProfileSelector;
 
@@ -50,9 +49,9 @@ public class SwingGui
     frame.getContentPane().setLayout(new GridBagLayout());
 
     createPartInput(boat);
-    for (BoatPart part : boat.getParts())
+    for (NamedValueSet namedValueSet : boat.getNamedValueSets())
     {
-      createPartInput(part);
+      createPartInput(namedValueSet);
     }
 
     int row = 0;

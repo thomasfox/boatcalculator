@@ -3,9 +3,9 @@ package com.github.thomasfox.wingcalculator.part.impl;
 import com.github.thomasfox.wingcalculator.calculate.MaterialConstants;
 import com.github.thomasfox.wingcalculator.part.PartType;
 
-public class Daggerboard extends Wing
+public class DaggerboardOrKeel extends Wing
 {
-  public Daggerboard()
+  public DaggerboardOrKeel()
   {
     super(PartType.DAGGERBOARD);
     setFixedValueNoOverwrite(MaterialConstants.DENSITY_WATER);

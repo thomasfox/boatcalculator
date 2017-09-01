@@ -13,4 +13,7 @@ public class MaterialConstants
 
   public static final PhysicalQuantityValue DENSITY_AIR
       = new FixedPhysicalQuantityValue(PhysicalQuantity.DENSITY, 1.2041d);
+
+  public static final PhysicalQuantityValue GRAVITY_ACCELERATION
+      = new FixedPhysicalQuantityValue(PhysicalQuantity.GRAVITY_ACCELERATION, 9.81d);
 }

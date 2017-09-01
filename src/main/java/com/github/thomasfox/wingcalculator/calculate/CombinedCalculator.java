@@ -11,6 +11,7 @@ import java.util.Set;
 import com.github.thomasfox.wingcalculator.calculate.impl.ApparentWindDirectionCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.ApparentWindSpeedCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.BendingCalculator;
+import com.github.thomasfox.wingcalculator.calculate.impl.LeverFromWeightCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.DrivingForceCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.InducedResistanceCoefficientCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.LateralForceCalculator;
@@ -20,6 +21,7 @@ import com.github.thomasfox.wingcalculator.calculate.impl.ProfileDragCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.ReynoldsNumberCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.SecondMomentOfAreaCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.ThicknessCalculator;
+import com.github.thomasfox.wingcalculator.calculate.impl.TorqueCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.TotalDragCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.WingDepthFromSecondMomentOfAreaCalculator;
 import com.github.thomasfox.wingcalculator.interpolate.Interpolator;
@@ -52,6 +54,8 @@ public class CombinedCalculator
     calculators.add(new TotalDragCalculator());
     calculators.add(new LateralForceCalculator());
     calculators.add(new DrivingForceCalculator());
+    calculators.add(new TorqueCalculator());
+    calculators.add(new LeverFromWeightCalculator());
 
     this.quantityRelationsList.addAll(quantityRelationsList);
   }

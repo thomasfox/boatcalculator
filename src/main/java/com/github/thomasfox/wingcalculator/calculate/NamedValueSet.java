@@ -6,9 +6,15 @@ import java.util.Set;
 import com.github.thomasfox.wingcalculator.equality.QuantityEquality;
 
 import lombok.Data;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+/**
+ * A set of physical Quantities which also has a name.
+ */
 @Data
-public abstract class NamedValueSet
+@RequiredArgsConstructor
+public class NamedValueSet
 {
   protected final Set<PhysicalQuantity> toInput = new HashSet<>();
 
@@ -20,6 +26,9 @@ public abstract class NamedValueSet
 
   private final Set<QuantityEquality> quantityEqualities = new HashSet<>();
 
+  @NonNull
+  private final String name;
+
   public PhysicalQuantityValues getKnownValues()
   {
     PhysicalQuantityValues result = new PhysicalQuantityValues(fixedValues);
@@ -27,8 +36,6 @@ public abstract class NamedValueSet
     result.setValuesFailOnOverwrite(calculatedValues);
     return result;
   }
-
-  public abstract String getName();
 
   public boolean isValueKnown(PhysicalQuantity toCheck)
   {
@@ -75,6 +82,11 @@ public abstract class NamedValueSet
   public Double getStartValue(PhysicalQuantity physicalQuantity)
   {
     return startValues.getValue(physicalQuantity);
+  }
+
+  public void addToInput(PhysicalQuantity toAdd)
+  {
+    toInput.add(toAdd);
   }
 
   public boolean fillEqualities()
