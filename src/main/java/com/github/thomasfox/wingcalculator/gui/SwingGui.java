@@ -1,5 +1,6 @@
 package com.github.thomasfox.wingcalculator.gui;
 
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import com.github.thomasfox.wingcalculator.boat.Boat;
 import com.github.thomasfox.wingcalculator.boat.impl.Skiff29er;
@@ -29,7 +31,11 @@ public class SwingGui
 {
   public static final File PROFILE_DIRECTORY = new File("profiles");
 
-  JFrame frame = new JFrame("wingCalculator");
+  private final JFrame frame = new JFrame("wingCalculator");
+
+  private final JPanel inputPanel = new JPanel();
+
+  private final JPanel resultPanel = new JPanel();
 
   private final List<PartInput> partInputs = new ArrayList<>();
 
@@ -46,7 +52,13 @@ public class SwingGui
   public SwingGui()
   {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.getContentPane().setLayout(new GridBagLayout());
+    frame.getContentPane().setLayout(new FlowLayout());
+
+    inputPanel.setLayout(new GridBagLayout());
+    frame.add(inputPanel);
+
+    resultPanel.setLayout(new GridBagLayout());
+    frame.add(resultPanel);
 
     createPartInput(boat);
     for (NamedValueSet namedValueSet : boat.getNamedValueSets())
@@ -57,10 +69,10 @@ public class SwingGui
     int row = 0;
     for (PartInput partInput : partInputs)
     {
-     row += partInput.addToFrameInRow(frame, row);
+     row += partInput.addToContainerInRow(inputPanel, row);
     }
 
-    SwingHelper.addSeparatorToFrame(frame, row++, 5);
+    SwingHelper.addSeparatorToContainer(inputPanel, row++, 5);
 
     calculateButton = new JButton("Berechnen");
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
@@ -68,7 +80,7 @@ public class SwingGui
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = row;
     calculateButton.addActionListener(this::calculateButtonPressed);
-    frame.add(calculateButton, gridBagConstraints);
+    inputPanel.add(calculateButton, gridBagConstraints);
 
     row++;
 
@@ -119,7 +131,7 @@ public class SwingGui
     int outputRow = 0;
     for (PartOutput partOutput : partOutputs)
     {
-      partOutput.removeFromFrameAndReset(frame);
+      partOutput.removeFromContainerAndReset(resultPanel);
     }
     partOutputs.clear();
     boolean changed;
@@ -152,7 +164,7 @@ public class SwingGui
         QuantityOutput output = new QuantityOutput(calculatedValue.getPhysicalQuantity(), calculatedValue.getValue());
         partOutput.getQuantityOutputs().add(output);
       }
-      outputRow += partOutput.addToFrameInRow(frame, rowAfterButton + outputRow);
+      outputRow += partOutput.addToContainerInRow(resultPanel, rowAfterButton + outputRow);
     }
     frame.pack();
   }

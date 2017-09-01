@@ -1,5 +1,6 @@
 package com.github.thomasfox.wingcalculator.gui;
 
+import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.util.Iterator;
 
@@ -35,37 +36,37 @@ public class QuantityInput
     scanNumberOfStepsField.setText("20");
   }
 
-  public void addToFrameInRow(JFrame frame, int row)
+  public void addToContainerInRow(Container container, int row)
   {
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = row;
-    frame.add(label, gridBagConstraints);
+    container.add(label, gridBagConstraints);
 
     gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = row;
-    frame.add(fixedValueField, gridBagConstraints);
+    container.add(fixedValueField, gridBagConstraints);
 
     gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 2;
     gridBagConstraints.gridy = row;
-    frame.add(scanFromField, gridBagConstraints);
+    container.add(scanFromField, gridBagConstraints);
 
     gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 3;
     gridBagConstraints.gridy = row;
-    frame.add(scanToField, gridBagConstraints);
+    container.add(scanToField, gridBagConstraints);
 
     gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 4;
     gridBagConstraints.gridy = row;
-    frame.add(scanNumberOfStepsField, gridBagConstraints);
+    container.add(scanNumberOfStepsField, gridBagConstraints);
   }
 
   public void removeFromFrame(JFrame frame)

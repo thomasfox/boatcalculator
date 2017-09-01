@@ -1,27 +1,27 @@
 package com.github.thomasfox.wingcalculator.gui;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.GridBagConstraints;
 
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JSeparator;
 
 public class SwingHelper
 {
-  public static JLabel addLabelToFrame(String label, JFrame frame, int x, int y)
+  public static JLabel addLabelToContainer(String label, Container container, int x, int y)
   {
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = x;
     gridBagConstraints.gridy = y;
     JLabel labelComponent = new JLabel(label);
-    frame.add(labelComponent, gridBagConstraints);
+    container.add(labelComponent, gridBagConstraints);
     return labelComponent;
   }
 
 
-  public static JSeparator addSeparatorToFrame(JFrame frame, int rowOffset, int gridwidth)
+  public static JSeparator addSeparatorToContainer(Container container, int rowOffset, int gridwidth)
   {
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -31,7 +31,7 @@ public class SwingHelper
     gridBagConstraints.ipady = 5;
     JSeparator jSeparator = new JSeparator();
     jSeparator.setBackground(Color.BLACK);
-    frame.add(new JSeparator(), gridBagConstraints);
+    container.add(new JSeparator(), gridBagConstraints);
     return jSeparator;
   }
 

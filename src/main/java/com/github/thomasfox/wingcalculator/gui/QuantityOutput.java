@@ -1,8 +1,8 @@
 package com.github.thomasfox.wingcalculator.gui;
 
+import java.awt.Container;
 import java.awt.GridBagConstraints;
 
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
@@ -27,25 +27,25 @@ public class QuantityOutput
     label.setText(quantity.getDisplayNameIncludingUnit());
   }
 
-  public void addToFrameInRow(JFrame frame, int row)
+  public void addToContainerInRow(Container container, int row)
   {
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = row;
-    frame.add(label, gridBagConstraints);
+    container.add(label, gridBagConstraints);
 
     gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = row;
-    frame.add(valueLabel, gridBagConstraints);
+    container.add(valueLabel, gridBagConstraints);
   }
 
-  public void removeFromFrame(JFrame frame)
+  public void removeFromContainer(Container container)
   {
-    frame.remove(label);
-    frame.remove(valueLabel);
+    container.remove(label);
+    container.remove(valueLabel);
   }
 
   public Double getValue()

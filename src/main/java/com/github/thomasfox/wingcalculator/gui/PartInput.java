@@ -1,9 +1,8 @@
 package com.github.thomasfox.wingcalculator.gui;
 
+import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JFrame;
 
 import com.github.thomasfox.wingcalculator.calculate.NamedValueSet;
 import com.github.thomasfox.wingcalculator.part.impl.Wing;
@@ -29,7 +28,7 @@ public class PartInput
     quantityInputs.add(quantityInput);
   }
 
-  public int addToFrameInRow(JFrame frame, int rowOffset)
+  public int addToContainerInRow(Container container, int rowOffset)
   {
     if (quantityInputs.size() == 0)
     {
@@ -38,24 +37,24 @@ public class PartInput
     int internalOffset = 0;
     if (rowOffset != 0)
     {
-      SwingHelper.addSeparatorToFrame(frame, rowOffset + internalOffset++, 5);
+      SwingHelper.addSeparatorToContainer(container, rowOffset + internalOffset++, 5);
     }
-    SwingHelper.addLabelToFrame(valueSet.getName(), frame, 0, rowOffset + internalOffset++);
-    SwingHelper.addLabelToFrame(" ", frame, 0, rowOffset + internalOffset++);
-    SwingHelper.addLabelToFrame("Fester Wert", frame, 1, rowOffset + internalOffset);
-    SwingHelper.addLabelToFrame("Scan Von", frame, 2, rowOffset + internalOffset);
-    SwingHelper.addLabelToFrame("Scan Bis", frame, 3, rowOffset + internalOffset);
-    SwingHelper.addLabelToFrame("Schritte", frame, 4, rowOffset+ internalOffset++);
+    SwingHelper.addLabelToContainer(valueSet.getName(), container, 0, rowOffset + internalOffset++);
+    SwingHelper.addLabelToContainer(" ", container, 0, rowOffset + internalOffset++);
+    SwingHelper.addLabelToContainer("Fester Wert", container, 1, rowOffset + internalOffset);
+    SwingHelper.addLabelToContainer("Scan Von", container, 2, rowOffset + internalOffset);
+    SwingHelper.addLabelToContainer("Scan Bis", container, 3, rowOffset + internalOffset);
+    SwingHelper.addLabelToContainer("Schritte", container, 4, rowOffset+ internalOffset++);
     int row = 0;
     for (QuantityInput quantityInput : quantityInputs)
     {
-      quantityInput.addToFrameInRow(frame, rowOffset + internalOffset + row++);
+      quantityInput.addToContainerInRow(container, rowOffset + internalOffset + row++);
     }
     internalOffset += quantityInputs.size();
     if (valueSet instanceof Wing)
     {
       profileInput = new ProfileInput();
-      profileInput.addToFrame(frame, rowOffset + internalOffset++);
+      profileInput.addToContainer(container, rowOffset + internalOffset++);
     }
     return internalOffset;
   }

@@ -1,12 +1,12 @@
 package com.github.thomasfox.wingcalculator.gui;
 
+import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.util.List;
 import java.util.Objects;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 
 import com.github.thomasfox.wingcalculator.profile.ProfileSelector;
 
@@ -30,19 +30,19 @@ public class ProfileInput
     scanSelect = new JCheckBox("scan");
   }
 
-  public void addToFrame(JFrame frame, int row)
+  public void addToContainer(Container container, int row)
   {
-    SwingHelper.addLabelToFrame("Profil", frame, 0, row);
+    SwingHelper.addLabelToContainer("Profil", container, 0, row);
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = row;
-    frame.add(profileSelect, gridBagConstraints);
+    container.add(profileSelect, gridBagConstraints);
     gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 2;
     gridBagConstraints.gridy = row;
-    frame.add(scanSelect, gridBagConstraints);
+    container.add(scanSelect, gridBagConstraints);
   }
 
   public String getProfileName()

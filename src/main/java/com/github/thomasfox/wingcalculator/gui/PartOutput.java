@@ -1,9 +1,8 @@
 package com.github.thomasfox.wingcalculator.gui;
 
+import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JFrame;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -23,28 +22,28 @@ public class PartOutput
     quantityOutputs.add(quantityOutput);
   }
 
-  public void removeFromFrameAndReset(JFrame frame)
+  public void removeFromContainerAndReset(Container container)
   {
     for (QuantityOutput quantityOutput : quantityOutputs)
     {
-      quantityOutput.removeFromFrame(frame);
+      quantityOutput.removeFromContainer(container);
     }
     quantityOutputs.clear();
   }
 
-  public int addToFrameInRow(JFrame frame, int rowOffset)
+  public int addToContainerInRow(Container container, int rowOffset)
   {
     if (quantityOutputs.size() == 0)
     {
       return 0;
     }
-    SwingHelper.addSeparatorToFrame(frame, rowOffset, 5);
-    SwingHelper.addLabelToFrame(name, frame, 0, rowOffset + 1);
-    SwingHelper.addLabelToFrame(" ", frame, 0, rowOffset + 2);
+    SwingHelper.addSeparatorToContainer(container, rowOffset, 5);
+    SwingHelper.addLabelToContainer(name, container, 0, rowOffset + 1);
+    SwingHelper.addLabelToContainer(" ", container, 0, rowOffset + 2);
     int row = 0;
     for (QuantityOutput quantityOutput : quantityOutputs)
     {
-      quantityOutput.addToFrameInRow(frame, rowOffset + 3 + row++);
+      quantityOutput.addToContainerInRow(container, rowOffset + 3 + row++);
     }
     return 3 + quantityOutputs.size();
   }
