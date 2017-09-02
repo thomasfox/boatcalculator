@@ -3,7 +3,7 @@ package com.github.thomasfox.wingcalculator.boat.impl;
 import java.io.File;
 
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.wingcalculator.equality.QuantityEquality;
+import com.github.thomasfox.wingcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.wingcalculator.gui.SwingGui;
 import com.github.thomasfox.wingcalculator.interpolate.QuantityRelationsLoader;
 

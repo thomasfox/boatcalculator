@@ -6,7 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.github.thomasfox.wingcalculator.equality.QuantityEquality;
+import com.github.thomasfox.wingcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
 
 import lombok.Data;
@@ -100,17 +100,7 @@ public class NamedValueSet
     boolean changed = false;
     for (QuantityEquality quantityEquality : quantityEqualities)
     {
-      if (!isValueKnown(quantityEquality.getTargetQuantity()))
-      {
-        PhysicalQuantityValue knownValue
-            = quantityEquality.getSourceSet().getKnownValue(
-                quantityEquality.getSourceQuantity());
-        if (knownValue != null)
-        {
-          calculatedValues.setValueNoOverwrite(quantityEquality.getTargetQuantity(), knownValue.getValue());
-          changed = true;
-        }
-      }
+      changed = changed || quantityEquality.setValue(this);
     }
     return changed;
   }

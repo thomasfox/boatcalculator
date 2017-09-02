@@ -2,7 +2,7 @@ package com.github.thomasfox.wingcalculator.boat.impl;
 
 import com.github.thomasfox.wingcalculator.boat.Boat;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.wingcalculator.equality.QuantityEquality;
+import com.github.thomasfox.wingcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.wingcalculator.part.BoatPart;
 import com.github.thomasfox.wingcalculator.part.impl.Crew;
 

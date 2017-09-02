@@ -6,7 +6,7 @@ import java.util.Set;
 
 import com.github.thomasfox.wingcalculator.calculate.NamedValueSet;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.wingcalculator.equality.QuantityEquality;
+import com.github.thomasfox.wingcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.wingcalculator.part.BoatPart;
 import com.github.thomasfox.wingcalculator.part.impl.DaggerboardOrKeel;
 import com.github.thomasfox.wingcalculator.part.impl.Hull;
