@@ -156,7 +156,7 @@ public class QuantityRelations
   {
     for (PhysicalQuantityValue fixedQuantity : fixedQuantities.getAsList())
     {
-      Double knownValue = knownValues.get(fixedQuantity.getValue());
+      Double knownValue = knownValues.get(fixedQuantity.getPhysicalQuantity());
       if (knownValue == null || !knownValue.equals(fixedQuantity.getValue()))
       {
         return false;
@@ -195,5 +195,11 @@ public class QuantityRelations
       }
     }
     return result;
+  }
+
+  @Override
+  public String toString()
+  {
+    return name;
   }
 }
