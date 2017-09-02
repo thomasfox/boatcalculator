@@ -6,13 +6,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantityValues;
 
 public class QuantityRelationsLoader
 {
@@ -31,9 +29,9 @@ public class QuantityRelationsLoader
   public QuantityRelations load(Reader reader, String title)
   {
     BufferedReader bufferedReader = new BufferedReader(reader);
-    Map<PhysicalQuantity, Double> fixedQuantities;
+   PhysicalQuantityValues fixedQuantities;
     List<PhysicalQuantity> relatedQuantities;
-    List<Map<PhysicalQuantity, Double>> relatedQuantityValues;
+    List<PhysicalQuantityValues> relatedQuantityValues;
     try
     {
       fixedQuantities = readFixedQuantities(bufferedReader);
@@ -47,15 +45,14 @@ public class QuantityRelationsLoader
     QuantityRelations result = QuantityRelations.builder()
       .name(title)
       .fixedQuantities(fixedQuantities)
-      .relatedQuantities(new LinkedHashSet<>(relatedQuantities))
       .relatedQuantityValues(relatedQuantityValues)
       .build();
     return result;
   }
 
-  public Map<PhysicalQuantity, Double> readFixedQuantities(BufferedReader reader) throws IOException
+  public PhysicalQuantityValues readFixedQuantities(BufferedReader reader) throws IOException
   {
-    Map<PhysicalQuantity, Double> result = new HashMap<>();
+    PhysicalQuantityValues result = new PhysicalQuantityValues();
 
     String line = reader.readLine();
     while (!line.isEmpty())
@@ -63,7 +60,7 @@ public class QuantityRelationsLoader
       StringTokenizer stringTokenizer = new StringTokenizer(line);
       PhysicalQuantity quantity = parseTokenAsPhysicalQuantity(stringTokenizer);
       Double value = parseTokenAsDouble(stringTokenizer);
-      result.put(quantity, value);
+      result.setValueNoOverwrite(quantity, value);
       line = reader.readLine();
     }
     return result;
@@ -85,9 +82,12 @@ public class QuantityRelationsLoader
     return result;
   }
 
-  public List<Map<PhysicalQuantity, Double>> readRelatedQuantityValues(BufferedReader reader, List<PhysicalQuantity> quantities) throws IOException
+  public List<PhysicalQuantityValues> readRelatedQuantityValues(
+      BufferedReader reader,
+      List<PhysicalQuantity> quantities)
+          throws IOException
   {
-    List<Map<PhysicalQuantity, Double>> result = new ArrayList<>();
+    List<PhysicalQuantityValues> result = new ArrayList<>();
 
     do
     {
@@ -97,11 +97,11 @@ public class QuantityRelationsLoader
         break;
       }
       StringTokenizer valueLineTokenizer = new StringTokenizer(line);
-      Map<PhysicalQuantity, Double> parsedLine = new HashMap<>();
+      PhysicalQuantityValues parsedLine = new PhysicalQuantityValues();
       for (PhysicalQuantity quantity : quantities)
       {
         Double value = parseTokenAsDouble(valueLineTokenizer);
-        parsedLine.put(quantity, value);
+        parsedLine.setValueNoOverwrite(quantity, value);
       }
       result.add(parsedLine);
     }

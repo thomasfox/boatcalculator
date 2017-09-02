@@ -4,14 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantityValues;
 import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
 
 public class XfoilResultLoader
@@ -20,8 +17,8 @@ public class XfoilResultLoader
   {
     BufferedReader bufferedReader = new BufferedReader(reader);
     String title;
-    Map<PhysicalQuantity, Double> fixedQuantities;
-    List<Map<PhysicalQuantity, Double>> relatedQuantityValues;
+    PhysicalQuantityValues fixedQuantities;
+    List<PhysicalQuantityValues> relatedQuantityValues;
     try
     {
       readPrelude(bufferedReader);
@@ -36,11 +33,6 @@ public class XfoilResultLoader
     QuantityRelations result = QuantityRelations.builder()
       .name(title)
       .fixedQuantities(fixedQuantities)
-      .relatedQuantities(new LinkedHashSet<>(Arrays.asList(
-          new PhysicalQuantity[] {
-              PhysicalQuantity.ANGLE_OF_ATTACK,
-              PhysicalQuantity.LIFT_COEFFICIENT,
-              PhysicalQuantity.PROFILE_DRAG_COEFFICIENT})))
       .relatedQuantityValues(relatedQuantityValues)
       .build();
     return result;
@@ -81,9 +73,9 @@ public class XfoilResultLoader
     return result;
   }
 
-  public Map<PhysicalQuantity, Double> readFixedQuantities(BufferedReader reader) throws IOException
+  public PhysicalQuantityValues readFixedQuantities(BufferedReader reader) throws IOException
   {
-    Map<PhysicalQuantity, Double> result = new HashMap<>();
+    PhysicalQuantityValues result = new PhysicalQuantityValues();
 
     String line = reader.readLine();
     if (!line.contains("Reynolds number fixed"))
@@ -127,13 +119,13 @@ public class XfoilResultLoader
     line = line.substring("Re =".length()).trim();
     String reNumber = line.substring(0, line.indexOf("Ncrit ="));
     reNumber = reNumber.replace(" ", "");
-    result.put(PhysicalQuantity.REYNOLDS_NUMBER, Double.parseDouble(reNumber));
+    result.setValueNoOverwrite(PhysicalQuantity.REYNOLDS_NUMBER, Double.parseDouble(reNumber));
 
     line = line.substring(line.indexOf("Ncrit =")).trim();
     line = line.substring("Ncrit =".length()).trim();
     String ncritNumber = line;
     ncritNumber = ncritNumber.replace(" ", "");
-    result.put(PhysicalQuantity.NCRIT, Double.parseDouble(ncritNumber));
+    result.setValueNoOverwrite(PhysicalQuantity.NCRIT, Double.parseDouble(ncritNumber));
 
     line = reader.readLine();
     if (!line.trim().isEmpty())
@@ -143,9 +135,9 @@ public class XfoilResultLoader
     return result;
   }
 
-  public List<Map<PhysicalQuantity, Double>> readPolar(BufferedReader reader) throws IOException
+  public List<PhysicalQuantityValues> readPolar(BufferedReader reader) throws IOException
   {
-    List<Map<PhysicalQuantity, Double>> result = new ArrayList<>();
+    List<PhysicalQuantityValues> result = new ArrayList<>();
     String line = reader.readLine();
     if (line.trim().isEmpty())
     {
@@ -174,10 +166,10 @@ public class XfoilResultLoader
         break;
       }
       StringTokenizer valueLineTokenizer = new StringTokenizer(line);
-      Map<PhysicalQuantity, Double> parsedLine = new HashMap<>();
-      parsedLine.put(PhysicalQuantity.ANGLE_OF_ATTACK, parseTokenAsDouble(valueLineTokenizer));
-      parsedLine.put(PhysicalQuantity.LIFT_COEFFICIENT, parseTokenAsDouble(valueLineTokenizer));
-      parsedLine.put(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, parseTokenAsDouble(valueLineTokenizer));
+      PhysicalQuantityValues parsedLine = new PhysicalQuantityValues();
+      parsedLine.setValueNoOverwrite(PhysicalQuantity.ANGLE_OF_ATTACK, parseTokenAsDouble(valueLineTokenizer));
+      parsedLine.setValueNoOverwrite(PhysicalQuantity.LIFT_COEFFICIENT, parseTokenAsDouble(valueLineTokenizer));
+      parsedLine.setValueNoOverwrite(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, parseTokenAsDouble(valueLineTokenizer));
       parseTokenAsDouble(valueLineTokenizer); // ignore pressure drag coefficient
       parseTokenAsDouble(valueLineTokenizer); // ignore momentum coefficient
       parseTokenAsDouble(valueLineTokenizer); // ignore top transition

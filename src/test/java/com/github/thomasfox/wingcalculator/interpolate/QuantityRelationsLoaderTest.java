@@ -5,10 +5,10 @@ import static  org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.io.FileReader;
 
-import org.assertj.core.data.MapEntry;
 import org.junit.Test;
 
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantityValue;
 
 public class QuantityRelationsLoaderTest
 {
@@ -25,16 +25,16 @@ public class QuantityRelationsLoaderTest
     }
 
     // verify
-    assertThat(result.getFixedQuantities()).containsExactly(
-        MapEntry.entry(PhysicalQuantity.WEIGHT, 204d));
+    assertThat(result.getFixedQuantities().getAsList()).containsExactly(
+        new PhysicalQuantityValue(PhysicalQuantity.WEIGHT, 204d));
     assertThat(result.getRelatedQuantities()).containsExactly(PhysicalQuantity.VELOCITY, PhysicalQuantity.TOTAL_DRAG);
     assertThat(result.getRelatedQuantityValues()).hasSize(20);
-    assertThat(result.getRelatedQuantityValues().get(0)).containsOnly(
-        MapEntry.entry(PhysicalQuantity.VELOCITY, 0d),
-        MapEntry.entry(PhysicalQuantity.TOTAL_DRAG, 0d));
-    assertThat(result.getRelatedQuantityValues().get(19)).containsOnly(
-        MapEntry.entry(PhysicalQuantity.VELOCITY, 8.018428827d),
-        MapEntry.entry(PhysicalQuantity.TOTAL_DRAG, 444.822d));
+    assertThat(result.getRelatedQuantityValues().get(0).getAsList()).containsOnly(
+        new PhysicalQuantityValue(PhysicalQuantity.VELOCITY, 0d),
+        new PhysicalQuantityValue(PhysicalQuantity.TOTAL_DRAG, 0d));
+    assertThat(result.getRelatedQuantityValues().get(19).getAsList()).containsOnly(
+        new PhysicalQuantityValue(PhysicalQuantity.VELOCITY, 8.018428827d),
+        new PhysicalQuantityValue(PhysicalQuantity.TOTAL_DRAG, 444.822d));
   }
 
 }

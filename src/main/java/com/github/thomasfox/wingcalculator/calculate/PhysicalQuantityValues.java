@@ -2,7 +2,9 @@ package com.github.thomasfox.wingcalculator.calculate;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -95,6 +97,16 @@ public class PhysicalQuantityValues
   public List<PhysicalQuantityValue> getAsList()
   {
     return Collections.unmodifiableList(values);
+  }
+
+  public Set<PhysicalQuantity> getContainedQuantities()
+  {
+    Set<PhysicalQuantity> result = new LinkedHashSet<>();
+    for (PhysicalQuantityValue value : values)
+    {
+      result.add(value.getPhysicalQuantity());
+    }
+    return result;
   }
 
   public void clear()

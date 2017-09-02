@@ -220,7 +220,7 @@ public class CombinedCalculator
           interpolationValues.put(physicalQuantityValue.getPhysicalQuantity(), relatedQuantityInterpolationList);
         }
         relatedQuantityInterpolationList.add(new SimpleXYPoint(
-            quantityRelations.getFixedQuantities().get(quantityToInterpolate),
+            quantityRelations.getFixedQuantities().getValue(quantityToInterpolate),
             physicalQuantityValue.getValue()));
       }
     }
@@ -236,13 +236,12 @@ public class CombinedCalculator
       Map<PhysicalQuantity, Double> allKnownValues,
       QuantityRelations quantityRelations)
   {
-    Map<PhysicalQuantity, Double> fixedQuantities
-        = quantityRelations.getFixedQuantities();
+    PhysicalQuantityValues fixedQuantities = quantityRelations.getFixedQuantities();
     boolean okForInterpolation = true;
-    for (Map.Entry<PhysicalQuantity, Double> fixedQuantity : fixedQuantities.entrySet())
+    for (PhysicalQuantityValue fixedQuantity : fixedQuantities.getAsList())
     {
-      if (!fixedQuantity.getKey().equals(quantityToInterpolate)
-          && !fixedQuantity.getKey().getValueFromAvailableQuantities(allKnownValues).equals(fixedQuantity.getValue()))
+      if (!fixedQuantity.getPhysicalQuantity().equals(quantityToInterpolate)
+          && !fixedQuantity.getPhysicalQuantity().getValueFromAvailableQuantities(allKnownValues).equals(fixedQuantity.getValue()))
       {
         okForInterpolation = false;
         break;
@@ -273,21 +272,20 @@ public class CombinedCalculator
     Set<PhysicalQuantity> fixedQuantitiesWithMatches = new HashSet<>();
     for (QuantityRelations quantityRelations : quantityRelationsList)
     {
-      Map<PhysicalQuantity, Double> fixedQuantities
-          = quantityRelations.getFixedQuantities();
-      for (Map.Entry<PhysicalQuantity, Double> fixedQuantity : fixedQuantities.entrySet())
+      PhysicalQuantityValues fixedQuantities = quantityRelations.getFixedQuantities();
+      for (PhysicalQuantityValue fixedQuantity : fixedQuantities.getAsList())
       {
-        Set<Double> quantityValues = fixedQuantitiesOccurances.get(fixedQuantity.getKey());
+        Set<Double> quantityValues = fixedQuantitiesOccurances.get(fixedQuantity.getPhysicalQuantity());
         if (quantityValues == null)
         {
           quantityValues = new HashSet<>();
-          fixedQuantitiesOccurances.put(fixedQuantity.getKey(), quantityValues);
+          fixedQuantitiesOccurances.put(fixedQuantity.getPhysicalQuantity(), quantityValues);
         }
         quantityValues.add(fixedQuantity.getValue());
-        Double knownValue = fixedQuantity.getKey().getValueFromAvailableQuantities(allKnownValues);
+        Double knownValue = fixedQuantity.getPhysicalQuantity().getValueFromAvailableQuantities(allKnownValues);
         if (knownValue != null && knownValue.equals(fixedQuantity.getValue()))
         {
-          fixedQuantitiesWithMatches.add(fixedQuantity.getKey());
+          fixedQuantitiesWithMatches.add(fixedQuantity.getPhysicalQuantity());
         }
       }
     }

@@ -1,45 +1,89 @@
 package com.github.thomasfox.wingcalculator.interpolate;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantityValue;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantityValues;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 /**
  * Describes relations between multiple physical quantity along the line of
  * "if quantity a has value x, the quantity b has value y and quantity c has value z"
  */
-@Builder
-@Data
 public class QuantityRelations
 {
   @NonNull
+  @Getter
+  @Setter
   private String name;
 
   @NonNull
-  private Map<PhysicalQuantity, Double> fixedQuantities = new HashMap<>();
+  @Getter
+  private final PhysicalQuantityValues fixedQuantities;
 
   @NonNull
-  private Set<PhysicalQuantity> relatedQuantities = new LinkedHashSet<>();
-
-  @NonNull
-  private List<Map<PhysicalQuantity, Double>> relatedQuantityValues = new ArrayList<>();
+  private final List<PhysicalQuantityValues> relatedQuantityValues = new ArrayList<>();
 
   /**
    * The PhysicalQuantity of which the other Quantities are functions.
    * May be null.
    */
+  @Getter
   private final PhysicalQuantity keyQuantity;
+
+  @Builder
+  public QuantityRelations(
+      String name,
+      PhysicalQuantityValues fixedQuantities,
+      List<PhysicalQuantityValues> relatedQuantityValues,
+      PhysicalQuantity keyQuantity)
+  {
+    this.name = name;
+    this.fixedQuantities = new PhysicalQuantityValues(fixedQuantities);
+    for (PhysicalQuantityValues relatedQuantityValuesEntry : relatedQuantityValues)
+    {
+      addRelatedQuantityValuesEntry(relatedQuantityValuesEntry);
+    }
+    this.keyQuantity = keyQuantity;
+  }
+
+  public void addRelatedQuantityValuesEntry(PhysicalQuantityValues relatedQuantityValuesEntry)
+  {
+    if (!relatedQuantityValues.isEmpty() && !getRelatedQuantities().equals(relatedQuantityValuesEntry.getContainedQuantities()))
+    {
+      throw new IllegalArgumentException("The passed object contains non-mathcing Physical Quantities");
+    }
+    relatedQuantityValues.add(new PhysicalQuantityValues(relatedQuantityValuesEntry));
+  }
+
+  public List<PhysicalQuantityValues> getRelatedQuantityValues()
+  {
+    List<PhysicalQuantityValues> result = new ArrayList<>();
+    for (PhysicalQuantityValues entry : relatedQuantityValues)
+    {
+      result.add(new PhysicalQuantityValues(entry));
+    }
+    return result;
+  }
+
+  public Set<PhysicalQuantity> getRelatedQuantities()
+  {
+    if (relatedQuantityValues.isEmpty())
+    {
+      return Collections.unmodifiableSet(new HashSet<>());
+    }
+    return Collections.unmodifiableSet(relatedQuantityValues.get(0).getContainedQuantities());
+  }
 
   public Double interpolateValueFrom(
       PhysicalQuantity wantedQuantity,
@@ -47,14 +91,14 @@ public class QuantityRelations
       Double providedValue)
   {
     List<XYPoint> interpolationPoints = new ArrayList<>();
-    for (Map<PhysicalQuantity, Double> relatedValues : relatedQuantityValues)
+    for (PhysicalQuantityValues relatedValues : relatedQuantityValues)
     {
-      Double xValue = relatedValues.get(providedQuantity);
+      Double xValue = relatedValues.getValue(providedQuantity);
       if (xValue == null)
       {
         throw new InterpolatorException("Quantity " + providedQuantity + " not found");
       }
-      Double yValue = relatedValues.get(wantedQuantity);
+      Double yValue = relatedValues.getValue(wantedQuantity);
       if (yValue == null)
       {
         throw new InterpolatorException("Quantity " + wantedQuantity + " not found");
@@ -98,9 +142,9 @@ public class QuantityRelations
   public String printFixedQuantities()
   {
     StringBuilder result = new StringBuilder();
-    for (Map.Entry<PhysicalQuantity, Double> fixedQuantity : fixedQuantities.entrySet())
+    for (PhysicalQuantityValue fixedQuantity : fixedQuantities.getAsList())
     {
-      result.append(fixedQuantity.getKey().getDisplayNameIncludingUnit())
+      result.append(fixedQuantity.getPhysicalQuantity().getDisplayNameIncludingUnit())
       .append(" = ")
       .append(fixedQuantity.getValue())
       .append("   ");
@@ -110,9 +154,9 @@ public class QuantityRelations
 
   public boolean fixedQuantitiesMatch(Map<PhysicalQuantity, Double> knownValues)
   {
-    for (Map.Entry<PhysicalQuantity, Double> fixedQuantity : fixedQuantities.entrySet())
+    for (PhysicalQuantityValue fixedQuantity : fixedQuantities.getAsList())
     {
-      Double knownValue = knownValues.get(fixedQuantity.getKey());
+      Double knownValue = knownValues.get(fixedQuantity.getValue());
       if (knownValue == null || !knownValue.equals(fixedQuantity.getValue()))
       {
         return false;
@@ -124,6 +168,7 @@ public class QuantityRelations
   public Set<PhysicalQuantity> getAvailableQuantities(Map<PhysicalQuantity, Double> knownValues)
   {
     Set<PhysicalQuantity> result = new HashSet<>();
+    Set<PhysicalQuantity> relatedQuantities = getRelatedQuantities();
     for (PhysicalQuantity relatedQuantity : relatedQuantities)
     {
       if (!knownValues.keySet().contains(relatedQuantity))
@@ -142,7 +187,7 @@ public class QuantityRelations
   public Set<PhysicalQuantity> getKnownRelatedQuantities(Map<PhysicalQuantity, Double> knownValues)
   {
     Set<PhysicalQuantity> result = new HashSet<>();
-    for (PhysicalQuantity relatedQuantity : relatedQuantities)
+    for (PhysicalQuantity relatedQuantity : getRelatedQuantities())
     {
       if (knownValues.keySet().contains(relatedQuantity))
       {
