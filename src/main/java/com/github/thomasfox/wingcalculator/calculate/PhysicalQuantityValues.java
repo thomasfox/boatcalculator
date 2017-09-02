@@ -101,4 +101,9 @@ public class PhysicalQuantityValues
   {
     values.clear();
   }
+
+  public boolean isEmpty()
+  {
+    return values.isEmpty();
+  }
 }

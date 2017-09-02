@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantityValues;
 
 import lombok.Builder;
 import lombok.Data;
@@ -63,6 +64,37 @@ public class QuantityRelations
     return new Interpolator().interpolate(providedValue, interpolationPoints);
   }
 
+  public PhysicalQuantityValues getRelatedQuantityValues(Map<PhysicalQuantity, Double> knownValues)
+  {
+    PhysicalQuantityValues result = new PhysicalQuantityValues();
+    Set<PhysicalQuantity> availableQuantities = getAvailableQuantities(knownValues);
+    Set<PhysicalQuantity> providedQuantities = getKnownRelatedQuantities(knownValues);
+    if (!providedQuantities.isEmpty())
+    {
+      PhysicalQuantity providedQuantity = providedQuantities.iterator().next();
+      // TODO check that all other provided quantities match
+      for (PhysicalQuantity wantedQuantity : availableQuantities)
+      {
+        try
+        {
+          Double interpolatedValue = interpolateValueFrom(wantedQuantity, providedQuantity, knownValues.get(providedQuantity));
+          if (interpolatedValue != null)
+          {
+            result.setValueNoOverwrite(wantedQuantity, interpolatedValue);
+          }
+        }
+        catch (InterpolatorException e)
+        {
+          System.out.println("Could not calculate " + wantedQuantity.getDisplayName()
+          + " from quantityRelations " + name
+          + " with fixed quantities " + printFixedQuantities());
+        }
+      }
+    }
+    return result;
+  }
+
+
   public String printFixedQuantities()
   {
     StringBuilder result = new StringBuilder();
@@ -92,10 +124,6 @@ public class QuantityRelations
   public Set<PhysicalQuantity> getAvailableQuantities(Map<PhysicalQuantity, Double> knownValues)
   {
     Set<PhysicalQuantity> result = new HashSet<>();
-    if (!fixedQuantitiesMatch(knownValues))
-    {
-      return result;
-    }
     for (PhysicalQuantity relatedQuantity : relatedQuantities)
     {
       if (!knownValues.keySet().contains(relatedQuantity))
@@ -114,10 +142,6 @@ public class QuantityRelations
   public Set<PhysicalQuantity> getKnownRelatedQuantities(Map<PhysicalQuantity, Double> knownValues)
   {
     Set<PhysicalQuantity> result = new HashSet<>();
-    if (!fixedQuantitiesMatch(knownValues))
-    {
-      return result;
-    }
     for (PhysicalQuantity relatedQuantity : relatedQuantities)
     {
       if (knownValues.keySet().contains(relatedQuantity))

@@ -26,7 +26,6 @@ import com.github.thomasfox.wingcalculator.calculate.impl.TorqueCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.TotalDragCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.WingDepthFromSecondMomentOfAreaCalculator;
 import com.github.thomasfox.wingcalculator.interpolate.Interpolator;
-import com.github.thomasfox.wingcalculator.interpolate.InterpolatorException;
 import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.wingcalculator.interpolate.SimpleXYPoint;
 import com.github.thomasfox.wingcalculator.interpolate.XYPoint;
@@ -97,32 +96,18 @@ public class CombinedCalculator
       // all quantities match -> get related values
       for (QuantityRelations quantityRelations : quantityRelationsList)
       {
-        Set<PhysicalQuantity> availableQuantities = quantityRelations.getAvailableQuantities(allKnownValues);
-        Set<PhysicalQuantity> providedQuantities = quantityRelations.getKnownRelatedQuantities(allKnownValues);
-        if (!providedQuantities.isEmpty())
+        if (!quantityRelations.fixedQuantitiesMatch(allKnownValues))
         {
-          PhysicalQuantity providedQuantity = providedQuantities.iterator().next();
-          // TODO check that all other provided quantities match
-          for (PhysicalQuantity wantedQuantity : availableQuantities)
-          {
-            try
-            {
-              Double interpolatedValue = quantityRelations.interpolateValueFrom(wantedQuantity, providedQuantity, allKnownValues.get(providedQuantity));
-              if (interpolatedValue != null)
-              {
-                allKnownValues.put(wantedQuantity, interpolatedValue);
-                store.setCalculatedValueNoOverwrite(wantedQuantity, interpolatedValue);
-                changedInCurrentIteration = true;
-                changedOverall = true;
-              }
-            }
-            catch (InterpolatorException e)
-            {
-              System.out.println("Could not calculate " + wantedQuantity.getDisplayName()
-              + " from quantityRelations " + quantityRelations.getName()
-              + " with fixed quantities " + quantityRelations.printFixedQuantities());
-            }
-          }
+          continue;
+        }
+        PhysicalQuantityValues relatedQuantities
+            = quantityRelations.getRelatedQuantityValues(allKnownValues);
+        for (PhysicalQuantityValue physicalQuantityValue : relatedQuantities.getAsList())
+        {
+          allKnownValues.put(physicalQuantityValue.getPhysicalQuantity(), physicalQuantityValue.getValue());
+          store.setCalculatedValueNoOverwrite(physicalQuantityValue.getPhysicalQuantity(), physicalQuantityValue.getValue());
+          changedInCurrentIteration = true;
+          changedOverall = true;
         }
       }
 
@@ -224,38 +209,19 @@ public class CombinedCalculator
         continue;
       }
 
-      for (PhysicalQuantity keyQuantity : quantityRelations.getRelatedQuantities())
+      PhysicalQuantityValues relatedQuantities
+          = quantityRelations.getRelatedQuantityValues(allKnownValues);
+      for (PhysicalQuantityValue physicalQuantityValue : relatedQuantities.getAsList())
       {
-        Double knownKeyValue = keyQuantity.getValueFromAvailableQuantities(allKnownValues);
-        if (knownKeyValue != null)
+        List<XYPoint> relatedQuantityInterpolationList = interpolationValues.get(physicalQuantityValue.getPhysicalQuantity());
+        if (relatedQuantityInterpolationList == null)
         {
-          for (PhysicalQuantity relatedQuantity : quantityRelations.getRelatedQuantities())
-          {
-            Double knownRelatedValue = relatedQuantity.getValueFromAvailableQuantities(allKnownValues);
-            if (knownRelatedValue == null)
-            {
-              try
-              {
-                Double relatedValue = quantityRelations.interpolateValueFrom(relatedQuantity, keyQuantity, knownKeyValue);
-                List<XYPoint> relatedQuantityInterpolationList = interpolationValues.get(relatedQuantity);
-                if (relatedQuantityInterpolationList == null)
-                {
-                  relatedQuantityInterpolationList = new ArrayList<>();
-                  interpolationValues.put(relatedQuantity, relatedQuantityInterpolationList);
-                }
-                relatedQuantityInterpolationList.add(new SimpleXYPoint(
-                    quantityRelations.getFixedQuantities().get(quantityToInterpolate),
-                    relatedValue));
-              }
-              catch (InterpolatorException e)
-              {
-                System.out.println("Could not calculate " + relatedQuantity.getDisplayName()
-                + " from quantityRelations " + quantityRelations.getName()
-                + " with fixed quantities " + quantityRelations.printFixedQuantities());
-              }
-            }
-          }
+          relatedQuantityInterpolationList = new ArrayList<>();
+          interpolationValues.put(physicalQuantityValue.getPhysicalQuantity(), relatedQuantityInterpolationList);
         }
+        relatedQuantityInterpolationList.add(new SimpleXYPoint(
+            quantityRelations.getFixedQuantities().get(quantityToInterpolate),
+            physicalQuantityValue.getValue()));
       }
     }
     return interpolationValues;
