@@ -24,6 +24,7 @@ import com.github.thomasfox.wingcalculator.calculate.impl.SecondMomentOfAreaCalc
 import com.github.thomasfox.wingcalculator.calculate.impl.ThicknessCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.TorqueCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.TotalDragCalculator;
+import com.github.thomasfox.wingcalculator.calculate.impl.TotalDragCoefficientCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.WingDepthFromSecondMomentOfAreaCalculator;
 import com.github.thomasfox.wingcalculator.interpolate.Interpolator;
 import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
@@ -52,6 +53,7 @@ public class CombinedCalculator
     calculators.add(new ApparentWindDirectionCalculator());
     calculators.add(new ApparentWindSpeedCalculator());
     calculators.add(new LiftCalculator());
+    calculators.add(new TotalDragCoefficientCalculator());
     calculators.add(new TotalDragCalculator());
     calculators.add(new LateralForceCalculator());
     calculators.add(new DrivingForceCalculator());

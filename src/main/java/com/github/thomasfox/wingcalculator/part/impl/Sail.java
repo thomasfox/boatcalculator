@@ -12,6 +12,6 @@ public class Sail extends Wing
     setFixedValueNoOverwrite(MaterialConstants.DENSITY_AIR);
     setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_AIR);
     toInput.add(PhysicalQuantity.LIFT_COEFFICIENT);
-    toInput.add(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT);
+    toInput.add(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT);
   }
 }
