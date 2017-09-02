@@ -1,7 +1,6 @@
 package com.github.thomasfox.wingcalculator.boat;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -47,8 +46,8 @@ public abstract class Boat extends NamedValueSet
     sail.getQuantityEqualities().add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, this, PhysicalQuantity.FLOW_DIRECTION));
 
     toInput.add(PhysicalQuantity.VELOCITY);
-    toInput.add(PhysicalQuantity.POINTING_ANGLE);
     toInput.add(PhysicalQuantity.WIND_SPEED);
+    toInput.add(PhysicalQuantity.POINTING_ANGLE);
 
     leverSailDaggerboard.getQuantityEqualities().add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, sail, PhysicalQuantity.FORCE));
     leverSailDaggerboard.addToInput(PhysicalQuantity.LEVER_BETWEEN_FORCES);
@@ -62,7 +61,7 @@ public abstract class Boat extends NamedValueSet
 
   public Set<NamedValueSet> getNamedValueSets()
   {
-    Set<NamedValueSet> result = new HashSet<>();
+    Set<NamedValueSet> result = new LinkedHashSet<>();
     result.add(this);
     result.addAll(parts);
     result.addAll(qualifiedValues);
@@ -72,12 +71,5 @@ public abstract class Boat extends NamedValueSet
   public void addPart(BoatPart part)
   {
     parts.add(part);
-    if (part instanceof Rudder || part instanceof DaggerboardOrKeel)
-    {
-      part.getQuantityEqualities().add(new QuantityEquality(PhysicalQuantity.VELOCITY, this, PhysicalQuantity.VELOCITY));
-    }
-    if (part instanceof Sail)
-    {
-    }
   }
 }

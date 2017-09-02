@@ -1,6 +1,7 @@
 package com.github.thomasfox.wingcalculator.calculate;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.github.thomasfox.wingcalculator.equality.QuantityEquality;
@@ -16,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NamedValueSet
 {
-  protected final Set<PhysicalQuantity> toInput = new HashSet<>();
+  protected final Set<PhysicalQuantity> toInput = new LinkedHashSet<>();
 
   private final PhysicalQuantityValues fixedValues = new PhysicalQuantityValues();
 
