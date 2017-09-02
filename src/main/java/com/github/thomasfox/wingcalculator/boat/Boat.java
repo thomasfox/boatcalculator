@@ -63,6 +63,7 @@ public abstract class Boat extends NamedValueSet
   public Set<NamedValueSet> getNamedValueSets()
   {
     Set<NamedValueSet> result = new HashSet<>();
+    result.add(this);
     result.addAll(parts);
     result.addAll(qualifiedValues);
     return Collections.unmodifiableSet(result);

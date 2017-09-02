@@ -60,7 +60,6 @@ public class SwingGui
     resultPanel.setLayout(new GridBagLayout());
     frame.add(resultPanel);
 
-    createPartInput(boat);
     for (NamedValueSet namedValueSet : boat.getNamedValueSets())
     {
       createPartInput(namedValueSet);
