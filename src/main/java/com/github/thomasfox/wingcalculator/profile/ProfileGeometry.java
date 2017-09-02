@@ -10,7 +10,7 @@ import com.github.thomasfox.wingcalculator.interpolate.XYPoint;
 
 import lombok.NonNull;
 
-public class Profile
+public class ProfileGeometry
 {
   private final int CALCULATION_STEPS = 50;
 
@@ -18,7 +18,7 @@ public class Profile
 
   private final List<XYPoint> points;
 
-  public Profile(@NonNull String name, @NonNull List<XYPoint> points)
+  public ProfileGeometry(@NonNull String name, @NonNull List<XYPoint> points)
   {
     this.name = name;
     this.points = points;

@@ -115,4 +115,9 @@ public class NamedValueSet
     startValues.clear();
     calculatedValues.clear();
   }
+
+  public void clearCalculatedValues()
+  {
+    calculatedValues.clear();
+  }
 }

@@ -3,10 +3,10 @@ package com.github.thomasfox.wingcalculator.iterate;
 import java.io.File;
 import java.util.Iterator;
 
-import com.github.thomasfox.wingcalculator.profile.Profile;
+import com.github.thomasfox.wingcalculator.profile.ProfileGeometry;
 import com.github.thomasfox.wingcalculator.profile.ProfileSelector;
 
-public class ProfileIterator implements Iterator<Profile>
+public class ProfileIterator implements Iterator<ProfileGeometry>
 {
   private final ProfileSelector profileSelector = new ProfileSelector();
 
@@ -27,7 +27,7 @@ public class ProfileIterator implements Iterator<Profile>
   }
 
   @Override
-  public Profile next()
+  public ProfileGeometry next()
   {
     String profileName = profileNameIterator.next();
     return profileSelector.loadProfile(profileDirectory, profileName);

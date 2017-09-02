@@ -2,12 +2,15 @@ package com.github.thomasfox.wingcalculator.gui;
 
 import java.awt.Container;
 import java.awt.GridBagConstraints;
+import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 
+import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
+import com.github.thomasfox.wingcalculator.profile.ProfileGeometry;
 import com.github.thomasfox.wingcalculator.profile.ProfileSelector;
 
 public class ProfileInput
@@ -54,4 +57,15 @@ public class ProfileInput
   {
     return scanSelect.isSelected();
   }
+
+  public ProfileGeometry loadProfile(File directory, String name)
+  {
+    return profileSelector.loadProfile(directory, name);
+  }
+
+  public List<QuantityRelations> loadXfoilResults(File directory, String name)
+  {
+    return profileSelector.loadXfoilResults(directory, name);
+  }
+
 }

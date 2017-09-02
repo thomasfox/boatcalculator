@@ -5,13 +5,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,12 +14,9 @@ import javax.swing.JPanel;
 
 import com.github.thomasfox.wingcalculator.boat.Boat;
 import com.github.thomasfox.wingcalculator.boat.impl.Skiff29er;
-import com.github.thomasfox.wingcalculator.calculate.CombinedCalculator;
 import com.github.thomasfox.wingcalculator.calculate.NamedValueSet;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantityValue;
-import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
-import com.github.thomasfox.wingcalculator.profile.Profile;
 import com.github.thomasfox.wingcalculator.profile.ProfileSelector;
 
 public class SwingGui
@@ -141,13 +133,12 @@ public class SwingGui
       partInput.getValueSet().clearStartAndCalculatedValues();
     }
 
-
     do
     {
       changed = false;
       for (PartInput partInput : partInputs)
       {
-        boolean partChanged = calculateForProfile(partInput.getProfileName(), partInput);
+        boolean partChanged = partInput.calculate();
         changed = changed || partChanged;
       }
       for (PartInput partInput : partInputs)
@@ -172,124 +163,5 @@ public class SwingGui
       outputRow += partOutput.addToContainerInRow(resultPanel, rowAfterButton + outputRow);
     }
     frame.pack();
-  }
-
-  public void calculateScan(PartInput partInput)
-  {
-    StringBuilder result = new StringBuilder();
-
-    List<PhysicalQuantity> calculatedQuantities = new ArrayList<>();
-    if (partInput.getProfileName() != null)
-    {
-      calculateScan(partInput.getProfileName(), calculatedQuantities, new HashMap<>(), partInput.getQuantityInputs(), result);
-    }
-    else
-    {
-      for (String selectedProfileName : profileSelector.getProfileNames(PROFILE_DIRECTORY))
-      {
-        calculateScan(selectedProfileName, calculatedQuantities, new HashMap<>(), partInput.getQuantityInputs(), result);
-      }
-    }
-    StringBuilder headline = new StringBuilder("Profil;");
-    for (PhysicalQuantity calculatedQuantity : calculatedQuantities)
-    {
-      headline.append(calculatedQuantity.getDisplayNameIncludingUnit()).append(";");
-    }
-    headline.append("\r\n");
-
-    try (FileWriter resultsWriter = new FileWriter("results.csv"))
-    {
-      resultsWriter.append(headline);
-      resultsWriter.append(result.toString().replaceAll("\\.", ","));
-    }
-    catch (IOException e1)
-    {
-      e1.printStackTrace();
-    }
-  }
-
-  private void calculateScan(
-      String profileName,
-      List<PhysicalQuantity> calculatedQuantities,
-      Map<PhysicalQuantity, Double> fixedQuantities,
-      List<QuantityInput> toScan,
-      StringBuilder result)
-  {
-    if (toScan.size() == 0)
-    {
-      Map<PhysicalQuantity, Double> knownQuantities = new HashMap<>(fixedQuantities);
-      List<QuantityRelations> quantityRelationsList = new ArrayList<>();
-      if (profileName != null)
-      {
-        Profile profile = profileSelector.loadProfile(PROFILE_DIRECTORY, profileName);
-        knownQuantities.put(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA, profile.getSecondMomentOfArea());
-        knownQuantities.put(PhysicalQuantity.WING_RELATIVE_THICKNESS, profile.getThickness());
-        quantityRelationsList.addAll(profileSelector.loadXfoilResults(PROFILE_DIRECTORY, profileName));
-      }
-
-      CombinedCalculator combinedCalculator = new CombinedCalculator(quantityRelationsList);
-
-      Map<PhysicalQuantity, Double> calculatedValues = new HashMap<>();//combinedCalculator.calculate(knownQuantities);
-      knownQuantities.putAll(calculatedValues);
-      for (PhysicalQuantity physicalQuantity : knownQuantities.keySet())
-      {
-        if (!calculatedQuantities.contains(physicalQuantity))
-        {
-          calculatedQuantities.add(physicalQuantity);
-        }
-      }
-      result.append(profileName).append(";");
-      for (PhysicalQuantity physicalQuantity : calculatedQuantities)
-      {
-        result.append(knownQuantities.get(physicalQuantity)).append(";");
-      }
-      result.append("\r\n");
-      return;
-    }
-    QuantityInput quantityInput = toScan.get(0);
-    Iterator<Double> inputQuantityIterator = quantityInput.getIterator();
-    if (inputQuantityIterator == null)
-    {
-      calculateScan(profileName, calculatedQuantities, fixedQuantities, toScan.subList(1, toScan.size()), result);
-    }
-    else
-    {
-      while (inputQuantityIterator.hasNext())
-      {
-        Double knownValue = inputQuantityIterator.next();
-        Map<PhysicalQuantity, Double> newFixedQuantities = new HashMap<>(fixedQuantities);
-        newFixedQuantities.put(quantityInput.getQuantity(), knownValue);
-        if (!calculatedQuantities.contains(quantityInput.getQuantity()))
-        {
-          calculatedQuantities.add(quantityInput.getQuantity());
-        }
-        calculateScan(profileName, calculatedQuantities, newFixedQuantities, toScan.subList(1, toScan.size()), result);
-      }
-    }
-  }
-
-
-  private boolean calculateForProfile(String profileName, PartInput input)
-  {
-    Map<PhysicalQuantity, Double> knownQuantities = new HashMap<>();
-    List<QuantityRelations> quantityRelationsList = new ArrayList<>();
-    for (QuantityInput quantityInput : input.getQuantityInputs())
-    {
-      if (quantityInput.getValue() != null && !input.getValueSet().isValueKnown(quantityInput.getQuantity()))
-      {
-        input.getValueSet().setStartValueNoOverwrite(quantityInput.getQuantity(), quantityInput.getValue());
-      }
-    }
-    if (profileName != null)
-    {
-      Profile profile = profileSelector.loadProfile(PROFILE_DIRECTORY, profileName);
-      knownQuantities.put(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA, profile.getSecondMomentOfArea());
-      knownQuantities.put(PhysicalQuantity.WING_RELATIVE_THICKNESS, profile.getThickness());
-      quantityRelationsList.addAll(profileSelector.loadXfoilResults(PROFILE_DIRECTORY, profileName));
-    }
-
-    CombinedCalculator combinedCalculator = new CombinedCalculator(quantityRelationsList);
-
-    return combinedCalculator.calculate(input.getValueSet());
   }
 }

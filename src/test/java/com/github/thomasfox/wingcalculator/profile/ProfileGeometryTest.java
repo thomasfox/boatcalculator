@@ -11,11 +11,11 @@ import org.junit.Test;
 
 import com.github.thomasfox.wingcalculator.interpolate.XYPoint;
 
-public class ProfileTest
+public class ProfileGeometryTest
 {
   private final DatFileLoader datFileLoader = new DatFileLoader();
 
-  private Profile sut;
+  private ProfileGeometry sut;
 
   @Before
   public void before() throws Exception
@@ -24,7 +24,7 @@ public class ProfileTest
         = new InputStreamReader(getClass().getResourceAsStream("/test.dat"), "ISO-8859-1"))
     {
       List<XYPoint> xyPoints = datFileLoader.load(reader);
-      sut = new Profile("Test", xyPoints);
+      sut = new ProfileGeometry("Test", xyPoints);
     }
   }
 

@@ -27,11 +27,11 @@ public class ProfileSelector
     return result;
   }
 
-  public Profile loadProfile(File directory, String name)
+  public ProfileGeometry loadProfile(File directory, String name)
   {
     try (FileReader reader = new FileReader(new File(directory, name + ".dat")))
     {
-      return new Profile(name, datLoader.load(reader));
+      return new ProfileGeometry(name, datLoader.load(reader));
     }
     catch (IOException e)
     {

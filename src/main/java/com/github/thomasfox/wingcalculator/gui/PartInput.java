@@ -2,10 +2,16 @@ package com.github.thomasfox.wingcalculator.gui;
 
 import java.awt.Container;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.github.thomasfox.wingcalculator.calculate.CombinedCalculator;
 import com.github.thomasfox.wingcalculator.calculate.NamedValueSet;
+import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.wingcalculator.part.impl.Wing;
+import com.github.thomasfox.wingcalculator.profile.ProfileGeometry;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -77,6 +83,31 @@ public class PartInput
       return null;
     }
     return profileInput.getProfileName();
+  }
+
+  public boolean calculate()
+  {
+    Map<PhysicalQuantity, Double> knownQuantities = new HashMap<>();
+    List<QuantityRelations> quantityRelationsList = new ArrayList<>();
+    for (QuantityInput quantityInput : quantityInputs)
+    {
+      if (quantityInput.getValue() != null && !valueSet.isValueKnown(quantityInput.getQuantity()))
+      {
+        valueSet.setStartValueNoOverwrite(quantityInput.getQuantity(), quantityInput.getValue());
+      }
+    }
+    String profileName = getProfileName();
+    if (profileName != null)
+    {
+      ProfileGeometry profileGeometry = profileInput.loadProfile(SwingGui.PROFILE_DIRECTORY, profileName);
+      knownQuantities.put(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA, profileGeometry.getSecondMomentOfArea());
+      knownQuantities.put(PhysicalQuantity.WING_RELATIVE_THICKNESS, profileGeometry.getThickness());
+      quantityRelationsList.addAll(profileInput.loadXfoilResults(SwingGui.PROFILE_DIRECTORY, profileName));
+    }
+
+    CombinedCalculator combinedCalculator = new CombinedCalculator(quantityRelationsList);
+
+    return combinedCalculator.calculate(valueSet);
   }
 
   @Override
