@@ -162,7 +162,7 @@ public class XfoilResultLoader
     line = reader.readLine();
     if (!line.contains("-"))
     {
-      throw new IOException("12th line does not coontain -, is this an XFOIL result file ?");
+      throw new IOException("12th line does not contain -, is this an XFOIL result file ?");
     }
 
     do
