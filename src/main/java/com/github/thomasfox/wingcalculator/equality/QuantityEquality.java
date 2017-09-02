@@ -5,9 +5,11 @@ import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
+@ToString
 public class QuantityEquality
 {
   private final PhysicalQuantity sourceQuantity;

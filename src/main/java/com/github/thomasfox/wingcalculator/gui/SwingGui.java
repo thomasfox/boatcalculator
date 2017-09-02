@@ -17,11 +17,12 @@ import com.github.thomasfox.wingcalculator.boat.impl.Skiff29er;
 import com.github.thomasfox.wingcalculator.calculate.NamedValueSet;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantityValue;
-import com.github.thomasfox.wingcalculator.profile.ProfileSelector;
 
 public class SwingGui
 {
   public static final File PROFILE_DIRECTORY = new File("profiles");
+
+  public static final File HULL_DIRECTORY = new File("hulls");
 
   private final JFrame frame = new JFrame("wingCalculator");
 
@@ -34,8 +35,6 @@ public class SwingGui
   private final List<PartOutput> partOutputs = new ArrayList<>();
 
   private final JButton calculateButton;
-
-  private final ProfileSelector profileSelector = new ProfileSelector();
 
   private final int rowAfterButton;
 

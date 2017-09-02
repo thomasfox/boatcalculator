@@ -6,6 +6,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -35,11 +36,11 @@ public class XfoilResultLoader
     QuantityRelations result = QuantityRelations.builder()
       .name(title)
       .fixedQuantities(fixedQuantities)
-      .relatedQuantities(Arrays.asList(
+      .relatedQuantities(new LinkedHashSet<>(Arrays.asList(
           new PhysicalQuantity[] {
               PhysicalQuantity.ANGLE_OF_ATTACK,
               PhysicalQuantity.LIFT_COEFFICIENT,
-              PhysicalQuantity.PROFILE_DRAG_COEFFICIENT}))
+              PhysicalQuantity.PROFILE_DRAG_COEFFICIENT})))
       .relatedQuantityValues(relatedQuantityValues)
       .build();
     return result;

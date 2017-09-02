@@ -94,6 +94,39 @@ public class CombinedCalculator
 
       // from here use quantityRelationsList to calculate unknown values
 
+      // all quantities match -> get related values
+      for (QuantityRelations quantityRelations : quantityRelationsList)
+      {
+        Set<PhysicalQuantity> availableQuantities = quantityRelations.getAvailableQuantities(allKnownValues);
+        Set<PhysicalQuantity> providedQuantities = quantityRelations.getKnownRelatedQuantities(allKnownValues);
+        if (!providedQuantities.isEmpty())
+        {
+          PhysicalQuantity providedQuantity = providedQuantities.iterator().next();
+          // TODO check that all other provided quantities match
+          for (PhysicalQuantity wantedQuantity : availableQuantities)
+          {
+            try
+            {
+              Double interpolatedValue = quantityRelations.interpolateValueFrom(wantedQuantity, providedQuantity, allKnownValues.get(providedQuantity));
+              if (interpolatedValue != null)
+              {
+                allKnownValues.put(wantedQuantity, interpolatedValue);
+                store.setCalculatedValueNoOverwrite(wantedQuantity, interpolatedValue);
+                changedInCurrentIteration = true;
+                changedOverall = true;
+              }
+            }
+            catch (InterpolatorException e)
+            {
+              System.out.println("Could not calculate " + wantedQuantity.getDisplayName()
+              + " from quantityRelations " + quantityRelations.getName()
+              + " with fixed quantities " + quantityRelations.printFixedQuantities());
+            }
+          }
+        }
+      }
+
+      // one quantity does not match -> interpolate
       Entry<PhysicalQuantity, Set<Double>> singleNonmatchingFixedQuantityWithValues
           = getSingleNonmatchingQuantityWithValues(allKnownValues);
       if (singleNonmatchingFixedQuantityWithValues == null)

@@ -1,10 +1,13 @@
 package com.github.thomasfox.wingcalculator.calculate;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.github.thomasfox.wingcalculator.equality.QuantityEquality;
+import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
 
 import lombok.Data;
 import lombok.NonNull;
@@ -26,6 +29,8 @@ public class NamedValueSet
   private final PhysicalQuantityValues calculatedValues = new PhysicalQuantityValues();
 
   private final Set<QuantityEquality> quantityEqualities = new HashSet<>();
+
+  private final List<QuantityRelations> quantityRelations = new ArrayList<>();
 
   @NonNull
   private final String name;

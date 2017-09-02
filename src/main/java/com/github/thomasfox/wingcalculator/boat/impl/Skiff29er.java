@@ -1,6 +1,11 @@
 package com.github.thomasfox.wingcalculator.boat.impl;
 
+import java.io.File;
+
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.wingcalculator.equality.QuantityEquality;
+import com.github.thomasfox.wingcalculator.gui.SwingGui;
+import com.github.thomasfox.wingcalculator.interpolate.QuantityRelationsLoader;
 
 public class Skiff29er extends Dinghy
 {
@@ -17,5 +22,8 @@ public class Skiff29er extends Dinghy
     sail.setStartValueNoOverwrite(PhysicalQuantity.ANGLE_OF_ATTACK, 20); // rough estimate
     crew.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 80d); // single person
     leverSailDaggerboard.setStartValueNoOverwrite(PhysicalQuantity.LEVER_BETWEEN_FORCES, 4); // rough estimate
+    hull.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 204d);
+    hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "29er.txt"), "29er Hull"));
+    hull.getQuantityEqualities().add(new QuantityEquality(PhysicalQuantity.VELOCITY, this, PhysicalQuantity.VELOCITY));
   }
 }

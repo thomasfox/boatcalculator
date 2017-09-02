@@ -2,8 +2,11 @@ package com.github.thomasfox.wingcalculator.interpolate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
 
@@ -26,7 +29,7 @@ public class QuantityRelations
   private Map<PhysicalQuantity, Double> fixedQuantities = new HashMap<>();
 
   @NonNull
-  private List<PhysicalQuantity> relatedQuantities = new ArrayList<>();
+  private Set<PhysicalQuantity> relatedQuantities = new LinkedHashSet<>();
 
   @NonNull
   private List<Map<PhysicalQuantity, Double>> relatedQuantityValues = new ArrayList<>();
@@ -71,5 +74,57 @@ public class QuantityRelations
       .append("   ");
     }
     return result.toString();
+  }
+
+  public boolean fixedQuantitiesMatch(Map<PhysicalQuantity, Double> knownValues)
+  {
+    for (Map.Entry<PhysicalQuantity, Double> fixedQuantity : fixedQuantities.entrySet())
+    {
+      Double knownValue = knownValues.get(fixedQuantity.getKey());
+      if (knownValue == null || !knownValue.equals(fixedQuantity.getValue()))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public Set<PhysicalQuantity> getAvailableQuantities(Map<PhysicalQuantity, Double> knownValues)
+  {
+    Set<PhysicalQuantity> result = new HashSet<>();
+    if (!fixedQuantitiesMatch(knownValues))
+    {
+      return result;
+    }
+    for (PhysicalQuantity relatedQuantity : relatedQuantities)
+    {
+      if (!knownValues.keySet().contains(relatedQuantity))
+      {
+        result.add(relatedQuantity);
+      }
+    }
+    if (result.equals(relatedQuantities))
+    {
+      // no related value is known
+      return new HashSet<>();
+    }
+    return result;
+  }
+
+  public Set<PhysicalQuantity> getKnownRelatedQuantities(Map<PhysicalQuantity, Double> knownValues)
+  {
+    Set<PhysicalQuantity> result = new HashSet<>();
+    if (!fixedQuantitiesMatch(knownValues))
+    {
+      return result;
+    }
+    for (PhysicalQuantity relatedQuantity : relatedQuantities)
+    {
+      if (knownValues.keySet().contains(relatedQuantity))
+      {
+        result.add(relatedQuantity);
+      }
+    }
+    return result;
   }
 }

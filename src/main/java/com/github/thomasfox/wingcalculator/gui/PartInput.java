@@ -88,7 +88,7 @@ public class PartInput
   public boolean calculate()
   {
     Map<PhysicalQuantity, Double> knownQuantities = new HashMap<>();
-    List<QuantityRelations> quantityRelationsList = new ArrayList<>();
+    List<QuantityRelations> quantityRelationsList = new ArrayList<>(valueSet.getQuantityRelations());
     for (QuantityInput quantityInput : quantityInputs)
     {
       if (quantityInput.getValue() != null && !valueSet.isValueKnown(quantityInput.getQuantity()))

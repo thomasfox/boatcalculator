@@ -1,10 +1,13 @@
 package com.github.thomasfox.wingcalculator.interpolate;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -13,6 +16,18 @@ import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
 
 public class QuantityRelationsLoader
 {
+  public QuantityRelations load(File file, String title)
+  {
+    try (FileReader reader = new FileReader(file))
+    {
+      return load(reader, title);
+    }
+    catch (IOException e)
+    {
+      throw new RuntimeException(e);
+    }
+  }
+
   public QuantityRelations load(Reader reader, String title)
   {
     BufferedReader bufferedReader = new BufferedReader(reader);
@@ -32,7 +47,7 @@ public class QuantityRelationsLoader
     QuantityRelations result = QuantityRelations.builder()
       .name(title)
       .fixedQuantities(fixedQuantities)
-      .relatedQuantities(relatedQuantities)
+      .relatedQuantities(new LinkedHashSet<>(relatedQuantities))
       .relatedQuantityValues(relatedQuantityValues)
       .build();
     return result;
