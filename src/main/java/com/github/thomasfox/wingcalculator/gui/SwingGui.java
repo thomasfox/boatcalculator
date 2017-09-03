@@ -142,7 +142,7 @@ public class SwingGui
       }
       for (PartInput partInput : partInputs)
       {
-        boolean partChanged = partInput.getValueSet().fillEqualities();
+        boolean partChanged = partInput.getValueSet().applyComputationStrategies();
         changed = changed || partChanged;
       }
       cutoff--;

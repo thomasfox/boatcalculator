@@ -38,18 +38,18 @@ public abstract class Boat extends NamedValueSet
     addPart(daggerboardOrKeel);
     addPart(rudder);
 
-    rudder.getQuantityEqualities().add(new QuantityEquality(PhysicalQuantity.VELOCITY, this, PhysicalQuantity.VELOCITY));
-    daggerboardOrKeel.getQuantityEqualities().add(new QuantityEquality(PhysicalQuantity.VELOCITY, this, PhysicalQuantity.VELOCITY));
-    daggerboardOrKeel.getQuantityEqualities().add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, sail, PhysicalQuantity.LIFT)); // assumption: rudder has no force
-    sail.getQuantityEqualities().add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, this, PhysicalQuantity.VELOCITY));
-    sail.getQuantityEqualities().add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, this, PhysicalQuantity.FLOW_DIRECTION));
-    sail.getQuantityEqualities().add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, this, PhysicalQuantity.FLOW_DIRECTION));
+    rudder.addComputationStrategy(new QuantityEquality(PhysicalQuantity.VELOCITY, this, PhysicalQuantity.VELOCITY));
+    daggerboardOrKeel.addComputationStrategy(new QuantityEquality(PhysicalQuantity.VELOCITY, this, PhysicalQuantity.VELOCITY));
+    daggerboardOrKeel.addComputationStrategy(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, sail, PhysicalQuantity.LIFT)); // assumption: rudder has no force
+    sail.addComputationStrategy(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, this, PhysicalQuantity.VELOCITY));
+    sail.addComputationStrategy(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, this, PhysicalQuantity.FLOW_DIRECTION));
+    sail.addComputationStrategy(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, this, PhysicalQuantity.FLOW_DIRECTION));
 
     toInput.add(PhysicalQuantity.VELOCITY);
     toInput.add(PhysicalQuantity.WIND_SPEED);
     toInput.add(PhysicalQuantity.POINTING_ANGLE);
 
-    leverSailDaggerboard.getQuantityEqualities().add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, sail, PhysicalQuantity.FORCE));
+    leverSailDaggerboard.getComputationStrategies().add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, sail, PhysicalQuantity.FORCE));
     leverSailDaggerboard.addToInput(PhysicalQuantity.LEVER_BETWEEN_FORCES);
     qualifiedValues.add(leverSailDaggerboard);
   }

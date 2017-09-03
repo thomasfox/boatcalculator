@@ -24,6 +24,6 @@ public class Skiff29er extends Dinghy
     leverSailDaggerboard.setStartValueNoOverwrite(PhysicalQuantity.LEVER_BETWEEN_FORCES, 4); // rough estimate
     hull.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 204d);
     hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "29er.txt"), "29er Hull"));
-    hull.getQuantityEqualities().add(new QuantityEquality(PhysicalQuantity.VELOCITY, this, PhysicalQuantity.VELOCITY));
+    hull.addComputationStrategy(new QuantityEquality(PhysicalQuantity.VELOCITY, this, PhysicalQuantity.VELOCITY));
   }
 }

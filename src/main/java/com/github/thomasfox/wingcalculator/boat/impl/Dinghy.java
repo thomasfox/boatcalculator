@@ -14,6 +14,6 @@ public class Dinghy extends Boat
   public Dinghy()
   {
     addPart(crew);
-    crew.getQuantityEqualities().add(new QuantityEquality(PhysicalQuantity.TORQUE_BETWEEN_FORCES, leverSailDaggerboard, PhysicalQuantity.TORQUE_BETWEEN_FORCES));
+    crew.addComputationStrategy(new QuantityEquality(PhysicalQuantity.TORQUE_BETWEEN_FORCES, leverSailDaggerboard, PhysicalQuantity.TORQUE_BETWEEN_FORCES));
   }
 }

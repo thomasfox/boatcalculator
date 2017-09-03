@@ -6,7 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.github.thomasfox.wingcalculator.calculate.strategy.QuantityEquality;
+import com.github.thomasfox.wingcalculator.calculate.strategy.ComputationStrategy;
 import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
 
 import lombok.Data;
@@ -28,7 +28,7 @@ public class NamedValueSet
 
   private final PhysicalQuantityValues calculatedValues = new PhysicalQuantityValues();
 
-  private final Set<QuantityEquality> quantityEqualities = new HashSet<>();
+  private final Set<ComputationStrategy> computationStrategies = new HashSet<>();
 
   private final List<QuantityRelations> quantityRelations = new ArrayList<>();
 
@@ -95,12 +95,17 @@ public class NamedValueSet
     toInput.add(toAdd);
   }
 
-  public boolean fillEqualities()
+  public void addComputationStrategy(ComputationStrategy computationStrategy)
+  {
+    computationStrategies.add(computationStrategy);
+  }
+
+  public boolean applyComputationStrategies()
   {
     boolean changed = false;
-    for (QuantityEquality quantityEquality : quantityEqualities)
+    for (ComputationStrategy computationStrategy : computationStrategies)
     {
-      changed = changed || quantityEquality.setValue(this);
+      changed = changed || computationStrategy.setValue(this);
     }
     return changed;
   }
