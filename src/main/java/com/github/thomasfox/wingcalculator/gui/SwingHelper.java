@@ -1,6 +1,5 @@
 package com.github.thomasfox.wingcalculator.gui;
 
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 
@@ -30,8 +29,8 @@ public class SwingHelper
     gridBagConstraints.gridy = rowOffset;
     gridBagConstraints.ipady = 5;
     JSeparator jSeparator = new JSeparator();
-    jSeparator.setBackground(Color.BLACK);
-    container.add(new JSeparator(), gridBagConstraints);
+//    jSeparator.setBackground(Color.BLACK);
+    container.add(jSeparator, gridBagConstraints);
     return jSeparator;
   }
 

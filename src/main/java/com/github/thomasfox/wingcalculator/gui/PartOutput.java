@@ -1,5 +1,6 @@
 package com.github.thomasfox.wingcalculator.gui;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,8 @@ public class PartOutput
   @Getter
   private final List<QuantityOutput> quantityOutputs = new ArrayList<>();
 
+  private final List<Component> additionalComponents = new ArrayList<>();
+
   public void add(QuantityOutput quantityOutput)
   {
     quantityOutputs.add(quantityOutput);
@@ -24,6 +27,11 @@ public class PartOutput
 
   public void removeFromContainerAndReset(Container container)
   {
+    for (Component additionalComponent : additionalComponents)
+    {
+      container.remove(additionalComponent);
+    }
+    additionalComponents.clear();
     for (QuantityOutput quantityOutput : quantityOutputs)
     {
       quantityOutput.removeFromContainer(container);
@@ -37,9 +45,9 @@ public class PartOutput
     {
       return 0;
     }
-    SwingHelper.addSeparatorToContainer(container, rowOffset, 5);
-    SwingHelper.addLabelToContainer(name, container, 0, rowOffset + 1);
-    SwingHelper.addLabelToContainer(" ", container, 0, rowOffset + 2);
+    additionalComponents.add(SwingHelper.addSeparatorToContainer(container, rowOffset, 5));
+    additionalComponents.add(SwingHelper.addLabelToContainer(name, container, 0, rowOffset + 1));
+    additionalComponents.add(SwingHelper.addLabelToContainer(" ", container, 0, rowOffset + 2));
     int row = 0;
     for (QuantityOutput quantityOutput : quantityOutputs)
     {
