@@ -131,7 +131,7 @@ public class SwingGui
       partInput.applyProfile();
     }
 
-    boat.calculate();
+    boat.calculate(null);
 
     for (PartInput partInput : partInputs)
     {

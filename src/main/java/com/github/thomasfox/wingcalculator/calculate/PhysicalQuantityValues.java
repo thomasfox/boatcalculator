@@ -29,11 +29,19 @@ public class PhysicalQuantityValues
     }
   }
 
-  public void setValuesFailOnOverwrite(PhysicalQuantityValues toSet)
+  public void setValuesFailOnOverwrite(@NonNull PhysicalQuantityValues toSet)
   {
     for (PhysicalQuantityValue valueToCopy : toSet.values)
     {
       setValueNoOverwrite(valueToCopy);
+    }
+  }
+
+  public void setValues(@NonNull PhysicalQuantityValues toSet)
+  {
+    for (PhysicalQuantityValue valueToCopy : toSet.values)
+    {
+      setValue(valueToCopy);
     }
   }
 

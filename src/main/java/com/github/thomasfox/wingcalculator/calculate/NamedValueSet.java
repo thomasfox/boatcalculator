@@ -123,12 +123,15 @@ public class NamedValueSet
     computationStrategies.add(computationStrategy);
   }
 
-  public boolean applyComputationStrategies()
+  public boolean applyComputationStrategies(ComputationStrategy strategyToOmit)
   {
     boolean changed = false;
     for (ComputationStrategy computationStrategy : computationStrategies)
     {
-      changed = changed || computationStrategy.setValue(this);
+      if (computationStrategy != strategyToOmit)
+      {
+        changed = changed || computationStrategy.setValue(this);
+      }
     }
     return changed;
   }
@@ -154,12 +157,12 @@ public class NamedValueSet
     startValues.clear();
   }
 
-  public boolean calculateSinglePass()
+  public boolean calculateSinglePass(ComputationStrategy strategyToOmit)
   {
     CombinedCalculator combinedCalculator = new CombinedCalculator(quantityRelations);
 
     boolean changedByCalculator = combinedCalculator.calculate(this);
-    boolean changedByComputationStrategies = applyComputationStrategies();
+    boolean changedByComputationStrategies = applyComputationStrategies(strategyToOmit);
     return changedByCalculator || changedByComputationStrategies;
   }
 }

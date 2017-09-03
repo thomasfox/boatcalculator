@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.wingcalculator.calculate.strategy.QuantityEquality;
+import com.github.thomasfox.wingcalculator.calculate.strategy.UpperLimitStrategy;
 import com.github.thomasfox.wingcalculator.gui.SwingGui;
 import com.github.thomasfox.wingcalculator.interpolate.QuantityRelationsLoader;
 
@@ -20,6 +21,7 @@ public class Skiff29er extends Dinghy
     sail.setStartValueNoOverwrite(PhysicalQuantity.LIFT_COEFFICIENT, 1.2); // rough estimate
     sail.setStartValueNoOverwrite(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, 0.03); // rough estimate
     sail.setStartValueNoOverwrite(PhysicalQuantity.ANGLE_OF_ATTACK, 20); // rough estimate
+    sail.addComputationStrategy(new UpperLimitStrategy(PhysicalQuantity.LEVER_WEIGHT, crew, 1.8, PhysicalQuantity.LIFT_COEFFICIENT, this)); // 1.8m: single person, CoG 91.5 cm from rim in trapeze
     crew.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 80d); // single person
     leverSailDaggerboard.setStartValueNoOverwrite(PhysicalQuantity.LEVER_BETWEEN_FORCES, 4); // rough estimate
     hull.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 204d);

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.github.thomasfox.wingcalculator.calculate.NamedValueSet;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.wingcalculator.calculate.strategy.ComputationStrategy;
 import com.github.thomasfox.wingcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.wingcalculator.part.BoatPart;
 import com.github.thomasfox.wingcalculator.part.impl.DaggerboardOrKeel;
@@ -73,7 +74,7 @@ public abstract class Boat extends NamedValueSet
     parts.add(part);
   }
 
-  public void calculate()
+  public void calculate(ComputationStrategy strategyToOmit)
   {
     boolean changed;
     int cutoff = 100;
@@ -82,7 +83,7 @@ public abstract class Boat extends NamedValueSet
       changed = false;
       for (NamedValueSet namedValueSet : getNamedValueSets())
       {
-        boolean partChanged = namedValueSet.calculateSinglePass();
+        boolean partChanged = namedValueSet.calculateSinglePass(strategyToOmit);
         changed = changed || partChanged;
       }
       cutoff--;
