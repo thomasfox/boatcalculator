@@ -37,9 +37,9 @@ public class NamedValueSet
 
   public PhysicalQuantityValues getKnownValues()
   {
-    PhysicalQuantityValues result = new PhysicalQuantityValues(fixedValues);
-    result.setValuesFailOnOverwrite(startValues);
-    result.setValuesFailOnOverwrite(calculatedValues);
+    PhysicalQuantityValues result = new PhysicalQuantityValues(startValues);
+    result.setValues(calculatedValues);
+    result.setValues(fixedValues);
     return result;
   }
 
