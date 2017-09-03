@@ -148,4 +148,18 @@ public class NamedValueSet
   {
     return calculatedValues.remove(toClear);
   }
+
+  public void clearStartValues()
+  {
+    startValues.clear();
+  }
+
+  public boolean calculateSinglePass()
+  {
+    CombinedCalculator combinedCalculator = new CombinedCalculator(quantityRelations);
+
+    boolean changedByCalculator = combinedCalculator.calculate(this);
+    boolean changedByComputationStrategies = applyComputationStrategies();
+    return changedByCalculator || changedByComputationStrategies;
+  }
 }

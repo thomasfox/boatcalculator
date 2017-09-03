@@ -72,4 +72,21 @@ public abstract class Boat extends NamedValueSet
   {
     parts.add(part);
   }
+
+  public void calculate()
+  {
+    boolean changed;
+    int cutoff = 100;
+    do
+    {
+      changed = false;
+      for (NamedValueSet namedValueSet : getNamedValueSets())
+      {
+        boolean partChanged = namedValueSet.calculateSinglePass();
+        changed = changed || partChanged;
+      }
+      cutoff--;
+    }
+    while (changed && cutoff > 0);
+  }
 }

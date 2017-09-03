@@ -2,11 +2,8 @@ package com.github.thomasfox.wingcalculator.gui;
 
 import java.awt.Container;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.github.thomasfox.wingcalculator.calculate.CombinedCalculator;
 import com.github.thomasfox.wingcalculator.calculate.NamedValueSet;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
@@ -26,6 +23,8 @@ public class PartInput
 
   @Getter
   private final List<QuantityInput> quantityInputs = new ArrayList<>();
+
+  private List<QuantityRelations> originalQuantityRelationsList;
 
   private ProfileInput profileInput;
 
@@ -85,10 +84,9 @@ public class PartInput
     return profileInput.getProfileName();
   }
 
-  public boolean calculate()
+  public void applyStartValues()
   {
-    Map<PhysicalQuantity, Double> knownQuantities = new HashMap<>();
-    List<QuantityRelations> quantityRelationsList = new ArrayList<>(valueSet.getQuantityRelations());
+    valueSet.clearStartValues();
     for (QuantityInput quantityInput : quantityInputs)
     {
       if (quantityInput.getValue() != null && !valueSet.isValueKnown(quantityInput.getQuantity()))
@@ -96,18 +94,28 @@ public class PartInput
         valueSet.setStartValueNoOverwrite(quantityInput.getQuantity(), quantityInput.getValue());
       }
     }
+  }
+
+  public void applyProfile()
+  {
+    if (originalQuantityRelationsList == null)
+    {
+      originalQuantityRelationsList = valueSet.getQuantityRelations();
+    }
+    else
+    {
+      valueSet.getQuantityRelations().clear();
+      valueSet.getQuantityRelations().addAll(originalQuantityRelationsList);
+    }
+
     String profileName = getProfileName();
     if (profileName != null)
     {
       ProfileGeometry profileGeometry = profileInput.loadProfile(SwingGui.PROFILE_DIRECTORY, profileName);
-      knownQuantities.put(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA, profileGeometry.getSecondMomentOfArea());
-      knownQuantities.put(PhysicalQuantity.WING_RELATIVE_THICKNESS, profileGeometry.getThickness());
-      quantityRelationsList.addAll(profileInput.loadXfoilResults(SwingGui.PROFILE_DIRECTORY, profileName));
+      valueSet.setStartValueNoOverwrite(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA, profileGeometry.getSecondMomentOfArea());
+      valueSet.setStartValueNoOverwrite(PhysicalQuantity.WING_RELATIVE_THICKNESS, profileGeometry.getThickness());
+      valueSet.getQuantityRelations().addAll(profileInput.loadXfoilResults(SwingGui.PROFILE_DIRECTORY, profileName));
     }
-
-    CombinedCalculator combinedCalculator = new CombinedCalculator(quantityRelationsList);
-
-    return combinedCalculator.calculate(valueSet);
   }
 
   @Override

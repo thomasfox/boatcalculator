@@ -113,8 +113,7 @@ public class SwingGui
 
     if (scan)
     {
-//      calculateScan(PartInput);
-      return;
+      throw new IllegalStateException("scan not yet implemented");
     }
 
 
@@ -124,31 +123,15 @@ public class SwingGui
       partOutput.removeFromContainerAndReset(resultPanel);
     }
     partOutputs.clear();
-    boolean changed;
-    int cutoff = 100;
 
     for (PartInput partInput : partInputs)
     {
-      partInput.getValueSet().clearStartAndCalculatedValues();
+      partInput.getValueSet().clearCalculatedValues();
+      partInput.applyStartValues();
+      partInput.applyProfile();
     }
 
-    do
-    {
-      changed = false;
-      for (PartInput partInput : partInputs)
-      {
-        boolean partChanged = partInput.calculate();
-        changed = changed || partChanged;
-      }
-      for (PartInput partInput : partInputs)
-      {
-        boolean partChanged = partInput.getValueSet().applyComputationStrategies();
-        changed = changed || partChanged;
-      }
-      cutoff--;
-    }
-    while (changed && cutoff > 0);
-
+    boat.calculate();
 
     for (PartInput partInput : partInputs)
     {
