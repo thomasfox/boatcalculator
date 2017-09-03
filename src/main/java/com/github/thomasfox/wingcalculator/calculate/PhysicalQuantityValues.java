@@ -61,12 +61,17 @@ public class PhysicalQuantityValues
 
   public void setValueNoOverwrite(@NonNull PhysicalQuantity physicalQuantity, double value)
   {
+    checkQuantityNotSetForWrite(physicalQuantity);
+    addValue(physicalQuantity, value);
+  }
+
+  public void checkQuantityNotSetForWrite(PhysicalQuantity physicalQuantity)
+  {
     PhysicalQuantityValue physicalQuantityValue = getPhysicalQuantityValue(physicalQuantity);
     if (physicalQuantityValue != null)
     {
       throw new IllegalArgumentException("Tried to overwite value for quantity " + physicalQuantity);
     }
-    addValue(physicalQuantity, value);
   }
 
   private void addValue(PhysicalQuantity physicalQuantity, Double value)

@@ -55,29 +55,52 @@ public class NamedValueSet
     {
       return result;
     }
-    result = startValues.getPhysicalQuantityValue(toGet);
+    result = calculatedValues.getPhysicalQuantityValue(toGet);
     if (result != null)
     {
       return result;
     }
-    result = calculatedValues.getPhysicalQuantityValue(toGet);
+    result = startValues.getPhysicalQuantityValue(toGet);
     return result;
   }
 
 
+  public void setFixedValueNoOverwrite(PhysicalQuantity physicalQuantity, double value)
+  {
+    startValues.checkQuantityNotSetForWrite(physicalQuantity);
+    calculatedValues.checkQuantityNotSetForWrite(physicalQuantity);
+    fixedValues.setValueNoOverwrite(physicalQuantity, value);
+  }
+
   public void setFixedValueNoOverwrite(PhysicalQuantityValue toSet)
   {
+    startValues.checkQuantityNotSetForWrite(toSet.getPhysicalQuantity());
+    calculatedValues.checkQuantityNotSetForWrite(toSet.getPhysicalQuantity());
     fixedValues.setValueNoOverwrite(toSet);
   }
 
   public void setStartValueNoOverwrite(PhysicalQuantity physicalQuantity, double value)
   {
+    fixedValues.checkQuantityNotSetForWrite(physicalQuantity);
+    calculatedValues.checkQuantityNotSetForWrite(physicalQuantity);
     startValues.setValueNoOverwrite(physicalQuantity, value);
+  }
+
+  public void setStartValue(PhysicalQuantity physicalQuantity, double value)
+  {
+    startValues.setValue(physicalQuantity, value);
   }
 
   public void setCalculatedValueNoOverwrite(PhysicalQuantity physicalQuantity, double value)
   {
+    fixedValues.checkQuantityNotSetForWrite(physicalQuantity);
+    startValues.checkQuantityNotSetForWrite(physicalQuantity);
     calculatedValues.setValueNoOverwrite(physicalQuantity, value);
+  }
+
+  public void setCalculatedValue(PhysicalQuantity physicalQuantity, double value)
+  {
+    calculatedValues.setValue(physicalQuantity, value);
   }
 
   public Double getFixedValue(PhysicalQuantity physicalQuantity)
