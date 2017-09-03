@@ -2,6 +2,7 @@ package com.github.thomasfox.wingcalculator.calculate;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -122,5 +123,20 @@ public class PhysicalQuantityValues
   public boolean isEmpty()
   {
     return values.isEmpty();
+  }
+
+  public Double remove(PhysicalQuantity toRemove)
+  {
+    Iterator<PhysicalQuantityValue> valueIt = values.iterator();
+    while (valueIt.hasNext())
+    {
+      PhysicalQuantityValue value = valueIt.next();
+      if (value.getPhysicalQuantity().equals(toRemove))
+      {
+        valueIt.remove();
+        return value.getValue();
+      }
+    }
+    return null;
   }
 }

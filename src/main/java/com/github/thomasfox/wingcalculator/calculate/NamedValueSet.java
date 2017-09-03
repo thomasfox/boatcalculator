@@ -143,4 +143,9 @@ public class NamedValueSet
   {
     calculatedValues.clear();
   }
+
+  public Double clearCalculatedValue(PhysicalQuantity toClear)
+  {
+    return calculatedValues.remove(toClear);
+  }
 }
