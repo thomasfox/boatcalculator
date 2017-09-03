@@ -8,6 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * A directed equality. A quantity is known to be equal to another.
+ * So if the one quantity is known, the other quantities value can be set
+ * equal to the value of the first quantity.
+ */
 @AllArgsConstructor
 @Getter
 @ToString
