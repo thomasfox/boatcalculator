@@ -4,6 +4,7 @@ import com.github.thomasfox.wingcalculator.boat.Boat;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.wingcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.wingcalculator.part.BoatPart;
+import com.github.thomasfox.wingcalculator.part.PartType;
 import com.github.thomasfox.wingcalculator.part.impl.Crew;
 
 public class Dinghy extends Boat
@@ -14,6 +15,6 @@ public class Dinghy extends Boat
   public Dinghy()
   {
     addPart(crew);
-    crew.addComputationStrategy(new QuantityEquality(PhysicalQuantity.TORQUE_BETWEEN_FORCES, leverSailDaggerboard, PhysicalQuantity.TORQUE_BETWEEN_FORCES));
+    values.add(new QuantityEquality(PhysicalQuantity.TORQUE_BETWEEN_FORCES, LEVER_SAIL_DAGGERBOARD_ID, PhysicalQuantity.TORQUE_BETWEEN_FORCES, PartType.CREW.name()));
   }
 }

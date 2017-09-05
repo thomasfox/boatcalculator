@@ -59,7 +59,7 @@ public class SwingGui
     int row = 0;
     for (PartInput partInput : partInputs)
     {
-     row += partInput.addToContainerInRow(inputPanel, row);
+      row += partInput.addToContainerInRow(inputPanel, row);
     }
 
     SwingHelper.addSeparatorToContainer(inputPanel, row++, 5);
@@ -131,7 +131,7 @@ public class SwingGui
       partInput.applyProfile();
     }
 
-    boat.calculate(null);
+    boat.calculate();
 
     for (PartInput partInput : partInputs)
     {

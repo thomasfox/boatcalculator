@@ -1,12 +1,10 @@
 package com.github.thomasfox.wingcalculator.calculate;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.github.thomasfox.wingcalculator.calculate.strategy.ComputationStrategy;
 import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
 
 import lombok.Data;
@@ -20,20 +18,35 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NamedValueSet
 {
+  @NonNull
+  private final String id;
+
+  @NonNull
+  private final String name;
+
   protected final Set<PhysicalQuantity> toInput = new LinkedHashSet<>();
 
+  /**
+   * Physical constants.
+   */
   private final PhysicalQuantityValues fixedValues = new PhysicalQuantityValues();
 
   private final PhysicalQuantityValues startValues = new PhysicalQuantityValues();
 
   private final PhysicalQuantityValues calculatedValues = new PhysicalQuantityValues();
 
-  private final Set<ComputationStrategy> computationStrategies = new HashSet<>();
-
   private final List<QuantityRelations> quantityRelations = new ArrayList<>();
 
-  @NonNull
-  private final String name;
+  public NamedValueSet(NamedValueSet toCopy)
+  {
+    this.id = toCopy.getId();
+    this.name = toCopy.getName();
+    this.toInput.addAll(toCopy.toInput);
+    this.fixedValues.setValuesFailOnOverwrite(toCopy.fixedValues);
+    this.startValues.setValuesFailOnOverwrite(toCopy.startValues);
+    this.calculatedValues.setValuesFailOnOverwrite(toCopy.calculatedValues);
+    this.quantityRelations.addAll(toCopy.getQuantityRelations());
+  }
 
   public PhysicalQuantityValues getKnownValues()
   {
@@ -103,6 +116,13 @@ public class NamedValueSet
     calculatedValues.setValue(physicalQuantity, value);
   }
 
+  public void setTrialValueNoOverwrite(PhysicalQuantity physicalQuantity, double value)
+  {
+    fixedValues.checkQuantityNotSetForWrite(physicalQuantity);
+    startValues.checkQuantityNotSetForWrite(physicalQuantity);
+    calculatedValues.checkQuantityNotSetForWrite(physicalQuantity);
+  }
+
   public Double getFixedValue(PhysicalQuantity physicalQuantity)
   {
     return fixedValues.getValue(physicalQuantity);
@@ -116,24 +136,6 @@ public class NamedValueSet
   public void addToInput(PhysicalQuantity toAdd)
   {
     toInput.add(toAdd);
-  }
-
-  public void addComputationStrategy(ComputationStrategy computationStrategy)
-  {
-    computationStrategies.add(computationStrategy);
-  }
-
-  public boolean applyComputationStrategies(ComputationStrategy strategyToOmit)
-  {
-    boolean changed = false;
-    for (ComputationStrategy computationStrategy : computationStrategies)
-    {
-      if (computationStrategy != strategyToOmit)
-      {
-        changed = changed || computationStrategy.setValue(this);
-      }
-    }
-    return changed;
   }
 
   public void clearStartAndCalculatedValues()
@@ -157,12 +159,17 @@ public class NamedValueSet
     startValues.clear();
   }
 
-  public boolean calculateSinglePass(ComputationStrategy strategyToOmit)
+  public boolean calculateSinglePass(AllValues allValues)
   {
     CombinedCalculator combinedCalculator = new CombinedCalculator(quantityRelations);
 
-    boolean changedByCalculator = combinedCalculator.calculate(this);
-    boolean changedByComputationStrategies = applyComputationStrategies(strategyToOmit);
-    return changedByCalculator || changedByComputationStrategies;
+    boolean changed = combinedCalculator.calculate(this);
+    return changed;
+  }
+
+  public void moveCalculatedValuesToStartValues()
+  {
+    startValues.setValues(calculatedValues);
+    calculatedValues.clear();
   }
 }

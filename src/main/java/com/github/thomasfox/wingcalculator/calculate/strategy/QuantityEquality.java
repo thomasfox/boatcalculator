@@ -1,5 +1,6 @@
 package com.github.thomasfox.wingcalculator.calculate.strategy;
 
+import com.github.thomasfox.wingcalculator.calculate.AllValues;
 import com.github.thomasfox.wingcalculator.calculate.NamedValueSet;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantityValue;
@@ -20,13 +21,17 @@ public class QuantityEquality implements ComputationStrategy
 {
   private final PhysicalQuantity sourceQuantity;
 
-  private final NamedValueSet sourceSet;
+  private final String sourceSetId;
 
   private final PhysicalQuantity targetQuantity;
 
+  private final String targetSetId;
+
   @Override
-  public boolean setValue(NamedValueSet targetSet)
+  public boolean setValue(AllValues allValues)
   {
+    NamedValueSet sourceSet = allValues.getNamedValueSetNonNull(sourceSetId);
+    NamedValueSet targetSet = allValues.getNamedValueSetNonNull(targetSetId);
     PhysicalQuantityValue knownValue = sourceSet.getKnownValue(sourceQuantity);
     if (knownValue != null && !targetSet.isValueKnown(targetQuantity))
     {
@@ -35,6 +40,4 @@ public class QuantityEquality implements ComputationStrategy
     }
     return false;
   }
-
-
 }

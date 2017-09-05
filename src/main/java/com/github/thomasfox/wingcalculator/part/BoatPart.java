@@ -15,7 +15,7 @@ public class BoatPart extends NamedValueSet
 
   public BoatPart(PartType type)
   {
-    super(type.toString());
+    super(type.name(), type.toString());
     this.type = type;
   }
 

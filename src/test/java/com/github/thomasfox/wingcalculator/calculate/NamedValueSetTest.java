@@ -13,7 +13,7 @@ public class NamedValueSetTest
   @Before
   public void setUp()
   {
-    sut = new NamedValueSet("namedValueSetName");
+    sut = new NamedValueSet("namedValueSetId", "namedValueSetName");
   }
 
   @Test
