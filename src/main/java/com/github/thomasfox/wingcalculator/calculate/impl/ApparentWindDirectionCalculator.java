@@ -23,14 +23,19 @@ public class ApparentWindDirectionCalculator extends Calculator
     double pointingAngle = PhysicalQuantity.POINTING_ANGLE.getValueFromAvailableQuantities(input);
     double apparentWindSpeedAlongBoat = boatSpeed + windSpeed * Math.cos(pointingAngle * Math.PI / 180d);
     double apparentWindSpeedPerpendicularToBoat = windSpeed * Math.sin(pointingAngle * Math.PI / 180d);
-    if (apparentWindSpeedAlongBoat < 1E-20d)
+    if (Math.abs(apparentWindSpeedAlongBoat) < 1E-20d)
     {
-      if (apparentWindSpeedPerpendicularToBoat < 1E-20d)
+      if (Math.abs(apparentWindSpeedPerpendicularToBoat) < 1E-20d)
       {
         return 0d;
       }
       return 90d;
     }
-    return Math.atan(apparentWindSpeedPerpendicularToBoat / apparentWindSpeedAlongBoat) * 180d / Math.PI;
+    double result = Math.atan(apparentWindSpeedPerpendicularToBoat / apparentWindSpeedAlongBoat) * 180d / Math.PI;
+    if (result < 0)
+    {
+      result += 180;
+    }
+    return result;
   }
 }
