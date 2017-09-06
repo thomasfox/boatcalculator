@@ -57,7 +57,7 @@ public class AllValues
   {
     return namedValueSets.stream()
         .filter(n -> n.getId().equals(id))
-        .findFirst().orElseThrow(() -> new IllegalStateException("No namedValueSet with id " + id + " exists"));
+        .findFirst().orElseThrow(() -> new IllegalStateException("No namedValueSet with id " + id + " exists, existing namedValueSets are " + namedValueSets));
   }
 
   public void add(ComputationStrategy computationStrategy)
