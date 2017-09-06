@@ -13,11 +13,11 @@ import com.github.thomasfox.wingcalculator.part.impl.Hull;
 import com.github.thomasfox.wingcalculator.part.impl.Rudder;
 import com.github.thomasfox.wingcalculator.part.impl.Sail;
 
-public abstract class Boat extends AllValues
+public abstract class Boat
 {
   protected static final String LEVER_SAIL_DAGGERBOARD_ID = "leverSailDaggerboard";
 
-  protected static final String EXTERNAL_SETTINGS_ID = "externalSettings";
+  public static final String EXTERNAL_SETTINGS_ID = "externalSettings";
 
   protected NamedValueSet externalSettings = new NamedValueSet(EXTERNAL_SETTINGS_ID, "Externe Parameter");
 
@@ -56,10 +56,14 @@ public abstract class Boat extends AllValues
     values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, PartType.SAIL.name(), PhysicalQuantity.FORCE, LEVER_SAIL_DAGGERBOARD_ID));
 }
 
-  @Override
   public Set<NamedValueSet> getNamedValueSets()
   {
     return values.getNamedValueSets();
+  }
+
+  public NamedValueSet getNamedValueSetNonNull(String name)
+  {
+    return values.getNamedValueSetNonNull(name);
   }
 
   public void addPart(BoatPart part)
@@ -67,7 +71,6 @@ public abstract class Boat extends AllValues
     values.add(part);
   }
 
-  @Override
   public void calculate()
   {
     values.calculate();

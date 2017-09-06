@@ -64,15 +64,17 @@ public class PartInput
     return internalOffset;
   }
 
-  public boolean isScan()
+  public List<QuantityInput> getScannedQuantityInputs()
   {
-    boolean scan = false;
+    List<QuantityInput> result = new ArrayList<>();
     for (QuantityInput quantityInput : quantityInputs)
     {
-      scan = scan || quantityInput.isScan();
+      if (quantityInput.isScan())
+      {
+        result.add(quantityInput);
+      }
     }
-    scan = scan || (profileInput != null && profileInput.isScan());
-    return scan;
+    return result;
   }
 
   public String getProfileName()

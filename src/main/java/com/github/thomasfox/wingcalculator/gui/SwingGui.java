@@ -12,6 +12,13 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.xy.DefaultXYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
 import com.github.thomasfox.wingcalculator.boat.Boat;
 import com.github.thomasfox.wingcalculator.boat.impl.Skiff29er;
 import com.github.thomasfox.wingcalculator.calculate.NamedValueSet;
@@ -30,9 +37,11 @@ public class SwingGui
 
   private final JPanel resultPanel = new JPanel();
 
-  private final List<PartInput> partInputs = new ArrayList<>();
+  private final List<PartInput> valueSetInputs = new ArrayList<>();
 
-  private final List<PartOutput> partOutputs = new ArrayList<>();
+  private final List<PartOutput> valueSetOutputs = new ArrayList<>();
+
+  private final List<ChartPanel> chartPanels = new ArrayList<>();
 
   private final JButton calculateButton;
 
@@ -57,7 +66,7 @@ public class SwingGui
     }
 
     int row = 0;
-    for (PartInput partInput : partInputs)
+    for (PartInput partInput : valueSetInputs)
     {
       row += partInput.addToContainerInRow(inputPanel, row);
     }
@@ -82,7 +91,7 @@ public class SwingGui
   private void createPartInput(NamedValueSet valueSet)
   {
     PartInput partInput = new PartInput(valueSet);
-    partInputs.add(partInput);
+    valueSetInputs.add(partInput);
     for (PhysicalQuantity physicalQuantity : valueSet.getToInput())
     {
       if (valueSet.getFixedValue(physicalQuantity) == null)
@@ -105,45 +114,122 @@ public class SwingGui
 
   public void calculateButtonPressed(ActionEvent e)
   {
-    boolean scan = false;
-    for (PartInput partInput : partInputs)
+    List<QuantityInput> scannedInputs = new ArrayList<>();
+    for (PartInput valueSetInput : valueSetInputs)
     {
-      scan = scan || partInput.isScan();
+      scannedInputs.addAll(valueSetInput.getScannedQuantityInputs());
     }
 
-    if (scan)
+    if (!scannedInputs.isEmpty())
     {
-      throw new IllegalStateException("scan not yet implemented");
+      calculateAndRefreshDisplayedResultsScan(scannedInputs);
     }
-
-
-    int outputRow = 0;
-    for (PartOutput partOutput : partOutputs)
+    else
     {
-      partOutput.removeFromContainerAndReset(resultPanel);
+      calculateAndRefreshDisplayedResultsNoScan();
     }
-    partOutputs.clear();
+    frame.pack();
+  }
 
-    for (PartInput partInput : partInputs)
-    {
-      partInput.getValueSet().clearCalculatedValues();
-      partInput.applyStartValues();
-      partInput.applyProfile();
-    }
-
+  private void calculateAndRefreshDisplayedResultsNoScan()
+  {
+    clearResult();
+    reinitalizeValueSetInputs();
     boat.calculate();
+    displayCalculateResultInValueSetOutputs();
+  }
 
-    for (PartInput partInput : partInputs)
+  private void calculateAndRefreshDisplayedResultsScan(List<QuantityInput> scannedInputs)
+  {
+    clearResult();
+
+    if (scannedInputs.size() > 1)
     {
-      PartOutput partOutput = new PartOutput(partInput.getValueSet().getName());
-      partOutputs.add(partOutput);
-      for (PhysicalQuantityValue calculatedValue : partInput.getValueSet().getCalculatedValues().getAsList())
+      throw new IllegalArgumentException("Can only handle one scanned input");
+    }
+    QuantityInput scannedInput = scannedInputs.get(0);
+
+    XYSeries velocitySeries = new XYSeries("velocity", false, true);
+
+    for (int i = 0; i < scannedInput.getNumberOfScanSteps(); ++i)
+    {
+      double xValue = scannedInput.getScanStepValue(i);
+      scannedInput.setValue(xValue);
+      reinitalizeValueSetInputs();
+      boat.calculate();
+      double yValue = boat.getNamedValueSetNonNull(Boat.EXTERNAL_SETTINGS_ID).getKnownValue(PhysicalQuantity.VELOCITY).getValue();
+      velocitySeries.add(xValue, yValue);
+    }
+    JFreeChart velocityChart;
+    if ("°".equals(scannedInput.getQuantity().getUnit()))
+    {
+      XYSeriesCollection velocitySeriesCollection = new XYSeriesCollection();
+      velocitySeriesCollection.addSeries(velocitySeries);
+      velocityChart = ChartFactory.createPolarChart("Velocity", velocitySeriesCollection, false, true, false);
+    }
+    else
+    {
+      DefaultXYDataset dataset = new DefaultXYDataset();
+      dataset.addSeries("velocity", velocitySeries.toArray());
+      velocityChart = ChartFactory.createXYLineChart(
+          "Velocity",
+          scannedInput.getQuantity().getDisplayNameIncludingUnit(),
+          PhysicalQuantity.VELOCITY.getDisplayNameIncludingUnit(),
+          dataset);
+    }
+    ChartPanel velocityChartPanel = new ChartPanel(velocityChart);
+    resultPanel.add(velocityChartPanel);
+    chartPanels.add(velocityChartPanel);
+  }
+
+
+  private void displayCalculateResultInValueSetOutputs()
+  {
+    int outputRow = 0;
+    for (PartInput valueSetInput : valueSetInputs)
+    {
+      PartOutput partOutput = new PartOutput(valueSetInput.getValueSet().getName());
+      valueSetOutputs.add(partOutput);
+      for (PhysicalQuantityValue calculatedValue : valueSetInput.getValueSet().getCalculatedValues().getAsList())
       {
         QuantityOutput output = new QuantityOutput(calculatedValue.getPhysicalQuantity(), calculatedValue.getValue());
         partOutput.getQuantityOutputs().add(output);
       }
       outputRow += partOutput.addToContainerInRow(resultPanel, rowAfterButton + outputRow);
     }
-    frame.pack();
+  }
+
+  private void reinitalizeValueSetInputs()
+  {
+    for (PartInput valueSetInput : valueSetInputs)
+    {
+      valueSetInput.getValueSet().clearCalculatedValues();
+      valueSetInput.applyStartValues();
+      valueSetInput.applyProfile();
+    }
+  }
+
+  private void clearResult()
+  {
+    clearCharts();
+    clearValueSetOutputs();
+  }
+
+  private void clearCharts()
+  {
+    for (ChartPanel chartPanel : chartPanels)
+    {
+      resultPanel.remove(chartPanel);
+    }
+    chartPanels.clear();
+  }
+
+  private void clearValueSetOutputs()
+  {
+    for (PartOutput partOutput : valueSetOutputs)
+    {
+      partOutput.removeFromContainerAndReset(resultPanel);
+    }
+    valueSetOutputs.clear();
   }
 }
