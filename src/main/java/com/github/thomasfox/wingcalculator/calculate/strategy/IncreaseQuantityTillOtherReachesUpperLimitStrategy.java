@@ -46,12 +46,16 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
 
     AllValues allValuesForCalculation = new AllValues(allValues);
     allValuesForCalculation.moveCalculatedValuesToStartValues();
-    double targetValue = applyAndRecalculateWithInterval(scannedQuantityUpperLimit, interval, 20, allValuesForCalculation);
+    Double targetValue = applyAndRecalculateWithInterval(scannedQuantityUpperLimit, interval, 20, allValuesForCalculation);
+    if (targetValue == null)
+    {
+      return false;
+    }
     scannedQuantitySet.setCalculatedValue(scannedQuantity, targetValue);
     return true;
   }
 
-  private double applyAndRecalculateWithInterval(double scannedValue, double scanInterval, int cutoff, AllValues allValues)
+  private Double applyAndRecalculateWithInterval(double scannedValue, double scanInterval, int cutoff, AllValues allValues)
   {
     if (cutoff <= -5)
     {
@@ -64,9 +68,7 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
     PhysicalQuantityValue limitedValue = limitedQuantitySet.getKnownValue(limitedQuantity);
     if (limitedValue == null)
     {
-      throw new IllegalStateException("Tried to limit quantity " + limitedQuantity
-          + " in " + limitedQuantitySetId
-          + " but limited quantity was not calculated");
+      return null;
     }
 
     if ((cutoff <= 0 || scannedValue == scannedQuantityUpperLimit) && limitedValue.getValue() <= limitedValueLimit)

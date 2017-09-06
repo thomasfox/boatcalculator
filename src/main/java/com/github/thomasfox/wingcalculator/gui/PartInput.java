@@ -100,7 +100,7 @@ public class PartInput
   {
     if (originalQuantityRelationsList == null)
     {
-      originalQuantityRelationsList = valueSet.getQuantityRelations();
+      originalQuantityRelationsList = new ArrayList<>(valueSet.getQuantityRelations());
     }
     else
     {

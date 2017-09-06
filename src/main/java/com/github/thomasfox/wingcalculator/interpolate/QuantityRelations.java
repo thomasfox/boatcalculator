@@ -200,6 +200,6 @@ public class QuantityRelations
   @Override
   public String toString()
   {
-    return name;
+    return name + ": fixedQuantities=" + fixedQuantities + ", relatedQuantities= " + getRelatedQuantities();
   }
 }
