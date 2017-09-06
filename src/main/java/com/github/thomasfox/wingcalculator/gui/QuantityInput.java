@@ -11,9 +11,6 @@ import javax.swing.JTextField;
 import com.github.thomasfox.wingcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.wingcalculator.iterate.DoubleIntervalIterator;
 
-import lombok.ToString;
-
-@ToString(of={"label"})
 public class QuantityInput
 {
   private final JLabel label = new JLabel();
@@ -115,6 +112,11 @@ public class QuantityInput
     return parseInteger(scanNumberOfStepsField.getText());
   }
 
+  public double getScanStepValue(int step)
+  {
+    return getScanFrom() + (getScanTo() - getScanFrom()) * (((double) step) / (getNumberOfScanSteps() - 1));
+  }
+
   public boolean isScan()
   {
     return getScanFrom() != null
@@ -177,5 +179,11 @@ public class QuantityInput
     {
       return null;
     }
+  }
+
+  @Override
+  public String toString()
+  {
+    return label.getText();
   }
 }
