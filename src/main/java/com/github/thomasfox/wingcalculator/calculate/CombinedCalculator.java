@@ -25,6 +25,7 @@ import com.github.thomasfox.wingcalculator.calculate.impl.ThicknessCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.TorqueCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.TotalDragCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.TotalDragCoefficientCalculator;
+import com.github.thomasfox.wingcalculator.calculate.impl.VMGCalculator;
 import com.github.thomasfox.wingcalculator.calculate.impl.WingDepthFromSecondMomentOfAreaCalculator;
 import com.github.thomasfox.wingcalculator.interpolate.Interpolator;
 import com.github.thomasfox.wingcalculator.interpolate.QuantityRelations;
@@ -59,6 +60,7 @@ public class CombinedCalculator
     calculators.add(new DrivingForceCalculator());
     calculators.add(new TorqueCalculator());
     calculators.add(new LeverFromWeightCalculator());
+    calculators.add(new VMGCalculator());
 
     this.quantityRelationsList.addAll(quantityRelationsList);
   }
