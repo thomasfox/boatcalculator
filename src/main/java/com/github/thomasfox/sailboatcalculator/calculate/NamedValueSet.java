@@ -116,13 +116,6 @@ public class NamedValueSet
     calculatedValues.setValue(physicalQuantity, value);
   }
 
-  public void setTrialValueNoOverwrite(PhysicalQuantity physicalQuantity, double value)
-  {
-    fixedValues.checkQuantityNotSetForWrite(physicalQuantity);
-    startValues.checkQuantityNotSetForWrite(physicalQuantity);
-    calculatedValues.checkQuantityNotSetForWrite(physicalQuantity);
-  }
-
   public Double getFixedValue(PhysicalQuantity physicalQuantity)
   {
     return fixedValues.getValue(physicalQuantity);

@@ -7,12 +7,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
 
 @NoArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class PhysicalQuantityValues
 {
   /**
