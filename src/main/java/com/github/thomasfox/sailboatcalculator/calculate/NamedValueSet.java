@@ -126,15 +126,14 @@ public class NamedValueSet
     return startValues.getValue(physicalQuantity);
   }
 
+  public Double getCalculatedValue(PhysicalQuantity physicalQuantity)
+  {
+    return calculatedValues.getValue(physicalQuantity);
+  }
+
   public void addToInput(PhysicalQuantity toAdd)
   {
     toInput.add(toAdd);
-  }
-
-  public void clearStartAndCalculatedValues()
-  {
-    startValues.clear();
-    calculatedValues.clear();
   }
 
   public void clearCalculatedValues()
