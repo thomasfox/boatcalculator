@@ -1,9 +1,8 @@
 package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
-import java.util.Map;
-
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantityValues;
 
 /**
  * https://de.wikipedia.org/wiki/Dynamischer_Auftrieb
@@ -21,13 +20,13 @@ public class TotalDragCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
+  protected double calculateWithoutChecks(PhysicalQuantityValues input)
   {
-    double dragCoefficient = PhysicalQuantity.TOTAL_DRAG_COEFFICIENT.getValueFromAvailableQuantities(input);
-    double wingWidth = PhysicalQuantity.WING_SPAN.getValueFromAvailableQuantities(input);
-    double wingDepth = PhysicalQuantity.WING_CHORD.getValueFromAvailableQuantities(input);
-    double velocity = PhysicalQuantity.VELOCITY.getValueFromAvailableQuantities(input);
-    double density = PhysicalQuantity.DENSITY.getValueFromAvailableQuantities(input);
+    double dragCoefficient = input.getValue(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT);
+    double wingWidth = input.getValue(PhysicalQuantity.WING_SPAN);
+    double wingDepth = input.getValue(PhysicalQuantity.WING_CHORD);
+    double velocity = input.getValue(PhysicalQuantity.VELOCITY);
+    double density = input.getValue(PhysicalQuantity.DENSITY);
 
     double area = wingWidth * wingDepth;
     double drag = dragCoefficient *  velocity * velocity * density * area / 2;

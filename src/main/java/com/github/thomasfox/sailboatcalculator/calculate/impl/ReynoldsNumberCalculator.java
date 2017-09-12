@@ -1,9 +1,8 @@
 package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
-import java.util.Map;
-
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantityValues;
 
 /**
  * Siehe http://www.wasser-wissen.de/abwasserlexikon/r/reynoldszahl.htm
@@ -19,11 +18,12 @@ public class ReynoldsNumberCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
+  protected double calculateWithoutChecks(PhysicalQuantityValues input)
   {
-    double wingVelocity = PhysicalQuantity.VELOCITY.getValueFromAvailableQuantities(input);
-    double wingDepth = PhysicalQuantity.WING_CHORD.getValueFromAvailableQuantities(input);
-    double kinematicVelocity = PhysicalQuantity.KINEMATIC_VISCOSITY.getValueFromAvailableQuantities(input);
+    double wingVelocity = input.getValue(PhysicalQuantity.VELOCITY);
+    double wingDepth = input.getValue(PhysicalQuantity.WING_CHORD);
+    double kinematicVelocity = input.getValue(PhysicalQuantity.KINEMATIC_VISCOSITY);
+
     return wingVelocity * wingDepth / kinematicVelocity;
   }
 }

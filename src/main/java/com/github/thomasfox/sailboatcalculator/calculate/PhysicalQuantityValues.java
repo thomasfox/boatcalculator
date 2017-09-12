@@ -125,6 +125,18 @@ public class PhysicalQuantityValues
     return result;
   }
 
+  public boolean containsQuantity(PhysicalQuantity toCheck)
+  {
+    for (PhysicalQuantityValue value : values)
+    {
+      if (value.getPhysicalQuantity().equals(toCheck))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public void clear()
   {
     values.clear();

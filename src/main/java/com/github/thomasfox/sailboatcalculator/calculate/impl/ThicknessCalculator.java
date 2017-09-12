@@ -1,15 +1,9 @@
 package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
-import java.util.Map;
-
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantityValues;
 
-/**
- * Gibt die Durchbiegung eines Flügels, das an einem Ende fest gelagert
- * und am anderen Ende mit einer Kraft Quer zum Flügel belastet wird, zurück.
- * Siehe Joos, Lehrbuch der Theoretischen Physik, 15. Auflage, S. 169
- */
 public class ThicknessCalculator extends Calculator
 {
   public ThicknessCalculator()
@@ -20,10 +14,11 @@ public class ThicknessCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
+  protected double calculateWithoutChecks(PhysicalQuantityValues input)
   {
-    double wingDepth = PhysicalQuantity.WING_CHORD.getValueFromAvailableQuantities(input);
-    double relativeThickness = PhysicalQuantity.WING_RELATIVE_THICKNESS.getValueFromAvailableQuantities(input);
+    double wingDepth = input.getValue(PhysicalQuantity.WING_CHORD);
+    double relativeThickness = input.getValue(PhysicalQuantity.WING_RELATIVE_THICKNESS);
+
     return wingDepth*relativeThickness;
   }
 }

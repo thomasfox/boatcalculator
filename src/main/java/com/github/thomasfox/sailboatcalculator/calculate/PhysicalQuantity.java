@@ -1,7 +1,5 @@
 package com.github.thomasfox.sailboatcalculator.calculate;
 
-import java.util.Map;
-
 public enum PhysicalQuantity
 {
   INDUCED_DRAG("Induzierter Widerstand", "N"),
@@ -100,14 +98,5 @@ public enum PhysicalQuantity
       result += " [" + unit + "]";
     }
     return result;
-  }
-
-  public Double getValueFromAvailableQuantities(Map<PhysicalQuantity, Double> availableQuantities)
-  {
-    if (fixedValue != null)
-    {
-      return fixedValue;
-    }
-    return availableQuantities.get(this);
   }
 }

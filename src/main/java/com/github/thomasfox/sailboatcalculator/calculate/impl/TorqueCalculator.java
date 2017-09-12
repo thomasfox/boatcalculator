@@ -1,9 +1,8 @@
 package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
-import java.util.Map;
-
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantityValues;
 
 public class TorqueCalculator extends Calculator
 {
@@ -15,10 +14,10 @@ public class TorqueCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
+  protected double calculateWithoutChecks(PhysicalQuantityValues input)
   {
-    double lever = PhysicalQuantity.LEVER_BETWEEN_FORCES.getValueFromAvailableQuantities(input);
-    double force = PhysicalQuantity.FORCE.getValueFromAvailableQuantities(input);
+    double lever = input.getValue(PhysicalQuantity.LEVER_BETWEEN_FORCES);
+    double force = input.getValue(PhysicalQuantity.FORCE);
 
     double torque = lever * force;
     return torque;

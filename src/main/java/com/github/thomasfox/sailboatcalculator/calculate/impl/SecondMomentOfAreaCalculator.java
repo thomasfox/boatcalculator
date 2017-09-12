@@ -1,9 +1,8 @@
 package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
-import java.util.Map;
-
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantityValues;
 
 /**
  * Berechnet das Flächenträgheitsmoment aus dem normalisierten
@@ -19,10 +18,11 @@ public class SecondMomentOfAreaCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
+  protected double calculateWithoutChecks(PhysicalQuantityValues input)
   {
-    double wingDepth = PhysicalQuantity.WING_CHORD.getValueFromAvailableQuantities(input);
-    double mormalizedMoment = PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA.getValueFromAvailableQuantities(input);
+    double wingDepth = input.getValue(PhysicalQuantity.WING_CHORD);
+    double mormalizedMoment = input.getValue(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA);
+
     return mormalizedMoment*wingDepth*wingDepth*wingDepth*wingDepth;
   }
 }

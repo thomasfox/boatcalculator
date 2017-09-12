@@ -1,9 +1,8 @@
 package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
-import java.util.Map;
-
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantityValues;
 
 /**
  * https://de.wikipedia.org/wiki/Dynamischer_Auftrieb
@@ -18,10 +17,10 @@ public class TotalDragCoefficientCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
+  protected double calculateWithoutChecks(PhysicalQuantityValues input)
   {
-    double profileDragCoefficient = PhysicalQuantity.PROFILE_DRAG_COEFFICIENT.getValueFromAvailableQuantities(input);
-    double inducedDragCoefficient = PhysicalQuantity.INDUCED_DRAG_COEFFICIENT.getValueFromAvailableQuantities(input);
+    double profileDragCoefficient = input.getValue(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT);
+    double inducedDragCoefficient = input.getValue(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT);
 
     double totalDragCoefficient = profileDragCoefficient + inducedDragCoefficient;
     return totalDragCoefficient;

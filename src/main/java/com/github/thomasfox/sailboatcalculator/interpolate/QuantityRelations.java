@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
@@ -108,7 +107,7 @@ public class QuantityRelations
     return new Interpolator().interpolate(providedValue, interpolationPoints);
   }
 
-  public PhysicalQuantityValues getRelatedQuantityValues(Map<PhysicalQuantity, Double> knownValues)
+  public PhysicalQuantityValues getRelatedQuantityValues(PhysicalQuantityValues knownValues)
   {
     PhysicalQuantityValues result = new PhysicalQuantityValues();
     Set<PhysicalQuantity> availableQuantities = getAvailableQuantities(knownValues);
@@ -121,7 +120,7 @@ public class QuantityRelations
       {
         try
         {
-          Double interpolatedValue = interpolateValueFrom(wantedQuantity, providedQuantity, knownValues.get(providedQuantity));
+          Double interpolatedValue = interpolateValueFrom(wantedQuantity, providedQuantity, knownValues.getValue(providedQuantity));
           if (interpolatedValue != null)
           {
             result.setValueNoOverwrite(wantedQuantity, interpolatedValue);
@@ -152,11 +151,11 @@ public class QuantityRelations
     return result.toString();
   }
 
-  public boolean fixedQuantitiesMatch(Map<PhysicalQuantity, Double> knownValues)
+  public boolean fixedQuantitiesMatch(PhysicalQuantityValues knownValues)
   {
     for (PhysicalQuantityValue fixedQuantity : fixedQuantities.getAsList())
     {
-      Double knownValue = knownValues.get(fixedQuantity.getPhysicalQuantity());
+      Double knownValue = knownValues.getValue(fixedQuantity.getPhysicalQuantity());
       if (knownValue == null || !knownValue.equals(fixedQuantity.getValue()))
       {
         return false;
@@ -165,13 +164,13 @@ public class QuantityRelations
     return true;
   }
 
-  public Set<PhysicalQuantity> getAvailableQuantities(Map<PhysicalQuantity, Double> knownValues)
+  public Set<PhysicalQuantity> getAvailableQuantities(PhysicalQuantityValues knownValues)
   {
     Set<PhysicalQuantity> result = new HashSet<>();
     Set<PhysicalQuantity> relatedQuantities = getRelatedQuantities();
     for (PhysicalQuantity relatedQuantity : relatedQuantities)
     {
-      if (!knownValues.keySet().contains(relatedQuantity))
+      if (!knownValues.containsQuantity(relatedQuantity))
       {
         result.add(relatedQuantity);
       }
@@ -184,12 +183,12 @@ public class QuantityRelations
     return result;
   }
 
-  public Set<PhysicalQuantity> getKnownRelatedQuantities(Map<PhysicalQuantity, Double> knownValues)
+  public Set<PhysicalQuantity> getKnownRelatedQuantities(PhysicalQuantityValues knownValues)
   {
     Set<PhysicalQuantity> result = new HashSet<>();
     for (PhysicalQuantity relatedQuantity : getRelatedQuantities())
     {
-      if (knownValues.keySet().contains(relatedQuantity))
+      if (knownValues.containsQuantity(relatedQuantity))
       {
         result.add(relatedQuantity);
       }

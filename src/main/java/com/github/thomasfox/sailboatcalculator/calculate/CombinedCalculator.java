@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.github.thomasfox.sailboatcalculator.calculate.impl.ApparentWindDirectionCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.ApparentWindSpeedCalculator;
@@ -30,8 +31,6 @@ import com.github.thomasfox.sailboatcalculator.interpolate.Interpolator;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.sailboatcalculator.interpolate.SimpleXYPoint;
 import com.github.thomasfox.sailboatcalculator.interpolate.XYPoint;
-
-import java.util.Set;
 
 public class CombinedCalculator
 {
@@ -66,32 +65,26 @@ public class CombinedCalculator
     this.quantityRelationsList.addAll(quantityRelationsList);
   }
 
-  public boolean calculate(NamedValueSet store)
+  public boolean calculate(NamedValueSet namedValueSet)
   {
     boolean changedOverall = false;
     boolean changedInCurrentIteration;
     int cutoff = 100;
-    Map<PhysicalQuantity, Double> allKnownValues = new HashMap<>();
-    for (PhysicalQuantityValue physicalQuantityValue : store.getKnownValues().getAsList())
-    {
-      allKnownValues.put(physicalQuantityValue.getPhysicalQuantity(), physicalQuantityValue.getValue());
-    }
     do
     {
       changedInCurrentIteration = false;
       for (Calculator calculator: calculators)
       {
-        if (!calculator.areNeededQuantitiesPresent(allKnownValues))
+        if (!calculator.areNeededQuantitiesPresent(namedValueSet.getKnownValues()))
         {
           continue;
         }
-        if (calculator.isOutputPresent(allKnownValues))
+        if (calculator.isOutputPresent(namedValueSet.getKnownValues()))
         {
           continue;
         }
-        double calculationResult = calculator.calculate(allKnownValues);
-        allKnownValues.put(calculator.getOutputQuantity(), calculationResult);
-        store.setCalculatedValueNoOverwrite(calculator.getOutputQuantity(), calculationResult);
+        double calculationResult = calculator.calculate(namedValueSet.getKnownValues());
+        namedValueSet.setCalculatedValueNoOverwrite(calculator.getOutputQuantity(), calculationResult);
         changedInCurrentIteration = true;
         changedOverall = true;
       }
@@ -101,16 +94,15 @@ public class CombinedCalculator
       // all quantities match -> get related values
       for (QuantityRelations quantityRelations : quantityRelationsList)
       {
-        if (!quantityRelations.fixedQuantitiesMatch(allKnownValues))
+        if (!quantityRelations.fixedQuantitiesMatch(namedValueSet.getKnownValues()))
         {
           continue;
         }
         PhysicalQuantityValues relatedQuantities
-            = quantityRelations.getRelatedQuantityValues(allKnownValues);
+            = quantityRelations.getRelatedQuantityValues(namedValueSet.getKnownValues());
         for (PhysicalQuantityValue physicalQuantityValue : relatedQuantities.getAsList())
         {
-          allKnownValues.put(physicalQuantityValue.getPhysicalQuantity(), physicalQuantityValue.getValue());
-          store.setCalculatedValueNoOverwrite(physicalQuantityValue.getPhysicalQuantity(), physicalQuantityValue.getValue());
+          namedValueSet.setCalculatedValueNoOverwrite(physicalQuantityValue.getPhysicalQuantity(), physicalQuantityValue.getValue());
           changedInCurrentIteration = true;
           changedOverall = true;
         }
@@ -118,7 +110,7 @@ public class CombinedCalculator
 
       // one quantity does not match -> interpolate
       Entry<PhysicalQuantity, Set<Double>> singleNonmatchingFixedQuantityWithValues
-          = getSingleNonmatchingQuantityWithValues(allKnownValues);
+          = getSingleNonmatchingQuantityWithValues(namedValueSet.getKnownValues());
       if (singleNonmatchingFixedQuantityWithValues == null)
       {
         cutoff--;
@@ -126,7 +118,7 @@ public class CombinedCalculator
       }
 
       PhysicalQuantity nonMatchingQuantity = singleNonmatchingFixedQuantityWithValues.getKey();
-      Double knownValueForNonMatchingQuantity = nonMatchingQuantity.getValueFromAvailableQuantities(allKnownValues);
+      PhysicalQuantityValue knownValueForNonMatchingQuantity = namedValueSet.getKnownValue(nonMatchingQuantity);
       if (knownValueForNonMatchingQuantity == null)
       {
         // a fixed quantity is unknown
@@ -137,18 +129,17 @@ public class CombinedCalculator
       Map<PhysicalQuantity, List<XYPoint>> interpolationValues
           = getInterpolationValuesForQuantityFromQuantityRelations(
               nonMatchingQuantity,
-              allKnownValues);
+              namedValueSet.getKnownValues());
 
       for (Map.Entry<PhysicalQuantity, List<XYPoint>> entry : interpolationValues.entrySet())
       {
         Double interpolatedValue = getInterpolatedValueFor(
             entry.getKey(),
-            knownValueForNonMatchingQuantity,
+            knownValueForNonMatchingQuantity.getValue(),
             entry.getValue());
         if (interpolatedValue != null)
         {
-          allKnownValues.put(entry.getKey(), interpolatedValue);
-          store.setCalculatedValueNoOverwrite(entry.getKey(), interpolatedValue);
+          namedValueSet.setCalculatedValueNoOverwrite(entry.getKey(), interpolatedValue);
           changedInCurrentIteration = true;
           changedOverall = true;
         }
@@ -203,7 +194,7 @@ public class CombinedCalculator
 
   private Map<PhysicalQuantity, List<XYPoint>> getInterpolationValuesForQuantityFromQuantityRelations(
       PhysicalQuantity quantityToInterpolate,
-      Map<PhysicalQuantity, Double> allKnownValues)
+      PhysicalQuantityValues allKnownValues)
   {
     Map<PhysicalQuantity, List<XYPoint>> interpolationValues = new HashMap<>();
     for (QuantityRelations quantityRelations : quantityRelationsList)
@@ -238,7 +229,7 @@ public class CombinedCalculator
    */
   private boolean quantityRelationsOkForInterpolation(
       PhysicalQuantity quantityToInterpolate,
-      Map<PhysicalQuantity, Double> allKnownValues,
+      PhysicalQuantityValues allKnownValues,
       QuantityRelations quantityRelations)
   {
     PhysicalQuantityValues fixedQuantities = quantityRelations.getFixedQuantities();
@@ -246,7 +237,7 @@ public class CombinedCalculator
     for (PhysicalQuantityValue fixedQuantity : fixedQuantities.getAsList())
     {
       if (!fixedQuantity.getPhysicalQuantity().equals(quantityToInterpolate)
-          && !fixedQuantity.getPhysicalQuantity().getValueFromAvailableQuantities(allKnownValues).equals(fixedQuantity.getValue()))
+          && !allKnownValues.getValue(fixedQuantity.getPhysicalQuantity()).equals(fixedQuantity.getValue()))
       {
         okForInterpolation = false;
         break;
@@ -271,7 +262,7 @@ public class CombinedCalculator
    *         in the quantityRelationsList, or null if no match is found.
    */
   private Map.Entry<PhysicalQuantity, Set<Double>> getSingleNonmatchingQuantityWithValues(
-      Map<PhysicalQuantity, Double> allKnownValues)
+      PhysicalQuantityValues allKnownValues)
   {
     Map<PhysicalQuantity, Set<Double>> fixedQuantitiesOccurances = new HashMap<>();
     Set<PhysicalQuantity> fixedQuantitiesWithMatches = new HashSet<>();
@@ -287,7 +278,7 @@ public class CombinedCalculator
           fixedQuantitiesOccurances.put(fixedQuantity.getPhysicalQuantity(), quantityValues);
         }
         quantityValues.add(fixedQuantity.getValue());
-        Double knownValue = fixedQuantity.getPhysicalQuantity().getValueFromAvailableQuantities(allKnownValues);
+        Double knownValue = allKnownValues.getValue(fixedQuantity.getPhysicalQuantity());
         if (knownValue != null && knownValue.equals(fixedQuantity.getValue()))
         {
           fixedQuantitiesWithMatches.add(fixedQuantity.getPhysicalQuantity());

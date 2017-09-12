@@ -1,9 +1,8 @@
 package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
-import java.util.Map;
-
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantityValues;
 
 /**
  * Gibt die Durchbiegung eines Flügels, das an einem Ende fest gelagert
@@ -22,12 +21,12 @@ public class BendingCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
+  protected double calculateWithoutChecks(PhysicalQuantityValues input)
   {
-    double wingWidth = PhysicalQuantity.WING_SPAN.getValueFromAvailableQuantities(input);
-    double bendingForce = PhysicalQuantity.BENDING_FORCE.getValueFromAvailableQuantities(input);
-    double modulusOfElasicity = PhysicalQuantity.MODULUS_OF_ELASTICITY.getValueFromAvailableQuantities(input);
-    double secondMomentOfArea = PhysicalQuantity.SECOND_MOMENT_OF_AREA.getValueFromAvailableQuantities(input);
+    double wingWidth = input.getValue(PhysicalQuantity.WING_SPAN);
+    double bendingForce = input.getValue(PhysicalQuantity.BENDING_FORCE);
+    double modulusOfElasicity = input.getValue(PhysicalQuantity.MODULUS_OF_ELASTICITY);
+    double secondMomentOfArea = input.getValue(PhysicalQuantity.SECOND_MOMENT_OF_AREA);
     return bendingForce*wingWidth*wingWidth*wingWidth/(modulusOfElasicity*secondMomentOfArea*3);
   }
 }

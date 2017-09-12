@@ -3,7 +3,6 @@ package com.github.thomasfox.sailboatcalculator.calculate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public abstract class Calculator
@@ -28,18 +27,18 @@ public abstract class Calculator
     return outputQuantity;
   }
 
-  public double calculate(Map<PhysicalQuantity, Double> input)
+  public double calculate(PhysicalQuantityValues input)
   {
     checkNeededQuantitiesArePresent(input);
     checkQuantitiesAreInValidRanges(input);
     return calculateWithoutChecks(input);
   }
 
-  public boolean areNeededQuantitiesPresent(Map<PhysicalQuantity, Double> input)
+  public boolean areNeededQuantitiesPresent(PhysicalQuantityValues input)
   {
     for (PhysicalQuantity inputQuantity : inputQuantities)
     {
-      if (inputQuantity.getValueFromAvailableQuantities(input) == null)
+      if (input.getPhysicalQuantityValue(inputQuantity) == null)
       {
         return false;
       }
@@ -47,26 +46,26 @@ public abstract class Calculator
     return true;
   }
 
-  public boolean isOutputPresent(Map<PhysicalQuantity, Double> input)
+  public boolean isOutputPresent(PhysicalQuantityValues input)
   {
-    return (outputQuantity.getValueFromAvailableQuantities(input) != null);
+    return (input.getPhysicalQuantityValue(outputQuantity) != null);
   }
 
-  protected void checkNeededQuantitiesArePresent(Map<PhysicalQuantity, Double> input)
+  protected void checkNeededQuantitiesArePresent(PhysicalQuantityValues input)
   {
     for (PhysicalQuantity inputQuantity : inputQuantities)
     {
-      if (inputQuantity.getValueFromAvailableQuantities(input) == null)
+      if (input.getPhysicalQuantityValue(inputQuantity) == null)
       {
         throw new InputQuantityNotPresentException(inputQuantity);
       }
     }
   }
 
-  protected void checkQuantitiesAreInValidRanges(Map<PhysicalQuantity, Double> input)
+  protected void checkQuantitiesAreInValidRanges(PhysicalQuantityValues input)
   {
     // do nothing per default
   }
 
-  protected abstract double calculateWithoutChecks(Map<PhysicalQuantity, Double> input);
+  protected abstract double calculateWithoutChecks(PhysicalQuantityValues input);
 }

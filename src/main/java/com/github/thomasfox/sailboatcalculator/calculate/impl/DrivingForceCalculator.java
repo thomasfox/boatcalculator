@@ -1,9 +1,8 @@
 package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
-import java.util.Map;
-
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantityValues;
 
 public class DrivingForceCalculator extends Calculator
 {
@@ -16,11 +15,11 @@ public class DrivingForceCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
+  protected double calculateWithoutChecks(PhysicalQuantityValues input)
   {
-    double drag = PhysicalQuantity.TOTAL_DRAG.getValueFromAvailableQuantities(input);
-    double lift = PhysicalQuantity.LIFT.getValueFromAvailableQuantities(input);
-    double flowDirection = PhysicalQuantity.FLOW_DIRECTION.getValueFromAvailableQuantities(input);
+    double drag = input.getValue(PhysicalQuantity.TOTAL_DRAG);
+    double lift = input.getValue(PhysicalQuantity.LIFT);
+    double flowDirection = input.getValue(PhysicalQuantity.FLOW_DIRECTION);
 
     double drivingForce = lift * Math.sin(flowDirection * Math.PI / 180d) - drag * Math.cos(flowDirection * Math.PI / 180d);
     return drivingForce;

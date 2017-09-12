@@ -1,9 +1,8 @@
 package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
-import java.util.Map;
-
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantityValues;
 
 public class ApparentWindSpeedCalculator extends Calculator
 {
@@ -16,11 +15,11 @@ public class ApparentWindSpeedCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
+  protected double calculateWithoutChecks(PhysicalQuantityValues input)
   {
-    double boatSpeed = PhysicalQuantity.VELOCITY.getValueFromAvailableQuantities(input);
-    double windSpeed = PhysicalQuantity.WIND_SPEED.getValueFromAvailableQuantities(input);
-    double pointingAngle = PhysicalQuantity.POINTING_ANGLE.getValueFromAvailableQuantities(input);
+    double boatSpeed = input.getValue(PhysicalQuantity.VELOCITY);
+    double windSpeed = input.getValue(PhysicalQuantity.WIND_SPEED);
+    double pointingAngle = input.getValue(PhysicalQuantity.POINTING_ANGLE);
     double apparentWindSpeedAlongBoat = boatSpeed + windSpeed * Math.cos(pointingAngle * Math.PI / 180d);
     double apparentWindSpeedPerpendicularToBoat = windSpeed * Math.sin(pointingAngle * Math.PI / 180d);
     return Math.sqrt(apparentWindSpeedAlongBoat *apparentWindSpeedAlongBoat

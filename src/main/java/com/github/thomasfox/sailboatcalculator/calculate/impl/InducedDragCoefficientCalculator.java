@@ -1,9 +1,8 @@
 package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
-import java.util.Map;
-
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantityValues;
 
 /**
  * https://de.wikipedia.org/wiki/Induzierter_Luftwiderstand
@@ -20,11 +19,11 @@ public class InducedDragCoefficientCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(Map<PhysicalQuantity, Double> input)
+  protected double calculateWithoutChecks(PhysicalQuantityValues input)
   {
-    double wingWidth = PhysicalQuantity.WING_SPAN.getValueFromAvailableQuantities(input);
-    double wingDepth = PhysicalQuantity.WING_CHORD.getValueFromAvailableQuantities(input);
-    double liftCoefficient = PhysicalQuantity.LIFT_COEFFICIENT.getValueFromAvailableQuantities(input);
+    double wingWidth = input.getValue(PhysicalQuantity.WING_SPAN);
+    double wingDepth = input.getValue(PhysicalQuantity.WING_CHORD);
+    double liftCoefficient = input.getValue(PhysicalQuantity.LIFT_COEFFICIENT);
 
     double aspectRatio = wingWidth / wingDepth;
     double result = liftCoefficient * liftCoefficient / Math.PI / aspectRatio;
