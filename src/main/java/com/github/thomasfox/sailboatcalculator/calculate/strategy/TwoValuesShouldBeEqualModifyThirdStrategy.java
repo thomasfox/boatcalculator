@@ -41,8 +41,8 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
       return false;
     }
 
-    double targetValue1 = 1E-10d;
-    double targetValue2 = 1d;
+    double targetValue1 = lowerCutoff;
+    double targetValue2 = upperCutoff;
     AllValues allValuesForCalculation = new AllValues(allValues);
     allValuesForCalculation.moveCalculatedValuesToStartValues();
     CalculateDifferenceResult difference1 = calculateDifference(targetValue1, allValuesForCalculation);
@@ -113,13 +113,13 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
           + " and " + equalQuantity2 + " in " + equalQuantity2SetId
           + " for target Quantity " + targetQuantity + " with value " + estimatedTarget);
     }
-    if (Math.abs(difference1.getDifference()) < Math.abs(difference2.getDifference()))
+    if (Math.signum(difference1.getDifference()) == Math.signum(estimatedTargetDifference.getDifference()))
     {
-      return applyAndRecalculateWithPoints(targetValue1, difference1, estimatedTarget, estimatedTargetDifference, allValues, maxTries - 1);
+      return applyAndRecalculateWithPoints(estimatedTarget, estimatedTargetDifference, targetValue2, difference2, allValues, maxTries - 1);
     }
     else
     {
-      return applyAndRecalculateWithPoints(estimatedTarget, estimatedTargetDifference, targetValue2, difference2, allValues, maxTries - 1);
+      return applyAndRecalculateWithPoints(targetValue1, difference1, estimatedTarget, estimatedTargetDifference, allValues, maxTries - 1);
     }
   }
 
