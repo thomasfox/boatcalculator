@@ -6,7 +6,9 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -45,6 +47,8 @@ public class SwingGui
 
   private final JButton calculateButton;
 
+  private final JButton scanButton;
+
   private final int rowAfterButton;
 
   private final Boat boat = new Skiff29er();
@@ -81,6 +85,9 @@ public class SwingGui
     calculateButton.addActionListener(this::calculateButtonPressed);
     inputPanel.add(calculateButton, gridBagConstraints);
 
+    scanButton = new JButton("Diagramme anzeigen");
+    scanButton.addActionListener(this::scanButtonPressed);
+
     row++;
 
     rowAfterButton = row;
@@ -114,42 +121,91 @@ public class SwingGui
 
   public void calculateButtonPressed(ActionEvent e)
   {
+    calculateAndRefreshDisplayedResults();
+    frame.pack();
+  }
+
+  private List<QuantityInput> getScannedInputs()
+  {
     List<QuantityInput> scannedInputs = new ArrayList<>();
     for (PartInput valueSetInput : valueSetInputs)
     {
       scannedInputs.addAll(valueSetInput.getScannedQuantityInputs());
     }
-
-    if (!scannedInputs.isEmpty())
-    {
-      calculateAndRefreshDisplayedResultsScan(scannedInputs);
-    }
-    else
-    {
-      calculateAndRefreshDisplayedResultsNoScan();
-    }
-    frame.pack();
+    return scannedInputs;
   }
 
-  private void calculateAndRefreshDisplayedResultsNoScan()
+  private Map<PartOutput, List<QuantityOutput>> getShownGraphs()
+  {
+    Map<PartOutput, List<QuantityOutput>> result = new HashMap<>();
+    for (PartOutput partOutput : valueSetOutputs)
+    {
+      List<QuantityOutput> shownGraphsInValueSet = partOutput.getShownGraphs();
+      if (!shownGraphsInValueSet.isEmpty())
+      {
+        result.put(partOutput, shownGraphsInValueSet);
+      }
+    }
+    return result;
+  }
+
+  private void calculateAndRefreshDisplayedResults()
   {
     clearResult();
     reinitalizeValueSetInputs();
     boat.calculate();
-    displayCalculateResultInValueSetOutputs();
+
+    QuantityOutput.Mode mode;
+    List<QuantityInput> scannedInputs = getScannedInputs();
+    if (scannedInputs.isEmpty())
+    {
+      mode = QuantityOutput.Mode.NUMERIC_DISPLAY;
+    }
+    else
+    {
+      mode = QuantityOutput.Mode.CHECKBOX_DISPLAY;
+    }
+
+    int row = displayCalculateResultInValueSetOutputs(mode);
+
+    if (!scannedInputs.isEmpty())
+    {
+      GridBagConstraints gridBagConstraints = new GridBagConstraints();
+      gridBagConstraints.fill = GridBagConstraints.BOTH;
+      gridBagConstraints.gridx = 0;
+      gridBagConstraints.gridy = row + 1;
+      resultPanel.add(scanButton, gridBagConstraints);
+    }
   }
 
-  private void calculateAndRefreshDisplayedResultsScan(List<QuantityInput> scannedInputs)
+  public void scanButtonPressed(ActionEvent e)
   {
+    calculateAndRefreshDisplayedResultsScan();
+    frame.pack();
+  }
+
+  private void calculateAndRefreshDisplayedResultsScan()
+  {
+    Map<PartOutput, List<QuantityOutput>> shownGraphs = getShownGraphs();
+
     clearResult();
 
+    List<QuantityInput> scannedInputs = getScannedInputs();
     if (scannedInputs.size() > 1)
     {
       throw new IllegalArgumentException("Can only handle one scanned input");
     }
     QuantityInput scannedInput = scannedInputs.get(0);
 
-    XYSeries velocitySeries = new XYSeries("velocity", false, true);
+    Map<QuantityOutput, XYSeries> quantitySeries = new HashMap<>();
+    for (Map.Entry<PartOutput, List<QuantityOutput>> shownGraphsPart: shownGraphs.entrySet())
+    {
+      for (QuantityOutput shownGraph : shownGraphsPart.getValue())
+      {
+        XYSeries series = new XYSeries(shownGraph.getQuantity().getDisplayName(), false, true);
+        quantitySeries.put(shownGraph, series);
+      }
+    }
 
     for (int i = 0; i < scannedInput.getNumberOfScanSteps(); ++i)
     {
@@ -157,46 +213,57 @@ public class SwingGui
       scannedInput.setValue(xValue);
       reinitalizeValueSetInputs();
       boat.calculate();
-      double yValue = boat.getNamedValueSetNonNull(Boat.EXTERNAL_SETTINGS_ID).getKnownValue(PhysicalQuantity.VELOCITY).getValue();
-      velocitySeries.add(xValue, yValue);
+      for (Map.Entry<PartOutput, List<QuantityOutput>> shownGraphsPart: shownGraphs.entrySet())
+      {
+        for (QuantityOutput shownGraph : shownGraphsPart.getValue())
+        {
+          NamedValueSet namedValueSet = boat.getNamedValueSetNonNull(shownGraphsPart.getKey().getId());
+          double yValue = namedValueSet.getKnownValue(shownGraph.getQuantity()).getValue();
+          quantitySeries.get(shownGraph).add(xValue, yValue);
+        }
+      }
     }
-    JFreeChart velocityChart;
-    if ("°".equals(scannedInput.getQuantity().getUnit()))
+    for (Map.Entry<QuantityOutput, XYSeries> seriesEntry : quantitySeries.entrySet())
     {
-      XYSeriesCollection velocitySeriesCollection = new XYSeriesCollection();
-      velocitySeriesCollection.addSeries(velocitySeries);
-      velocityChart = ChartFactory.createPolarChart("Velocity", velocitySeriesCollection, false, true, false);
+      String seriesDisplayName = seriesEntry.getKey().getQuantity().getDisplayName();
+      JFreeChart chart;
+      if ("°".equals(scannedInput.getQuantity().getUnit()))
+      {
+        XYSeriesCollection seriesCollection = new XYSeriesCollection();
+        seriesCollection.addSeries(seriesEntry.getValue());
+        chart = ChartFactory.createPolarChart(seriesDisplayName, seriesCollection, false, true, false);
+      }
+      else
+      {
+        DefaultXYDataset dataset = new DefaultXYDataset();
+        dataset.addSeries(seriesDisplayName, seriesEntry.getValue().toArray());
+        chart = ChartFactory.createXYLineChart(
+            seriesDisplayName,
+            scannedInput.getQuantity().getDisplayNameIncludingUnit(),
+            PhysicalQuantity.VELOCITY.getDisplayNameIncludingUnit(),
+            dataset);
+      }
+      ChartPanel chartPanel = new ChartPanel(chart);
+      resultPanel.add(chartPanel);
+      chartPanels.add(chartPanel);
     }
-    else
-    {
-      DefaultXYDataset dataset = new DefaultXYDataset();
-      dataset.addSeries("velocity", velocitySeries.toArray());
-      velocityChart = ChartFactory.createXYLineChart(
-          "Velocity",
-          scannedInput.getQuantity().getDisplayNameIncludingUnit(),
-          PhysicalQuantity.VELOCITY.getDisplayNameIncludingUnit(),
-          dataset);
-    }
-    ChartPanel velocityChartPanel = new ChartPanel(velocityChart);
-    resultPanel.add(velocityChartPanel);
-    chartPanels.add(velocityChartPanel);
   }
 
-
-  private void displayCalculateResultInValueSetOutputs()
+  private int displayCalculateResultInValueSetOutputs(QuantityOutput.Mode mode)
   {
     int outputRow = 0;
     for (PartInput valueSetInput : valueSetInputs)
     {
-      PartOutput partOutput = new PartOutput(valueSetInput.getValueSet().getName());
+      PartOutput partOutput = new PartOutput(valueSetInput.getValueSet().getId(), valueSetInput.getValueSet().getName());
       valueSetOutputs.add(partOutput);
       for (PhysicalQuantityValue calculatedValue : valueSetInput.getValueSet().getCalculatedValues().getAsList())
       {
         QuantityOutput output = new QuantityOutput(calculatedValue.getPhysicalQuantity(), calculatedValue.getValue());
         partOutput.getQuantityOutputs().add(output);
       }
-      outputRow += partOutput.addToContainerInRow(resultPanel, rowAfterButton + outputRow);
+      outputRow += partOutput.addToContainerInRow(resultPanel, rowAfterButton + outputRow, mode);
     }
+    return outputRow;
   }
 
   private void reinitalizeValueSetInputs()
@@ -231,5 +298,6 @@ public class SwingGui
       partOutput.removeFromContainerAndReset(resultPanel);
     }
     valueSetOutputs.clear();
+    resultPanel.remove(scanButton);
   }
 }

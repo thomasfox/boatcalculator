@@ -91,9 +91,16 @@ public class PartInput
     valueSet.clearStartValues();
     for (QuantityInput quantityInput : quantityInputs)
     {
-      if (quantityInput.getValue() != null && !valueSet.isValueKnown(quantityInput.getQuantity()))
+      if (!valueSet.isValueKnown(quantityInput.getQuantity()))
       {
-        valueSet.setStartValueNoOverwrite(quantityInput.getQuantity(), quantityInput.getValue());
+        if (quantityInput.getValue() != null)
+        {
+          valueSet.setStartValueNoOverwrite(quantityInput.getQuantity(), quantityInput.getValue());
+        }
+        else if (quantityInput.getScanFrom() != null)
+        {
+          valueSet.setStartValueNoOverwrite(quantityInput.getQuantity(), quantityInput.getScanFrom());
+        }
       }
     }
   }
