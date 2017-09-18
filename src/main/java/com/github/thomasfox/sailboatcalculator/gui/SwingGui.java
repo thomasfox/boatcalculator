@@ -1,6 +1,6 @@
 package com.github.thomasfox.sailboatcalculator.gui;
 
-import java.awt.FlowLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -37,11 +38,13 @@ public class SwingGui
 
   private final JPanel inputPanel = new JPanel();
 
-  private final JPanel resultPanel = new JPanel();
+  private final JPanel singleResultPanel = new JPanel();
 
   private final List<PartInput> valueSetInputs = new ArrayList<>();
 
   private final List<PartOutput> valueSetOutputs = new ArrayList<>();
+
+  private final JPanel chartsPanel = new JPanel();
 
   private final List<ChartPanel> chartPanels = new ArrayList<>();
 
@@ -49,20 +52,37 @@ public class SwingGui
 
   private final JButton scanButton;
 
-  private final int rowAfterButton;
-
   private final Boat boat = new Skiff29er();
 
   public SwingGui()
   {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.getContentPane().setLayout(new FlowLayout());
+    frame.getContentPane().setLayout(new GridBagLayout());
 
     inputPanel.setLayout(new GridBagLayout());
-    frame.add(inputPanel);
+    GridBagConstraints gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    frame.add(inputPanel, gridBagConstraints);
 
-    resultPanel.setLayout(new GridBagLayout());
-    frame.add(resultPanel);
+    singleResultPanel.setLayout(new GridBagLayout());
+    gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 0;
+    frame.add(singleResultPanel, gridBagConstraints);
+
+    chartsPanel.setLayout(new GridBagLayout());
+    JScrollPane scrollPane = new JScrollPane(chartsPanel);
+    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setPreferredSize(new Dimension(600, 400));
+    gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 0;
+    frame.add(scrollPane, gridBagConstraints);
 
     for (NamedValueSet namedValueSet : boat.getNamedValueSets())
     {
@@ -78,7 +98,7 @@ public class SwingGui
     SwingHelper.addSeparatorToContainer(inputPanel, row++, 5);
 
     calculateButton = new JButton("Berechnen");
-    GridBagConstraints gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = row;
@@ -88,9 +108,6 @@ public class SwingGui
     scanButton = new JButton("Diagramme anzeigen");
     scanButton.addActionListener(this::scanButtonPressed);
 
-    row++;
-
-    rowAfterButton = row;
     frame.pack();
     frame.setVisible(true);
   }
@@ -171,10 +188,10 @@ public class SwingGui
     if (!scannedInputs.isEmpty())
     {
       GridBagConstraints gridBagConstraints = new GridBagConstraints();
-      gridBagConstraints.fill = GridBagConstraints.BOTH;
+      gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
       gridBagConstraints.gridx = 0;
       gridBagConstraints.gridy = row + 1;
-      resultPanel.add(scanButton, gridBagConstraints);
+      singleResultPanel.add(scanButton, gridBagConstraints);
     }
   }
 
@@ -188,7 +205,7 @@ public class SwingGui
   {
     Map<PartOutput, List<QuantityOutput>> shownGraphs = getShownGraphs();
 
-    clearResult();
+    clearCharts();
 
     List<QuantityInput> scannedInputs = getScannedInputs();
     if (scannedInputs.size() > 1)
@@ -223,6 +240,7 @@ public class SwingGui
         }
       }
     }
+    int row = 0;
     for (Map.Entry<QuantityOutput, XYSeries> seriesEntry : quantitySeries.entrySet())
     {
       String seriesDisplayName = seriesEntry.getKey().getQuantity().getDisplayName();
@@ -244,7 +262,11 @@ public class SwingGui
             dataset);
       }
       ChartPanel chartPanel = new ChartPanel(chart);
-      resultPanel.add(chartPanel);
+      GridBagConstraints gridBagConstraints = new GridBagConstraints();
+      gridBagConstraints.fill = GridBagConstraints.BOTH;
+      gridBagConstraints.gridx = 0;
+      gridBagConstraints.gridy = row++;
+      chartsPanel.add(chartPanel);
       chartPanels.add(chartPanel);
     }
   }
@@ -261,7 +283,7 @@ public class SwingGui
         QuantityOutput output = new QuantityOutput(calculatedValue.getPhysicalQuantity(), calculatedValue.getValue());
         partOutput.getQuantityOutputs().add(output);
       }
-      outputRow += partOutput.addToContainerInRow(resultPanel, rowAfterButton + outputRow, mode);
+      outputRow += partOutput.addToContainerInRow(singleResultPanel, outputRow, mode);
     }
     return outputRow;
   }
@@ -279,25 +301,25 @@ public class SwingGui
   private void clearResult()
   {
     clearCharts();
-    clearValueSetOutputs();
+    clearSingleResult();
   }
 
   private void clearCharts()
   {
     for (ChartPanel chartPanel : chartPanels)
     {
-      resultPanel.remove(chartPanel);
+      chartsPanel.remove(chartPanel);
     }
     chartPanels.clear();
   }
 
-  private void clearValueSetOutputs()
+  private void clearSingleResult()
   {
     for (PartOutput partOutput : valueSetOutputs)
     {
-      partOutput.removeFromContainerAndReset(resultPanel);
+      partOutput.removeFromContainerAndReset(singleResultPanel);
     }
     valueSetOutputs.clear();
-    resultPanel.remove(scanButton);
+    singleResultPanel.remove(scanButton);
   }
 }
