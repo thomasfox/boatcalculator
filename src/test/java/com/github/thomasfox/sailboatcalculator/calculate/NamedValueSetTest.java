@@ -159,8 +159,8 @@ public class NamedValueSetTest
         new PhysicalQuantityValue(PhysicalQuantity.DRIVING_FORCE, 10d),
         new PhysicalQuantityValue(PhysicalQuantity.LATERAL_FORCE, 13d));
     assertThat(result.getCalculatedValues().getAsList()).containsOnly(
-        new PhysicalQuantityValue(PhysicalQuantity.LIFT, 20d),
-        new PhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d));
+        new CalculatedPhysicalQuantityValue(PhysicalQuantity.LIFT, 20d),
+        new CalculatedPhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d));
   }
 
   @Test
@@ -339,7 +339,7 @@ public class NamedValueSetTest
     assertThat(result).isEqualTo(20d);
     // assert calculated value is removed
     assertThat(sut.getCalculatedValues().getAsList()).containsOnly(
-        new PhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d));
+        new CalculatedPhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d));
 
     // assert rest of object stays the same
     assertThat(sut.getId()).isEqualTo("namedValueSetId");
@@ -416,8 +416,8 @@ public class NamedValueSetTest
         new PhysicalQuantityValue(PhysicalQuantity.DENSITY, 1005d),
         new PhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 1.2E-6d));
     assertThat(sut.getCalculatedValues().getAsList()).containsOnly(
-        new PhysicalQuantityValue(PhysicalQuantity.LIFT, 20d),
-        new PhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d));
+        new CalculatedPhysicalQuantityValue(PhysicalQuantity.LIFT, 20d),
+        new CalculatedPhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d));
   }
 
   @Test

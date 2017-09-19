@@ -33,7 +33,7 @@ public class NamedValueSet
 
   private final PhysicalQuantityValues startValues = new PhysicalQuantityValues();
 
-  private final PhysicalQuantityValues calculatedValues = new PhysicalQuantityValues();
+  private final CalculatedPhysicalQuantityValues calculatedValues = new CalculatedPhysicalQuantityValues();
 
   private final List<QuantityRelations> quantityRelations = new ArrayList<>();
 
