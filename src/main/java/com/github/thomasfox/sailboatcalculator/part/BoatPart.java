@@ -1,6 +1,6 @@
 package com.github.thomasfox.sailboatcalculator.part;
 
-import com.github.thomasfox.sailboatcalculator.calculate.NamedValueSet;
+import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -6,9 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
 
 import lombok.Builder;
 import lombok.Getter;

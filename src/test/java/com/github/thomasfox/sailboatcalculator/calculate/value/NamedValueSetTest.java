@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.calculate;
+package com.github.thomasfox.sailboatcalculator.calculate.value;
 
 import static  org.assertj.core.api.Assertions.assertThat;
 
@@ -6,6 +6,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
 
 public class NamedValueSetTest
 {

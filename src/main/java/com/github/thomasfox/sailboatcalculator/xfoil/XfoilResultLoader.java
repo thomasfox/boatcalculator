@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 
 public class XfoilResultLoader

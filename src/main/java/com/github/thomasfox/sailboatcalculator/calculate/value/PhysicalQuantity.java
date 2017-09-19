@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.calculate;
+package com.github.thomasfox.sailboatcalculator.calculate.value;
 
 public enum PhysicalQuantity
 {

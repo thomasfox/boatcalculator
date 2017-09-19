@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.calculate;
+package com.github.thomasfox.sailboatcalculator.calculate.value;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

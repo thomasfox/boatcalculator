@@ -24,9 +24,9 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import com.github.thomasfox.sailboatcalculator.boat.Boat;
 import com.github.thomasfox.sailboatcalculator.boat.impl.Skiff29er;
-import com.github.thomasfox.sailboatcalculator.calculate.NamedValueSet;
-import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 
 public class SwingGui
 {

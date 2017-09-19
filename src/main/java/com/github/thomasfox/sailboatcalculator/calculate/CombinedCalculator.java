@@ -27,6 +27,10 @@ import com.github.thomasfox.sailboatcalculator.calculate.impl.TotalDragCalculato
 import com.github.thomasfox.sailboatcalculator.calculate.impl.TotalDragCoefficientCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.VMGCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.WingDepthFromSecondMomentOfAreaCalculator;
+import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
 import com.github.thomasfox.sailboatcalculator.interpolate.Interpolator;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.sailboatcalculator.interpolate.SimpleXYPoint;

@@ -2,10 +2,10 @@ package com.github.thomasfox.sailboatcalculator.boat.impl;
 
 import java.io.File;
 
-import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.IncreaseQuantityTillOtherReachesUpperLimitStrategy;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.TwoValuesShouldBeEqualModifyThirdStrategy;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.gui.SwingGui;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelationsLoader;
 import com.github.thomasfox.sailboatcalculator.part.PartType;

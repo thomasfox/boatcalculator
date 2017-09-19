@@ -1,5 +1,7 @@
 package com.github.thomasfox.sailboatcalculator.calculate;
 
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
+
 public class InputQuantityNotPresentException extends CalculatorException
 {
   private static final long serialVersionUID = 1L;

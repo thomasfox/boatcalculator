@@ -1,10 +1,11 @@
-package com.github.thomasfox.sailboatcalculator.calculate;
+package com.github.thomasfox.sailboatcalculator.calculate.value;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.github.thomasfox.sailboatcalculator.calculate.CombinedCalculator;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 
 import lombok.Data;

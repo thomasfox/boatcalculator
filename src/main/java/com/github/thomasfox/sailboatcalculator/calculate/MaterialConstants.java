@@ -1,5 +1,9 @@
 package com.github.thomasfox.sailboatcalculator.calculate;
 
+import com.github.thomasfox.sailboatcalculator.calculate.value.FixedPhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
+
 public class MaterialConstants
 {
   public static final PhysicalQuantityValue KINEMATIC_VISCOSITY_WATER
