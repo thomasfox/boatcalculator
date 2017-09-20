@@ -7,12 +7,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
-
 public class NamedValueSetTest
 {
 
@@ -33,7 +27,7 @@ public class NamedValueSetTest
     // arrange
     sut.setFixedValueNoOverwrite(PhysicalQuantity.WEIGHT, 10d);
     sut.setStartValue(PhysicalQuantity.WEIGHT, 20d);
-    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 30d);
+    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 30d, "calculatedBy");
 
     // act
     PhysicalQuantityValue result = sut.getKnownValue(PhysicalQuantity.WEIGHT);
@@ -48,7 +42,7 @@ public class NamedValueSetTest
   {
     // arrange
     sut.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 20d);
-    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 30d);
+    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 30d, "calculatedBy");
 
     // act
     PhysicalQuantityValue result = sut.getKnownValue(PhysicalQuantity.WEIGHT);
@@ -78,7 +72,7 @@ public class NamedValueSetTest
     // arrange
     sut.setFixedValueNoOverwrite(PhysicalQuantity.WEIGHT, 10d);
     sut.setStartValue(PhysicalQuantity.WEIGHT, 20d);
-    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 30d);
+    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 30d, "calculatedBy");
 
     // act
     PhysicalQuantityValues result = sut.getKnownValues();
@@ -92,7 +86,7 @@ public class NamedValueSetTest
   {
     // arrange
     sut.setStartValue(PhysicalQuantity.WEIGHT, 20d);
-    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 30d);
+    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 30d, "calculatedBy");
 
     // act
     PhysicalQuantityValues result = sut.getKnownValues();
@@ -133,7 +127,7 @@ public class NamedValueSetTest
     // arrange
     sut.setFixedValueNoOverwrite(PhysicalQuantity.LIFT, 20d);
     sut.setStartValue(PhysicalQuantity.LIFT, 20d);
-    sut.setCalculatedValue(PhysicalQuantity.LIFT, 20d);
+    sut.setCalculatedValue(PhysicalQuantity.LIFT, 20d, "calculatedBy");
 
     // act
     boolean result = sut.isValueKnown(PhysicalQuantity.WEIGHT);
@@ -165,8 +159,8 @@ public class NamedValueSetTest
         new PhysicalQuantityValue(PhysicalQuantity.DRIVING_FORCE, 10d),
         new PhysicalQuantityValue(PhysicalQuantity.LATERAL_FORCE, 13d));
     assertThat(result.getCalculatedValues().getAsList()).containsOnly(
-        new CalculatedPhysicalQuantityValue(PhysicalQuantity.LIFT, 20d),
-        new CalculatedPhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d));
+        new CalculatedPhysicalQuantityValue(PhysicalQuantity.LIFT, 20d, "calculatedBy"),
+        new CalculatedPhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d, "calculatedBy"));
   }
 
   @Test
@@ -186,7 +180,7 @@ public class NamedValueSetTest
   public void testSetStartValueNoOverwrite_calculatedValueKnown()
   {
     // arrange
-    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 10d);
+    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 10d, "calculatedBy");
 
     // assert
     expectedExeption.expect(IllegalArgumentException.class);
@@ -225,7 +219,7 @@ public class NamedValueSetTest
   public void testSetFixedValueNoOverwrite_calculatedValueKnown()
   {
     // arrange
-    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 10d);
+    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 10d, "calculatedBy");
 
     // assert
     expectedExeption.expect(IllegalArgumentException.class);
@@ -257,20 +251,20 @@ public class NamedValueSetTest
     expectedExeption.expect(IllegalArgumentException.class);
 
     // act
-    sut.setCalculatedValueNoOverwrite(PhysicalQuantity.WEIGHT, 10d);
+    sut.setCalculatedValueNoOverwrite(PhysicalQuantity.WEIGHT, 10d, "calculatedBy");
   }
 
   @Test
   public void testSetCalculatedValueNoOverwrite_calculatedValueKnown()
   {
     // arrange
-    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 10d);
+    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 10d, "calculatedBy");
 
     // assert
     expectedExeption.expect(IllegalArgumentException.class);
 
     // act
-    sut.setCalculatedValueNoOverwrite(PhysicalQuantity.WEIGHT, 10d);
+    sut.setCalculatedValueNoOverwrite(PhysicalQuantity.WEIGHT, 10d, "calculatedBy");
   }
 
   @Test
@@ -283,7 +277,7 @@ public class NamedValueSetTest
     expectedExeption.expect(IllegalArgumentException.class);
 
     // act
-    sut.setCalculatedValueNoOverwrite(PhysicalQuantity.WEIGHT, 10d);
+    sut.setCalculatedValueNoOverwrite(PhysicalQuantity.WEIGHT, 10d, "calculatedBy");
   }
 
   @Test
@@ -292,7 +286,7 @@ public class NamedValueSetTest
     // arrange
     sut.setFixedValueNoOverwrite(PhysicalQuantity.WEIGHT, 10d);
     sut.setStartValue(PhysicalQuantity.WEIGHT, 20d);
-    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 30d);
+    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 30d, "calculatedBy");
 
     // act
     double result = sut.getFixedValue(PhysicalQuantity.WEIGHT);
@@ -307,7 +301,7 @@ public class NamedValueSetTest
     // arrange
     sut.setFixedValueNoOverwrite(PhysicalQuantity.WEIGHT, 10d);
     sut.setStartValue(PhysicalQuantity.WEIGHT, 20d);
-    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 30d);
+    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 30d, "calculatedBy");
 
     // act
     double result = sut.getStartValue(PhysicalQuantity.WEIGHT);
@@ -322,7 +316,7 @@ public class NamedValueSetTest
     // arrange
     sut.setFixedValueNoOverwrite(PhysicalQuantity.WEIGHT, 10d);
     sut.setStartValue(PhysicalQuantity.WEIGHT, 20d);
-    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 30d);
+    sut.setCalculatedValue(PhysicalQuantity.WEIGHT, 30d, "calculatedBy");
 
     // act
     double result = sut.getCalculatedValue(PhysicalQuantity.WEIGHT);
@@ -345,7 +339,7 @@ public class NamedValueSetTest
     assertThat(result).isEqualTo(20d);
     // assert calculated value is removed
     assertThat(sut.getCalculatedValues().getAsList()).containsOnly(
-        new CalculatedPhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d));
+        new CalculatedPhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d, "calculatedBy"));
 
     // assert rest of object stays the same
     assertThat(sut.getId()).isEqualTo("namedValueSetId");
@@ -422,8 +416,8 @@ public class NamedValueSetTest
         new PhysicalQuantityValue(PhysicalQuantity.DENSITY, 1005d),
         new PhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 1.2E-6d));
     assertThat(sut.getCalculatedValues().getAsList()).containsOnly(
-        new CalculatedPhysicalQuantityValue(PhysicalQuantity.LIFT, 20d),
-        new CalculatedPhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d));
+        new CalculatedPhysicalQuantityValue(PhysicalQuantity.LIFT, 20d, "calculatedBy"),
+        new CalculatedPhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d, "calculatedBy"));
   }
 
   @Test
@@ -461,7 +455,7 @@ public class NamedValueSetTest
     sut.setFixedValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 1.2E-6d));
     sut.setStartValue(PhysicalQuantity.DRIVING_FORCE, 10d);
     sut.setStartValueNoOverwrite(PhysicalQuantity.LATERAL_FORCE, 13d);
-    sut.setCalculatedValue(PhysicalQuantity.LIFT, 20d);
-    sut.setCalculatedValueNoOverwrite(PhysicalQuantity.POINTING_ANGLE, 23d);
+    sut.setCalculatedValue(PhysicalQuantity.LIFT, 20d, "calculatedBy");
+    sut.setCalculatedValueNoOverwrite(PhysicalQuantity.POINTING_ANGLE, 23d, "calculatedBy");
   }
 }

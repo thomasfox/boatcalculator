@@ -51,7 +51,11 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
     {
       return false;
     }
-    scannedQuantitySet.setCalculatedValue(scannedQuantity, targetValue);
+    scannedQuantitySet.setCalculatedValue(
+        scannedQuantity,
+        targetValue,
+        "Scan " + scannedQuantitySet.getName() + ": " + scannedQuantity.getDisplayName() + " with max "+ scannedQuantityUpperLimit
+          + " to maximize " + limitedQuantitySet.getName() + ":" + limitedQuantity.getDisplayName() + " with max " + limitedValueLimit);
     return true;
   }
 
@@ -96,6 +100,6 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
   {
     allValues.clearCalculatedValues();
     NamedValueSet scannedQuantitySet = allValues.getNamedValueSetNonNull(scannedQuantitySetId);
-    scannedQuantitySet.setCalculatedValue(scannedQuantity, scannedValue);
+    scannedQuantitySet.setCalculatedValue(scannedQuantity, scannedValue, getClass().getSimpleName() + " trial value");
   }
 }

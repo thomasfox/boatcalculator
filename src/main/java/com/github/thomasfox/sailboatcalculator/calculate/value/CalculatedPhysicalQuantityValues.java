@@ -19,6 +19,33 @@ public class CalculatedPhysicalQuantityValues extends AbstractPhysicalQuantityVa
   @Override
   protected CalculatedPhysicalQuantityValue createEntry(PhysicalQuantity physicalQuantity, Double value)
   {
-    return new CalculatedPhysicalQuantityValue(physicalQuantity, value);
+    return new CalculatedPhysicalQuantityValue(physicalQuantity, value, null, (PhysicalQuantityValueWithSetName[]) null);
+  }
+
+  public void setValueNoOverwrite(
+      PhysicalQuantity physicalQuantity,
+      double value,
+      String calculatedBy,
+      PhysicalQuantityValueWithSetName... calculatedFrom)
+  {
+    super.setValueNoOverwrite(new CalculatedPhysicalQuantityValue(physicalQuantity, value, calculatedBy, calculatedFrom));
+  }
+
+  public void setValueNoOverwrite(
+      PhysicalQuantity physicalQuantity,
+      double value,
+      String calculatedBy,
+      PhysicalQuantityValuesWithSetNamePerValue calculatedFrom)
+  {
+    super.setValueNoOverwrite(new CalculatedPhysicalQuantityValue(physicalQuantity, value, calculatedBy, calculatedFrom));
+  }
+
+  public void setValue(
+      PhysicalQuantity physicalQuantity,
+      double value,
+      String calculatedBy,
+      PhysicalQuantityValueWithSetName... calculatedFrom)
+  {
+    super.setValue(new CalculatedPhysicalQuantityValue(physicalQuantity, value, calculatedBy, calculatedFrom));
   }
 }

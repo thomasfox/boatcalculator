@@ -1,6 +1,7 @@
 package com.github.thomasfox.sailboatcalculator.calculate.value;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -31,7 +32,7 @@ public abstract class AbstractPhysicalQuantityValues<T extends PhysicalQuantityV
   {
     for (T valueToCopy : toCopy.values)
     {
-      values.add(copy(valueToCopy));
+      addValue(valueToCopy);
     }
   }
 
@@ -51,27 +52,38 @@ public abstract class AbstractPhysicalQuantityValues<T extends PhysicalQuantityV
     }
   }
 
+  public void setValues(T... toSet)
+  {
+    for (T valueToCopy : toSet)
+    {
+      setValue(valueToCopy);
+    }
+  }
+
+  public void setValues(Collection<T> toSet)
+  {
+    for (T valueToCopy : toSet)
+    {
+      setValue(valueToCopy);
+    }
+  }
+
   public void setValue(@NonNull T toSet)
   {
-    setValue(toSet.getPhysicalQuantity(), toSet.getValue());
+    remove(toSet.getPhysicalQuantity());
+    addValue(toSet);
   }
 
   public void setValue(@NonNull PhysicalQuantity physicalQuantity, double value)
   {
-    PhysicalQuantityValue physicalQuantityValue = getPhysicalQuantityValue(physicalQuantity);
-    if (physicalQuantityValue == null)
-    {
-      addValue(physicalQuantity, value);
-    }
-    else
-    {
-      physicalQuantityValue.setValue(value);
-    }
+    remove(physicalQuantity);
+    addValue(physicalQuantity, value);
   }
 
   public void setValueNoOverwrite(@NonNull T toSet)
   {
-    setValueNoOverwrite(toSet.getPhysicalQuantity(), toSet.getValue());
+    checkQuantityNotSetForWrite(toSet.getPhysicalQuantity());
+    addValue(toSet);
   }
 
   public void setValueNoOverwrite(@NonNull PhysicalQuantity physicalQuantity, double value)
@@ -87,6 +99,11 @@ public abstract class AbstractPhysicalQuantityValues<T extends PhysicalQuantityV
     {
       throw new IllegalArgumentException("Tried to overwite value for quantity " + physicalQuantity);
     }
+  }
+
+  private boolean addValue(T toAdd)
+  {
+    return values.add(copy(toAdd));
   }
 
   private void addValue(PhysicalQuantity physicalQuantity, Double value)

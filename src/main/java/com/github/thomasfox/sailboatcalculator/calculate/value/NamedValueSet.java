@@ -1,11 +1,13 @@
 package com.github.thomasfox.sailboatcalculator.calculate.value;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.github.thomasfox.sailboatcalculator.calculate.CombinedCalculator;
+import com.github.thomasfox.sailboatcalculator.calculate.QuantityNotPresentException;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 
 import lombok.Data;
@@ -57,6 +59,23 @@ public class NamedValueSet
     return result;
   }
 
+  public PhysicalQuantityValueWithSetName[] getKnownValuesAsArray(Collection<PhysicalQuantity> toGet)
+  {
+    PhysicalQuantityValueWithSetName[] result = new PhysicalQuantityValueWithSetName[toGet.size()];
+    int i = 0;
+    for (PhysicalQuantity physicalQuantity : toGet)
+    {
+      PhysicalQuantityValue knownQuantity = getKnownValue(physicalQuantity);
+      if (knownQuantity == null)
+      {
+        throw new QuantityNotPresentException(physicalQuantity);
+      }
+      result[i] = new PhysicalQuantityValueWithSetName(knownQuantity.getPhysicalQuantity(), knownQuantity.getValue(), name);
+      ++i;
+    }
+    return result;
+  }
+
   public boolean isValueKnown(PhysicalQuantity toCheck)
   {
     return getKnownValue(toCheck) != null;
@@ -78,6 +97,20 @@ public class NamedValueSet
     return result;
   }
 
+  public PhysicalQuantityValues getKnownValues(Set<PhysicalQuantity> quantitiesToRead)
+  {
+    PhysicalQuantityValues result = new PhysicalQuantityValues();
+    for (PhysicalQuantity quantityToRead : quantitiesToRead)
+    {
+      PhysicalQuantityValue knownValue = getKnownValue(quantityToRead);
+      if (knownValue == null)
+      {
+        throw new QuantityNotPresentException(quantityToRead);
+      }
+      result.setValueNoOverwrite(knownValue);
+    }
+    return result;
+  }
 
   public void setFixedValueNoOverwrite(PhysicalQuantity physicalQuantity, double value)
   {
@@ -105,16 +138,35 @@ public class NamedValueSet
     startValues.setValue(physicalQuantity, value);
   }
 
-  public void setCalculatedValueNoOverwrite(PhysicalQuantity physicalQuantity, double value)
+  public void setCalculatedValueNoOverwrite(
+      PhysicalQuantity physicalQuantity,
+      double value,
+      String calculatedBy,
+      PhysicalQuantityValueWithSetName... calculatedFrom)
   {
     fixedValues.checkQuantityNotSetForWrite(physicalQuantity);
     startValues.checkQuantityNotSetForWrite(physicalQuantity);
-    calculatedValues.setValueNoOverwrite(physicalQuantity, value);
+    calculatedValues.setValueNoOverwrite(physicalQuantity, value, calculatedBy, calculatedFrom);
   }
 
-  public void setCalculatedValue(PhysicalQuantity physicalQuantity, double value)
+  public void setCalculatedValueNoOverwrite(
+      PhysicalQuantity physicalQuantity,
+      double value,
+      String calculatedBy,
+      PhysicalQuantityValuesWithSetNamePerValue calculatedFrom)
   {
-    calculatedValues.setValue(physicalQuantity, value);
+    fixedValues.checkQuantityNotSetForWrite(physicalQuantity);
+    startValues.checkQuantityNotSetForWrite(physicalQuantity);
+    calculatedValues.setValueNoOverwrite(physicalQuantity, value, calculatedBy, calculatedFrom);
+  }
+
+  public void setCalculatedValue(
+      PhysicalQuantity physicalQuantity,
+      double value,
+      String calculatedBy,
+      PhysicalQuantityValueWithSetName... calculatedFrom)
+  {
+    calculatedValues.setValue(physicalQuantity, value, calculatedBy, calculatedFrom);
   }
 
   public Double getFixedValue(PhysicalQuantity physicalQuantity)

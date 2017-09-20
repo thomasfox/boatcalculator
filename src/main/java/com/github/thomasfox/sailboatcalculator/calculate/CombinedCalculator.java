@@ -31,6 +31,7 @@ import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValuesWithSetNamePerValue;
 import com.github.thomasfox.sailboatcalculator.interpolate.Interpolator;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.sailboatcalculator.interpolate.SimpleXYPoint;
@@ -88,7 +89,11 @@ public class CombinedCalculator
           continue;
         }
         double calculationResult = calculator.calculate(namedValueSet.getKnownValues());
-        namedValueSet.setCalculatedValueNoOverwrite(calculator.getOutputQuantity(), calculationResult);
+        namedValueSet.setCalculatedValueNoOverwrite(
+            calculator.getOutputQuantity(),
+            calculationResult,
+            calculator.getClass().getSimpleName(),
+            namedValueSet.getKnownValuesAsArray(calculator.getInputQuantities()));
         changedInCurrentIteration = true;
         changedOverall = true;
       }
@@ -102,11 +107,18 @@ public class CombinedCalculator
         {
           continue;
         }
+        Set<PhysicalQuantity> usedQuantities
+            = quantityRelations.getKnownRelatedQuantities(namedValueSet.getKnownValues());
+        usedQuantities.addAll(quantityRelations.getFixedQuantities().getContainedQuantities());
         PhysicalQuantityValues relatedQuantities
             = quantityRelations.getRelatedQuantityValues(namedValueSet.getKnownValues());
         for (PhysicalQuantityValue physicalQuantityValue : relatedQuantities.getAsList())
         {
-          namedValueSet.setCalculatedValueNoOverwrite(physicalQuantityValue.getPhysicalQuantity(), physicalQuantityValue.getValue());
+          namedValueSet.setCalculatedValueNoOverwrite(
+              physicalQuantityValue.getPhysicalQuantity(),
+              physicalQuantityValue.getValue(),
+              quantityRelations.getName(),
+              new PhysicalQuantityValuesWithSetNamePerValue(namedValueSet.getKnownValues(usedQuantities), namedValueSet.getName()));
           changedInCurrentIteration = true;
           changedOverall = true;
         }
@@ -143,7 +155,10 @@ public class CombinedCalculator
             entry.getValue());
         if (interpolatedValue != null)
         {
-          namedValueSet.setCalculatedValueNoOverwrite(entry.getKey(), interpolatedValue);
+          namedValueSet.setCalculatedValueNoOverwrite(
+              entry.getKey(),
+              interpolatedValue,
+              "unknown Quantity Relations");
           changedInCurrentIteration = true;
           changedOverall = true;
         }

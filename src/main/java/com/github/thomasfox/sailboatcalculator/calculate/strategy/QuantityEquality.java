@@ -4,6 +4,7 @@ import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetName;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,7 +36,11 @@ public class QuantityEquality implements ComputationStrategy
     PhysicalQuantityValue knownValue = sourceSet.getKnownValue(sourceQuantity);
     if (knownValue != null && !targetSet.isValueKnown(targetQuantity))
     {
-      targetSet.setCalculatedValueNoOverwrite(targetQuantity, knownValue.getValue());
+      targetSet.setCalculatedValueNoOverwrite(
+          targetQuantity,
+          knownValue.getValue(),
+          sourceSet.getName() + ":" +  sourceQuantity.getDisplayName(),
+          new PhysicalQuantityValueWithSetName(knownValue, sourceSet.getName()));
       return true;
     }
     return false;

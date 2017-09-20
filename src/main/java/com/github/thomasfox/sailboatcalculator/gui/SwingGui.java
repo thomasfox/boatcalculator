@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -24,9 +25,9 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import com.github.thomasfox.sailboatcalculator.boat.Boat;
 import com.github.thomasfox.sailboatcalculator.boat.impl.Skiff29er;
+import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 
 public class SwingGui
 {
@@ -72,6 +73,7 @@ public class SwingGui
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 0;
     frame.add(singleResultPanel, gridBagConstraints);
+    singleResultPanel.setBorder(new EmptyBorder(0,10,0,10));
 
     chartsPanel.setLayout(new GridBagLayout());
     JScrollPane scrollPane = new JScrollPane(chartsPanel);
@@ -278,9 +280,9 @@ public class SwingGui
     {
       PartOutput partOutput = new PartOutput(valueSetInput.getValueSet().getId(), valueSetInput.getValueSet().getName());
       valueSetOutputs.add(partOutput);
-      for (PhysicalQuantityValue calculatedValue : valueSetInput.getValueSet().getCalculatedValues().getAsList())
+      for (CalculatedPhysicalQuantityValue calculatedValue : valueSetInput.getValueSet().getCalculatedValues().getAsList())
       {
-        QuantityOutput output = new QuantityOutput(calculatedValue.getPhysicalQuantity(), calculatedValue.getValue());
+        QuantityOutput output = new QuantityOutput(calculatedValue);
         partOutput.getQuantityOutputs().add(output);
       }
       outputRow += partOutput.addToContainerInRow(singleResultPanel, outputRow, mode);

@@ -60,7 +60,7 @@ public abstract class Calculator
     {
       if (input.getPhysicalQuantityValue(inputQuantity) == null)
       {
-        throw new InputQuantityNotPresentException(inputQuantity);
+        throw new QuantityNotPresentException(inputQuantity);
       }
     }
   }

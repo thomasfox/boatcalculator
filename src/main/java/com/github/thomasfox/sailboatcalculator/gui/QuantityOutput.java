@@ -2,10 +2,14 @@ package com.github.thomasfox.sailboatcalculator.gui;
 
 import java.awt.Container;
 import java.awt.GridBagConstraints;
+import java.math.BigDecimal;
+import java.math.MathContext;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.border.EmptyBorder;
 
+import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
 
 import lombok.Getter;
@@ -18,6 +22,8 @@ public class QuantityOutput
 
   private final JLabel valueLabel = new JLabel();
 
+  private final JLabel originLabel = new JLabel();
+
   @Getter
   private final PhysicalQuantity quantity;
 
@@ -27,11 +33,12 @@ public class QuantityOutput
 
   private Mode mode;
 
-  public QuantityOutput(PhysicalQuantity quantity, Double value)
+  public QuantityOutput(CalculatedPhysicalQuantityValue calculatedValue)
   {
-    this.quantity = quantity;
-    setValue(value);
+    this.quantity = calculatedValue.getPhysicalQuantity();
+    setValue(calculatedValue.getValue());
     label.setText(quantity.getDisplayNameIncludingUnit());
+    originLabel.setText(calculatedValue.getCalculatedBy());
     mode = Mode.NOT_DISPLAYED;
   }
 
@@ -54,6 +61,11 @@ public class QuantityOutput
     if (newMode == Mode.NUMERIC_DISPLAY)
     {
       container.add(valueLabel, gridBagConstraints);
+      gridBagConstraints = new GridBagConstraints();
+      gridBagConstraints.fill = GridBagConstraints.BOTH;
+      gridBagConstraints.gridx = 2;
+      gridBagConstraints.gridy = row;
+      container.add(originLabel, gridBagConstraints);
     }
     else if (newMode == Mode.CHECKBOX_DISPLAY)
     {
@@ -76,6 +88,7 @@ public class QuantityOutput
     if (mode == Mode.NUMERIC_DISPLAY)
     {
       container.remove(valueLabel);
+      container.remove(originLabel);
     }
     else
     {
@@ -98,7 +111,10 @@ public class QuantityOutput
     }
     else
     {
-      valueLabel.setText(value.toString());
+      BigDecimal bd = new BigDecimal(value);
+      bd = bd.round(new MathContext(3));
+      valueLabel.setText(bd.toPlainString());
+      valueLabel.setBorder(new EmptyBorder(0,10,0,10));
     }
   }
 
