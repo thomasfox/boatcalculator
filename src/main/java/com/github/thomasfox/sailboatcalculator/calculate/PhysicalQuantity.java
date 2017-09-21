@@ -20,6 +20,7 @@ public enum PhysicalQuantity
   VELOCITY("Geschwindigkeit", "m/s", "Geschwindigkeit der Strömung"),
   FLOW_DIRECTION("Winkel der Strömung", "°", "Winkel der Strömung zur Bootsachse"),
   POINTING_ANGLE("Steuerkurs", "°", "Winkel zwischen Symmetrieachse des Bootes und Windrichtung"),
+  SAILING_ANGLE("Gesegelter Kurs", "°", "Winkel zwischen Windrichtung und dem Geschwindigkeitsvektor durch das Wasser"),
   VMG("VMG", "m/s", "Komponente der Geschwindigkeit in Windrichtung"),
   APPARENT_WIND_ANGLE("Scheinbare Windrichtung", "°", "Winkel zwischen Symmetrieachse des Bootes und Scheinbarer Windrichtung"),
   APPARENT_WIND_SPEED("Scheinbarer Wind", "m/s"),

@@ -9,14 +9,14 @@ public class VMGCalculator extends Calculator
   public VMGCalculator()
   {
     super(PhysicalQuantity.VMG,
-        PhysicalQuantity.POINTING_ANGLE,
+        PhysicalQuantity.SAILING_ANGLE,
         PhysicalQuantity.VELOCITY);
   }
 
   @Override
   protected double calculateWithoutChecks(PhysicalQuantityValues input)
   {
-    double pointingAngle = input.getValue(PhysicalQuantity.POINTING_ANGLE);
+    double pointingAngle = input.getValue(PhysicalQuantity.SAILING_ANGLE);
     double velocity = input.getValue(PhysicalQuantity.VELOCITY);
 
     double vmg = velocity* Math.cos(pointingAngle * Math.PI / 180d);

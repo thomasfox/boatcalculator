@@ -11,7 +11,7 @@ public class ApparentWindDirectionCalculator extends Calculator
     super(PhysicalQuantity.APPARENT_WIND_ANGLE,
         PhysicalQuantity.VELOCITY,
         PhysicalQuantity.WIND_SPEED,
-        PhysicalQuantity.POINTING_ANGLE);
+        PhysicalQuantity.SAILING_ANGLE);
   }
 
   @Override
@@ -19,7 +19,7 @@ public class ApparentWindDirectionCalculator extends Calculator
   {
     double boatSpeed = input.getValue(PhysicalQuantity.VELOCITY);
     double windSpeed = input.getValue(PhysicalQuantity.WIND_SPEED);
-    double pointingAngle = input.getValue(PhysicalQuantity.POINTING_ANGLE);
+    double pointingAngle = input.getValue(PhysicalQuantity.SAILING_ANGLE);
     double apparentWindSpeedAlongBoat = boatSpeed + windSpeed * Math.cos(pointingAngle * Math.PI / 180d);
     double apparentWindSpeedPerpendicularToBoat = windSpeed * Math.sin(pointingAngle * Math.PI / 180d);
     if (Math.abs(apparentWindSpeedAlongBoat) < 1E-20d)

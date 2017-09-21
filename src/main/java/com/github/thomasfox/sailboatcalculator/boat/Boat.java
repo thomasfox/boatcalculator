@@ -45,8 +45,10 @@ public abstract class Boat
 
     externalSettings.addToInput(PhysicalQuantity.WIND_SPEED);
     externalSettings.addToInput(PhysicalQuantity.POINTING_ANGLE);
+    externalSettings.addToInput(PhysicalQuantity.DRIFT_ANGLE);
     values.add(externalSettings);
 
+//    values.add(new DriftToStableStateStrategy(PhysicalQuantity.ANGLE_OF_ATTACK, PartType.DAGGERBOARD.name(), PhysicalQuantity.DRIFT_ANGLE, EXTERNAL_SETTINGS_ID, 0d));
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, EXTERNAL_SETTINGS_ID, PhysicalQuantity.VELOCITY, PartType.RUDDER.name()));
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, EXTERNAL_SETTINGS_ID, PhysicalQuantity.VELOCITY, PartType.DAGGERBOARD.name()));
     values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, PartType.SAIL.name(), PhysicalQuantity.LIFT, PartType.DAGGERBOARD.name())); // assumption: rudder has no force

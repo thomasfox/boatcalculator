@@ -20,6 +20,7 @@ import com.github.thomasfox.sailboatcalculator.calculate.impl.LiftCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.LiftCoefficientCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.ProfileDragCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.ReynoldsNumberCalculator;
+import com.github.thomasfox.sailboatcalculator.calculate.impl.SailingAngleCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.SecondMomentOfAreaCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.ThicknessCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.TorqueCalculator;
@@ -65,6 +66,7 @@ public class CombinedCalculator
     calculators.add(new TorqueCalculator());
     calculators.add(new LeverFromWeightCalculator());
     calculators.add(new VMGCalculator());
+    calculators.add(new SailingAngleCalculator());
 
     this.quantityRelationsList.addAll(quantityRelationsList);
   }
