@@ -72,11 +72,15 @@ public class SwingGui
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 0;
-    frame.add(singleResultPanel, gridBagConstraints);
+    JScrollPane scrollPane = new JScrollPane(singleResultPanel);
+    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setPreferredSize(new Dimension(600, 400));
+    frame.add(scrollPane, gridBagConstraints);
     singleResultPanel.setBorder(new EmptyBorder(0,10,0,10));
 
     chartsPanel.setLayout(new GridBagLayout());
-    JScrollPane scrollPane = new JScrollPane(chartsPanel);
+    scrollPane = new JScrollPane(chartsPanel);
     scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     scrollPane.setPreferredSize(new Dimension(600, 400));
@@ -109,6 +113,12 @@ public class SwingGui
 
     scanButton = new JButton("Diagramme anzeigen");
     scanButton.addActionListener(this::scanButtonPressed);
+    scanButton.setVisible(false);
+    gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = row;
+    inputPanel.add(scanButton, gridBagConstraints);
 
     frame.pack();
     frame.setVisible(true);
@@ -193,7 +203,11 @@ public class SwingGui
       gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
       gridBagConstraints.gridx = 0;
       gridBagConstraints.gridy = row + 1;
-      singleResultPanel.add(scanButton, gridBagConstraints);
+      scanButton.setVisible(true);
+    }
+    else
+    {
+      scanButton.setVisible(false);
     }
   }
 
