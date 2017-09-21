@@ -1,8 +1,8 @@
 package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetName;
 

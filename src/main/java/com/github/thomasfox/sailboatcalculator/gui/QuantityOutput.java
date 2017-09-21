@@ -9,8 +9,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
 
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
 
 import lombok.Getter;
 import lombok.ToString;

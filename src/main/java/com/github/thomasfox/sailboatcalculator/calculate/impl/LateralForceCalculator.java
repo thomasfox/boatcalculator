@@ -1,7 +1,7 @@
 package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
 
 public class LateralForceCalculator extends Calculator

@@ -3,6 +3,8 @@ package com.github.thomasfox.sailboatcalculator.calculate.value;
 import java.util.Collections;
 import java.util.List;
 
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+
 import lombok.Getter;
 
 public class CalculatedPhysicalQuantityValue extends PhysicalQuantityValue

@@ -4,8 +4,8 @@ import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.sailboatcalculator.part.impl.Wing;
 import com.github.thomasfox.sailboatcalculator.profile.ProfileGeometry;

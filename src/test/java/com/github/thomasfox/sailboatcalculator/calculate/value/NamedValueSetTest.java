@@ -7,6 +7,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+
 public class NamedValueSetTest
 {
 

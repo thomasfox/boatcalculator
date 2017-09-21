@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.iterate.DoubleIntervalIterator;
 
 public class QuantityInput

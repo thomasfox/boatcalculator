@@ -1,6 +1,6 @@
 package com.github.thomasfox.sailboatcalculator.part.impl;
 
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.part.BoatPart;
 import com.github.thomasfox.sailboatcalculator.part.PartType;
 

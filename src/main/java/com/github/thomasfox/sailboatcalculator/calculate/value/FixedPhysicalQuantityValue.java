@@ -1,5 +1,7 @@
 package com.github.thomasfox.sailboatcalculator.calculate.value;
 
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+
 public class FixedPhysicalQuantityValue extends PhysicalQuantityValue
 {
   public FixedPhysicalQuantityValue(PhysicalQuantity physicalQuantity, double value)

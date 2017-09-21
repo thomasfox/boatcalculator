@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.calculate.value;
+package com.github.thomasfox.sailboatcalculator.calculate;
 
 public enum PhysicalQuantity
 {
@@ -23,6 +23,7 @@ public enum PhysicalQuantity
   VMG("VMG", "m/s", "Komponente der Geschwindigkeit in Windrichtung"),
   APPARENT_WIND_ANGLE("Scheinbare Windrichtung", "°", "Winkel zwischen Symmetrieachse des Bootes und Scheinbarer Windrichtung"),
   APPARENT_WIND_SPEED("Scheinbarer Wind", "m/s"),
+  DRIFT_ANGLE("Abdrift", "°", "Winkel zwischen Symmetrieachse des Bootes und dem Geschwindigkeitsvektor durch das Wasser"),
   WIND_SPEED("Windgeschwindigkeit", "m/s", "Das Wasser wird als ruhendes Bezugssystem genommen"),
   FORCE("Kraft", "N"),
   LEVER_BETWEEN_FORCES("Hebelarm", "m", "Strecke zwischen zwei gleichstarken entgegengesetzten Kräften, ohne festen Drehpunkt"),

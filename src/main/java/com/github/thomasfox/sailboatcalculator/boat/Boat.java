@@ -2,10 +2,10 @@ package com.github.thomasfox.sailboatcalculator.boat;
 
 import java.util.Set;
 
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.part.BoatPart;
 import com.github.thomasfox.sailboatcalculator.part.PartType;
 import com.github.thomasfox.sailboatcalculator.part.impl.DaggerboardOrKeel;

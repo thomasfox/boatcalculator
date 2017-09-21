@@ -1,8 +1,8 @@
 package com.github.thomasfox.sailboatcalculator.boat.impl;
 
 import com.github.thomasfox.sailboatcalculator.boat.Boat;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantityEquality;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.part.BoatPart;
 import com.github.thomasfox.sailboatcalculator.part.PartType;
 import com.github.thomasfox.sailboatcalculator.part.impl.Crew;

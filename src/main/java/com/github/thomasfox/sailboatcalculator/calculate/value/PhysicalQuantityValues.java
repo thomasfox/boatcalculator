@@ -1,5 +1,7 @@
 package com.github.thomasfox.sailboatcalculator.calculate.value;
 
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor

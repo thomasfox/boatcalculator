@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.github.thomasfox.sailboatcalculator.calculate.CombinedCalculator;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.QuantityNotPresentException;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 
