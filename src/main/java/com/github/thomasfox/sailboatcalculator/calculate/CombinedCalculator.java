@@ -306,15 +306,15 @@ public class CombinedCalculator
       }
     }
 
-    if (fixedQuantitiesOccurances.size() - fixedQuantitiesWithMatches.size() > 1)
-    {
-      System.out.println("not enough matching quantities for " + quantityRelationsList);
-      return null;
-    }
-
     for (PhysicalQuantity matchingQuantity : fixedQuantitiesWithMatches)
     {
       fixedQuantitiesOccurances.remove(matchingQuantity);
+    }
+
+    if (fixedQuantitiesOccurances.size() > 1)
+    {
+      System.out.println("mismatching quantities: " + fixedQuantitiesOccurances + ": not enough matching quantities for " + quantityRelationsList);
+      return null;
     }
 
     if (fixedQuantitiesOccurances.size() != 1)

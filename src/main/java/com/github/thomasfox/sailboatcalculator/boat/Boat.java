@@ -3,6 +3,7 @@ package com.github.thomasfox.sailboatcalculator.boat;
 import java.util.Set;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.strategy.DriftToStableStateStrategy;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
@@ -48,7 +49,7 @@ public abstract class Boat
     externalSettings.addToInput(PhysicalQuantity.DRIFT_ANGLE);
     values.add(externalSettings);
 
-//    values.add(new DriftToStableStateStrategy(PhysicalQuantity.ANGLE_OF_ATTACK, PartType.DAGGERBOARD.name(), PhysicalQuantity.DRIFT_ANGLE, EXTERNAL_SETTINGS_ID, 0d));
+    values.add(new DriftToStableStateStrategy(PhysicalQuantity.ANGLE_OF_ATTACK, PartType.DAGGERBOARD.name(), PhysicalQuantity.DRIFT_ANGLE, EXTERNAL_SETTINGS_ID, 0d));
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, EXTERNAL_SETTINGS_ID, PhysicalQuantity.VELOCITY, PartType.RUDDER.name()));
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, EXTERNAL_SETTINGS_ID, PhysicalQuantity.VELOCITY, PartType.DAGGERBOARD.name()));
     values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, PartType.SAIL.name(), PhysicalQuantity.LIFT, PartType.DAGGERBOARD.name())); // assumption: rudder has no force
