@@ -1,7 +1,6 @@
 package com.github.thomasfox.sailboatcalculator.calculate.value;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -14,7 +13,7 @@ public class AllValues
 {
   private final Set<NamedValueSet> namedValueSets = new LinkedHashSet<>();
 
-  private final Set<ComputationStrategy> computationStrategies = new HashSet<>();
+  private final Set<ComputationStrategy> computationStrategies = new LinkedHashSet<>();
 
   public AllValues(Set<NamedValueSet> namedValueSets)
   {
