@@ -23,7 +23,7 @@ public class Skiff29er extends Dinghy
     sail.setStartValueNoOverwrite(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, 0.03); // rough estimate
     sail.setStartValueNoOverwrite(PhysicalQuantity.ANGLE_OF_ATTACK, 20); // rough estimate
     crew.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 80d); // single person
-    leverSailDaggerboard.setStartValueNoOverwrite(PhysicalQuantity.LEVER_BETWEEN_FORCES, 4); // rough estimate
+    leverSailDaggerboard.setStartValueNoOverwrite(PhysicalQuantity.LEVER_BETWEEN_FORCES, 3.5); // rough estimate based on COG of Sail plan and daggeboard plan
     hull.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 204d);
     hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "29er.txt"), "29er Hull"));
 
