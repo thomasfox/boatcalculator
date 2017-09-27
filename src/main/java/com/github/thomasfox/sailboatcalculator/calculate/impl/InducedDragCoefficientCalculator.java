@@ -14,18 +14,18 @@ public class InducedDragCoefficientCalculator extends Calculator
   {
     super(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT,
         PhysicalQuantity.WING_SPAN,
-        PhysicalQuantity.WING_CHORD,
+        PhysicalQuantity.WING_AREA,
         PhysicalQuantity.LIFT_COEFFICIENT);
   }
 
   @Override
   protected double calculateWithoutChecks(PhysicalQuantityValues input)
   {
-    double wingWidth = input.getValue(PhysicalQuantity.WING_SPAN);
-    double wingDepth = input.getValue(PhysicalQuantity.WING_CHORD);
+    double wingSpan = input.getValue(PhysicalQuantity.WING_SPAN);
+    double wingArea = input.getValue(PhysicalQuantity.WING_AREA);
     double liftCoefficient = input.getValue(PhysicalQuantity.LIFT_COEFFICIENT);
 
-    double aspectRatio = wingWidth / wingDepth;
+    double aspectRatio = wingSpan *wingSpan / wingArea;
     double result = liftCoefficient * liftCoefficient / Math.PI / aspectRatio;
     return result;
   }

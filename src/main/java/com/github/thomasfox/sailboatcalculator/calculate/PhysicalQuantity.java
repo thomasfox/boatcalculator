@@ -14,6 +14,7 @@ public enum PhysicalQuantity
   DRIVING_FORCE("Vortriebskraft", "N"),
   REYNOLDS_NUMBER("Reynoldszahl", null),
   WING_SPAN("Spannweite des Flügels", "m", "quer zur Profilierung, von einem Ende zum anderen"),
+  WING_AREA("Fläche Flügels", "m^2"),
   WING_CHORD("Tiefe des Flügels", "m", "quer zur Spannweite, gleich über die geamte Spannweite"),
   WING_THICKNESS("Dicke des Flügels", "m", "Dicke an der dicksten Stelle"),
   WING_RELATIVE_THICKNESS("Relative Dicke des Flügels", null, "Dicke an der dicksten Stelle geteilt durch Profiltiefe"),

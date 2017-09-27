@@ -13,5 +13,6 @@ public class Sail extends Wing
     setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_AIR);
     toInput.add(PhysicalQuantity.LIFT_COEFFICIENT);
     toInput.add(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT);
+    toInput.add(PhysicalQuantity.WING_AREA);
   }
 }

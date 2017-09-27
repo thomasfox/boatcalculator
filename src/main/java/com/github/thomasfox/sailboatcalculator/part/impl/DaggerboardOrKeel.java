@@ -1,6 +1,7 @@
 package com.github.thomasfox.sailboatcalculator.part.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.MaterialConstants;
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.part.PartType;
 
 public class DaggerboardOrKeel extends Wing
@@ -10,6 +11,7 @@ public class DaggerboardOrKeel extends Wing
     super(PartType.DAGGERBOARD);
     setFixedValueNoOverwrite(MaterialConstants.DENSITY_WATER);
     setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_WATER);
+    toInput.add(PhysicalQuantity.WING_CHORD);
   }
 
 }

@@ -13,8 +13,7 @@ public class TotalDragCalculator extends Calculator
   {
     super(PhysicalQuantity.TOTAL_DRAG,
         PhysicalQuantity.TOTAL_DRAG_COEFFICIENT,
-        PhysicalQuantity.WING_SPAN,
-        PhysicalQuantity.WING_CHORD,
+        PhysicalQuantity.WING_AREA,
         PhysicalQuantity.VELOCITY,
         PhysicalQuantity.DENSITY);
   }
@@ -23,12 +22,10 @@ public class TotalDragCalculator extends Calculator
   protected double calculateWithoutChecks(PhysicalQuantityValues input)
   {
     double dragCoefficient = input.getValue(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT);
-    double wingWidth = input.getValue(PhysicalQuantity.WING_SPAN);
-    double wingDepth = input.getValue(PhysicalQuantity.WING_CHORD);
+    double area = input.getValue(PhysicalQuantity.WING_AREA);
     double velocity = input.getValue(PhysicalQuantity.VELOCITY);
     double density = input.getValue(PhysicalQuantity.DENSITY);
 
-    double area = wingWidth * wingDepth;
     double drag = dragCoefficient *  velocity * velocity * density * area / 2;
     return drag;
   }

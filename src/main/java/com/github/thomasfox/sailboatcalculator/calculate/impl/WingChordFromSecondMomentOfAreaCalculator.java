@@ -9,9 +9,9 @@ import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityV
  * Flächenträgheitsmoment für eine Fläche mit Tiefe 1
  * und dem gewünschten Flächenträgheitsmoment
  */
-public class WingDepthFromSecondMomentOfAreaCalculator extends Calculator
+public class WingChordFromSecondMomentOfAreaCalculator extends Calculator
 {
-  public WingDepthFromSecondMomentOfAreaCalculator()
+  public WingChordFromSecondMomentOfAreaCalculator()
   {
     super(PhysicalQuantity.WING_CHORD,
         PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA,

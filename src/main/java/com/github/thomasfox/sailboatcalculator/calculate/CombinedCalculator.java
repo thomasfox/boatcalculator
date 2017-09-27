@@ -10,6 +10,7 @@ import java.util.Set;
 
 import com.github.thomasfox.sailboatcalculator.calculate.impl.ApparentWindDirectionCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.ApparentWindSpeedCalculator;
+import com.github.thomasfox.sailboatcalculator.calculate.impl.AreaCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.BendingCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.DrivingForceCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.InducedDragCalculator;
@@ -27,7 +28,7 @@ import com.github.thomasfox.sailboatcalculator.calculate.impl.TorqueCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.TotalDragCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.TotalDragCoefficientCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.VMGCalculator;
-import com.github.thomasfox.sailboatcalculator.calculate.impl.WingDepthFromSecondMomentOfAreaCalculator;
+import com.github.thomasfox.sailboatcalculator.calculate.impl.WingChordFromSecondMomentOfAreaCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
@@ -47,6 +48,7 @@ public class CombinedCalculator
 
   public CombinedCalculator(List<QuantityRelations> quantityRelationsList)
   {
+    calculators.add(new AreaCalculator());
     calculators.add(new ReynoldsNumberCalculator());
     calculators.add(new InducedDragCoefficientCalculator());
     calculators.add(new InducedDragCalculator());
@@ -54,7 +56,7 @@ public class CombinedCalculator
     calculators.add(new SecondMomentOfAreaCalculator());
     calculators.add(new LiftCoefficientCalculator());
     calculators.add(new ThicknessCalculator());
-    calculators.add(new WingDepthFromSecondMomentOfAreaCalculator());
+    calculators.add(new WingChordFromSecondMomentOfAreaCalculator());
     calculators.add(new ProfileDragCalculator());
     calculators.add(new ApparentWindDirectionCalculator());
     calculators.add(new ApparentWindSpeedCalculator());
