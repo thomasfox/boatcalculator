@@ -14,6 +14,8 @@ import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityV
 
 public class QuantityRelationsLoader
 {
+  private static String COMMENT_LINE_START = "#";
+
   public QuantityRelations load(File file, String title)
   {
     try (FileReader reader = new FileReader(file))
@@ -29,7 +31,7 @@ public class QuantityRelationsLoader
   public QuantityRelations load(Reader reader, String title)
   {
     BufferedReader bufferedReader = new BufferedReader(reader);
-   PhysicalQuantityValues fixedQuantities;
+    PhysicalQuantityValues fixedQuantities;
     List<PhysicalQuantity> relatedQuantities;
     List<PhysicalQuantityValues> relatedQuantityValues;
     try
@@ -57,6 +59,11 @@ public class QuantityRelationsLoader
     String line = reader.readLine();
     while (!line.isEmpty())
     {
+      if (line.startsWith(COMMENT_LINE_START))
+      {
+        line = reader.readLine();
+        continue;
+      }
       StringTokenizer stringTokenizer = new StringTokenizer(line);
       PhysicalQuantity quantity = parseTokenAsPhysicalQuantity(stringTokenizer);
       Double value = parseTokenAsDouble(stringTokenizer);

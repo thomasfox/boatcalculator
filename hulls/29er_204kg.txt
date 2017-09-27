@@ -1,3 +1,4 @@
+# From Frank Bethwaite, High Performance Sailing
 WEIGHT	204
 
 VELOCITY	TOTAL_DRAG

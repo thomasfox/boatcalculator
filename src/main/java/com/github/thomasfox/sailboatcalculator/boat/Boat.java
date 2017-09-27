@@ -19,9 +19,9 @@ public abstract class Boat
 {
   protected static final String LEVER_SAIL_DAGGERBOARD_ID = "leverSailDaggerboard";
 
-  public static final String EXTERNAL_SETTINGS_ID = "externalSettings";
+  public static final String BOAT_ID = "boat";
 
-  protected NamedValueSet externalSettings = new NamedValueSet(EXTERNAL_SETTINGS_ID, "Externe Parameter");
+  protected NamedValueSet boat = new NamedValueSet(BOAT_ID, "Boot");
 
   protected NamedValueSet leverSailDaggerboard = new NamedValueSet(LEVER_SAIL_DAGGERBOARD_ID, "Hebel Schwert/Segel");
 
@@ -44,18 +44,19 @@ public abstract class Boat
 
     values.add(leverSailDaggerboard);
 
-    externalSettings.addToInput(PhysicalQuantity.WIND_SPEED);
-    externalSettings.addToInput(PhysicalQuantity.POINTING_ANGLE);
-    externalSettings.addToInput(PhysicalQuantity.DRIFT_ANGLE);
-    values.add(externalSettings);
+    boat.addToInput(PhysicalQuantity.WIND_SPEED);
+    boat.addToInput(PhysicalQuantity.POINTING_ANGLE);
+    boat.addToInput(PhysicalQuantity.DRIFT_ANGLE);
+    boat.addToInput(PhysicalQuantity.WEIGHT);
+    values.add(boat);
 
-    values.add(new DriftToStableStateStrategy(PhysicalQuantity.ANGLE_OF_ATTACK, PartType.DAGGERBOARD.name(), PhysicalQuantity.DRIFT_ANGLE, EXTERNAL_SETTINGS_ID, 0d));
-    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, EXTERNAL_SETTINGS_ID, PhysicalQuantity.VELOCITY, PartType.RUDDER.name()));
-    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, EXTERNAL_SETTINGS_ID, PhysicalQuantity.VELOCITY, PartType.DAGGERBOARD.name()));
+    values.add(new DriftToStableStateStrategy(PhysicalQuantity.ANGLE_OF_ATTACK, PartType.DAGGERBOARD.name(), PhysicalQuantity.DRIFT_ANGLE, BOAT_ID, 0d));
+    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.RUDDER.name()));
+    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.DAGGERBOARD.name()));
     values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, PartType.RIGG.name(), PhysicalQuantity.LIFT, PartType.DAGGERBOARD.name())); // assumption: rudder has no force
-    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, EXTERNAL_SETTINGS_ID, PhysicalQuantity.VELOCITY, PartType.RIGG.name()));
-    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, EXTERNAL_SETTINGS_ID, PhysicalQuantity.FLOW_DIRECTION, PartType.RIGG.name()));
-    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, EXTERNAL_SETTINGS_ID, PhysicalQuantity.FLOW_DIRECTION, PartType.RIGG.name()));
+    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.RIGG.name()));
+    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BOAT_ID, PhysicalQuantity.FLOW_DIRECTION, PartType.RIGG.name()));
+    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BOAT_ID, PhysicalQuantity.FLOW_DIRECTION, PartType.RIGG.name()));
     values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, PartType.RIGG.name(), PhysicalQuantity.FORCE, LEVER_SAIL_DAGGERBOARD_ID));
     values.add(new LeverSailDaggerboardStrategy(PartType.RIGG.name(), PartType.DAGGERBOARD.name(), LEVER_SAIL_DAGGERBOARD_ID));
 }

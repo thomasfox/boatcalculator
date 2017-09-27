@@ -16,6 +16,7 @@ public class Skiff29er extends Dinghy
   {
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 0.77d); // full blade span 92 cm, estimated box size 15 cm
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.223d);
+    rudder.setStartValueNoOverwrite(PhysicalQuantity.LIFT, 0d); // assuming negligible force on the rudder for no heel
     daggerboardOrKeel.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 0.985d); // full blade span 118.5 cm, estimated box size 20 cm
     daggerboardOrKeel.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.32d);
     rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 6d); // rough estimate
@@ -24,15 +25,16 @@ public class Skiff29er extends Dinghy
     rigg.setStartValueNoOverwrite(PhysicalQuantity.ANGLE_OF_ATTACK, 20); // rough estimate
     crew.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 80d); // single person
     rigg.setStartValueNoOverwrite(PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT, 3); // rough estimate based on COG of Sail plan
-    hull.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 204d);
-    hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "29er.txt"), "29er Hull"));
+    boat.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 100d); // old boat, nominal weight is 90 kg
+    hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "29er_153kg.txt"), "29er Hull@153kg"));
+    hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "29er_204kg.txt"), "29er Hull@204kg"));
 
     values.add(new TwoValuesShouldBeEqualModifyThirdStrategy(
         PhysicalQuantity.DRIVING_FORCE, PartType.RIGG.name(),
         PhysicalQuantity.TOTAL_DRAG, PartType.HULL.name(),
-        PhysicalQuantity.VELOCITY, EXTERNAL_SETTINGS_ID,
+        PhysicalQuantity.VELOCITY, BOAT_ID,
         0d, 100d));
     values.add(new IncreaseQuantityTillOtherReachesUpperLimitStrategy(PhysicalQuantity.LEVER_WEIGHT, PartType.CREW.name(), 1.8, PhysicalQuantity.LIFT_COEFFICIENT, PartType.RIGG.name(), 1.2)); // 1.8m: single person, CoG 91.5 cm from rim in trapeze; caMax=1.2: rough estimate
-    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, EXTERNAL_SETTINGS_ID, PhysicalQuantity.VELOCITY, PartType.HULL.name()));
+    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.HULL.name()));
   }
 }
