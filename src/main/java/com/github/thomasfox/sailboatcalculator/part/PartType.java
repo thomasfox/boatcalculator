@@ -4,7 +4,7 @@ public enum PartType
 {
   DAGGERBOARD("Schwert"),
   RUDDER("Ruder"),
-  SAIL("Segel"),
+  RIGG("Rigg"),
   HULL("Rumpf"),
   CREW("Besatzung");
 

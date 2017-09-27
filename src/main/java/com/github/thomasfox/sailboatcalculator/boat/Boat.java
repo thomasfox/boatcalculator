@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.DriftToStableStateStrategy;
+import com.github.thomasfox.sailboatcalculator.calculate.strategy.LeverSailDaggerboardStrategy;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
@@ -11,8 +12,8 @@ import com.github.thomasfox.sailboatcalculator.part.BoatPart;
 import com.github.thomasfox.sailboatcalculator.part.PartType;
 import com.github.thomasfox.sailboatcalculator.part.impl.DaggerboardOrKeel;
 import com.github.thomasfox.sailboatcalculator.part.impl.Hull;
+import com.github.thomasfox.sailboatcalculator.part.impl.Rigg;
 import com.github.thomasfox.sailboatcalculator.part.impl.Rudder;
-import com.github.thomasfox.sailboatcalculator.part.impl.Sail;
 
 public abstract class Boat
 {
@@ -24,7 +25,7 @@ public abstract class Boat
 
   protected NamedValueSet leverSailDaggerboard = new NamedValueSet(LEVER_SAIL_DAGGERBOARD_ID, "Hebel Schwert/Segel");
 
-  protected BoatPart sail = new Sail();
+  protected BoatPart rigg = new Rigg();
 
   protected BoatPart hull = new Hull();
 
@@ -37,11 +38,10 @@ public abstract class Boat
   public Boat()
   {
     addPart(hull);
-    addPart(sail);
+    addPart(rigg);
     addPart(daggerboardOrKeel);
     addPart(rudder);
 
-    leverSailDaggerboard.addToInput(PhysicalQuantity.LEVER_BETWEEN_FORCES);
     values.add(leverSailDaggerboard);
 
     externalSettings.addToInput(PhysicalQuantity.WIND_SPEED);
@@ -52,11 +52,12 @@ public abstract class Boat
     values.add(new DriftToStableStateStrategy(PhysicalQuantity.ANGLE_OF_ATTACK, PartType.DAGGERBOARD.name(), PhysicalQuantity.DRIFT_ANGLE, EXTERNAL_SETTINGS_ID, 0d));
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, EXTERNAL_SETTINGS_ID, PhysicalQuantity.VELOCITY, PartType.RUDDER.name()));
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, EXTERNAL_SETTINGS_ID, PhysicalQuantity.VELOCITY, PartType.DAGGERBOARD.name()));
-    values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, PartType.SAIL.name(), PhysicalQuantity.LIFT, PartType.DAGGERBOARD.name())); // assumption: rudder has no force
-    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, EXTERNAL_SETTINGS_ID, PhysicalQuantity.VELOCITY, PartType.SAIL.name()));
-    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, EXTERNAL_SETTINGS_ID, PhysicalQuantity.FLOW_DIRECTION, PartType.SAIL.name()));
-    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, EXTERNAL_SETTINGS_ID, PhysicalQuantity.FLOW_DIRECTION, PartType.SAIL.name()));
-    values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, PartType.SAIL.name(), PhysicalQuantity.FORCE, LEVER_SAIL_DAGGERBOARD_ID));
+    values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, PartType.RIGG.name(), PhysicalQuantity.LIFT, PartType.DAGGERBOARD.name())); // assumption: rudder has no force
+    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, EXTERNAL_SETTINGS_ID, PhysicalQuantity.VELOCITY, PartType.RIGG.name()));
+    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, EXTERNAL_SETTINGS_ID, PhysicalQuantity.FLOW_DIRECTION, PartType.RIGG.name()));
+    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, EXTERNAL_SETTINGS_ID, PhysicalQuantity.FLOW_DIRECTION, PartType.RIGG.name()));
+    values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, PartType.RIGG.name(), PhysicalQuantity.FORCE, LEVER_SAIL_DAGGERBOARD_ID));
+    values.add(new LeverSailDaggerboardStrategy(PartType.RIGG.name(), PartType.DAGGERBOARD.name(), LEVER_SAIL_DAGGERBOARD_ID));
 }
 
   public Set<NamedValueSet> getNamedValueSets()

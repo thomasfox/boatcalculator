@@ -14,7 +14,7 @@ public enum PhysicalQuantity
   DRIVING_FORCE("Vortriebskraft", "N"),
   REYNOLDS_NUMBER("Reynoldszahl", null),
   WING_SPAN("Spannweite des Flügels", "m", "quer zur Profilierung, von einem Ende zum anderen"),
-  WING_AREA("Fläche Flügels", "m^2"),
+  WING_AREA("Fläche des Flügels", "m^2"),
   WING_CHORD("Tiefe des Flügels", "m", "quer zur Spannweite, gleich über die geamte Spannweite"),
   WING_THICKNESS("Dicke des Flügels", "m", "Dicke an der dicksten Stelle"),
   WING_RELATIVE_THICKNESS("Relative Dicke des Flügels", null, "Dicke an der dicksten Stelle geteilt durch Profiltiefe"),
@@ -42,7 +42,8 @@ public enum PhysicalQuantity
   BENDING_FORCE("Biegekraft", "N", "am Ende eines Flügels angreifende Kraft. Der Flügel ist am anderen Ende fest eingepsannt"),
   BENDING("Durchbiegung", "m", "am Ende eines Flügels. Der Flügel ist am anderen Ende fest eingepsannt"),
   SECOND_MOMENT_OF_AREA("Flächenmoment 2. Ordnung für den Flügelquerschnitt", "m^4", "Integral y^2 dx dy"),
-  NORMALIZED_SECOND_MOMENT_OF_AREA("Flächenmoment 2. Ordnung", null, "Integral y^2 dx dy für ein Profil der Tiefe 1 und gleichem Tiefe/Dickenverhältnis wie das eigentliche Profil");
+  NORMALIZED_SECOND_MOMENT_OF_AREA("Flächenmoment 2. Ordnung", null, "Integral y^2 dx dy für ein Profil der Tiefe 1 und gleichem Tiefe/Dickenverhältnis wie das eigentliche Profil"),
+  RIGG_CENTER_OF_EFFORT_HEIGHT("Höhe des Rigg-Druckpunktes", "m", "gerechnet vom Boden des Bootes (wo das Schwert/der Kiel beginnt)");
 
   private String displayName;
 
