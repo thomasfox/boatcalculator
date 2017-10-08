@@ -9,8 +9,6 @@ import org.junit.Test;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
-import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelationsLoader;
 
 public class QuantityRelationsLoaderTest
 {
@@ -20,7 +18,7 @@ public class QuantityRelationsLoaderTest
   public void testLoad() throws Exception
   {
     QuantityRelations result;
-    try (FileReader reader = new FileReader(new File("hulls/29er.txt")))
+    try (FileReader reader = new FileReader(new File("hulls/29er_204kg.txt")))
     {
       // execute
       result = sut.load(reader, "Hull");
@@ -36,7 +34,7 @@ public class QuantityRelationsLoaderTest
         new PhysicalQuantityValue(PhysicalQuantity.TOTAL_DRAG, 0d));
     assertThat(result.getRelatedQuantityValues().get(19).getAsList()).containsOnly(
         new PhysicalQuantityValue(PhysicalQuantity.VELOCITY, 8.018428827d),
-        new PhysicalQuantityValue(PhysicalQuantity.TOTAL_DRAG, 444.822d));
+        new PhysicalQuantityValue(PhysicalQuantity.TOTAL_DRAG, 367.62d));
   }
 
 }
