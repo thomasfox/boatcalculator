@@ -37,13 +37,19 @@ public class Interpolator
       throw new InterpolatorException("The list of known values is empty");
     }
     TwoValues<XYPoint> enclosingPoints = getEnclosing(xValue, knownValues, XYPoint::getX);
-    if (enclosingPoints.value1 == enclosingPoints.value2)
-    {
-      return enclosingPoints.value1.getY();
-    }
 
-    double relativeWeightOfCurrentValue = (xValue - enclosingPoints.value2.getX()) / (enclosingPoints.value1.getX() - enclosingPoints.value2.getX());
-    double result = relativeWeightOfCurrentValue * enclosingPoints.value1.getY() + (1d - relativeWeightOfCurrentValue) * enclosingPoints.value2.getY();
+    double result = interpolateY(xValue, enclosingPoints.value1, enclosingPoints.value2);
+    return result;
+  }
+
+  public double interpolateY(double xValue, XYPoint point1, XYPoint point2)
+  {
+    if (point1.getX() == point2.getX())
+    {
+      return point1.getY();
+    }
+    double relativeWeightOfCurrentValue = (xValue - point2.getX()) / (point1.getX() - point2.getX());
+    double result = relativeWeightOfCurrentValue * point1.getY() + (1d - relativeWeightOfCurrentValue) * point2.getY();
     return result;
   }
 
