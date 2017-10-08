@@ -84,7 +84,7 @@ public class QuantityRelations
     return Collections.unmodifiableSet(relatedQuantityValues.get(0).getContainedQuantities());
   }
 
-  public Double interpolateValueFrom(
+  public double interpolateValueFrom(
       PhysicalQuantity wantedQuantity,
       PhysicalQuantity providedQuantity,
       Double providedValue)
@@ -120,11 +120,8 @@ public class QuantityRelations
       {
         try
         {
-          Double interpolatedValue = interpolateValueFrom(wantedQuantity, providedQuantity, knownValues.getValue(providedQuantity));
-          if (interpolatedValue != null)
-          {
-            result.setValueNoOverwrite(wantedQuantity, interpolatedValue);
-          }
+          double interpolatedValue = interpolateValueFrom(wantedQuantity, providedQuantity, knownValues.getValue(providedQuantity));
+          result.setValueNoOverwrite(wantedQuantity, interpolatedValue);
         }
         catch (InterpolatorException e)
         {
