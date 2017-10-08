@@ -25,13 +25,13 @@ public abstract class Boat
 
   protected NamedValueSet leverSailDaggerboard = new NamedValueSet(LEVER_SAIL_DAGGERBOARD_ID, "Hebel Schwert/Segel");
 
-  protected BoatPart rigg = new Rigg();
+  protected Rigg rigg = new Rigg();
 
-  protected BoatPart hull = new Hull();
+  protected Hull hull = new Hull();
 
-  protected BoatPart daggerboardOrKeel = new DaggerboardOrKeel();
+  protected DaggerboardOrKeel daggerboardOrKeel = new DaggerboardOrKeel();
 
-  protected BoatPart rudder = new Rudder();
+  protected Rudder rudder = new Rudder();
 
   protected AllValues values = new AllValues();
 

@@ -21,16 +21,25 @@ public class ProfileInput
 
   private final JCheckBox scanSelect;
 
-  public ProfileInput()
+  public ProfileInput(String profileNameToSelect)
   {
     profileSelect = new JComboBox<>();
     profileSelect.addItem(null);
     List<String> profiles = profileSelector.getProfileNames(SwingGui.PROFILE_DIRECTORY);
+    String selectedProfile = null;
     for (String profile : profiles)
     {
       profileSelect.addItem(profile);
+      if (Objects.equals(profile, profileNameToSelect))
+      {
+        selectedProfile = profile;
+      }
     }
     scanSelect = new JCheckBox("scan");
+    if (selectedProfile != null)
+    {
+      profileSelect.setSelectedItem(selectedProfile);
+    }
   }
 
   public void addToContainer(Container container, int row)

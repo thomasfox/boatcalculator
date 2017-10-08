@@ -58,7 +58,7 @@ public class PartInput
     internalOffset += quantityInputs.size();
     if (valueSet instanceof Wing)
     {
-      profileInput = new ProfileInput();
+      profileInput = new ProfileInput(((Wing) valueSet).getProfileName());
       profileInput.addToContainer(container, rowOffset + internalOffset++);
     }
     return internalOffset;

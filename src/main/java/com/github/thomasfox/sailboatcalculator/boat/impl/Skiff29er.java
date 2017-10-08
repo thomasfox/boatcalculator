@@ -17,8 +17,10 @@ public class Skiff29er extends Dinghy
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 0.77d); // full blade span 92 cm, estimated box size 15 cm
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.223d);
     rudder.setStartValueNoOverwrite(PhysicalQuantity.LIFT, 0d); // assuming negligible force on the rudder for no heel
+    rudder.setProfileName("naca0010");
     daggerboardOrKeel.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 0.985d); // full blade span 118.5 cm, estimated box size 20 cm
     daggerboardOrKeel.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.32d);
+    daggerboardOrKeel.setProfileName("naca0010");
     rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 6d); // rough estimate
     rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_AREA, 12d); // no gennaker taken into account
     rigg.setStartValueNoOverwrite(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, 0.03); // rough estimate
