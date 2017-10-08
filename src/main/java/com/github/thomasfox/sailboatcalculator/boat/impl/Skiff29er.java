@@ -20,7 +20,7 @@ public class Skiff29er extends Dinghy
     daggerboardOrKeel.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 0.985d); // full blade span 118.5 cm, estimated box size 20 cm
     daggerboardOrKeel.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.32d);
     rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 6d); // rough estimate
-    rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_AREA, 12d);
+    rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_AREA, 12d); // no gennaker taken into account
     rigg.setStartValueNoOverwrite(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, 0.03); // rough estimate
     rigg.setStartValueNoOverwrite(PhysicalQuantity.ANGLE_OF_ATTACK, 20); // rough estimate
     crew.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 80d); // single person
@@ -31,9 +31,9 @@ public class Skiff29er extends Dinghy
 
     values.add(new TwoValuesShouldBeEqualModifyThirdStrategy(
         PhysicalQuantity.DRIVING_FORCE, PartType.RIGG.name(),
-        PhysicalQuantity.TOTAL_DRAG, PartType.HULL.name(),
+        PhysicalQuantity.TOTAL_DRAG, BOAT_ID,
         PhysicalQuantity.VELOCITY, BOAT_ID,
-        0d, 100d));
+        0d, 25d));
     values.add(new IncreaseQuantityTillOtherReachesUpperLimitStrategy(PhysicalQuantity.LEVER_WEIGHT, PartType.CREW.name(), 1.8, PhysicalQuantity.LIFT_COEFFICIENT, PartType.RIGG.name(), 1.2)); // 1.8m: single person, CoG 91.5 cm from rim in trapeze; caMax=1.2: rough estimate
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.HULL.name()));
   }

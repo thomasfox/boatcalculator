@@ -30,13 +30,13 @@ public class NamedValueSet
 
   protected final Set<PhysicalQuantity> toInput = new LinkedHashSet<>();
 
-  /**
-   * Physical constants.
-   */
+  /** Physical constants. */
   private final PhysicalQuantityValues fixedValues = new PhysicalQuantityValues();
 
+  /** Values with which the calculation starts. */
   private final PhysicalQuantityValues startValues = new PhysicalQuantityValues();
 
+  /** Values calculated from fixed values, start values and other calculated values. */
   private final CalculatedPhysicalQuantityValues calculatedValues = new CalculatedPhysicalQuantityValues();
 
   private final List<QuantityRelations> quantityRelations = new ArrayList<>();

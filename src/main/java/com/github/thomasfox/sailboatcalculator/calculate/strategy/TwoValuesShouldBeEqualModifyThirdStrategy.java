@@ -15,6 +15,8 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
 {
   private static double CUTOFF = 1E-4;
 
+  private static int MAX_TRIES = 100;
+
   private final PhysicalQuantity equalQuantity1;
 
   private final String equalQuantity1SetId;
@@ -27,9 +29,9 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
 
   private final String targetSetId;
 
-  double lowerCutoff;
+  private final double lowerCutoff;
 
-  double upperCutoff;
+  private final double upperCutoff;
 
   @Override
   public boolean setValue(AllValues allValues)
@@ -43,15 +45,36 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
 
     double targetValue1 = lowerCutoff;
     double targetValue2 = upperCutoff;
+    int remainingTries = MAX_TRIES;
+    double cutoffTrialInterval = (upperCutoff - lowerCutoff) / MAX_TRIES;
     AllValues allValuesForCalculation = new AllValues(allValues);
     allValuesForCalculation.moveCalculatedValuesToStartValues();
-    CalculateDifferenceResult difference1 = calculateDifference(targetValue1, allValuesForCalculation);
-    CalculateDifferenceResult difference2 = calculateDifference(targetValue2, allValuesForCalculation);
-    if (difference1 == null || difference2 == null)
+    CalculateDifferenceResult difference1 = null;
+    CalculateDifferenceResult difference2 = null;
+    while (remainingTries > 0 && (difference1 == null || difference2 == null))
+    {
+      if (difference1 == null)
+      {
+        difference1 = calculateDifference(targetValue1, allValuesForCalculation);
+      }
+      if (difference1 == null && (targetValue1 + cutoffTrialInterval < targetValue2))
+      {
+        targetValue1 += cutoffTrialInterval;
+      }
+      if (difference2 == null && (targetValue1 < targetValue2 - cutoffTrialInterval))
+      {
+        difference2 = calculateDifference(targetValue2, allValuesForCalculation);
+      }
+      if (difference2 == null && remainingTries > 0)
+      {
+        targetValue2 -= cutoffTrialInterval;
+      }
+    }
+    if (remainingTries == 0)
     {
       return false;
     }
-    boolean changed = applyAndRecalculateWithPoints(targetValue1, difference1, targetValue2, difference2, allValuesForCalculation, 100);
+    boolean changed = applyAndRecalculateWithPoints(targetValue1, difference1, targetValue2, difference2, allValuesForCalculation, remainingTries);
     if (changed)
     {
       double targetValue = allValuesForCalculation.getNamedValueSetNonNull(targetSetId).getKnownValue(targetQuantity).getValue();
@@ -68,6 +91,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
       AllValues allValues,
       int maxTries)
   {
+    System.out.println("Try values " + targetValue1 + " and " + targetValue2 + " for target Quantity " + targetQuantity + ", maxTries = " + maxTries);
     if (maxTries <= 0)
     {
       return false;
@@ -105,7 +129,6 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
       estimatedTarget = upperCutoff;
     }
     CalculateDifferenceResult estimatedTargetDifference = calculateDifference(estimatedTarget, allValues);
-    System.out.println("Try value " + estimatedTarget + " for target Quantity " + targetQuantity + ", maxTries = " + maxTries);
     if (estimatedTargetDifference == null)
     {
       throw new RuntimeException("Could not calculate Difference between "

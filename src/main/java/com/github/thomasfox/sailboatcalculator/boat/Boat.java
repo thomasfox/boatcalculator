@@ -53,6 +53,7 @@ public abstract class Boat
     values.add(new DriftToStableStateStrategy(PhysicalQuantity.ANGLE_OF_ATTACK, PartType.DAGGERBOARD.name(), PhysicalQuantity.DRIFT_ANGLE, BOAT_ID, 0d));
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.RUDDER.name()));
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.DAGGERBOARD.name()));
+    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.HULL.name()));
     values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, PartType.RIGG.name(), PhysicalQuantity.LIFT, PartType.DAGGERBOARD.name())); // assumption: rudder has no force
     values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.RIGG.name()));
     values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BOAT_ID, PhysicalQuantity.FLOW_DIRECTION, PartType.RIGG.name()));

@@ -129,6 +129,7 @@ public class QuantityRelations
         catch (InterpolatorException e)
         {
           System.out.println("Could not calculate " + wantedQuantity.getDisplayName()
+          + " for value " + knownValues.getValue(providedQuantity) + " of " + providedQuantity.getDisplayName()
           + " from quantityRelations " + name
           + " with fixed quantities " + printFixedQuantities());
         }

@@ -49,15 +49,41 @@ public class AllValues
   {
     return namedValueSets.stream()
         .filter(n -> n.getId().equals(id))
-        .findFirst().orElse(null);
+        .findAny().orElse(null);
   }
 
   public NamedValueSet getNamedValueSetNonNull(String id)
   {
     return namedValueSets.stream()
         .filter(n -> n.getId().equals(id))
-        .findFirst().orElseThrow(() -> new IllegalStateException("No namedValueSet with id " + id + " exists, existing namedValueSets are " + namedValueSets));
+        .findAny().orElseThrow(() -> new IllegalStateException(
+            "No namedValueSet with id " + id + " exists, existing namedValueSets are " + namedValueSets));
   }
+
+  public Double getKnownValue(PhysicalQuantityInSet toResolve)
+  {
+    NamedValueSet sourceSet = getNamedValueSetNonNull(toResolve.getNamedValueSetId());
+    if (sourceSet == null)
+    {
+      return null;
+    }
+    PhysicalQuantityValue knownValue = sourceSet.getKnownValue(toResolve.getPhysicalQuantity());
+    if (knownValue == null)
+    {
+      return null;
+    }
+    return knownValue.getValue();
+  }
+
+  public String getNameOfSetWithId(String setId)
+  {
+    return namedValueSets.stream()
+        .filter(n -> n.getId().equals(setId))
+        .map(s -> s.getName())
+        .findAny().orElseThrow(() -> new IllegalStateException(
+            "No namedValueSet with id " + setId + " exists, existing namedValueSets are " + namedValueSets));
+  }
+
 
   public void add(ComputationStrategy computationStrategy)
   {
