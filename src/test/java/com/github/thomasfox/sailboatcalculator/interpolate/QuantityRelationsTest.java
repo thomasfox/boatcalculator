@@ -1,6 +1,7 @@
 package com.github.thomasfox.sailboatcalculator.interpolate;
 
 import static  org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,6 @@ import org.junit.rules.ExpectedException;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
-import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 
 public class QuantityRelationsTest
 {
@@ -83,5 +83,40 @@ public class QuantityRelationsTest
 
     // act
     sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
+  }
+
+  @Test
+  public void testGetRelatedQuantityValues_ok()
+  {
+    // arrange
+    List<PhysicalQuantityValues> relatedValues = new ArrayList<>();
+    PhysicalQuantityValues relatedValuesEntry = new PhysicalQuantityValues();
+    relatedValuesEntry.setValue(PhysicalQuantity.FORCE, 0d);
+    relatedValuesEntry.setValue(PhysicalQuantity.BENDING, 0d);
+    relatedValuesEntry.setValue(PhysicalQuantity.VELOCITY, 0d);
+    relatedValues.add(relatedValuesEntry);
+    relatedValuesEntry = new PhysicalQuantityValues();
+    relatedValuesEntry.setValue(PhysicalQuantity.FORCE, 20d);
+    relatedValuesEntry.setValue(PhysicalQuantity.BENDING, 10d);
+    relatedValuesEntry.setValue(PhysicalQuantity.VELOCITY, 40d);
+    relatedValues.add(relatedValuesEntry);
+    relatedValuesEntry = new PhysicalQuantityValues();
+    relatedValuesEntry.setValue(PhysicalQuantity.FORCE, 40d);
+    relatedValuesEntry.setValue(PhysicalQuantity.BENDING, 20d);
+    relatedValuesEntry.setValue(PhysicalQuantity.VELOCITY, 80d);
+    relatedValues.add(relatedValuesEntry);
+    sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
+
+    PhysicalQuantityValues knownValues = new PhysicalQuantityValues();
+    knownValues.setValue(PhysicalQuantity.BENDING, 15d);
+
+    // act
+    PhysicalQuantityValues result = sut.getRelatedQuantityValues(knownValues);
+
+    // assert
+    assertThat(result.getContainedQuantities()).containsOnly(
+        PhysicalQuantity.FORCE, PhysicalQuantity.VELOCITY);
+    assertThat(result.getValue(PhysicalQuantity.FORCE)).isCloseTo(30d, within(1E-8));
+    assertThat(result.getValue(PhysicalQuantity.VELOCITY)).isCloseTo(60d, within(1E-8));
   }
 }
