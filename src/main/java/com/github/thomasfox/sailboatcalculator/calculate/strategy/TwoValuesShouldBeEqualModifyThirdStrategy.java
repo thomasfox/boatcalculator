@@ -131,10 +131,11 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
     CalculateDifferenceResult estimatedTargetDifference = calculateDifference(estimatedTarget, allValues);
     if (estimatedTargetDifference == null)
     {
-      throw new RuntimeException("Could not calculate Difference between "
+      System.out.println("Could not calculate difference between "
           + equalQuantity1 + " in " + equalQuantity1SetId
           + " and " + equalQuantity2 + " in " + equalQuantity2SetId
           + " for target Quantity " + targetQuantity + " with value " + estimatedTarget);
+      return false;
     }
     if (Math.signum(difference1.getDifference()) == Math.signum(estimatedTargetDifference.getDifference()))
     {
@@ -154,7 +155,15 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
     NamedValueSet equalQuantity2Set = allValues.getNamedValueSetNonNull(equalQuantity2SetId);
     PhysicalQuantityValue value1 =  equalQuantity1Set.getKnownValue(equalQuantity1);
     PhysicalQuantityValue value2 =  equalQuantity2Set.getKnownValue(equalQuantity2);
-    if (value1 == null || value2 == null)
+    if (value1 == null)
+    {
+      System.out.println("Could not calculate " + equalQuantity1 + " in " + equalQuantity1Set.getName());
+    }
+    if (value2 == null)
+    {
+      System.out.println("Could not calculate " + equalQuantity2 + " in " + equalQuantity2Set.getName());
+    }
+    if (value1==null || value2 == null)
     {
       return null;
     }
