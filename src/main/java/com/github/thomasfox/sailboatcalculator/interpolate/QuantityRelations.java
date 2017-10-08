@@ -9,6 +9,7 @@ import java.util.Set;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.interpolate.Interpolator.TwoValues;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +33,8 @@ public class QuantityRelations
 
   @NonNull
   private final List<PhysicalQuantityValues> relatedQuantityValues = new ArrayList<>();
+
+  private final Interpolator interpolator = new Interpolator();
 
   /**
    * The PhysicalQuantity of which the other Quantities are functions.
@@ -84,57 +87,43 @@ public class QuantityRelations
     return Collections.unmodifiableSet(relatedQuantityValues.get(0).getContainedQuantities());
   }
 
-  public double interpolateValueFrom(
-      PhysicalQuantity wantedQuantity,
-      PhysicalQuantity providedQuantity,
-      Double providedValue)
-  {
-    List<XYPoint> interpolationPoints = new ArrayList<>();
-    for (PhysicalQuantityValues relatedValues : relatedQuantityValues)
-    {
-      Double xValue = relatedValues.getValue(providedQuantity);
-      if (xValue == null)
-      {
-        throw new InterpolatorException("Quantity " + providedQuantity + " not found");
-      }
-      Double yValue = relatedValues.getValue(wantedQuantity);
-      if (yValue == null)
-      {
-        throw new InterpolatorException("Quantity " + wantedQuantity + " not found");
-      }
-      interpolationPoints.add(new SimpleXYPoint(xValue, yValue));
-    }
-    return new Interpolator().interpolate(providedValue, interpolationPoints);
-  }
-
   public PhysicalQuantityValues getRelatedQuantityValues(PhysicalQuantityValues knownValues)
   {
     PhysicalQuantityValues result = new PhysicalQuantityValues();
-    Set<PhysicalQuantity> availableQuantities = getAvailableQuantities(knownValues);
     Set<PhysicalQuantity> providedQuantities = getKnownRelatedQuantities(knownValues);
-    if (!providedQuantities.isEmpty())
+    if (providedQuantities.isEmpty())
     {
-      PhysicalQuantity providedQuantity = providedQuantities.iterator().next();
-      // TODO check that all other provided quantities match
-      for (PhysicalQuantity wantedQuantity : availableQuantities)
-      {
-        try
-        {
-          double interpolatedValue = interpolateValueFrom(wantedQuantity, providedQuantity, knownValues.getValue(providedQuantity));
-          result.setValueNoOverwrite(wantedQuantity, interpolatedValue);
-        }
-        catch (InterpolatorException e)
-        {
-          System.out.println("Could not calculate " + wantedQuantity.getDisplayName()
-          + " for value " + knownValues.getValue(providedQuantity) + " of " + providedQuantity.getDisplayName()
-          + " from quantityRelations " + name
-          + " with fixed quantities " + printFixedQuantities());
-        }
-      }
+      return result;
+    }
+    Set<PhysicalQuantity> availableQuantities = getAvailableQuantities(knownValues);
+    PhysicalQuantity providedQuantity = providedQuantities.iterator().next();
+    // TODO check that all other provided quantities match
+
+    double xValue = knownValues.getValue(providedQuantity);
+    TwoValues<PhysicalQuantityValues> enclosingPoints;
+    try
+    {
+      enclosingPoints = interpolator.getEnclosing(xValue, relatedQuantityValues, x -> x.getValue(providedQuantity));
+    }
+    catch (InterpolatorException e)
+    {
+      System.out.println("Could not calculate " + availableQuantities
+      + " for value " + knownValues.getValue(providedQuantity) + " of " + providedQuantity.getDisplayName()
+      + " from quantityRelations " + name
+      + " with fixed quantities " + printFixedQuantities());
+      return result;
+    }
+
+    for (PhysicalQuantity wantedQuantity : availableQuantities)
+    {
+      double interpolatedValue =interpolator.interpolateY(
+          xValue,
+          new SimpleXYPoint(enclosingPoints.value1.getValue(providedQuantity), enclosingPoints.value1.getValue(wantedQuantity)),
+          new SimpleXYPoint(enclosingPoints.value2.getValue(providedQuantity), enclosingPoints.value2.getValue(wantedQuantity)));
+        result.setValueNoOverwrite(wantedQuantity, interpolatedValue);
     }
     return result;
   }
-
 
   public String printFixedQuantities()
   {
