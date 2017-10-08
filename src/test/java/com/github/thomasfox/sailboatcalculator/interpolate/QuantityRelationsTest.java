@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.within;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -86,7 +87,7 @@ public class QuantityRelationsTest
   }
 
   @Test
-  public void testGetRelatedQuantityValues_ok()
+  public void testGetRelatedQuantityValues()
   {
     // arrange
     List<PhysicalQuantityValues> relatedValues = new ArrayList<>();
@@ -118,5 +119,108 @@ public class QuantityRelationsTest
         PhysicalQuantity.FORCE, PhysicalQuantity.VELOCITY);
     assertThat(result.getValue(PhysicalQuantity.FORCE)).isCloseTo(30d, within(1E-8));
     assertThat(result.getValue(PhysicalQuantity.VELOCITY)).isCloseTo(60d, within(1E-8));
+  }
+
+  @Test
+  public void testGetRelatedQuantityValues_outsideScope()
+  {
+    // arrange
+    List<PhysicalQuantityValues> relatedValues = new ArrayList<>();
+    PhysicalQuantityValues relatedValuesEntry = new PhysicalQuantityValues();
+    relatedValuesEntry.setValue(PhysicalQuantity.FORCE, 0d);
+    relatedValuesEntry.setValue(PhysicalQuantity.BENDING, 0d);
+    relatedValuesEntry.setValue(PhysicalQuantity.VELOCITY, 0d);
+    relatedValues.add(relatedValuesEntry);
+    relatedValuesEntry = new PhysicalQuantityValues();
+    relatedValuesEntry.setValue(PhysicalQuantity.FORCE, 20d);
+    relatedValuesEntry.setValue(PhysicalQuantity.BENDING, 10d);
+    relatedValuesEntry.setValue(PhysicalQuantity.VELOCITY, 40d);
+    relatedValues.add(relatedValuesEntry);
+    sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
+
+    PhysicalQuantityValues knownValues = new PhysicalQuantityValues();
+    knownValues.setValue(PhysicalQuantity.BENDING, 15d);
+
+    // act
+    PhysicalQuantityValues result = sut.getRelatedQuantityValues(knownValues);
+
+    // assert
+    assertThat(result.getContainedQuantities()).isEmpty();
+  }
+
+  @Test
+  public void testGetRelatedQuantityValues_noValueKnown()
+  {
+    // arrange
+    List<PhysicalQuantityValues> relatedValues = new ArrayList<>();
+    PhysicalQuantityValues relatedValuesEntry = new PhysicalQuantityValues();
+    relatedValuesEntry.setValue(PhysicalQuantity.FORCE, 0d);
+    relatedValuesEntry.setValue(PhysicalQuantity.BENDING, 0d);
+    relatedValuesEntry.setValue(PhysicalQuantity.VELOCITY, 0d);
+    relatedValues.add(relatedValuesEntry);
+    relatedValuesEntry = new PhysicalQuantityValues();
+    relatedValuesEntry.setValue(PhysicalQuantity.FORCE, 20d);
+    relatedValuesEntry.setValue(PhysicalQuantity.BENDING, 10d);
+    relatedValuesEntry.setValue(PhysicalQuantity.VELOCITY, 40d);
+    relatedValues.add(relatedValuesEntry);
+    sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
+
+    PhysicalQuantityValues knownValues = new PhysicalQuantityValues();
+    knownValues.setValue(PhysicalQuantity.ANGLE_OF_ATTACK, 15d);
+
+    // act
+    PhysicalQuantityValues result = sut.getRelatedQuantityValues(knownValues);
+
+    // assert
+    assertThat(result.getContainedQuantities()).isEmpty();
+  }
+
+  @Test
+  public void testGetAvailableQuantities()
+  {
+    // arrange
+    List<PhysicalQuantityValues> relatedValues = new ArrayList<>();
+    PhysicalQuantityValues relatedValuesEntry = new PhysicalQuantityValues();
+    relatedValuesEntry.setValue(PhysicalQuantity.FORCE, 0d);
+    relatedValuesEntry.setValue(PhysicalQuantity.BENDING, 0d);
+    relatedValuesEntry.setValue(PhysicalQuantity.VELOCITY, 0d);
+    relatedValuesEntry.setValue(PhysicalQuantity.ANGLE_OF_ATTACK, 0d);
+    relatedValues.add(relatedValuesEntry);
+    sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
+
+    PhysicalQuantityValues knownValues = new PhysicalQuantityValues();
+    knownValues.setValue(PhysicalQuantity.BENDING, 15d);
+    knownValues.setValue(PhysicalQuantity.ANGLE_OF_ATTACK, 0d);
+    knownValues.setValue(PhysicalQuantity.FLOW_DIRECTION, 0d);
+
+    // act
+    Set<PhysicalQuantity> result = sut.getAvailableQuantities(knownValues);
+
+    // assert
+    assertThat(result).containsOnly(
+        PhysicalQuantity.FORCE, PhysicalQuantity.VELOCITY);
+  }
+
+  @Test
+  public void testGetAvailableQuantities_noKnownValue()
+  {
+    // arrange
+    List<PhysicalQuantityValues> relatedValues = new ArrayList<>();
+    PhysicalQuantityValues relatedValuesEntry = new PhysicalQuantityValues();
+    relatedValuesEntry.setValue(PhysicalQuantity.FORCE, 0d);
+    relatedValuesEntry.setValue(PhysicalQuantity.BENDING, 0d);
+    relatedValuesEntry.setValue(PhysicalQuantity.VELOCITY, 0d);
+    relatedValuesEntry.setValue(PhysicalQuantity.ANGLE_OF_ATTACK, 0d);
+    relatedValues.add(relatedValuesEntry);
+    sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
+
+    PhysicalQuantityValues knownValues = new PhysicalQuantityValues();
+    knownValues.setValue(PhysicalQuantity.FLOW_DIRECTION, 0d);
+
+    // act
+    Set<PhysicalQuantity> result = sut.getAvailableQuantities(knownValues);
+
+    // assert
+    assertThat(result).isEmpty();
   }
 }
