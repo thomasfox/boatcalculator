@@ -116,7 +116,7 @@ public class QuantityRelations
 
     for (PhysicalQuantity wantedQuantity : availableQuantities)
     {
-      double interpolatedValue =interpolator.interpolateY(
+      double interpolatedValue = interpolator.interpolateY(
           xValue,
           new SimpleXYPoint(enclosingPoints.value1.getValue(providedQuantity), enclosingPoints.value1.getValue(wantedQuantity)),
           new SimpleXYPoint(enclosingPoints.value2.getValue(providedQuantity), enclosingPoints.value2.getValue(wantedQuantity)));
@@ -178,6 +178,32 @@ public class QuantityRelations
       if (knownValues.containsQuantity(relatedQuantity))
       {
         result.add(relatedQuantity);
+      }
+    }
+    return result;
+  }
+
+  public Set<PhysicalQuantity> getUnknownRelatedQuantities(PhysicalQuantityValues knownValues)
+  {
+    Set<PhysicalQuantity> result = new HashSet<>();
+    for (PhysicalQuantity relatedQuantity : getRelatedQuantities())
+    {
+      if (!knownValues.containsQuantity(relatedQuantity))
+      {
+        result.add(relatedQuantity);
+      }
+    }
+    return result;
+  }
+
+  public PhysicalQuantityValues getNonmatchingFixedQuantities(PhysicalQuantityValues knownValues)
+  {
+    PhysicalQuantityValues result = new PhysicalQuantityValues();
+    for (PhysicalQuantityValue fixedQuantityValue : fixedQuantities.getAsList())
+    {
+      if (!knownValues.containedValueEquals(fixedQuantityValue))
+      {
+        result.setValue(fixedQuantityValue);
       }
     }
     return result;

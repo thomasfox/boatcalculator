@@ -54,6 +54,7 @@ public abstract class AbstractPhysicalQuantityValues<T extends PhysicalQuantityV
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void setValues(T... toSet)
   {
     for (T valueToCopy : toSet)
@@ -157,9 +158,39 @@ public abstract class AbstractPhysicalQuantityValues<T extends PhysicalQuantityV
     return false;
   }
 
+  public boolean containedValueEquals(PhysicalQuantityValue toCheck)
+  {
+    for (PhysicalQuantityValue value : values)
+    {
+      if (value.getPhysicalQuantity().equals(toCheck.getPhysicalQuantity()))
+      {
+        return value.getValue() == toCheck.getValue();
+      }
+    }
+    return false;
+  }
+
+  public boolean allValuesAreContainedAndEquals(PhysicalQuantityValues toCheck)
+  {
+    for (PhysicalQuantityValue valueToCheck : toCheck.getAsList())
+    {
+      if (!containedValueEquals(valueToCheck))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+
   public void clear()
   {
     values.clear();
+  }
+
+  public int size()
+  {
+    return values.size();
   }
 
   public boolean isEmpty()

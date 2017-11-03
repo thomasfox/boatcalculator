@@ -2,7 +2,6 @@ package com.github.thomasfox.sailboatcalculator.calculate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,7 +35,8 @@ import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityV
 import com.github.thomasfox.sailboatcalculator.interpolate.Interpolator;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.sailboatcalculator.interpolate.SimpleXYPoint;
-import com.github.thomasfox.sailboatcalculator.interpolate.XYPoint;
+
+import lombok.NonNull;
 
 public class CombinedCalculator
 {
@@ -103,67 +103,114 @@ public class CombinedCalculator
 
       // from here use quantityRelationsList to calculate unknown values
 
-      // all quantities match -> get related values
-      for (QuantityRelations quantityRelations : quantityRelationsList)
+      Map<PhysicalQuantityValues, QuantityRelations> fixedValueInterpolationCandidates
+          = getFixedValueInterpolationCandidates(namedValueSet.getKnownValues());
+      if (fixedValueInterpolationCandidates.isEmpty())
       {
-        if (!quantityRelations.fixedQuantitiesMatch(namedValueSet.getKnownValues()))
+        cutoff--;
+        continue;
+      }
+
+      Entry<PhysicalQuantityValues, QuantityRelations> firstEntry
+          = fixedValueInterpolationCandidates.entrySet().iterator().next();
+
+      PhysicalQuantityValues nonmatchingFixedValues = firstEntry.getKey();
+
+      if (nonmatchingFixedValues.size() == 0)
+      {
+        // no interpolation necessary, direct hit
+        for (QuantityRelations quantityRelations : fixedValueInterpolationCandidates.values())
         {
+          boolean changed = setValuesFromQuantityRelations(
+              namedValueSet,
+              quantityRelations);
+          changedInCurrentIteration = changedInCurrentIteration || changed;
+          changedOverall = changedOverall || changed;
+        }
+      }
+      else if (nonmatchingFixedValues.size() == 1)
+      {
+        // only one nonmatching value -> try to interpolate
+        PhysicalQuantityValue nonmatchingValue = null;
+
+        // check whether any nonmatching value is known at all
+        for (PhysicalQuantityValue valueCandidate : nonmatchingFixedValues.getAsList())
+        {
+          nonmatchingValue = namedValueSet.getKnownValue(valueCandidate.getPhysicalQuantity());
+          if (nonmatchingValue != null)
+          {
+            break;
+          }
+        }
+        if (nonmatchingValue == null)
+        {
+          // no nonmatching value is known now
           continue;
         }
-        Set<PhysicalQuantity> usedQuantities
-            = quantityRelations.getKnownRelatedQuantities(namedValueSet.getKnownValues());
-        usedQuantities.addAll(quantityRelations.getFixedQuantities().getContainedQuantities());
-        PhysicalQuantityValues relatedQuantities
-            = quantityRelations.getRelatedQuantityValues(namedValueSet.getKnownValues());
-        for (PhysicalQuantityValue physicalQuantityValue : relatedQuantities.getAsList())
+
+        Map<PhysicalQuantityValue, QuantityRelations> fixedValueInterpolationRelations
+            = getFixedValueInterpolationRelations(
+                fixedValueInterpolationCandidates,
+                nonmatchingValue);
+
+        if (fixedValueInterpolationRelations.size() == 1)
         {
-          namedValueSet.setCalculatedValueNoOverwrite(
-              physicalQuantityValue.getPhysicalQuantity(),
-              physicalQuantityValue.getValue(),
-              quantityRelations.getName(),
-              new PhysicalQuantityValuesWithSetNamePerValue(namedValueSet.getKnownValues(usedQuantities), namedValueSet.getName()));
-          changedInCurrentIteration = true;
-          changedOverall = true;
+          // no interpolation possible, outside interval or only one point available
+          PhysicalQuantityValue usedValue = fixedValueInterpolationRelations.keySet().iterator().next();
+          QuantityRelations quantityRelations = fixedValueInterpolationRelations.values().iterator().next();
+          System.out.println("Only one point to interpolate "
+              + usedValue.getPhysicalQuantity().getDisplayName()
+              + ", using " + usedValue.getValue() + " instead of " + nonmatchingValue.getValue());
+
+          boolean changed = setValuesFromQuantityRelations(
+              namedValueSet,
+              quantityRelations);
+          changedInCurrentIteration = changedInCurrentIteration || changed;
+          changedOverall = changedOverall || changed;
         }
-      }
-
-      // one quantity does not match -> interpolate
-      Entry<PhysicalQuantity, Set<Double>> singleNonmatchingFixedQuantityWithValues
-          = getSingleNonmatchingQuantityWithValues(namedValueSet.getKnownValues());
-      if (singleNonmatchingFixedQuantityWithValues == null)
-      {
-        cutoff--;
-        continue;
-      }
-
-      PhysicalQuantity nonMatchingQuantity = singleNonmatchingFixedQuantityWithValues.getKey();
-      PhysicalQuantityValue knownValueForNonMatchingQuantity = namedValueSet.getKnownValue(nonMatchingQuantity);
-      if (knownValueForNonMatchingQuantity == null)
-      {
-        // a fixed quantity is unknown
-        cutoff--;
-        continue;
-      }
-
-      Map<PhysicalQuantity, List<XYPoint>> interpolationValues
-          = getInterpolationValuesForQuantityFromQuantityRelations(
-              nonMatchingQuantity,
-              namedValueSet.getKnownValues());
-
-      for (Map.Entry<PhysicalQuantity, List<XYPoint>> entry : interpolationValues.entrySet())
-      {
-        Double interpolatedValue = getInterpolatedValueFor(
-            entry.getKey(),
-            knownValueForNonMatchingQuantity.getValue(),
-            entry.getValue());
-        if (interpolatedValue != null)
+        else
         {
-          namedValueSet.setCalculatedValueNoOverwrite(
-              entry.getKey(),
-              interpolatedValue,
-              "unknown Quantity Relations");
-          changedInCurrentIteration = true;
-          changedOverall = true;
+          // Interpolation
+          Double x1 = null;
+          Double x2 = null;
+          PhysicalQuantityValues yValues1 = null;
+          PhysicalQuantityValues yValues2 = null;
+          String name1 = null;
+          String name2 = null;
+          for (Map.Entry<PhysicalQuantityValue, QuantityRelations> interpolationRelationEntry : fixedValueInterpolationRelations.entrySet())
+          {
+            if (x1 == null)
+            {
+              x1 = interpolationRelationEntry.getKey().getValue();
+              yValues1 = interpolationRelationEntry.getValue().getRelatedQuantityValues(namedValueSet.getKnownValues());
+              name1 = interpolationRelationEntry.getValue().getName();
+            }
+            else if (x2 == null)
+            {
+              x2 = interpolationRelationEntry.getKey().getValue();
+              yValues2 = interpolationRelationEntry.getValue().getRelatedQuantityValues(namedValueSet.getKnownValues());
+              name2 = interpolationRelationEntry.getValue().getName();
+            }
+            else
+            {
+              throw new IllegalArgumentException("Too many entries in fixedValueInterpolationRelations : " + fixedValueInterpolationRelations);
+            }
+          }
+          for (PhysicalQuantityValue y1 : yValues1.getAsList())
+          {
+            Double y2 = yValues2.getValue(y1.getPhysicalQuantity());
+            if (y2 != null)
+            {
+              double y = interpolator.interpolateY(
+                  nonmatchingValue.getValue(),
+                  new SimpleXYPoint(x1, y1.getValue()),
+                  new SimpleXYPoint(x2, y2));
+              namedValueSet.setCalculatedValue(
+                  y1.getPhysicalQuantity(),
+                  y,
+                  name1 + " and " + name2); // todo set origin
+            }
+          }
         }
       }
       cutoff--;
@@ -172,161 +219,130 @@ public class CombinedCalculator
     return changedOverall;
   }
 
-  private Double getInterpolatedValueFor(PhysicalQuantity quantityToInterpolate, Double xValue, List<XYPoint> from)
+  private boolean setValuesFromQuantityRelations(NamedValueSet namedValueSet, QuantityRelations quantityRelations)
   {
-    if (from.size() == 0)
+    boolean changed = false;
+    Set<PhysicalQuantity> usedQuantities
+        = quantityRelations.getKnownRelatedQuantities(namedValueSet.getKnownValues());
+    usedQuantities.addAll(quantityRelations.getFixedQuantities().getContainedQuantities());
+    PhysicalQuantityValues relatedQuantities
+        = quantityRelations.getRelatedQuantityValues(namedValueSet.getKnownValues());
+    for (PhysicalQuantityValue physicalQuantityValue : relatedQuantities.getAsList())
     {
-      System.out.println("No points to interpolate " + quantityToInterpolate.getDisplayName());
-      return null;
+      namedValueSet.setCalculatedValueNoOverwrite(
+          physicalQuantityValue.getPhysicalQuantity(),
+          physicalQuantityValue.getValue(),
+          quantityRelations.getName(),
+          new PhysicalQuantityValuesWithSetNamePerValue(namedValueSet.getKnownValues(usedQuantities), namedValueSet.getName()));
+      changed = true;
     }
-    else if (from.size() == 1)
-    {
-      System.out.println("Only one point to interpolate " + quantityToInterpolate.getDisplayName()
-          + ", using " + from.get(0).getX() + " instead of " + xValue);
-      return from.get(0).getY();
-    }
-    else
-    {
-      double interpolated = Double.NaN;
-      try
-      {
-        interpolated = interpolator.interpolate(xValue, from);
-      }
-      catch (Exception e)
-      {
-        // probably outside interpolation interval, try find best-matching value
-        double distance = Double.POSITIVE_INFINITY;
-        double usedValue = Double.NaN;
-        for (XYPoint point : from)
-        {
-          double currentDistance = Math.abs(xValue - point.getX());
-          if (currentDistance < distance)
-          {
-            distance = currentDistance;
-            interpolated = point.getY();
-            usedValue = point.getX();
-          }
-        }
-        System.out.println("No matching interval to interpolate " + quantityToInterpolate.getDisplayName()
-            + ", using " + usedValue + " instead of " + xValue);
-      }
-      return interpolated;
-    }
+    return changed;
   }
 
-  private Map<PhysicalQuantity, List<XYPoint>> getInterpolationValuesForQuantityFromQuantityRelations(
-      PhysicalQuantity quantityToInterpolate,
-      PhysicalQuantityValues allKnownValues)
+  /**
+   * Returns the quantity relations with the minimal number of nonmatching fixed quantities.
+   * Nonmatching means that either the fixed value in the qunatity relations is not equal to the known value
+   * or that the fixed value is not in the known values.
+   *
+   * @param knownValues the known values.
+   *
+   * @return the quantity relations with the minimal number of nonmatching fixed quantities, not null, may be empty.
+   */
+  private Map<PhysicalQuantityValues, QuantityRelations> getFixedValueInterpolationCandidates(
+      PhysicalQuantityValues knownValues)
   {
-    Map<PhysicalQuantity, List<XYPoint>> interpolationValues = new HashMap<>();
+    int minimalNumberOfNonmatchingQuantities = Integer.MAX_VALUE;
+    Map<PhysicalQuantityValues, QuantityRelations> interpolationCandidates = new HashMap<>();
     for (QuantityRelations quantityRelations : quantityRelationsList)
     {
-      if (!quantityRelationsOkForInterpolation(
-          quantityToInterpolate, allKnownValues, quantityRelations))
+      PhysicalQuantityValues nonmatchingFixedValues
+          = quantityRelations.getNonmatchingFixedQuantities(knownValues);
+      int numberOfMissingQuantities = nonmatchingFixedValues.size();
+      if (numberOfMissingQuantities <= minimalNumberOfNonmatchingQuantities
+          && quantityRelations.getUnknownRelatedQuantities(knownValues).size() > 0)
+      {
+        if (numberOfMissingQuantities < minimalNumberOfNonmatchingQuantities)
+        {
+          interpolationCandidates.clear();
+        }
+        minimalNumberOfNonmatchingQuantities = numberOfMissingQuantities;
+        interpolationCandidates.put(nonmatchingFixedValues, quantityRelations);
+      }
+    }
+
+    return interpolationCandidates;
+  }
+
+  /**
+   * Gets the quantity relations which can really be used for interpolation
+   *
+   * @param fixedValueInterpolationCandidates the quantity relations which can be used for interpolation,
+   *        not empty, keys must have size 1.
+   * @return the interpolation quantity relations,
+   *         of size 0 if no matching entries are found to interpolate,
+   *         or of size 1 if no interpolation is possible
+   *         or of size 2 if interpolation is possible.
+   */
+  private Map<PhysicalQuantityValue, QuantityRelations> getFixedValueInterpolationRelations(
+      @NonNull Map<PhysicalQuantityValues, QuantityRelations> fixedValueInterpolationCandidates,
+      @NonNull PhysicalQuantityValue knownValueForInterpolation)
+  {
+    Double minInterpolationQuantity = null;
+    Double maxInterpolationQuantity = null;
+    QuantityRelations minInterpolationRelations = null;
+    QuantityRelations maxInterpolationRelations = null;
+    for (Map.Entry<PhysicalQuantityValues, QuantityRelations> fixedValueInterpolationCandidate
+        : fixedValueInterpolationCandidates.entrySet())
+    {
+      PhysicalQuantityValue nonmatchingValue = fixedValueInterpolationCandidate.getKey().getAsList().get(0);
+      if (nonmatchingValue.getPhysicalQuantity() != knownValueForInterpolation.getPhysicalQuantity())
       {
         continue;
       }
-
-      PhysicalQuantityValues relatedQuantities
-          = quantityRelations.getRelatedQuantityValues(allKnownValues);
-      for (PhysicalQuantityValue physicalQuantityValue : relatedQuantities.getAsList())
+      if (minInterpolationQuantity == null)
       {
-        List<XYPoint> relatedQuantityInterpolationList = interpolationValues.get(physicalQuantityValue.getPhysicalQuantity());
-        if (relatedQuantityInterpolationList == null)
-        {
-          relatedQuantityInterpolationList = new ArrayList<>();
-          interpolationValues.put(physicalQuantityValue.getPhysicalQuantity(), relatedQuantityInterpolationList);
-        }
-        relatedQuantityInterpolationList.add(new SimpleXYPoint(
-            quantityRelations.getFixedQuantities().getValue(quantityToInterpolate),
-            physicalQuantityValue.getValue()));
+        minInterpolationQuantity = nonmatchingValue.getValue();
+        maxInterpolationQuantity = nonmatchingValue.getValue();
+        minInterpolationRelations = fixedValueInterpolationCandidate.getValue();
+        maxInterpolationRelations = minInterpolationRelations;
+        continue;
       }
-    }
-    return interpolationValues;
-  }
 
-  /**
-   * Returns true only if the quantity to interpolate is the only
-   * quantity in the fixed values which is not equal to a fixed value.
-   */
-  private boolean quantityRelationsOkForInterpolation(
-      PhysicalQuantity quantityToInterpolate,
-      PhysicalQuantityValues allKnownValues,
-      QuantityRelations quantityRelations)
-  {
-    PhysicalQuantityValues fixedQuantities = quantityRelations.getFixedQuantities();
-    boolean okForInterpolation = true;
-    for (PhysicalQuantityValue fixedQuantity : fixedQuantities.getAsList())
-    {
-      if (!fixedQuantity.getPhysicalQuantity().equals(quantityToInterpolate)
-          && !allKnownValues.getValue(fixedQuantity.getPhysicalQuantity()).equals(fixedQuantity.getValue()))
+      if (nonmatchingValue.getValue() > minInterpolationQuantity
+          && nonmatchingValue.getValue() <= knownValueForInterpolation.getValue())
       {
-        okForInterpolation = false;
-        break;
-      }
-    }
-    return okForInterpolation;
-  }
-
-  /**
-   * Checks the fixed values in the known quantityRelationList.
-   * The fixed values are checked against the known values.
-   * If a fixed value is equal to a known value, it is marked.
-   * When all fixed values are passed, the list of fixed values without match
-   * is determined. If it contains more than one quantity, null is returned,
-   * otherwise the matching quantity .
-   *
-   * NOTE: This method is ok for the profile calculations,
-   * it does not work if known quantities change between quantityRelations
-   * or if all quantities match exactly in a quantityRelations.
-   *
-   * @return the single nonmatching quantity, along with the occurances of fixed values
-   *         in the quantityRelationsList, or null if no match is found.
-   */
-  private Map.Entry<PhysicalQuantity, Set<Double>> getSingleNonmatchingQuantityWithValues(
-      PhysicalQuantityValues allKnownValues)
-  {
-    Map<PhysicalQuantity, Set<Double>> fixedQuantitiesOccurances = new HashMap<>();
-    Set<PhysicalQuantity> fixedQuantitiesWithMatches = new HashSet<>();
-    for (QuantityRelations quantityRelations : quantityRelationsList)
-    {
-      PhysicalQuantityValues fixedQuantities = quantityRelations.getFixedQuantities();
-      for (PhysicalQuantityValue fixedQuantity : fixedQuantities.getAsList())
-      {
-        Set<Double> quantityValues = fixedQuantitiesOccurances.get(fixedQuantity.getPhysicalQuantity());
-        if (quantityValues == null)
+        minInterpolationQuantity = nonmatchingValue.getValue();
+        minInterpolationRelations = fixedValueInterpolationCandidate.getValue();
+        if (minInterpolationQuantity > maxInterpolationQuantity)
         {
-          quantityValues = new HashSet<>();
-          fixedQuantitiesOccurances.put(fixedQuantity.getPhysicalQuantity(), quantityValues);
+          maxInterpolationQuantity = nonmatchingValue.getValue();
+          maxInterpolationRelations = fixedValueInterpolationCandidate.getValue();
         }
-        quantityValues.add(fixedQuantity.getValue());
-        Double knownValue = allKnownValues.getValue(fixedQuantity.getPhysicalQuantity());
-        if (knownValue != null && knownValue.equals(fixedQuantity.getValue()))
+
+      }
+
+      if (nonmatchingValue.getValue() < maxInterpolationQuantity
+          && nonmatchingValue.getValue() >= knownValueForInterpolation.getValue())
+      {
+        maxInterpolationQuantity = nonmatchingValue.getValue();
+        maxInterpolationRelations = fixedValueInterpolationCandidate.getValue();
+        if (minInterpolationQuantity > maxInterpolationQuantity)
         {
-          fixedQuantitiesWithMatches.add(fixedQuantity.getPhysicalQuantity());
+          minInterpolationQuantity = nonmatchingValue.getValue();
+          minInterpolationRelations = fixedValueInterpolationCandidate.getValue();
         }
       }
     }
-
-    for (PhysicalQuantity matchingQuantity : fixedQuantitiesWithMatches)
+    Map<PhysicalQuantityValue, QuantityRelations> result = new HashMap<>();
+    result.put(
+        new PhysicalQuantityValue(knownValueForInterpolation.getPhysicalQuantity(), minInterpolationQuantity),
+        minInterpolationRelations);
+    if (maxInterpolationRelations != minInterpolationRelations)
     {
-      fixedQuantitiesOccurances.remove(matchingQuantity);
+      result.put(
+          new PhysicalQuantityValue(knownValueForInterpolation.getPhysicalQuantity(), maxInterpolationQuantity),
+          maxInterpolationRelations);
     }
-
-    if (fixedQuantitiesOccurances.size() > 1)
-    {
-      System.out.println("mismatching quantities: " + fixedQuantitiesOccurances + ": not enough matching quantities for " + quantityRelationsList);
-      return null;
-    }
-
-    if (fixedQuantitiesOccurances.size() != 1)
-    {
-      if (fixedQuantitiesOccurances.size() != 0)
-      {
-        System.out.println("Matching quantities for " + quantityRelationsList + " are " + fixedQuantitiesOccurances.size());
-      }
-      return null;
-    }
-    return fixedQuantitiesOccurances.entrySet().iterator().next();
+    return result;
   }
 }
