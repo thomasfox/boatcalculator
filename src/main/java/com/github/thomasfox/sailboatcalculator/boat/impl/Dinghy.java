@@ -26,6 +26,7 @@ public class Dinghy extends Boat
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BOAT_ID),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, PartType.HULL.name()),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, PartType.RUDDER.name()),
-        new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, PartType.DAGGERBOARD.name())));
+        new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, PartType.DAGGERBOARD.name()),
+        new PhysicalQuantityInSet(PhysicalQuantity.BRAKING_FORCE, PartType.CREW.name())));
   }
 }

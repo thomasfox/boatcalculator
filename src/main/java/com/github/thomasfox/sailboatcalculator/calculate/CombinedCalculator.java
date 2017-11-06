@@ -11,6 +11,7 @@ import com.github.thomasfox.sailboatcalculator.calculate.impl.ApparentWindDirect
 import com.github.thomasfox.sailboatcalculator.calculate.impl.ApparentWindSpeedCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.AreaCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.BendingCalculator;
+import com.github.thomasfox.sailboatcalculator.calculate.impl.BrakingForceCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.DrivingForceCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.InducedDragCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.InducedDragCoefficientCalculator;
@@ -18,6 +19,7 @@ import com.github.thomasfox.sailboatcalculator.calculate.impl.LateralForceCalcul
 import com.github.thomasfox.sailboatcalculator.calculate.impl.LeverFromWeightCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.LiftCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.LiftCoefficientCalculator;
+import com.github.thomasfox.sailboatcalculator.calculate.impl.ParasiticDragCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.ProfileDragCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.ReynoldsNumberCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.SailingAngleCalculator;
@@ -52,6 +54,7 @@ public class CombinedCalculator
     calculators.add(new ReynoldsNumberCalculator());
     calculators.add(new InducedDragCoefficientCalculator());
     calculators.add(new InducedDragCalculator());
+    calculators.add(new ParasiticDragCalculator());
     calculators.add(new BendingCalculator());
     calculators.add(new SecondMomentOfAreaCalculator());
     calculators.add(new LiftCoefficientCalculator());
@@ -69,6 +72,7 @@ public class CombinedCalculator
     calculators.add(new LeverFromWeightCalculator());
     calculators.add(new VMGCalculator());
     calculators.add(new SailingAngleCalculator());
+    calculators.add(new BrakingForceCalculator());
 
     this.quantityRelationsList.addAll(quantityRelationsList);
   }

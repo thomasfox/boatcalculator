@@ -56,8 +56,9 @@ public abstract class Boat
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.HULL.name()));
     values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, PartType.RIGG.name(), PhysicalQuantity.LIFT, PartType.DAGGERBOARD.name())); // assumption: rudder has no force
     values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.RIGG.name()));
+    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.CREW.name()));
     values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BOAT_ID, PhysicalQuantity.FLOW_DIRECTION, PartType.RIGG.name()));
-    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BOAT_ID, PhysicalQuantity.FLOW_DIRECTION, PartType.RIGG.name()));
+    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BOAT_ID, PhysicalQuantity.FLOW_DIRECTION, PartType.CREW.name()));
     values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, PartType.RIGG.name(), PhysicalQuantity.FORCE, LEVER_SAIL_DAGGERBOARD_ID));
     values.add(new LeverSailDaggerboardStrategy(PartType.RIGG.name(), PartType.DAGGERBOARD.name(), LEVER_SAIL_DAGGERBOARD_ID));
 }

@@ -23,13 +23,17 @@ public class Skiff29er extends Dinghy
     daggerboardOrKeel.setProfileName("naca0010");
     rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 6d); // rough estimate
     rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_AREA, 12d); // no gennaker taken into account
-    rigg.setStartValueNoOverwrite(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, 0.03); // rough estimate
+    rigg.setStartValueNoOverwrite(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, 0.18); // estimate from: https://en.wikipedia.org/wiki/Forces_on_sails
     rigg.setStartValueNoOverwrite(PhysicalQuantity.ANGLE_OF_ATTACK, 20); // rough estimate
     crew.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 80d); // single person
+    crew.setStartValueNoOverwrite(PhysicalQuantity.WING_AREA, 0.58); // 1.8m * 0.3m
+    crew.setStartValueNoOverwrite(PhysicalQuantity.PARASITIC_DRAG_COEFFICIENT, 0.5); // rough estimate
     rigg.setStartValueNoOverwrite(PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT, 3); // rough estimate based on COG of Sail plan
     boat.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 100d); // old boat, nominal weight is 90 kg
     hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "29er_153kg.txt"), "29er Hull@153kg"));
     hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "29er_204kg.txt"), "29er Hull@204kg"));
+    hull.setStartValueNoOverwrite(PhysicalQuantity.WING_AREA, 0.375); // 1,5m * 25cm)
+    hull.setStartValueNoOverwrite(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT, 0.5); // rough estimate
 
     values.add(new TwoValuesShouldBeEqualModifyThirdStrategy(
         PhysicalQuantity.DRIVING_FORCE, PartType.RIGG.name(),
