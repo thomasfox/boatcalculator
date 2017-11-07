@@ -98,7 +98,7 @@ public class NamedValueSet
     return result;
   }
 
-  public PhysicalQuantityValues getKnownValues(Set<PhysicalQuantity> quantitiesToRead)
+  public PhysicalQuantityValues getKnownValues(Collection<PhysicalQuantity> quantitiesToRead)
   {
     PhysicalQuantityValues result = new PhysicalQuantityValues();
     for (PhysicalQuantity quantityToRead : quantitiesToRead)

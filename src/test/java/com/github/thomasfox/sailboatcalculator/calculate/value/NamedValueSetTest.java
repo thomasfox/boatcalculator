@@ -2,12 +2,14 @@ package com.github.thomasfox.sailboatcalculator.calculate.value;
 
 import static  org.assertj.core.api.Assertions.assertThat;
 
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.QuantityNotPresentException;
 
 public class NamedValueSetTest
 {
@@ -111,6 +113,86 @@ public class NamedValueSetTest
   }
 
   @Test
+  public void testGetKnownValues_CollectionAsInput()
+  {
+    // arrange
+    sut.setStartValue(PhysicalQuantity.WEIGHT, 10d);
+
+    sut.setCalculatedValue(PhysicalQuantity.LIFT, 20d, "someLiftCalculation");
+    sut.setStartValue(PhysicalQuantity.LIFT, 30d);
+
+    sut.setFixedValueNoOverwrite(PhysicalQuantity.BENDING, 40d);
+    sut.setCalculatedValue(PhysicalQuantity.BENDING, 50d, "someBendingCalculation");
+    sut.setStartValue(PhysicalQuantity.BENDING, 60d);
+
+    sut.setStartValue(PhysicalQuantity.FORCE, 70d);
+
+    // act
+    PhysicalQuantityValues result
+        = sut.getKnownValues(Lists.newArrayList(PhysicalQuantity.WEIGHT, PhysicalQuantity.LIFT, PhysicalQuantity.BENDING));
+
+    // assert
+    assertThat(result.getAsList()).containsOnly(
+        new PhysicalQuantityValue(PhysicalQuantity.WEIGHT, 10d),
+        new PhysicalQuantityValue(PhysicalQuantity.LIFT, 20d),
+        new PhysicalQuantityValue(PhysicalQuantity.BENDING, 40d));
+  }
+
+  @Test
+  public void testGetKnownValuesAsArray_CollectionAsInput_quantityMissing()
+  {
+    // arrange
+    sut.setStartValue(PhysicalQuantity.WEIGHT, 20d);
+
+    // assert
+    expectedExeption.expect(QuantityNotPresentException.class);
+    expectedExeption.expectMessage("The quantity Durchbiegung is needed but not present");
+
+    // act
+    sut.getKnownValues(Lists.newArrayList(PhysicalQuantity.WEIGHT, PhysicalQuantity.BENDING));
+  }
+
+  @Test
+  public void testGetKnownValuesAsArray()
+  {
+    // arrange
+    sut.setStartValue(PhysicalQuantity.WEIGHT, 10d);
+
+    sut.setCalculatedValue(PhysicalQuantity.LIFT, 20d, "someLiftCalculation");
+    sut.setStartValue(PhysicalQuantity.LIFT, 30d);
+
+    sut.setFixedValueNoOverwrite(PhysicalQuantity.BENDING, 40d);
+    sut.setCalculatedValue(PhysicalQuantity.BENDING, 50d, "someBendingCalculation");
+    sut.setStartValue(PhysicalQuantity.BENDING, 60d);
+
+    sut.setStartValue(PhysicalQuantity.FORCE, 70d);
+
+    // act
+    PhysicalQuantityValueWithSetName[] result
+        = sut.getKnownValuesAsArray(Lists.newArrayList(PhysicalQuantity.WEIGHT, PhysicalQuantity.LIFT, PhysicalQuantity.BENDING));
+
+    // assert
+    assertThat(result).containsOnly(
+        new PhysicalQuantityValueWithSetName(PhysicalQuantity.WEIGHT, 10d, "namedValueSetName"),
+        new PhysicalQuantityValueWithSetName(PhysicalQuantity.LIFT, 20d, "namedValueSetName"),
+        new PhysicalQuantityValueWithSetName(PhysicalQuantity.BENDING, 40d, "namedValueSetName"));
+  }
+
+  @Test
+  public void testGetKnownValuesAsArray_quantityMissing()
+  {
+    // arrange
+    sut.setStartValue(PhysicalQuantity.WEIGHT, 20d);
+
+    // assert
+    expectedExeption.expect(QuantityNotPresentException.class);
+    expectedExeption.expectMessage("The quantity Durchbiegung is needed but not present");
+
+    // act
+    sut.getKnownValuesAsArray(Lists.newArrayList(PhysicalQuantity.WEIGHT, PhysicalQuantity.BENDING));
+  }
+
+  @Test
   public void testIsValueKnown_true()
   {
     // arrange
@@ -166,6 +248,16 @@ public class NamedValueSetTest
   }
 
   @Test
+  public void testSetStartValueNoOverwrite()
+  {
+    // act
+    sut.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 10d);
+
+    // assert
+    assertThat(sut.getStartValue(PhysicalQuantity.WEIGHT)).isEqualTo(10d);
+  }
+
+  @Test
   public void testSetStartValueNoOverwrite_startValueKnown()
   {
     // arrange
@@ -202,6 +294,16 @@ public class NamedValueSetTest
 
     // act
     sut.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 10d);
+  }
+
+  @Test
+  public void testSetFixedValueNoOverwrite()
+  {
+    // act
+    sut.setFixedValueNoOverwrite(PhysicalQuantity.WEIGHT, 10d);
+
+    // assert
+    assertThat(sut.getFixedValue(PhysicalQuantity.WEIGHT)).isEqualTo(10d);
   }
 
   @Test
@@ -244,7 +346,26 @@ public class NamedValueSetTest
   }
 
   @Test
-  public void testSeCalculatedValueNoOverwrite_startValueKnown()
+  public void testSetCalculatedValueNoOverwrite()
+  {
+    // act
+    sut.setCalculatedValueNoOverwrite(
+        PhysicalQuantity.WEIGHT,
+        10d,
+        "calculatedBy",
+        new PhysicalQuantityValueWithSetName(PhysicalQuantity.BENDING, 20d, "setName"));
+
+    // assert
+    assertThat(sut.getCalculatedValues().getAsList()).containsOnly(
+        new CalculatedPhysicalQuantityValue(
+            PhysicalQuantity.WEIGHT,
+            10d,
+            "calculatedBy",
+            new PhysicalQuantityValueWithSetName(PhysicalQuantity.BENDING, 20d, "setName")));
+  }
+
+  @Test
+  public void testSetCalculatedValueNoOverwrite_startValueKnown()
   {
     // arrange
     sut.setStartValue(PhysicalQuantity.WEIGHT, 10d);
