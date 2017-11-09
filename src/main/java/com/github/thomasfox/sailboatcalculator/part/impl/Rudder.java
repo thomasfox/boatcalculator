@@ -11,8 +11,8 @@ public class Rudder extends Wing
     super(PartType.RUDDER);
     setFixedValueNoOverwrite(MaterialConstants.DENSITY_WATER);
     setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_WATER);
-    toInput.add(PhysicalQuantity.WING_CHORD);
-    toInput.add(PhysicalQuantity.LIFT);
+    addToInput(PhysicalQuantity.WING_CHORD);
+    addToInput(PhysicalQuantity.LIFT);
   }
 
 }

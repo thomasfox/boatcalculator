@@ -28,7 +28,7 @@ public class NamedValueSet
   @NonNull
   private final String name;
 
-  protected final Set<PhysicalQuantity> toInput = new LinkedHashSet<>();
+  private final Set<PhysicalQuantity> toInput = new LinkedHashSet<>();
 
   /** Physical constants. */
   private final PhysicalQuantityValues fixedValues = new PhysicalQuantityValues();

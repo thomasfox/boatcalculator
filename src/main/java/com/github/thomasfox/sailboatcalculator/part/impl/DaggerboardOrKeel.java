@@ -11,7 +11,7 @@ public class DaggerboardOrKeel extends Wing
     super(PartType.DAGGERBOARD);
     setFixedValueNoOverwrite(MaterialConstants.DENSITY_WATER);
     setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_WATER);
-    toInput.add(PhysicalQuantity.WING_CHORD);
+    addToInput(PhysicalQuantity.WING_CHORD);
   }
 
 }

@@ -13,8 +13,8 @@ public class Crew extends BoatPart
     setFixedValueNoOverwrite(MaterialConstants.GRAVITY_ACCELERATION);
     setFixedValueNoOverwrite(MaterialConstants.DENSITY_AIR);
     setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_AIR);
-    toInput.add(PhysicalQuantity.WEIGHT);
-    toInput.add(PhysicalQuantity.WING_AREA);
-    toInput.add(PhysicalQuantity.PARASITIC_DRAG_COEFFICIENT);
+    addToInput(PhysicalQuantity.WEIGHT);
+    addToInput(PhysicalQuantity.WING_AREA);
+    addToInput(PhysicalQuantity.PARASITIC_DRAG_COEFFICIENT);
   }
 }

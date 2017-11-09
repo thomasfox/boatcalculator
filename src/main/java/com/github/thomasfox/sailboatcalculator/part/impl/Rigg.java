@@ -11,9 +11,9 @@ public class Rigg extends Wing
     super(PartType.RIGG);
     setFixedValueNoOverwrite(MaterialConstants.DENSITY_AIR);
     setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_AIR);
-    toInput.add(PhysicalQuantity.LIFT_COEFFICIENT);
-    toInput.add(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT);
-    toInput.add(PhysicalQuantity.WING_AREA);
-    toInput.add(PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT);
+    addToInput(PhysicalQuantity.LIFT_COEFFICIENT);
+    addToInput(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT);
+    addToInput(PhysicalQuantity.WING_AREA);
+    addToInput(PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT);
   }
 }
