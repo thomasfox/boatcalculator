@@ -22,7 +22,7 @@ public class SimpleValueSetTest
   @Before
   public void setUp()
   {
-    sut = new SimpleValueSet("namedValueSetId", "namedValueSetName");
+    sut = new SimpleValueSet("valueSetId", "valueSetName");
   }
 
   @Test
@@ -173,9 +173,9 @@ public class SimpleValueSetTest
 
     // assert
     assertThat(result).containsOnly(
-        new PhysicalQuantityValueWithSetName(PhysicalQuantity.WEIGHT, 10d, "namedValueSetName"),
-        new PhysicalQuantityValueWithSetName(PhysicalQuantity.LIFT, 20d, "namedValueSetName"),
-        new PhysicalQuantityValueWithSetName(PhysicalQuantity.BENDING, 40d, "namedValueSetName"));
+        new PhysicalQuantityValueWithSetName(PhysicalQuantity.WEIGHT, 10d, "valueSetName"),
+        new PhysicalQuantityValueWithSetName(PhysicalQuantity.LIFT, 20d, "valueSetName"),
+        new PhysicalQuantityValueWithSetName(PhysicalQuantity.BENDING, 40d, "valueSetName"));
   }
 
   @Test
@@ -232,8 +232,8 @@ public class SimpleValueSetTest
     // assert equality
     assertThat(result).isEqualToComparingFieldByField(sut);
     // assert setters have worked
-    assertThat(result.getId()).isEqualTo("namedValueSetId");
-    assertThat(result.getName()).isEqualTo("namedValueSetName");
+    assertThat(result.getId()).isEqualTo("valueSetId");
+    assertThat(result.getName()).isEqualTo("valueSetName");
     assertThat(result.getToInput()).containsOnly(
         PhysicalQuantity.ANGLE_OF_ATTACK, PhysicalQuantity.WEIGHT);
     assertThat(result.getFixedValues().getAsList()).containsOnly(
@@ -465,8 +465,8 @@ public class SimpleValueSetTest
         new CalculatedPhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d, "calculatedBy"));
 
     // assert rest of object stays the same
-    assertThat(sut.getId()).isEqualTo("namedValueSetId");
-    assertThat(sut.getName()).isEqualTo("namedValueSetName");
+    assertThat(sut.getId()).isEqualTo("valueSetId");
+    assertThat(sut.getName()).isEqualTo("valueSetName");
     assertThat(sut.getToInput()).containsOnly(
         PhysicalQuantity.ANGLE_OF_ATTACK, PhysicalQuantity.WEIGHT);
     assertThat(sut.getFixedValues().getAsList()).containsOnly(
@@ -506,8 +506,8 @@ public class SimpleValueSetTest
     assertThat(sut.getCalculatedValues().getAsList()).containsOnly();
 
     // assert rest of object stays the same
-    assertThat(sut.getId()).isEqualTo("namedValueSetId");
-    assertThat(sut.getName()).isEqualTo("namedValueSetName");
+    assertThat(sut.getId()).isEqualTo("valueSetId");
+    assertThat(sut.getName()).isEqualTo("valueSetName");
     assertThat(sut.getToInput()).containsOnly(
         PhysicalQuantity.ANGLE_OF_ATTACK, PhysicalQuantity.WEIGHT);
     assertThat(sut.getFixedValues().getAsList()).containsOnly(
@@ -531,8 +531,8 @@ public class SimpleValueSetTest
     assertThat(sut.getStartValues().getAsList()).containsOnly();
 
     // assert rest of object stays the same
-    assertThat(sut.getId()).isEqualTo("namedValueSetId");
-    assertThat(sut.getName()).isEqualTo("namedValueSetName");
+    assertThat(sut.getId()).isEqualTo("valueSetId");
+    assertThat(sut.getName()).isEqualTo("valueSetName");
     assertThat(sut.getToInput()).containsOnly(
         PhysicalQuantity.ANGLE_OF_ATTACK, PhysicalQuantity.WEIGHT);
     assertThat(sut.getFixedValues().getAsList()).containsOnly(
@@ -561,8 +561,8 @@ public class SimpleValueSetTest
     assertThat(sut.getCalculatedValues().getAsList()).containsOnly();
 
     // assert rest of object stays the same
-    assertThat(sut.getId()).isEqualTo("namedValueSetId");
-    assertThat(sut.getName()).isEqualTo("namedValueSetName");
+    assertThat(sut.getId()).isEqualTo("valueSetId");
+    assertThat(sut.getName()).isEqualTo("valueSetName");
     assertThat(sut.getToInput()).containsOnly(
         PhysicalQuantity.ANGLE_OF_ATTACK, PhysicalQuantity.WEIGHT);
     assertThat(sut.getFixedValues().getAsList()).containsOnly(

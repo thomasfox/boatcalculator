@@ -44,7 +44,7 @@ public class QuantitySum implements ComputationStrategy
   @Override
   public boolean setValue(AllValues allValues)
   {
-    ValueSet targetSet = allValues.getValueSetNonNull(target.getNamedValueSetId());
+    ValueSet targetSet = allValues.getValueSetNonNull(target.getValueSetId());
     if (allSourceValuesAreKnown(allValues) && !targetSet.isValueKnown(target.getPhysicalQuantity()))
     {
       targetSet.setCalculatedValueNoOverwrite(
@@ -89,7 +89,7 @@ public class QuantitySum implements ComputationStrategy
       {
         result.append(" + ");
       }
-      result.append(allValues.getNameOfSetWithId(source.getNamedValueSetId()))
+      result.append(allValues.getNameOfSetWithId(source.getValueSetId()))
           .append(":")
           .append(source.getPhysicalQuantity().getDisplayName());
     }
@@ -102,7 +102,7 @@ public class QuantitySum implements ComputationStrategy
     int i = 0;
     for (PhysicalQuantityInSet source : sources)
     {
-      ValueSet sourceSet = allValues.getNamedValueSet(source.getNamedValueSetId());
+      ValueSet sourceSet = allValues.getValueSet(source.getValueSetId());
       result[i] = new PhysicalQuantityValueWithSetName(
           sourceSet.getKnownValue(source.getPhysicalQuantity()),
           sourceSet.getName());

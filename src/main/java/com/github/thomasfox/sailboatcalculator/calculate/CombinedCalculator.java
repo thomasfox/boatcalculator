@@ -77,7 +77,7 @@ public class CombinedCalculator
     this.quantityRelationsList.addAll(quantityRelationsList);
   }
 
-  public boolean calculate(ValueSet namedValueSet)
+  public boolean calculate(ValueSet valueSet)
   {
     boolean changedOverall = false;
     boolean changedInCurrentIteration;
@@ -87,20 +87,20 @@ public class CombinedCalculator
       changedInCurrentIteration = false;
       for (Calculator calculator: calculators)
       {
-        if (!calculator.areNeededQuantitiesPresent(namedValueSet.getKnownValues()))
+        if (!calculator.areNeededQuantitiesPresent(valueSet.getKnownValues()))
         {
           continue;
         }
-        if (calculator.isOutputPresent(namedValueSet.getKnownValues()))
+        if (calculator.isOutputPresent(valueSet.getKnownValues()))
         {
           continue;
         }
-        double calculationResult = calculator.calculate(namedValueSet.getKnownValues());
-        namedValueSet.setCalculatedValueNoOverwrite(
+        double calculationResult = calculator.calculate(valueSet.getKnownValues());
+        valueSet.setCalculatedValueNoOverwrite(
             calculator.getOutputQuantity(),
             calculationResult,
             calculator.getClass().getSimpleName(),
-            namedValueSet.getKnownValuesAsArray(calculator.getInputQuantities()));
+            valueSet.getKnownValuesAsArray(calculator.getInputQuantities()));
         changedInCurrentIteration = true;
         changedOverall = true;
       }
@@ -108,7 +108,7 @@ public class CombinedCalculator
       // from here use quantityRelationsList to calculate unknown values
 
       Map<PhysicalQuantityValues, QuantityRelations> fixedValueInterpolationCandidates
-          = getFixedValueInterpolationCandidates(namedValueSet.getKnownValues());
+          = getFixedValueInterpolationCandidates(valueSet.getKnownValues());
       if (fixedValueInterpolationCandidates.isEmpty())
       {
         cutoff--;
@@ -126,7 +126,7 @@ public class CombinedCalculator
         for (QuantityRelations quantityRelations : fixedValueInterpolationCandidates.values())
         {
           boolean changed = setValuesFromQuantityRelations(
-              namedValueSet,
+              valueSet,
               quantityRelations);
           changedInCurrentIteration = changedInCurrentIteration || changed;
           changedOverall = changedOverall || changed;
@@ -140,7 +140,7 @@ public class CombinedCalculator
         // check whether any nonmatching value is known at all
         for (PhysicalQuantityValue valueCandidate : nonmatchingFixedValues.getAsList())
         {
-          nonmatchingValue = namedValueSet.getKnownValue(valueCandidate.getPhysicalQuantity());
+          nonmatchingValue = valueSet.getKnownValue(valueCandidate.getPhysicalQuantity());
           if (nonmatchingValue != null)
           {
             break;
@@ -167,7 +167,7 @@ public class CombinedCalculator
               + ", using " + usedValue.getValue() + " instead of " + nonmatchingValue.getValue());
 
           boolean changed = setValuesFromQuantityRelations(
-              namedValueSet,
+              valueSet,
               quantityRelations);
           changedInCurrentIteration = changedInCurrentIteration || changed;
           changedOverall = changedOverall || changed;
@@ -186,13 +186,13 @@ public class CombinedCalculator
             if (x1 == null)
             {
               x1 = interpolationRelationEntry.getKey().getValue();
-              yValues1 = interpolationRelationEntry.getValue().getRelatedQuantityValues(namedValueSet.getKnownValues());
+              yValues1 = interpolationRelationEntry.getValue().getRelatedQuantityValues(valueSet.getKnownValues());
               name1 = interpolationRelationEntry.getValue().getName();
             }
             else if (x2 == null)
             {
               x2 = interpolationRelationEntry.getKey().getValue();
-              yValues2 = interpolationRelationEntry.getValue().getRelatedQuantityValues(namedValueSet.getKnownValues());
+              yValues2 = interpolationRelationEntry.getValue().getRelatedQuantityValues(valueSet.getKnownValues());
               name2 = interpolationRelationEntry.getValue().getName();
             }
             else
@@ -209,7 +209,7 @@ public class CombinedCalculator
                   nonmatchingValue.getValue(),
                   new SimpleXYPoint(x1, y1.getValue()),
                   new SimpleXYPoint(x2, y2));
-              namedValueSet.setCalculatedValueNoOverwrite(
+              valueSet.setCalculatedValueNoOverwrite(
                   y1.getPhysicalQuantity(),
                   y,
                   name1 + " and " + name2); // todo set origin
@@ -223,21 +223,21 @@ public class CombinedCalculator
     return changedOverall;
   }
 
-  private boolean setValuesFromQuantityRelations(ValueSet namedValueSet, QuantityRelations quantityRelations)
+  private boolean setValuesFromQuantityRelations(ValueSet valueSet, QuantityRelations quantityRelations)
   {
     boolean changed = false;
     Set<PhysicalQuantity> usedQuantities
-        = quantityRelations.getKnownRelatedQuantities(namedValueSet.getKnownValues());
+        = quantityRelations.getKnownRelatedQuantities(valueSet.getKnownValues());
     usedQuantities.addAll(quantityRelations.getFixedQuantities().getContainedQuantities());
     PhysicalQuantityValues relatedQuantities
-        = quantityRelations.getRelatedQuantityValues(namedValueSet.getKnownValues());
+        = quantityRelations.getRelatedQuantityValues(valueSet.getKnownValues());
     for (PhysicalQuantityValue physicalQuantityValue : relatedQuantities.getAsList())
     {
-      namedValueSet.setCalculatedValueNoOverwrite(
+      valueSet.setCalculatedValueNoOverwrite(
           physicalQuantityValue.getPhysicalQuantity(),
           physicalQuantityValue.getValue(),
           quantityRelations.getName(),
-          new PhysicalQuantityValuesWithSetNamePerValue(namedValueSet.getKnownValues(usedQuantities), namedValueSet.getName()));
+          new PhysicalQuantityValuesWithSetNamePerValue(valueSet.getKnownValues(usedQuantities), valueSet.getName()));
       changed = true;
     }
     return changed;

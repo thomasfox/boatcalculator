@@ -22,19 +22,19 @@ public class AllValues
 
   public AllValues(AllValues toCopy)
   {
-    for (SimpleValueSet namedValueSetToCopy : toCopy.valueSets)
+    for (SimpleValueSet valueSetToCopy : toCopy.valueSets)
     {
-      this.valueSets.add(new SimpleValueSet(namedValueSetToCopy));
+      this.valueSets.add(new SimpleValueSet(valueSetToCopy));
     }
     this.computationStrategies.addAll(toCopy.getComputationStrategies());
   }
 
   public void add(SimpleValueSet toAdd)
   {
-    ValueSet withSameId = getNamedValueSet(toAdd.getId());
+    ValueSet withSameId = getValueSet(toAdd.getId());
     if (withSameId != null)
     {
-      throw new IllegalArgumentException("namedValueSet with id " + withSameId
+      throw new IllegalArgumentException("valueSet with id " + withSameId
           + " exists already");
     }
     this.valueSets.add(toAdd);
@@ -45,7 +45,7 @@ public class AllValues
     return Collections.unmodifiableSet(valueSets);
   }
 
-  public ValueSet getNamedValueSet(String id)
+  public ValueSet getValueSet(String id)
   {
     return valueSets.stream()
         .filter(n -> n.getId().equals(id))
@@ -57,12 +57,12 @@ public class AllValues
     return valueSets.stream()
         .filter(n -> n.getId().equals(id))
         .findAny().orElseThrow(() -> new IllegalStateException(
-            "No namedValueSet with id " + id + " exists, existing namedValueSets are " + valueSets));
+            "No valueSet with id " + id + " exists, existing valueSets are " + valueSets));
   }
 
   public Double getKnownValue(PhysicalQuantityInSet toResolve)
   {
-    ValueSet sourceSet = getValueSetNonNull(toResolve.getNamedValueSetId());
+    ValueSet sourceSet = getValueSetNonNull(toResolve.getValueSetId());
     if (sourceSet == null)
     {
       return null;
@@ -81,7 +81,7 @@ public class AllValues
         .filter(n -> n.getId().equals(setId))
         .map(s -> s.getName())
         .findAny().orElseThrow(() -> new IllegalStateException(
-            "No namedValueSet with id " + setId + " exists, existing namedValueSets are " + valueSets));
+            "No valueSet with id " + setId + " exists, existing valueSets are " + valueSets));
   }
 
 
@@ -102,9 +102,9 @@ public class AllValues
     do
     {
       changed = false;
-      for (ValueSet namedValueSet : valueSets)
+      for (ValueSet valueSet : valueSets)
       {
-        boolean partChanged = namedValueSet.calculateSinglePass(this);
+        boolean partChanged = valueSet.calculateSinglePass(this);
         changed = changed || partChanged;
       }
       boolean changedByComputationStrategies = applyComputationStrategies();

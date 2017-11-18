@@ -14,5 +14,5 @@ public class PhysicalQuantityInSet
   private final PhysicalQuantity physicalQuantity;
 
   @NonNull
-  private final String namedValueSetId;
+  private final String valueSetId;
 }
