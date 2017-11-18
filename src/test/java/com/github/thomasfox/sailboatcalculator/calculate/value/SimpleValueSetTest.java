@@ -11,10 +11,10 @@ import org.junit.rules.ExpectedException;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.QuantityNotPresentException;
 
-public class NamedValueSetTest
+public class SimpleValueSetTest
 {
 
-  private NamedValueSet sut;
+  private SimpleValueSet sut;
 
   @Rule
   public ExpectedException expectedExeption = ExpectedException.none();
@@ -22,7 +22,7 @@ public class NamedValueSetTest
   @Before
   public void setUp()
   {
-    sut = new NamedValueSet("namedValueSetId", "namedValueSetName");
+    sut = new SimpleValueSet("namedValueSetId", "namedValueSetName");
   }
 
   @Test
@@ -227,7 +227,7 @@ public class NamedValueSetTest
     givenAllSutFieldsAreFilled();
 
     // act
-    NamedValueSet result = new NamedValueSet(sut);
+    SimpleValueSet result = new SimpleValueSet(sut);
 
     // assert equality
     assertThat(result).isEqualToComparingFieldByField(sut);
@@ -482,7 +482,7 @@ public class NamedValueSetTest
   {
     // arrange
     givenAllSutFieldsAreFilled();
-    NamedValueSet expected = new NamedValueSet(sut);
+    SimpleValueSet expected = new SimpleValueSet(sut);
 
     // act
     Double result = sut.clearCalculatedValue(PhysicalQuantity.WEIGHT);

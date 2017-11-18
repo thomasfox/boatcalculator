@@ -7,7 +7,8 @@ import com.github.thomasfox.sailboatcalculator.calculate.strategy.DriftToStableS
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.LeverSailDaggerboardStrategy;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
+import com.github.thomasfox.sailboatcalculator.calculate.value.SimpleValueSet;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 import com.github.thomasfox.sailboatcalculator.part.BoatPart;
 import com.github.thomasfox.sailboatcalculator.part.PartType;
 import com.github.thomasfox.sailboatcalculator.part.impl.DaggerboardOrKeel;
@@ -21,9 +22,9 @@ public abstract class Boat
 
   public static final String BOAT_ID = "boat";
 
-  protected NamedValueSet boat = new NamedValueSet(BOAT_ID, "Boot");
+  protected SimpleValueSet boat = new SimpleValueSet(BOAT_ID, "Boot");
 
-  protected NamedValueSet leverSailDaggerboard = new NamedValueSet(LEVER_SAIL_DAGGERBOARD_ID, "Hebel Schwert/Segel");
+  protected SimpleValueSet leverSailDaggerboard = new SimpleValueSet(LEVER_SAIL_DAGGERBOARD_ID, "Hebel Schwert/Segel");
 
   protected Rigg rigg = new Rigg();
 
@@ -63,14 +64,14 @@ public abstract class Boat
     values.add(new LeverSailDaggerboardStrategy(PartType.RIGG.name(), PartType.DAGGERBOARD.name(), LEVER_SAIL_DAGGERBOARD_ID));
 }
 
-  public Set<NamedValueSet> getNamedValueSets()
+  public Set<ValueSet> getValueSets()
   {
-    return values.getNamedValueSets();
+    return values.getValueSets();
   }
 
-  public NamedValueSet getNamedValueSetNonNull(String name)
+  public ValueSet getValueSetNonNull(String name)
   {
-    return values.getNamedValueSetNonNull(name);
+    return values.getValueSetNonNull(name);
   }
 
   public void addPart(BoatPart part)

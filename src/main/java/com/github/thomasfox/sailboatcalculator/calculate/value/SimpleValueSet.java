@@ -16,11 +16,11 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
- * A set of physical Quantities which also has a name.
+ * A set of physical Quantities.
  */
 @Data
 @RequiredArgsConstructor
-public class NamedValueSet
+public class SimpleValueSet implements ValueSet
 {
   @NonNull
   private final String id;
@@ -41,7 +41,7 @@ public class NamedValueSet
 
   private final List<QuantityRelations> quantityRelations = new ArrayList<>();
 
-  public NamedValueSet(NamedValueSet toCopy)
+  public SimpleValueSet(SimpleValueSet toCopy)
   {
     this.id = toCopy.getId();
     this.name = toCopy.getName();
@@ -52,6 +52,7 @@ public class NamedValueSet
     this.quantityRelations.addAll(toCopy.getQuantityRelations());
   }
 
+  @Override
   public PhysicalQuantityValues getKnownValues()
   {
     PhysicalQuantityValues result = new PhysicalQuantityValues(startValues);
@@ -60,6 +61,7 @@ public class NamedValueSet
     return result;
   }
 
+  @Override
   public PhysicalQuantityValueWithSetName[] getKnownValuesAsArray(Collection<PhysicalQuantity> toGet)
   {
     PhysicalQuantityValueWithSetName[] result = new PhysicalQuantityValueWithSetName[toGet.size()];
@@ -77,11 +79,13 @@ public class NamedValueSet
     return result;
   }
 
+  @Override
   public boolean isValueKnown(PhysicalQuantity toCheck)
   {
     return getKnownValue(toCheck) != null;
   }
 
+  @Override
   public PhysicalQuantityValue getKnownValue(PhysicalQuantity toGet)
   {
     PhysicalQuantityValue result = fixedValues.getPhysicalQuantityValue(toGet);
@@ -98,6 +102,7 @@ public class NamedValueSet
     return result;
   }
 
+  @Override
   public PhysicalQuantityValues getKnownValues(Collection<PhysicalQuantity> quantitiesToRead)
   {
     PhysicalQuantityValues result = new PhysicalQuantityValues();
@@ -120,6 +125,7 @@ public class NamedValueSet
     fixedValues.setValueNoOverwrite(physicalQuantity, value);
   }
 
+  @Override
   public void setFixedValueNoOverwrite(PhysicalQuantityValue toSet)
   {
     startValues.checkQuantityNotSetForWrite(toSet.getPhysicalQuantity());
@@ -134,11 +140,20 @@ public class NamedValueSet
     startValues.setValueNoOverwrite(physicalQuantity, value);
   }
 
+  @Override
+  public void setStartValueNoOverwrite(PhysicalQuantityValue toSet)
+  {
+    fixedValues.checkQuantityNotSetForWrite(toSet.getPhysicalQuantity());
+    calculatedValues.checkQuantityNotSetForWrite(toSet.getPhysicalQuantity());
+    startValues.setValueNoOverwrite(toSet);
+  }
+
   public void setStartValue(PhysicalQuantity physicalQuantity, double value)
   {
     startValues.setValue(physicalQuantity, value);
   }
 
+  @Override
   public void setCalculatedValueNoOverwrite(
       PhysicalQuantity physicalQuantity,
       double value,
@@ -150,6 +165,7 @@ public class NamedValueSet
     calculatedValues.setValueNoOverwrite(physicalQuantity, value, calculatedBy, calculatedFrom);
   }
 
+  @Override
   public void setCalculatedValueNoOverwrite(
       PhysicalQuantity physicalQuantity,
       double value,
@@ -170,11 +186,13 @@ public class NamedValueSet
     calculatedValues.setValue(physicalQuantity, value, calculatedBy, calculatedFrom);
   }
 
+  @Override
   public Double getFixedValue(PhysicalQuantity physicalQuantity)
   {
     return fixedValues.getValue(physicalQuantity);
   }
 
+  @Override
   public Double getStartValue(PhysicalQuantity physicalQuantity)
   {
     return startValues.getValue(physicalQuantity);
@@ -185,11 +203,13 @@ public class NamedValueSet
     return calculatedValues.getValue(physicalQuantity);
   }
 
+  @Override
   public void addToInput(PhysicalQuantity toAdd)
   {
     toInput.add(toAdd);
   }
 
+  @Override
   public void clearCalculatedValues()
   {
     calculatedValues.clear();
@@ -200,11 +220,13 @@ public class NamedValueSet
     return calculatedValues.remove(toClear);
   }
 
+  @Override
   public void clearStartValues()
   {
     startValues.clear();
   }
 
+  @Override
   public boolean calculateSinglePass(AllValues allValues)
   {
     CombinedCalculator combinedCalculator = new CombinedCalculator(quantityRelations);
@@ -213,6 +235,7 @@ public class NamedValueSet
     return changed;
   }
 
+  @Override
   public void moveCalculatedValuesToStartValues()
   {
     startValues.setValues(calculatedValues);

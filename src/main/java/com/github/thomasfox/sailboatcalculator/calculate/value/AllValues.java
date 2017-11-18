@@ -11,58 +11,58 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AllValues
 {
-  private final Set<NamedValueSet> namedValueSets = new LinkedHashSet<>();
+  private final Set<SimpleValueSet> valueSets = new LinkedHashSet<>();
 
   private final Set<ComputationStrategy> computationStrategies = new LinkedHashSet<>();
 
-  public AllValues(Set<NamedValueSet> namedValueSets)
+  public AllValues(Set<SimpleValueSet> valueSets)
   {
-    this.namedValueSets.addAll(namedValueSets);
+    this.valueSets.addAll(valueSets);
   }
 
   public AllValues(AllValues toCopy)
   {
-    for (NamedValueSet namedValueSetToCopy : toCopy.namedValueSets)
+    for (SimpleValueSet namedValueSetToCopy : toCopy.valueSets)
     {
-      this.namedValueSets.add(new NamedValueSet(namedValueSetToCopy));
+      this.valueSets.add(new SimpleValueSet(namedValueSetToCopy));
     }
     this.computationStrategies.addAll(toCopy.getComputationStrategies());
   }
 
-  public void add(NamedValueSet toAdd)
+  public void add(SimpleValueSet toAdd)
   {
-    NamedValueSet withSameId = getNamedValueSet(toAdd.getId());
+    ValueSet withSameId = getNamedValueSet(toAdd.getId());
     if (withSameId != null)
     {
       throw new IllegalArgumentException("namedValueSet with id " + withSameId
           + " exists already");
     }
-    this.namedValueSets.add(toAdd);
+    this.valueSets.add(toAdd);
   }
 
-  public Set<NamedValueSet> getNamedValueSets()
+  public Set<ValueSet> getValueSets()
   {
-    return Collections.unmodifiableSet(namedValueSets);
+    return Collections.unmodifiableSet(valueSets);
   }
 
-  public NamedValueSet getNamedValueSet(String id)
+  public ValueSet getNamedValueSet(String id)
   {
-    return namedValueSets.stream()
+    return valueSets.stream()
         .filter(n -> n.getId().equals(id))
         .findAny().orElse(null);
   }
 
-  public NamedValueSet getNamedValueSetNonNull(String id)
+  public ValueSet getValueSetNonNull(String id)
   {
-    return namedValueSets.stream()
+    return valueSets.stream()
         .filter(n -> n.getId().equals(id))
         .findAny().orElseThrow(() -> new IllegalStateException(
-            "No namedValueSet with id " + id + " exists, existing namedValueSets are " + namedValueSets));
+            "No namedValueSet with id " + id + " exists, existing namedValueSets are " + valueSets));
   }
 
   public Double getKnownValue(PhysicalQuantityInSet toResolve)
   {
-    NamedValueSet sourceSet = getNamedValueSetNonNull(toResolve.getNamedValueSetId());
+    ValueSet sourceSet = getValueSetNonNull(toResolve.getNamedValueSetId());
     if (sourceSet == null)
     {
       return null;
@@ -77,11 +77,11 @@ public class AllValues
 
   public String getNameOfSetWithId(String setId)
   {
-    return namedValueSets.stream()
+    return valueSets.stream()
         .filter(n -> n.getId().equals(setId))
         .map(s -> s.getName())
         .findAny().orElseThrow(() -> new IllegalStateException(
-            "No namedValueSet with id " + setId + " exists, existing namedValueSets are " + namedValueSets));
+            "No namedValueSet with id " + setId + " exists, existing namedValueSets are " + valueSets));
   }
 
 
@@ -102,7 +102,7 @@ public class AllValues
     do
     {
       changed = false;
-      for (NamedValueSet namedValueSet : namedValueSets)
+      for (ValueSet namedValueSet : valueSets)
       {
         boolean partChanged = namedValueSet.calculateSinglePass(this);
         changed = changed || partChanged;
@@ -126,7 +126,7 @@ public class AllValues
 
   public void clearCalculatedValues()
   {
-    for (NamedValueSet set : namedValueSets)
+    for (ValueSet set : valueSets)
     {
       set.clearCalculatedValues();
     }
@@ -134,7 +134,7 @@ public class AllValues
 
   public void moveCalculatedValuesToStartValues()
   {
-    for (NamedValueSet set : namedValueSets)
+    for (ValueSet set : valueSets)
     {
       set.moveCalculatedValuesToStartValues();
     }

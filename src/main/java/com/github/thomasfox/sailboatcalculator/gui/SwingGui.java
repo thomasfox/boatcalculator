@@ -27,7 +27,7 @@ import com.github.thomasfox.sailboatcalculator.boat.Boat;
 import com.github.thomasfox.sailboatcalculator.boat.impl.Skiff29er;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 public class SwingGui
 {
@@ -37,15 +37,15 @@ public class SwingGui
 
   private final JFrame frame = new JFrame("wingCalculator");
 
-  private final JPanel inputPanel = new JPanel();
+  private JPanel inputPanel;
 
-  private final JPanel singleResultPanel = new JPanel();
+  private JPanel singleResultPanel;
 
   private final List<PartInput> valueSetInputs = new ArrayList<>();
 
   private final List<PartOutput> valueSetOutputs = new ArrayList<>();
 
-  private final JPanel chartsPanel = new JPanel();
+  private JPanel chartsPanel;
 
   private final List<ChartPanel> chartPanels = new ArrayList<>();
 
@@ -60,39 +60,13 @@ public class SwingGui
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.getContentPane().setLayout(new GridBagLayout());
 
-    inputPanel.setLayout(new GridBagLayout());
-    GridBagConstraints gridBagConstraints = new GridBagConstraints();
-    gridBagConstraints.fill = GridBagConstraints.BOTH;
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    frame.add(inputPanel, gridBagConstraints);
+    addInputPanel();
+    addSingleResultsPanel();
+    addChartsPanel();
 
-    singleResultPanel.setLayout(new GridBagLayout());
-    gridBagConstraints = new GridBagConstraints();
-    gridBagConstraints.fill = GridBagConstraints.BOTH;
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 0;
-    JScrollPane scrollPane = new JScrollPane(singleResultPanel);
-    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setPreferredSize(new Dimension(600, 400));
-    frame.add(scrollPane, gridBagConstraints);
-    singleResultPanel.setBorder(new EmptyBorder(0,10,0,10));
-
-    chartsPanel.setLayout(new GridBagLayout());
-    scrollPane = new JScrollPane(chartsPanel);
-    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setPreferredSize(new Dimension(600, 400));
-    gridBagConstraints = new GridBagConstraints();
-    gridBagConstraints.fill = GridBagConstraints.BOTH;
-    gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = 0;
-    frame.add(scrollPane, gridBagConstraints);
-
-    for (NamedValueSet namedValueSet : boat.getNamedValueSets())
+    for (ValueSet valueSet : boat.getValueSets())
     {
-      createPartInput(namedValueSet);
+      createPartInput(valueSet);
     }
 
     int row = 0;
@@ -104,7 +78,7 @@ public class SwingGui
     SwingHelper.addSeparatorToContainer(inputPanel, row++, 5);
 
     calculateButton = new JButton("Berechnen");
-    gridBagConstraints = new GridBagConstraints();
+    GridBagConstraints gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = row;
@@ -124,7 +98,49 @@ public class SwingGui
     frame.setVisible(true);
   }
 
-  private void createPartInput(NamedValueSet valueSet)
+  private void addInputPanel()
+  {
+    inputPanel = new JPanel();
+    inputPanel.setLayout(new GridBagLayout());
+    GridBagConstraints gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    frame.add(inputPanel, gridBagConstraints);
+  }
+
+  private void addSingleResultsPanel()
+  {
+    singleResultPanel = new JPanel();
+    singleResultPanel.setLayout(new GridBagLayout());
+    GridBagConstraints gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 0;
+    JScrollPane scrollPane = new JScrollPane(singleResultPanel);
+    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setPreferredSize(new Dimension(600, 400));
+    frame.add(scrollPane, gridBagConstraints);
+    singleResultPanel.setBorder(new EmptyBorder(0,10,0,10));
+  }
+
+  private void addChartsPanel()
+  {
+    chartsPanel = new JPanel();
+    chartsPanel.setLayout(new GridBagLayout());
+    JScrollPane scrollPane = new JScrollPane(chartsPanel);
+    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setPreferredSize(new Dimension(600, 400));
+    GridBagConstraints gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 0;
+    frame.add(scrollPane, gridBagConstraints);
+  }
+
+  private void createPartInput(ValueSet valueSet)
   {
     PartInput partInput = new PartInput(valueSet);
     valueSetInputs.add(partInput);
@@ -250,8 +266,8 @@ public class SwingGui
       {
         for (QuantityOutput shownGraph : shownGraphsPart.getValue())
         {
-          NamedValueSet namedValueSet = boat.getNamedValueSetNonNull(shownGraphsPart.getKey().getId());
-          double yValue = namedValueSet.getKnownValue(shownGraph.getQuantity()).getValue();
+          ValueSet valueSet = boat.getValueSetNonNull(shownGraphsPart.getKey().getId());
+          double yValue = valueSet.getKnownValue(shownGraph.getQuantity()).getValue();
           quantitySeries.get(shownGraph).add(xValue, yValue);
         }
       }

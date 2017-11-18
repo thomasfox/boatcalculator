@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.sailboatcalculator.part.impl.Wing;
 import com.github.thomasfox.sailboatcalculator.profile.ProfileGeometry;
@@ -19,7 +20,7 @@ public class PartInput
 {
   @NonNull
   @Getter
-  private final NamedValueSet valueSet;
+  private final ValueSet valueSet;
 
   @Getter
   private final List<QuantityInput> quantityInputs = new ArrayList<>();
@@ -95,11 +96,11 @@ public class PartInput
       {
         if (quantityInput.getValue() != null)
         {
-          valueSet.setStartValueNoOverwrite(quantityInput.getQuantity(), quantityInput.getValue());
+          valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(quantityInput.getQuantity(), quantityInput.getValue()));
         }
         else if (quantityInput.getScanFrom() != null)
         {
-          valueSet.setStartValueNoOverwrite(quantityInput.getQuantity(), quantityInput.getScanFrom());
+          valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(quantityInput.getQuantity(), quantityInput.getScanFrom()));
         }
       }
     }
@@ -121,8 +122,12 @@ public class PartInput
     if (profileName != null)
     {
       ProfileGeometry profileGeometry = profileInput.loadProfile(SwingGui.PROFILE_DIRECTORY, profileName);
-      valueSet.setStartValueNoOverwrite(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA, profileGeometry.getSecondMomentOfArea());
-      valueSet.setStartValueNoOverwrite(PhysicalQuantity.WING_RELATIVE_THICKNESS, profileGeometry.getThickness());
+      valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
+          PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA,
+          profileGeometry.getSecondMomentOfArea()));
+      valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
+          PhysicalQuantity.WING_RELATIVE_THICKNESS,
+          profileGeometry.getThickness()));
       valueSet.getQuantityRelations().addAll(profileInput.loadXfoilResults(SwingGui.PROFILE_DIRECTORY, profileName));
     }
   }

@@ -2,9 +2,9 @@ package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetName;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,9 +27,9 @@ public class LeverSailDaggerboardStrategy implements ComputationStrategy
   @Override
   public boolean setValue(AllValues allValues)
   {
-    NamedValueSet rigg = allValues.getNamedValueSetNonNull(riggId);
-    NamedValueSet daggerboard = allValues.getNamedValueSetNonNull(daggerboardId);
-    NamedValueSet leverSailDaggerboard = allValues.getNamedValueSetNonNull(leverSailDaggerboardId);
+    ValueSet rigg = allValues.getValueSetNonNull(riggId);
+    ValueSet daggerboard = allValues.getValueSetNonNull(daggerboardId);
+    ValueSet leverSailDaggerboard = allValues.getValueSetNonNull(leverSailDaggerboardId);
     PhysicalQuantityValue riggCenterOfEffortHeight = rigg.getKnownValue(PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT);
     PhysicalQuantityValue daggerboardSpan = daggerboard.getKnownValue(PhysicalQuantity.WING_SPAN);
     if (riggCenterOfEffortHeight != null && daggerboardSpan != null && !leverSailDaggerboard.isValueKnown(PhysicalQuantity.LEVER_BETWEEN_FORCES))

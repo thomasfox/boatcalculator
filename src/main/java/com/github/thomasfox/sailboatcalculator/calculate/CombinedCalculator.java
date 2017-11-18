@@ -30,10 +30,10 @@ import com.github.thomasfox.sailboatcalculator.calculate.impl.TotalDragCalculato
 import com.github.thomasfox.sailboatcalculator.calculate.impl.TotalDragCoefficientCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.VMGCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.WingChordFromSecondMomentOfAreaCalculator;
-import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValuesWithSetNamePerValue;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 import com.github.thomasfox.sailboatcalculator.interpolate.Interpolator;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.sailboatcalculator.interpolate.SimpleXYPoint;
@@ -77,7 +77,7 @@ public class CombinedCalculator
     this.quantityRelationsList.addAll(quantityRelationsList);
   }
 
-  public boolean calculate(NamedValueSet namedValueSet)
+  public boolean calculate(ValueSet namedValueSet)
   {
     boolean changedOverall = false;
     boolean changedInCurrentIteration;
@@ -209,7 +209,7 @@ public class CombinedCalculator
                   nonmatchingValue.getValue(),
                   new SimpleXYPoint(x1, y1.getValue()),
                   new SimpleXYPoint(x2, y2));
-              namedValueSet.setCalculatedValue(
+              namedValueSet.setCalculatedValueNoOverwrite(
                   y1.getPhysicalQuantity(),
                   y,
                   name1 + " and " + name2); // todo set origin
@@ -223,7 +223,7 @@ public class CombinedCalculator
     return changedOverall;
   }
 
-  private boolean setValuesFromQuantityRelations(NamedValueSet namedValueSet, QuantityRelations quantityRelations)
+  private boolean setValuesFromQuantityRelations(ValueSet namedValueSet, QuantityRelations quantityRelations)
   {
     boolean changed = false;
     Set<PhysicalQuantity> usedQuantities

@@ -2,8 +2,8 @@ package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 import lombok.AllArgsConstructor;
 import lombok.ToString;
@@ -27,7 +27,7 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
   @Override
   public boolean setValue(AllValues allValues)
   {
-    NamedValueSet limitedQuantitySet = allValues.getNamedValueSetNonNull(limitedQuantitySetId);
+    ValueSet limitedQuantitySet = allValues.getValueSetNonNull(limitedQuantitySetId);
 
     PhysicalQuantityValue limitedValue = limitedQuantitySet.getKnownValue(limitedQuantity);
     if (limitedValue != null)
@@ -35,7 +35,7 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
       return false;
     }
 
-    NamedValueSet scannedQuantitySet = allValues.getNamedValueSetNonNull(scannedQuantitySetId);
+    ValueSet scannedQuantitySet = allValues.getValueSetNonNull(scannedQuantitySetId);
     PhysicalQuantityValue scannedQuantityValue = scannedQuantitySet.getKnownValue(scannedQuantity);
     if (scannedQuantityValue != null)
     {
@@ -51,7 +51,7 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
     {
       return false;
     }
-    scannedQuantitySet.setCalculatedValue(
+    scannedQuantitySet.setCalculatedValueNoOverwrite(
         scannedQuantity,
         targetValue,
         "Scan " + scannedQuantitySet.getName() + ": " + scannedQuantity.getDisplayName() + " with max "+ scannedQuantityUpperLimit
@@ -68,7 +68,7 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
     }
     clearComputedValuesAndSetScannedValue(scannedValue, allValues);
     allValues.calculate();
-    NamedValueSet limitedQuantitySet = allValues.getNamedValueSetNonNull(limitedQuantitySetId);
+    ValueSet limitedQuantitySet = allValues.getValueSetNonNull(limitedQuantitySetId);
     PhysicalQuantityValue limitedValue = limitedQuantitySet.getKnownValue(limitedQuantity);
     if (limitedValue == null)
     {
@@ -99,7 +99,7 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
   private void clearComputedValuesAndSetScannedValue(double scannedValue, AllValues allValues)
   {
     allValues.clearCalculatedValues();
-    NamedValueSet scannedQuantitySet = allValues.getNamedValueSetNonNull(scannedQuantitySetId);
-    scannedQuantitySet.setCalculatedValue(scannedQuantity, scannedValue, getClass().getSimpleName() + " trial value");
+    ValueSet scannedQuantitySet = allValues.getValueSetNonNull(scannedQuantitySetId);
+    scannedQuantitySet.setCalculatedValueNoOverwrite(scannedQuantity, scannedValue, getClass().getSimpleName() + " trial value");
   }
 }

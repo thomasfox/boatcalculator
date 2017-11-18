@@ -2,8 +2,8 @@ package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,7 +36,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
   @Override
   public boolean setValue(AllValues allValues)
   {
-    NamedValueSet targetSet = allValues.getNamedValueSetNonNull(targetSetId);
+    ValueSet targetSet = allValues.getValueSetNonNull(targetSetId);
     PhysicalQuantityValue knownTargetValue = targetSet.getKnownValue(targetQuantity);
     if (knownTargetValue != null)
     {
@@ -77,7 +77,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
     boolean changed = applyAndRecalculateWithPoints(targetValue1, difference1, targetValue2, difference2, allValuesForCalculation, remainingTries);
     if (changed)
     {
-      double targetValue = allValuesForCalculation.getNamedValueSetNonNull(targetSetId).getKnownValue(targetQuantity).getValue();
+      double targetValue = allValuesForCalculation.getValueSetNonNull(targetSetId).getKnownValue(targetQuantity).getValue();
       targetSet.setCalculatedValueNoOverwrite(targetQuantity, targetValue, getClass().getSimpleName());
     }
     return changed;
@@ -151,8 +151,8 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
   {
     clearComputedValuesAndSetTargetValue(targetValue, allValues);
     allValues.calculate();
-    NamedValueSet equalQuantity1Set = allValues.getNamedValueSetNonNull(equalQuantity1SetId);
-    NamedValueSet equalQuantity2Set = allValues.getNamedValueSetNonNull(equalQuantity2SetId);
+    ValueSet equalQuantity1Set = allValues.getValueSetNonNull(equalQuantity1SetId);
+    ValueSet equalQuantity2Set = allValues.getValueSetNonNull(equalQuantity2SetId);
     PhysicalQuantityValue value1 =  equalQuantity1Set.getKnownValue(equalQuantity1);
     PhysicalQuantityValue value2 =  equalQuantity2Set.getKnownValue(equalQuantity2);
     if (value1 == null)
@@ -173,8 +173,8 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
   private void clearComputedValuesAndSetTargetValue(double targetValue, AllValues allValues)
   {
     allValues.clearCalculatedValues();
-    NamedValueSet targetSet = allValues.getNamedValueSetNonNull(targetSetId);
-    targetSet.setCalculatedValue(targetQuantity, targetValue, getClass().getSimpleName() + " trial Value");
+    ValueSet targetSet = allValues.getValueSetNonNull(targetSetId);
+    targetSet.setCalculatedValueNoOverwrite(targetQuantity, targetValue, getClass().getSimpleName() + " trial Value");
   }
 
   @ToString

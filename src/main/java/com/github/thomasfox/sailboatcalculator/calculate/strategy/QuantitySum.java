@@ -3,9 +3,9 @@ package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 import java.util.Objects;
 
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.NamedValueSet;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityInSet;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetName;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -44,7 +44,7 @@ public class QuantitySum implements ComputationStrategy
   @Override
   public boolean setValue(AllValues allValues)
   {
-    NamedValueSet targetSet = allValues.getNamedValueSetNonNull(target.getNamedValueSetId());
+    ValueSet targetSet = allValues.getValueSetNonNull(target.getNamedValueSetId());
     if (allSourceValuesAreKnown(allValues) && !targetSet.isValueKnown(target.getPhysicalQuantity()))
     {
       targetSet.setCalculatedValueNoOverwrite(
@@ -102,7 +102,7 @@ public class QuantitySum implements ComputationStrategy
     int i = 0;
     for (PhysicalQuantityInSet source : sources)
     {
-      NamedValueSet sourceSet = allValues.getNamedValueSet(source.getNamedValueSetId());
+      ValueSet sourceSet = allValues.getNamedValueSet(source.getNamedValueSetId());
       result[i] = new PhysicalQuantityValueWithSetName(
           sourceSet.getKnownValue(source.getPhysicalQuantity()),
           sourceSet.getName());
