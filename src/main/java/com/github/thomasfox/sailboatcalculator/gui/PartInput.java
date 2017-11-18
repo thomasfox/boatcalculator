@@ -121,14 +121,17 @@ public class PartInput
     String profileName = getProfileName();
     if (profileName != null)
     {
-      ProfileGeometry profileGeometry = profileInput.loadProfile(SwingGui.PROFILE_DIRECTORY, profileName);
+      ProfileGeometry profileGeometry = profileInput.loadProfile(
+          SwingGui.PROFILE_DIRECTORY, profileName);
       valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
           PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA,
           profileGeometry.getSecondMomentOfArea()));
       valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
           PhysicalQuantity.WING_RELATIVE_THICKNESS,
           profileGeometry.getThickness()));
-      valueSet.getQuantityRelations().addAll(profileInput.loadXfoilResults(SwingGui.PROFILE_DIRECTORY, profileName));
+      valueSet.getQuantityRelations().addAll(
+          profileInput.loadXfoilResults(
+              SwingGui.PROFILE_DIRECTORY, profileName));
     }
   }
 

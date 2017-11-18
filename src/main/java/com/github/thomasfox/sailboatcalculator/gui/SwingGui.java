@@ -312,8 +312,12 @@ public class SwingGui
       valueSetOutputs.add(partOutput);
       for (CalculatedPhysicalQuantityValue calculatedValue : valueSetInput.getValueSet().getCalculatedValues().getAsList())
       {
+        if (valueSetInput.getValueSet().getHiddenOutputs().contains(calculatedValue.getPhysicalQuantity()))
+        {
+          continue;
+        }
         QuantityOutput output = new QuantityOutput(calculatedValue);
-        partOutput.getQuantityOutputs().add(output);
+        partOutput.add(output);
       }
       outputRow += partOutput.addToContainerInRow(singleResultPanel, outputRow, mode);
     }

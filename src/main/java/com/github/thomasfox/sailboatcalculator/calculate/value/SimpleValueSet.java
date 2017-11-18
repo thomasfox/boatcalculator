@@ -2,6 +2,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.value;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +31,8 @@ public class SimpleValueSet implements ValueSet
 
   private final Set<PhysicalQuantity> toInput = new LinkedHashSet<>();
 
+  private final Set<PhysicalQuantity> hiddenOutputs = new HashSet<>();
+
   /** Physical constants. */
   private final PhysicalQuantityValues fixedValues = new PhysicalQuantityValues();
 
@@ -46,6 +49,7 @@ public class SimpleValueSet implements ValueSet
     this.id = toCopy.getId();
     this.name = toCopy.getName();
     this.toInput.addAll(toCopy.toInput);
+    this.hiddenOutputs.addAll(toCopy.hiddenOutputs);
     this.fixedValues.setValuesFailOnOverwrite(toCopy.fixedValues);
     this.startValues.setValuesFailOnOverwrite(toCopy.startValues);
     this.calculatedValues.setValuesFailOnOverwrite(toCopy.calculatedValues);
@@ -207,6 +211,12 @@ public class SimpleValueSet implements ValueSet
   public void addToInput(PhysicalQuantity toAdd)
   {
     toInput.add(toAdd);
+  }
+
+  @Override
+  public void addHiddenOutput(PhysicalQuantity toAdd)
+  {
+    hiddenOutputs.add(toAdd);
   }
 
   @Override

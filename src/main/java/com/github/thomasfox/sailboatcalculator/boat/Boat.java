@@ -42,7 +42,6 @@ public abstract class Boat
     addPart(rigg);
     addPart(daggerboardOrKeel);
     addPart(rudder);
-
     values.add(leverSailDaggerboard);
 
     boat.addToInput(PhysicalQuantity.WIND_SPEED);
@@ -50,6 +49,10 @@ public abstract class Boat
     boat.addToInput(PhysicalQuantity.DRIFT_ANGLE);
     boat.addToInput(PhysicalQuantity.WEIGHT);
     values.add(boat);
+
+    hull.addHiddenOutput(PhysicalQuantity.VELOCITY);
+    daggerboardOrKeel.addHiddenOutput(PhysicalQuantity.VELOCITY);
+    rudder.addHiddenOutput(PhysicalQuantity.VELOCITY);
 
     values.add(new DriftToStableStateStrategy(PhysicalQuantity.ANGLE_OF_ATTACK, PartType.DAGGERBOARD.name(), PhysicalQuantity.DRIFT_ANGLE, BOAT_ID, 0d));
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.RUDDER.name()));

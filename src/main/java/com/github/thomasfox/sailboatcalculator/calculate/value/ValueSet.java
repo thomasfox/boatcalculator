@@ -52,22 +52,21 @@ public interface ValueSet
       String calculatedBy,
       PhysicalQuantityValuesWithSetNamePerValue calculatedFrom);
 
-//
-//  public Double getCalculatedValue(PhysicalQuantity physicalQuantity);
-
   public void addToInput(PhysicalQuantity toAdd);
 
   public Set<PhysicalQuantity> getToInput();
 
-  public void clearCalculatedValues();
+  public void addHiddenOutput(PhysicalQuantity toAdd);
 
-//  public Double clearCalculatedValue(PhysicalQuantity toClear);
+  public Set<PhysicalQuantity> getHiddenOutputs();
+
+  public void moveCalculatedValuesToStartValues();
+
+  public void clearCalculatedValues();
 
   public void clearStartValues();
 
   public boolean calculateSinglePass(AllValues allValues);
-
-  public void moveCalculatedValuesToStartValues();
 
   public List<QuantityRelations> getQuantityRelations();
 }
