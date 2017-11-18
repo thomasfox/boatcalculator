@@ -2,6 +2,13 @@ package com.github.thomasfox.sailboatcalculator.boat;
 
 import java.util.Set;
 
+import com.github.thomasfox.sailboatcalculator.boat.valueset.BoatGlobalValues;
+import com.github.thomasfox.sailboatcalculator.boat.valueset.Crew;
+import com.github.thomasfox.sailboatcalculator.boat.valueset.DaggerboardOrKeel;
+import com.github.thomasfox.sailboatcalculator.boat.valueset.Hull;
+import com.github.thomasfox.sailboatcalculator.boat.valueset.LeverSailDaggerboard;
+import com.github.thomasfox.sailboatcalculator.boat.valueset.Rigg;
+import com.github.thomasfox.sailboatcalculator.boat.valueset.Rudder;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.DriftToStableStateStrategy;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.LeverSailDaggerboardStrategy;
@@ -9,22 +16,12 @@ import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantityEquali
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.SimpleValueSet;
 import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
-import com.github.thomasfox.sailboatcalculator.part.BoatPart;
-import com.github.thomasfox.sailboatcalculator.part.PartType;
-import com.github.thomasfox.sailboatcalculator.part.impl.DaggerboardOrKeel;
-import com.github.thomasfox.sailboatcalculator.part.impl.Hull;
-import com.github.thomasfox.sailboatcalculator.part.impl.Rigg;
-import com.github.thomasfox.sailboatcalculator.part.impl.Rudder;
 
 public abstract class Boat
 {
-  protected static final String LEVER_SAIL_DAGGERBOARD_ID = "leverSailDaggerboard";
+  protected BoatGlobalValues boatGlobalValues = new BoatGlobalValues();
 
-  public static final String BOAT_ID = "boat";
-
-  protected SimpleValueSet boat = new SimpleValueSet(BOAT_ID, "Boot");
-
-  protected SimpleValueSet leverSailDaggerboard = new SimpleValueSet(LEVER_SAIL_DAGGERBOARD_ID, "Hebel Schwert/Segel");
+  protected LeverSailDaggerboard leverSailDaggerboard = new LeverSailDaggerboard();
 
   protected Rigg rigg = new Rigg();
 
@@ -38,33 +35,28 @@ public abstract class Boat
 
   public Boat()
   {
-    addPart(hull);
-    addPart(rigg);
-    addPart(daggerboardOrKeel);
-    addPart(rudder);
-    values.add(leverSailDaggerboard);
-
-    boat.addToInput(PhysicalQuantity.WIND_SPEED);
-    boat.addToInput(PhysicalQuantity.POINTING_ANGLE);
-    boat.addToInput(PhysicalQuantity.DRIFT_ANGLE);
-    boat.addToInput(PhysicalQuantity.WEIGHT);
-    values.add(boat);
+    addValueSet(hull);
+    addValueSet(rigg);
+    addValueSet(daggerboardOrKeel);
+    addValueSet(rudder);
+    addValueSet(leverSailDaggerboard);
+    addValueSet(boatGlobalValues);
 
     hull.addHiddenOutput(PhysicalQuantity.VELOCITY);
     daggerboardOrKeel.addHiddenOutput(PhysicalQuantity.VELOCITY);
     rudder.addHiddenOutput(PhysicalQuantity.VELOCITY);
 
-    values.add(new DriftToStableStateStrategy(PhysicalQuantity.ANGLE_OF_ATTACK, PartType.DAGGERBOARD.name(), PhysicalQuantity.DRIFT_ANGLE, BOAT_ID, 0d));
-    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.RUDDER.name()));
-    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.DAGGERBOARD.name()));
-    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.HULL.name()));
-    values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, PartType.RIGG.name(), PhysicalQuantity.LIFT, PartType.DAGGERBOARD.name())); // assumption: rudder has no force
-    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.RIGG.name()));
-    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, BOAT_ID, PhysicalQuantity.VELOCITY, PartType.CREW.name()));
-    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BOAT_ID, PhysicalQuantity.FLOW_DIRECTION, PartType.RIGG.name()));
-    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BOAT_ID, PhysicalQuantity.FLOW_DIRECTION, PartType.CREW.name()));
-    values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, PartType.RIGG.name(), PhysicalQuantity.FORCE, LEVER_SAIL_DAGGERBOARD_ID));
-    values.add(new LeverSailDaggerboardStrategy(PartType.RIGG.name(), PartType.DAGGERBOARD.name(), LEVER_SAIL_DAGGERBOARD_ID));
+    values.add(new DriftToStableStateStrategy(PhysicalQuantity.ANGLE_OF_ATTACK, DaggerboardOrKeel.ID, PhysicalQuantity.DRIFT_ANGLE, BoatGlobalValues.ID, 0d));
+    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, Rudder.ID));
+    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, DaggerboardOrKeel.ID));
+    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, Hull.ID));
+    values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, Rigg.ID, PhysicalQuantity.LIFT, DaggerboardOrKeel.ID)); // assumption: rudder has no force
+    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, Rigg.ID));
+    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, Crew.ID));
+    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BoatGlobalValues.ID, PhysicalQuantity.FLOW_DIRECTION, Rigg.ID));
+    values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BoatGlobalValues.ID, PhysicalQuantity.FLOW_DIRECTION, Crew.ID));
+    values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, Rigg.ID, PhysicalQuantity.FORCE, LeverSailDaggerboard.ID));
+    values.add(new LeverSailDaggerboardStrategy(Rigg.ID, DaggerboardOrKeel.ID, LeverSailDaggerboard.ID));
 }
 
   public Set<ValueSet> getValueSets()
@@ -77,9 +69,9 @@ public abstract class Boat
     return values.getValueSetNonNull(name);
   }
 
-  public void addPart(BoatPart part)
+  public void addValueSet(SimpleValueSet toAdd)
   {
-    values.add(part);
+    values.add(toAdd);
   }
 
   public void calculate()

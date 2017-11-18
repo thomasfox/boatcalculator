@@ -4,11 +4,11 @@ import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.thomasfox.sailboatcalculator.boat.valueset.Wing;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
-import com.github.thomasfox.sailboatcalculator.part.impl.Wing;
 import com.github.thomasfox.sailboatcalculator.profile.ProfileGeometry;
 
 import lombok.Getter;

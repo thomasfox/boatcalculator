@@ -1,35 +1,41 @@
 package com.github.thomasfox.sailboatcalculator.boat.impl;
 
 import com.github.thomasfox.sailboatcalculator.boat.Boat;
+import com.github.thomasfox.sailboatcalculator.boat.valueset.BoatGlobalValues;
+import com.github.thomasfox.sailboatcalculator.boat.valueset.Crew;
+import com.github.thomasfox.sailboatcalculator.boat.valueset.DaggerboardOrKeel;
+import com.github.thomasfox.sailboatcalculator.boat.valueset.Hull;
+import com.github.thomasfox.sailboatcalculator.boat.valueset.LeverSailDaggerboard;
+import com.github.thomasfox.sailboatcalculator.boat.valueset.Rudder;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantitySum;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityInSet;
-import com.github.thomasfox.sailboatcalculator.part.BoatPart;
-import com.github.thomasfox.sailboatcalculator.part.PartType;
-import com.github.thomasfox.sailboatcalculator.part.impl.Crew;
+import com.github.thomasfox.sailboatcalculator.calculate.value.SimpleValueSet;
 
 public class Dinghy extends Boat
 {
-  protected BoatPart crew = new Crew();
+  protected SimpleValueSet crew = new Crew();
 
 
   public Dinghy()
   {
-    addPart(crew);
+    addValueSet(crew);
 
     crew.addHiddenOutput(PhysicalQuantity.VELOCITY);
 
-    values.add(new QuantityEquality(PhysicalQuantity.TORQUE_BETWEEN_FORCES, LEVER_SAIL_DAGGERBOARD_ID, PhysicalQuantity.TORQUE_BETWEEN_FORCES, PartType.CREW.name()));
+    values.add(new QuantityEquality(
+        PhysicalQuantity.TORQUE_BETWEEN_FORCES, LeverSailDaggerboard.ID,
+        PhysicalQuantity.TORQUE_BETWEEN_FORCES, Crew.ID));
     values.add(new QuantitySum(
-        new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, PartType.HULL.name()),
-        new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, PartType.CREW.name()),
-        new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BOAT_ID)));
+        new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Hull.ID),
+        new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Crew.ID),
+        new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BoatGlobalValues.ID)));
     values.add(new QuantitySum(
-        new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BOAT_ID),
-        new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, PartType.HULL.name()),
-        new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, PartType.RUDDER.name()),
-        new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, PartType.DAGGERBOARD.name()),
-        new PhysicalQuantityInSet(PhysicalQuantity.BRAKING_FORCE, PartType.CREW.name())));
+        new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID),
+        new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Hull.ID),
+        new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Rudder.ID),
+        new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, DaggerboardOrKeel.ID),
+        new PhysicalQuantityInSet(PhysicalQuantity.BRAKING_FORCE, Crew.ID)));
   }
 }

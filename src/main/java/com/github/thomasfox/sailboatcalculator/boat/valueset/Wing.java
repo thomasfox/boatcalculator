@@ -1,21 +1,20 @@
-package com.github.thomasfox.sailboatcalculator.part.impl;
+package com.github.thomasfox.sailboatcalculator.boat.valueset;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.part.BoatPart;
-import com.github.thomasfox.sailboatcalculator.part.PartType;
+import com.github.thomasfox.sailboatcalculator.calculate.value.SimpleValueSet;
 
 import lombok.Getter;
 import lombok.Setter;
 
-public abstract class Wing extends BoatPart
+public abstract class Wing extends SimpleValueSet
 {
   @Getter
   @Setter
   private String profileName;
 
-  public Wing(PartType type)
+  public Wing(String id, String name)
   {
-    super(type);
+    super(id, name);
     addToInput(PhysicalQuantity.WING_SPAN);
     setFixedValueNoOverwrite(PhysicalQuantity.NCRIT, 9d);
   }

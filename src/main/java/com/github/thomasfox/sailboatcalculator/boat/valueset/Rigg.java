@@ -1,14 +1,17 @@
-package com.github.thomasfox.sailboatcalculator.part.impl;
+package com.github.thomasfox.sailboatcalculator.boat.valueset;
 
 import com.github.thomasfox.sailboatcalculator.calculate.MaterialConstants;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.part.PartType;
 
 public class Rigg extends Wing
 {
+  public static final String ID = Rigg.class.getSimpleName();
+
+  private static final String NAME = "Rigg";
+
   public Rigg()
   {
-    super(PartType.RIGG);
+    super(ID, NAME);
     setFixedValueNoOverwrite(MaterialConstants.DENSITY_AIR);
     setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_AIR);
     addToInput(PhysicalQuantity.LIFT_COEFFICIENT);
