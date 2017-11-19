@@ -75,6 +75,36 @@ public class AllValues
     return knownValue.getValue();
   }
 
+  public String getName(PhysicalQuantityInSet toBeNamed)
+  {
+    return getSetName(toBeNamed) + ":" + toBeNamed.getPhysicalQuantity().getDisplayName();
+  }
+
+  public String getSetName(PhysicalQuantityInSet toBeNamed)
+  {
+    return getValueSetNonNull(toBeNamed.getValueSetId()).getName();
+  }
+
+  public boolean isValueKnown(PhysicalQuantityInSet toCheck)
+  {
+    Double value = getKnownValue(toCheck);
+    return value != null;
+  }
+
+  public void setCalculatedValueNoOverwrite(
+      PhysicalQuantityInSet target,
+      double value,
+      String calculatedBy,
+      PhysicalQuantityValueWithSetName... calculatedFrom)
+  {
+    ValueSet targetSet = getValueSetNonNull(target.getValueSetId());
+    targetSet.setCalculatedValueNoOverwrite(
+        target.getPhysicalQuantity(),
+        value,
+        calculatedBy,
+        calculatedFrom);
+  }
+
   public String getNameOfSetWithId(String setId)
   {
     return valueSets.stream()
@@ -83,7 +113,6 @@ public class AllValues
         .findAny().orElseThrow(() -> new IllegalStateException(
             "No valueSet with id " + setId + " exists, existing valueSets are " + valueSets));
   }
-
 
   public void add(ComputationStrategy computationStrategy)
   {

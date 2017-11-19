@@ -1,9 +1,6 @@
 package com.github.thomasfox.sailboatcalculator.boat.valueset;
 
-import com.github.thomasfox.sailboatcalculator.calculate.MaterialConstants;
-import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-
-public class DaggerboardOrKeel extends Wing
+public class DaggerboardOrKeel extends Hydrofoil
 {
   public static final String ID = DaggerboardOrKeel.class.getSimpleName();
 
@@ -12,9 +9,6 @@ public class DaggerboardOrKeel extends Wing
   public DaggerboardOrKeel()
   {
     super(ID, NAME);
-    setFixedValueNoOverwrite(MaterialConstants.DENSITY_WATER);
-    setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_WATER);
-    addToInput(PhysicalQuantity.WING_CHORD);
   }
 
 }

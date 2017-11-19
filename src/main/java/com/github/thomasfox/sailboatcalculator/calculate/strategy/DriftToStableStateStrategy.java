@@ -2,88 +2,98 @@ package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityInSet;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetName;
-import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
-import lombok.AllArgsConstructor;
 import lombok.ToString;
 
-@AllArgsConstructor
+/**
+ * A strategy to calculate two initially unknown values, source and target,
+ * so that they end up equal to another.
+ *
+ * This is achieved by setting the target value to a initial start value,
+ * calculating the source value from it,
+ * setting the target value to the source value,
+ * again calculating the source value from it,
+ * and so on until source and target are sufficiently equal.
+ */
 @ToString
 public class DriftToStableStateStrategy implements ComputationStrategy
 {
-  private final PhysicalQuantity sourceQuantity;
+  private final PhysicalQuantityInSet source;
 
-  private final String sourceQuantitySetId;
-
-  private final PhysicalQuantity targetQuantity;
-
-  private final String targetQuantitySetId;
+  private final PhysicalQuantityInSet target;
 
   private final double targetQuantityStart;
+
+  public DriftToStableStateStrategy(
+      PhysicalQuantity sourceQuantity,
+      String sourceSetId,
+      PhysicalQuantity targetQuantity,
+      String targetSetId,
+      double targetQuantityStart)
+  {
+    this.source = new PhysicalQuantityInSet(sourceQuantity, sourceSetId);
+    this.target = new PhysicalQuantityInSet(targetQuantity, targetSetId);
+    this.targetQuantityStart = targetQuantityStart;
+  }
 
   @Override
   public boolean setValue(AllValues allValues)
   {
-    ValueSet targetQuantitySet = allValues.getValueSetNonNull(targetQuantitySetId);
-    PhysicalQuantityValue targetValue = targetQuantitySet.getKnownValue(targetQuantity);
-    if (targetValue != null)
+    if (allValues.isValueKnown(target))
     {
       return false;
     }
 
-    ValueSet sourceQuantitySet = allValues.getValueSetNonNull(sourceQuantitySetId);
-    PhysicalQuantityValue sourceQuantityValue = sourceQuantitySet.getKnownValue(sourceQuantity);
-    if (sourceQuantityValue != null)
+    if (allValues.isValueKnown(source))
     {
       return false;
     }
 
     AllValues allValuesForCalculation = new AllValues(allValues);
     allValuesForCalculation.moveCalculatedValuesToStartValues();
-    sourceQuantityValue = applyAndRecalculateSourceValue(20, allValuesForCalculation, targetQuantityStart);
-    if (sourceQuantityValue == null)
+    Double sourceValue
+        = applyAndRecalculateSourceValue(20, allValuesForCalculation, targetQuantityStart);
+    if (sourceValue == null)
     {
       return false;
     }
-    targetQuantitySet.setCalculatedValueNoOverwrite(
-        targetQuantity,
-        sourceQuantityValue.getValue(),
-        "Drift towards " + sourceQuantitySet.getName() + ": " + sourceQuantity.getDisplayName(),
-        new PhysicalQuantityValueWithSetName(sourceQuantityValue, sourceQuantitySet.getName()));
+    allValues.setCalculatedValueNoOverwrite(
+        target,
+        sourceValue,
+        "Drift towards " + allValues.getName(source),
+        new PhysicalQuantityValueWithSetName(source.getPhysicalQuantity(), sourceValue, allValues.getSetName(source)));
 
     return true;
   }
 
-  private PhysicalQuantityValue applyAndRecalculateSourceValue(int cutoff, AllValues allValues, double targetValue)
+  private Double applyAndRecalculateSourceValue(int cutoff, AllValues allValues, double targetValue)
   {
     if (cutoff <= 0)
     {
-      throw new IllegalStateException("Could not calculate " + targetQuantity
-          + " in " + targetQuantitySetId
+      throw new IllegalStateException("Could not calculate "
+          + allValues.getName(target)
           + " within cutoff , last value was " + targetQuantityStart);
     }
     clearComputedValuesAndSetTargetValue(targetValue, allValues);
     allValues.calculate();
-    ValueSet sourceQuantitySet = allValues.getValueSetNonNull(sourceQuantitySetId);
-    PhysicalQuantityValue sourceValue = sourceQuantitySet.getKnownValue(sourceQuantity);
+    Double sourceValue = allValues.getKnownValue(source);
     if (sourceValue == null)
     {
       return null;
     }
 
-    if (sourceValue.getValue() == targetValue || (targetValue != 0 && Math.abs(sourceValue.getValue() - targetValue) < Math.abs(targetValue) / 1000d))
+    if (sourceValue == targetValue || (targetValue != 0 && Math.abs(sourceValue - targetValue) < Math.abs(targetValue) / 1000d))
     {
       return sourceValue;
     }
-    return applyAndRecalculateSourceValue(cutoff - 1, allValues, sourceValue.getValue());
+    return applyAndRecalculateSourceValue(cutoff - 1, allValues, sourceValue);
   }
 
   private void clearComputedValuesAndSetTargetValue(double targetValue, AllValues allValues)
   {
     allValues.clearCalculatedValues();
-    ValueSet scannedQuantitySet = allValues.getValueSetNonNull(targetQuantitySetId);
-    scannedQuantitySet.setCalculatedValueNoOverwrite(targetQuantity, targetValue, getClass().getSimpleName() + " trial value");
+    allValues.setCalculatedValueNoOverwrite(target, targetValue, getClass().getSimpleName() + " trial value");
   }
 }

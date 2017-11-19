@@ -6,6 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
+/**
+ * The key for a certain physical quantity in a certain value set,
+ * e.g. the weight of the crew.
+ */
 @AllArgsConstructor
 @Data
 public class PhysicalQuantityInSet
