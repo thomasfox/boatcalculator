@@ -11,6 +11,8 @@ import lombok.ToString;
  * A strategy to calculate two initially unknown values, source and target,
  * so that they end up equal to another.
  *
+ * This strategy requires that source can be calculated if target is known.
+ *
  * This is achieved by setting the target value to a initial start value,
  * calculating the source value from it,
  * setting the target value to the source value,
