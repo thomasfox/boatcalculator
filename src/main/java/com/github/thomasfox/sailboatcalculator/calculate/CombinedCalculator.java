@@ -278,7 +278,7 @@ public class CombinedCalculator
   }
 
   /**
-   * Gets the quantity relations which can really be used for interpolation
+   * Gets the quantity relations which can really be used for interpolation.
    *
    * @param fixedValueInterpolationCandidates the quantity relations which can be used for interpolation,
    *        not empty, keys must have size 1.
@@ -291,60 +291,53 @@ public class CombinedCalculator
       @NonNull Map<PhysicalQuantityValues, QuantityRelations> fixedValueInterpolationCandidates,
       @NonNull PhysicalQuantityValue knownValueForInterpolation)
   {
-    Double minInterpolationQuantity = null;
-    Double maxInterpolationQuantity = null;
+    Double minInterpolationValue = null;
+    Double maxInterpolationValue = null;
     QuantityRelations minInterpolationRelations = null;
     QuantityRelations maxInterpolationRelations = null;
     for (Map.Entry<PhysicalQuantityValues, QuantityRelations> fixedValueInterpolationCandidate
         : fixedValueInterpolationCandidates.entrySet())
     {
-      PhysicalQuantityValue nonmatchingValue = fixedValueInterpolationCandidate.getKey().getAsList().get(0);
-      if (nonmatchingValue.getPhysicalQuantity() != knownValueForInterpolation.getPhysicalQuantity())
+      PhysicalQuantityValue interpolationCandidateQuantityValue = fixedValueInterpolationCandidate.getKey().getAsList().get(0);
+      if (interpolationCandidateQuantityValue.getPhysicalQuantity() != knownValueForInterpolation.getPhysicalQuantity())
       {
         continue;
       }
-      if (minInterpolationQuantity == null)
+      Double interpolationCandidateValue = interpolationCandidateQuantityValue.getValue();
+
+      if (minInterpolationValue == null)
       {
-        minInterpolationQuantity = nonmatchingValue.getValue();
-        maxInterpolationQuantity = nonmatchingValue.getValue();
+        minInterpolationValue = interpolationCandidateValue;
+        maxInterpolationValue = interpolationCandidateValue;
         minInterpolationRelations = fixedValueInterpolationCandidate.getValue();
         maxInterpolationRelations = minInterpolationRelations;
         continue;
       }
 
-      if (nonmatchingValue.getValue() > minInterpolationQuantity
-          && nonmatchingValue.getValue() <= knownValueForInterpolation.getValue())
+      if (interpolationCandidateValue <= knownValueForInterpolation.getValue()
+          && (interpolationCandidateValue > minInterpolationValue
+              || minInterpolationValue > knownValueForInterpolation.getValue()))
       {
-        minInterpolationQuantity = nonmatchingValue.getValue();
+        minInterpolationValue = interpolationCandidateValue;
         minInterpolationRelations = fixedValueInterpolationCandidate.getValue();
-        if (minInterpolationQuantity > maxInterpolationQuantity)
-        {
-          maxInterpolationQuantity = nonmatchingValue.getValue();
-          maxInterpolationRelations = fixedValueInterpolationCandidate.getValue();
-        }
-
       }
 
-      if (nonmatchingValue.getValue() < maxInterpolationQuantity
-          && nonmatchingValue.getValue() >= knownValueForInterpolation.getValue())
+      if (interpolationCandidateValue >= knownValueForInterpolation.getValue()
+          && (interpolationCandidateValue < maxInterpolationValue
+              || maxInterpolationValue < knownValueForInterpolation.getValue()))
       {
-        maxInterpolationQuantity = nonmatchingValue.getValue();
+        maxInterpolationValue = interpolationCandidateValue;
         maxInterpolationRelations = fixedValueInterpolationCandidate.getValue();
-        if (minInterpolationQuantity > maxInterpolationQuantity)
-        {
-          minInterpolationQuantity = nonmatchingValue.getValue();
-          minInterpolationRelations = fixedValueInterpolationCandidate.getValue();
-        }
       }
     }
     Map<PhysicalQuantityValue, QuantityRelations> result = new HashMap<>();
     result.put(
-        new PhysicalQuantityValue(knownValueForInterpolation.getPhysicalQuantity(), minInterpolationQuantity),
+        new PhysicalQuantityValue(knownValueForInterpolation.getPhysicalQuantity(), minInterpolationValue),
         minInterpolationRelations);
     if (maxInterpolationRelations != minInterpolationRelations)
     {
       result.put(
-          new PhysicalQuantityValue(knownValueForInterpolation.getPhysicalQuantity(), maxInterpolationQuantity),
+          new PhysicalQuantityValue(knownValueForInterpolation.getPhysicalQuantity(), maxInterpolationValue),
           maxInterpolationRelations);
     }
     return result;
