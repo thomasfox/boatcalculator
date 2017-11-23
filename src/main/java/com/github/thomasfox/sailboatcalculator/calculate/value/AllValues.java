@@ -215,4 +215,22 @@ public class AllValues
       }
     }
   }
+
+  public void logState()
+  {
+    for (ValueSet valueSet : getValueSets())
+    {
+      for (PhysicalQuantityValue value : valueSet.getStartValues().getAsList())
+      {
+        System.out.println("  Start value: "+ valueSet.getId() + ":" + value.getPhysicalQuantity().getDisplayName() + "=" + value.getValue());
+      }
+    }
+    for (ValueSet valueSet : getValueSets())
+    {
+      for (PhysicalQuantityValue value : valueSet.getCalculatedValues().getAsList())
+      {
+        System.out.println("  Calculated value: "+ valueSet.getId() + ":" + value.getPhysicalQuantity().getDisplayName() + "=" + value.getValue());
+      }
+    }
+  }
 }
