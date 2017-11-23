@@ -110,7 +110,8 @@ public class QuantityRelations
       System.out.println("Could not calculate " + availableQuantities
       + " for value " + knownValues.getValue(providedQuantity) + " of " + providedQuantity.getDisplayName()
       + " from quantityRelations " + name
-      + " with fixed quantities " + printFixedQuantities());
+      + " with fixed quantities " + printFixedQuantities()
+      + " reason is " + e.getMessage());
       return result;
     }
 
