@@ -72,6 +72,7 @@ public class DriftToStableStateStrategy implements ComputationStrategy
 
   private Double applyAndRecalculateSourceValue(int cutoff, AllValues allValues, double targetValue)
   {
+    System.out.println("Trying value " + targetValue + " for drifting " + target);
     if (cutoff <= 0)
     {
       throw new IllegalStateException("Could not calculate "
@@ -83,6 +84,7 @@ public class DriftToStableStateStrategy implements ComputationStrategy
     Double sourceValue = allValues.getKnownValue(source);
     if (sourceValue == null)
     {
+      System.out.println("No calculated value for " + source + " was calculated for start value " + targetValue + " of " + target);
       return null;
     }
 

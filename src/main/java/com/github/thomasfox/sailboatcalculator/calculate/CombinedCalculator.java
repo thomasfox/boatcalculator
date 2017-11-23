@@ -85,25 +85,32 @@ public class CombinedCalculator
     do
     {
       changedInCurrentIteration = false;
-      for (Calculator calculator: calculators)
+      boolean changedInCurrentIterationInCalculatorsOnly = false;
+      do
       {
-        if (!calculator.areNeededQuantitiesPresent(valueSet.getKnownValues()))
+        changedInCurrentIterationInCalculatorsOnly = false;
+        for (Calculator calculator: calculators)
         {
-          continue;
+          if (!calculator.areNeededQuantitiesPresent(valueSet.getKnownValues()))
+          {
+            continue;
+          }
+          if (calculator.isOutputPresent(valueSet.getKnownValues()))
+          {
+            continue;
+          }
+          double calculationResult = calculator.calculate(valueSet.getKnownValues());
+          valueSet.setCalculatedValueNoOverwrite(
+              calculator.getOutputQuantity(),
+              calculationResult,
+              calculator.getClass().getSimpleName(),
+              valueSet.getKnownValuesAsArray(calculator.getInputQuantities()));
+          changedInCurrentIteration = true;
+          changedOverall = true;
+          changedInCurrentIterationInCalculatorsOnly = true;
         }
-        if (calculator.isOutputPresent(valueSet.getKnownValues()))
-        {
-          continue;
-        }
-        double calculationResult = calculator.calculate(valueSet.getKnownValues());
-        valueSet.setCalculatedValueNoOverwrite(
-            calculator.getOutputQuantity(),
-            calculationResult,
-            calculator.getClass().getSimpleName(),
-            valueSet.getKnownValuesAsArray(calculator.getInputQuantities()));
-        changedInCurrentIteration = true;
-        changedOverall = true;
       }
+      while (changedInCurrentIterationInCalculatorsOnly == true);
 
       // from here use quantityRelationsList to calculate unknown values
 

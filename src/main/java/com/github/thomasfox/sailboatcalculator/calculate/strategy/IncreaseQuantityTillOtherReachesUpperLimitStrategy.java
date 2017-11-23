@@ -79,6 +79,7 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
           + " within cutoff , last value for " + allValues.getName(scannedQuantity) + " was " + scannedValue);
     }
     clearComputedValuesAndSetScannedValue(scannedValue, allValues);
+    System.out.println("Try value " + scannedValue + " for scannedQuantity " + scannedQuantity);
     allValues.calculate();
     Double limitedValue = allValues.getKnownValue(limitedQuantity);
     if (limitedValue == null)

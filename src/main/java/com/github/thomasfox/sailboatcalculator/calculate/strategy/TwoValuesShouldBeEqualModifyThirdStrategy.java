@@ -157,11 +157,15 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
     PhysicalQuantityValue value2 =  equalQuantity2Set.getKnownValue(equalQuantity2);
     if (value1 == null)
     {
-      System.out.println("Could not calculate " + equalQuantity1 + " in " + equalQuantity1Set.getName());
+      System.out.println("Could not calculate " + equalQuantity1
+          + " in " + equalQuantity1Set.getName()
+          + " for value " + targetValue + " of " + targetSetId + ":" + targetQuantity);
     }
     if (value2 == null)
     {
-      System.out.println("Could not calculate " + equalQuantity2 + " in " + equalQuantity2Set.getName());
+      System.out.println("Could not calculate " + equalQuantity2
+          + " in " + equalQuantity2Set.getName()
+          + " for value " + targetValue + " of " + targetSetId + ":" + targetQuantity);
     }
     if (value1==null || value2 == null)
     {
