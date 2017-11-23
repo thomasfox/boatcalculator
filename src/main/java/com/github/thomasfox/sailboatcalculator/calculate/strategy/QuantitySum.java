@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityInSet;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetName;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetId;
 import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 import lombok.Getter;
@@ -96,16 +96,16 @@ public class QuantitySum implements ComputationStrategy
     return result.toString();
   }
 
-  private PhysicalQuantityValueWithSetName[] getSourceValuesWithNames(AllValues allValues)
+  private PhysicalQuantityValueWithSetId[] getSourceValuesWithNames(AllValues allValues)
   {
-    PhysicalQuantityValueWithSetName[] result = new PhysicalQuantityValueWithSetName[sources.length];
+    PhysicalQuantityValueWithSetId[] result = new PhysicalQuantityValueWithSetId[sources.length];
     int i = 0;
     for (PhysicalQuantityInSet source : sources)
     {
       ValueSet sourceSet = allValues.getValueSet(source.getValueSetId());
-      result[i] = new PhysicalQuantityValueWithSetName(
+      result[i] = new PhysicalQuantityValueWithSetId(
           sourceSet.getKnownValue(source.getPhysicalQuantity()),
-          sourceSet.getName());
+          sourceSet.getId());
       ++i;
     }
     return result;

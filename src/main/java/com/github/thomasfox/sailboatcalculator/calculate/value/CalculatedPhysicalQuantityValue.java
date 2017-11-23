@@ -9,7 +9,7 @@ import lombok.Getter;
 
 public class CalculatedPhysicalQuantityValue extends PhysicalQuantityValue
 {
-  public PhysicalQuantityValuesWithSetNamePerValue calculatedFrom = new PhysicalQuantityValuesWithSetNamePerValue();
+  public PhysicalQuantityValuesWithSetIdPerValue calculatedFrom = new PhysicalQuantityValuesWithSetIdPerValue();
 
   @Getter
   public String calculatedBy;
@@ -18,7 +18,7 @@ public class CalculatedPhysicalQuantityValue extends PhysicalQuantityValue
       PhysicalQuantity physicalQuantity,
       double value,
       String calculatedBy,
-      PhysicalQuantityValueWithSetName... calculatedFrom)
+      PhysicalQuantityValueWithSetId... calculatedFrom)
   {
     super(physicalQuantity, value);
     this.calculatedBy = calculatedBy;
@@ -32,7 +32,7 @@ public class CalculatedPhysicalQuantityValue extends PhysicalQuantityValue
       PhysicalQuantity physicalQuantity,
       double value,
       String calculatedBy,
-      PhysicalQuantityValuesWithSetNamePerValue calculatedFrom)
+      PhysicalQuantityValuesWithSetIdPerValue calculatedFrom)
   {
     super(physicalQuantity, value);
     this.calculatedBy = calculatedBy;
@@ -46,10 +46,10 @@ public class CalculatedPhysicalQuantityValue extends PhysicalQuantityValue
   {
     super(toCopy);
     this.calculatedBy = toCopy.calculatedBy;
-    this.calculatedFrom = new PhysicalQuantityValuesWithSetNamePerValue(toCopy.calculatedFrom);
+    this.calculatedFrom = new PhysicalQuantityValuesWithSetIdPerValue(toCopy.calculatedFrom);
   }
 
-  public List<PhysicalQuantityValueWithSetName> getCalculatedFromAsList()
+  public List<PhysicalQuantityValueWithSetId> getCalculatedFromAsList()
   {
     return Collections.unmodifiableList(calculatedFrom.getAsList());
   }

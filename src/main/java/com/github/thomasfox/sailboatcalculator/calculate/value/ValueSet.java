@@ -24,7 +24,7 @@ public interface ValueSet
 
   public PhysicalQuantityValues getKnownValues(Collection<PhysicalQuantity> quantitiesToRead);
 
-  public PhysicalQuantityValueWithSetName[] getKnownValuesAsArray(Collection<PhysicalQuantity> toGet);
+  public PhysicalQuantityValueWithSetId[] getKnownValuesAsArray(Collection<PhysicalQuantity> toGet);
 
   public PhysicalQuantityValues getFixedValues();
 
@@ -44,13 +44,13 @@ public interface ValueSet
       PhysicalQuantity physicalQuantity,
       double value,
       String calculatedBy,
-      PhysicalQuantityValueWithSetName... calculatedFrom);
+      PhysicalQuantityValueWithSetId... calculatedFrom);
 
   public void setCalculatedValueNoOverwrite(
       PhysicalQuantity physicalQuantity,
       double value,
       String calculatedBy,
-      PhysicalQuantityValuesWithSetNamePerValue calculatedFrom);
+      PhysicalQuantityValuesWithSetIdPerValue calculatedFrom);
 
   public void addToInput(PhysicalQuantity toAdd);
 

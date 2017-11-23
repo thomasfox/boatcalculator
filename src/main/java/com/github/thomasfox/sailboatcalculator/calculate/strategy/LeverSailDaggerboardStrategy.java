@@ -3,7 +3,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetName;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetId;
 import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 import lombok.AllArgsConstructor;
@@ -39,8 +39,8 @@ public class LeverSailDaggerboardStrategy implements ComputationStrategy
           riggCenterOfEffortHeight.getValue() + (daggerboardSpan.getValue() / 2),
           rigg.getName() + ":" +  PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT.getDisplayName()
               + ", " + leverSailDaggerboard.getName() + ":" +  PhysicalQuantity.WING_SPAN.getDisplayName(),
-          new PhysicalQuantityValueWithSetName(riggCenterOfEffortHeight, rigg.getName()),
-          new PhysicalQuantityValueWithSetName(daggerboardSpan, daggerboard.getName()));
+          new PhysicalQuantityValueWithSetId(riggCenterOfEffortHeight, rigg.getId()),
+          new PhysicalQuantityValueWithSetId(daggerboardSpan, daggerboard.getId()));
       return true;
     }
     return false;

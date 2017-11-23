@@ -3,7 +3,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityInSet;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetName;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetId;
 
 import lombok.ToString;
 
@@ -65,7 +65,7 @@ public class DriftToStableStateStrategy implements ComputationStrategy
         target,
         sourceValue,
         "Drift towards " + allValues.getName(source),
-        new PhysicalQuantityValueWithSetName(source.getPhysicalQuantity(), sourceValue, allValues.getSetName(source)));
+        new PhysicalQuantityValueWithSetId(source.getPhysicalQuantity(), sourceValue, source.getValueSetId()));
 
     return true;
   }

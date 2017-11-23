@@ -32,7 +32,7 @@ import com.github.thomasfox.sailboatcalculator.calculate.impl.VMGCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.WingChordFromSecondMomentOfAreaCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValuesWithSetNamePerValue;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValuesWithSetIdPerValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 import com.github.thomasfox.sailboatcalculator.interpolate.Interpolator;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
@@ -237,7 +237,7 @@ public class CombinedCalculator
           physicalQuantityValue.getPhysicalQuantity(),
           physicalQuantityValue.getValue(),
           quantityRelations.getName(),
-          new PhysicalQuantityValuesWithSetNamePerValue(valueSet.getKnownValues(usedQuantities), valueSet.getName()));
+          new PhysicalQuantityValuesWithSetIdPerValue(valueSet.getKnownValues(usedQuantities), valueSet.getId()));
       changed = true;
     }
     return changed;

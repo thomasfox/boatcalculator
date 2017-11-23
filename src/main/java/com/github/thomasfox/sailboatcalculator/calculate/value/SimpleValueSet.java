@@ -66,9 +66,9 @@ public class SimpleValueSet implements ValueSet
   }
 
   @Override
-  public PhysicalQuantityValueWithSetName[] getKnownValuesAsArray(Collection<PhysicalQuantity> toGet)
+  public PhysicalQuantityValueWithSetId[] getKnownValuesAsArray(Collection<PhysicalQuantity> toGet)
   {
-    PhysicalQuantityValueWithSetName[] result = new PhysicalQuantityValueWithSetName[toGet.size()];
+    PhysicalQuantityValueWithSetId[] result = new PhysicalQuantityValueWithSetId[toGet.size()];
     int i = 0;
     for (PhysicalQuantity physicalQuantity : toGet)
     {
@@ -77,7 +77,7 @@ public class SimpleValueSet implements ValueSet
       {
         throw new QuantityNotPresentException(physicalQuantity);
       }
-      result[i] = new PhysicalQuantityValueWithSetName(knownQuantity.getPhysicalQuantity(), knownQuantity.getValue(), name);
+      result[i] = new PhysicalQuantityValueWithSetId(knownQuantity.getPhysicalQuantity(), knownQuantity.getValue(), id);
       ++i;
     }
     return result;
@@ -162,7 +162,7 @@ public class SimpleValueSet implements ValueSet
       PhysicalQuantity physicalQuantity,
       double value,
       String calculatedBy,
-      PhysicalQuantityValueWithSetName... calculatedFrom)
+      PhysicalQuantityValueWithSetId... calculatedFrom)
   {
     fixedValues.checkQuantityNotSetForWrite(physicalQuantity);
     startValues.checkQuantityNotSetForWrite(physicalQuantity);
@@ -174,7 +174,7 @@ public class SimpleValueSet implements ValueSet
       PhysicalQuantity physicalQuantity,
       double value,
       String calculatedBy,
-      PhysicalQuantityValuesWithSetNamePerValue calculatedFrom)
+      PhysicalQuantityValuesWithSetIdPerValue calculatedFrom)
   {
     fixedValues.checkQuantityNotSetForWrite(physicalQuantity);
     startValues.checkQuantityNotSetForWrite(physicalQuantity);
@@ -185,7 +185,7 @@ public class SimpleValueSet implements ValueSet
       PhysicalQuantity physicalQuantity,
       double value,
       String calculatedBy,
-      PhysicalQuantityValueWithSetName... calculatedFrom)
+      PhysicalQuantityValueWithSetId... calculatedFrom)
   {
     calculatedValues.setValue(physicalQuantity, value, calculatedBy, calculatedFrom);
   }

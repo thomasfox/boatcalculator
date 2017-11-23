@@ -3,7 +3,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetName;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetId;
 import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 import lombok.AllArgsConstructor;
@@ -40,7 +40,7 @@ public class QuantityEquality implements ComputationStrategy
           targetQuantity,
           knownValue.getValue(),
           sourceSet.getName() + ":" +  sourceQuantity.getDisplayName(),
-          new PhysicalQuantityValueWithSetName(knownValue, sourceSet.getName()));
+          new PhysicalQuantityValueWithSetId(knownValue, sourceSet.getId()));
       return true;
     }
     return false;

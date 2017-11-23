@@ -1,8 +1,10 @@
 package com.github.thomasfox.sailboatcalculator.calculate.value;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.ComputationStrategy;
 
@@ -57,7 +59,8 @@ public class AllValues
     return valueSets.stream()
         .filter(n -> n.getId().equals(id))
         .findAny().orElseThrow(() -> new IllegalStateException(
-            "No valueSet with id " + id + " exists, existing valueSets are " + valueSets));
+            "No valueSet with id " + id + " exists, existing valueSets are "
+                + valueSets.stream().map(ValueSet::getId).collect(Collectors.toList())));
   }
 
   public Double getKnownValue(PhysicalQuantityInSet toResolve)
@@ -95,7 +98,7 @@ public class AllValues
       PhysicalQuantityInSet target,
       double value,
       String calculatedBy,
-      PhysicalQuantityValueWithSetName... calculatedFrom)
+      PhysicalQuantityValueWithSetId... calculatedFrom)
   {
     ValueSet targetSet = getValueSetNonNull(target.getValueSetId());
     targetSet.setCalculatedValueNoOverwrite(
@@ -111,7 +114,8 @@ public class AllValues
         .filter(n -> n.getId().equals(setId))
         .map(s -> s.getName())
         .findAny().orElseThrow(() -> new IllegalStateException(
-            "No valueSet with id " + setId + " exists, existing valueSets are " + valueSets));
+            "No valueSet with id " + setId + " exists, existing valueSets are "
+                + valueSets.stream().map(ValueSet::getId).collect(Collectors.toList())));
   }
 
   public void add(ComputationStrategy computationStrategy)
@@ -166,6 +170,49 @@ public class AllValues
     for (ValueSet set : valueSets)
     {
       set.moveCalculatedValuesToStartValues();
+    }
+  }
+
+  public void printLongestComputationPaths()
+  {
+    Set<PhysicalQuantityValueWithSetId> excluded = new HashSet<>();
+    for (ValueSet set : valueSets)
+    {
+      for (CalculatedPhysicalQuantityValue calculatedValue : set.getCalculatedValues().getAsList())
+      {
+        for (PhysicalQuantityValueWithSetId sourceQuantity : calculatedValue.getCalculatedFromAsList())
+        {
+          excluded.add(sourceQuantity);
+        }
+      }
+    }
+
+    for (ValueSet set : valueSets)
+    {
+      for (CalculatedPhysicalQuantityValue calculatedValue : set.getCalculatedValues().getAsList())
+      {
+        if (excluded.contains(calculatedValue))
+        {
+          continue;
+        }
+        System.out.println("Calculation path for " + set.getId() + ":" + calculatedValue.getPhysicalQuantity().getDisplayName());
+        printComputationPath(calculatedValue, "  ");
+      }
+    }
+  }
+
+  public void printComputationPath(CalculatedPhysicalQuantityValue value, String indent)
+  {
+    for (PhysicalQuantityValueWithSetId sourceQuantity : value.getCalculatedFromAsList())
+    {
+      ValueSet set = getValueSetNonNull(sourceQuantity.getSetId());
+      CalculatedPhysicalQuantityValue calculatedFrom
+          = (CalculatedPhysicalQuantityValue) set.getCalculatedValues().getPhysicalQuantityValue(sourceQuantity.getPhysicalQuantity());
+      if (calculatedFrom != null)
+      {
+        System.out.println(indent + sourceQuantity.getSetId() + ":" + sourceQuantity.getPhysicalQuantity().getDisplayName());
+        printComputationPath(calculatedFrom, indent + "  ");
+      }
     }
   }
 }

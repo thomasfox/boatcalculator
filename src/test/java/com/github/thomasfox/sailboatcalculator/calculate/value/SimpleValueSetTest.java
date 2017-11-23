@@ -168,14 +168,14 @@ public class SimpleValueSetTest
     sut.setStartValue(PhysicalQuantity.FORCE, 70d);
 
     // act
-    PhysicalQuantityValueWithSetName[] result
+    PhysicalQuantityValueWithSetId[] result
         = sut.getKnownValuesAsArray(Lists.newArrayList(PhysicalQuantity.WEIGHT, PhysicalQuantity.LIFT, PhysicalQuantity.BENDING));
 
     // assert
     assertThat(result).containsOnly(
-        new PhysicalQuantityValueWithSetName(PhysicalQuantity.WEIGHT, 10d, "valueSetName"),
-        new PhysicalQuantityValueWithSetName(PhysicalQuantity.LIFT, 20d, "valueSetName"),
-        new PhysicalQuantityValueWithSetName(PhysicalQuantity.BENDING, 40d, "valueSetName"));
+        new PhysicalQuantityValueWithSetId(PhysicalQuantity.WEIGHT, 10d, "valueSetName"),
+        new PhysicalQuantityValueWithSetId(PhysicalQuantity.LIFT, 20d, "valueSetName"),
+        new PhysicalQuantityValueWithSetId(PhysicalQuantity.BENDING, 40d, "valueSetName"));
   }
 
   @Test
@@ -353,7 +353,7 @@ public class SimpleValueSetTest
         PhysicalQuantity.WEIGHT,
         10d,
         "calculatedBy",
-        new PhysicalQuantityValueWithSetName(PhysicalQuantity.BENDING, 20d, "setName"));
+        new PhysicalQuantityValueWithSetId(PhysicalQuantity.BENDING, 20d, "setName"));
 
     // assert
     assertThat(sut.getCalculatedValues().getAsList()).containsOnly(
@@ -361,7 +361,7 @@ public class SimpleValueSetTest
             PhysicalQuantity.WEIGHT,
             10d,
             "calculatedBy",
-            new PhysicalQuantityValueWithSetName(PhysicalQuantity.BENDING, 20d, "setName")));
+            new PhysicalQuantityValueWithSetId(PhysicalQuantity.BENDING, 20d, "setName")));
   }
 
   @Test

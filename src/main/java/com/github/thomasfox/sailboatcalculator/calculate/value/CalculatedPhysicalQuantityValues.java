@@ -21,14 +21,14 @@ public class CalculatedPhysicalQuantityValues extends AbstractPhysicalQuantityVa
   @Override
   protected CalculatedPhysicalQuantityValue createEntry(PhysicalQuantity physicalQuantity, Double value)
   {
-    return new CalculatedPhysicalQuantityValue(physicalQuantity, value, null, (PhysicalQuantityValueWithSetName[]) null);
+    return new CalculatedPhysicalQuantityValue(physicalQuantity, value, null, (PhysicalQuantityValueWithSetId[]) null);
   }
 
   public void setValueNoOverwrite(
       PhysicalQuantity physicalQuantity,
       double value,
       String calculatedBy,
-      PhysicalQuantityValueWithSetName... calculatedFrom)
+      PhysicalQuantityValueWithSetId... calculatedFrom)
   {
     super.setValueNoOverwrite(new CalculatedPhysicalQuantityValue(physicalQuantity, value, calculatedBy, calculatedFrom));
   }
@@ -37,7 +37,7 @@ public class CalculatedPhysicalQuantityValues extends AbstractPhysicalQuantityVa
       PhysicalQuantity physicalQuantity,
       double value,
       String calculatedBy,
-      PhysicalQuantityValuesWithSetNamePerValue calculatedFrom)
+      PhysicalQuantityValuesWithSetIdPerValue calculatedFrom)
   {
     super.setValueNoOverwrite(new CalculatedPhysicalQuantityValue(physicalQuantity, value, calculatedBy, calculatedFrom));
   }
@@ -46,7 +46,7 @@ public class CalculatedPhysicalQuantityValues extends AbstractPhysicalQuantityVa
       PhysicalQuantity physicalQuantity,
       double value,
       String calculatedBy,
-      PhysicalQuantityValueWithSetName... calculatedFrom)
+      PhysicalQuantityValueWithSetId... calculatedFrom)
   {
     super.setValue(new CalculatedPhysicalQuantityValue(physicalQuantity, value, calculatedBy, calculatedFrom));
   }
