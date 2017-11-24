@@ -46,7 +46,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
     double targetValue1 = lowerCutoff;
     double targetValue2 = upperCutoff;
     int remainingTries = MAX_TRIES;
-    double cutoffTrialInterval = (upperCutoff - lowerCutoff) / MAX_TRIES;
+    double cutoffTrialInterval = getCutoffTrialInterval();
     AllValues allValuesForCalculation = new AllValues(allValues);
     allValuesForCalculation.moveCalculatedValuesToStartValues();
     CalculateDifferenceResult difference1 = null;
@@ -83,6 +83,11 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
     return changed;
   }
 
+  private double getCutoffTrialInterval()
+  {
+    return (upperCutoff - lowerCutoff) / MAX_TRIES;
+  }
+
   private boolean applyAndRecalculateWithPoints(
       double targetValue1,
       CalculateDifferenceResult difference1,
@@ -91,7 +96,9 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
       AllValues allValues,
       int maxTries)
   {
-    System.out.println("Try values " + targetValue1 + " and " + targetValue2 + " for target Quantity " + targetQuantity + ", maxTries = " + maxTries);
+    System.out.println("Try values " + targetValue1 + " and " + targetValue2
+        + " for target Quantity " + targetSetId + ":" + targetQuantity
+        + ", maxTries = " + maxTries);
     if (maxTries <= 0)
     {
       return false;
@@ -129,6 +136,24 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
       estimatedTarget = upperCutoff;
     }
     CalculateDifferenceResult estimatedTargetDifference = calculateDifference(estimatedTarget, allValues);
+//    if (estimatedTargetDifference == null)
+//    {
+//      // perhaps a noncalculatable region was reached outside the trial region, try half the intervall.
+//      double minTargetValue = Math.min(targetValue1, targetValue2);
+//      while (estimatedTarget < minTargetValue && maxTries > 0 && estimatedTargetDifference == null)
+//      {
+//        maxTries--;
+//        estimatedTarget = estimatedTarget / 2 + minTargetValue / 2;
+//        estimatedTargetDifference = calculateDifference(estimatedTarget, allValues);
+//      }
+//      double maxTargetValue = Math.max(targetValue1, targetValue2);
+//      while (estimatedTarget > maxTargetValue && maxTries > 0 && estimatedTargetDifference == null)
+//      {
+//        maxTries--;
+//        estimatedTarget = estimatedTarget / 2 + maxTargetValue / 2;
+//        estimatedTargetDifference = calculateDifference(estimatedTarget, allValues);
+//      }
+//    }
     if (estimatedTargetDifference == null)
     {
       System.out.println("Could not calculate difference between "
@@ -169,6 +194,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
     }
     if (value1==null || value2 == null)
     {
+      allValues.logState();
       return null;
     }
     return new CalculateDifferenceResult(value1.getValue(), value2.getValue());
