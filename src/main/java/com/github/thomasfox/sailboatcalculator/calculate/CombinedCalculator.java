@@ -296,7 +296,7 @@ public class CombinedCalculator
    */
   private Map<PhysicalQuantityValue, QuantityRelations> getFixedValueInterpolationRelations(
       @NonNull Map<PhysicalQuantityValues, QuantityRelations> fixedValueInterpolationCandidates,
-      @NonNull PhysicalQuantityValue knownValueForInterpolation)
+      @NonNull PhysicalQuantityValue knownValue)
   {
     Double minInterpolationValue = null;
     Double maxInterpolationValue = null;
@@ -305,46 +305,56 @@ public class CombinedCalculator
     for (Map.Entry<PhysicalQuantityValues, QuantityRelations> fixedValueInterpolationCandidate
         : fixedValueInterpolationCandidates.entrySet())
     {
-      PhysicalQuantityValue interpolationCandidateQuantityValue = fixedValueInterpolationCandidate.getKey().getAsList().get(0);
-      if (interpolationCandidateQuantityValue.getPhysicalQuantity() != knownValueForInterpolation.getPhysicalQuantity())
+      PhysicalQuantityValue candidateQuantityValue = fixedValueInterpolationCandidate.getKey().getAsList().get(0);
+      if (candidateQuantityValue.getPhysicalQuantity() != knownValue.getPhysicalQuantity())
       {
         continue;
       }
-      Double interpolationCandidateValue = interpolationCandidateQuantityValue.getValue();
+      Double candidate = candidateQuantityValue.getValue();
 
       if (minInterpolationValue == null)
       {
-        minInterpolationValue = interpolationCandidateValue;
-        maxInterpolationValue = interpolationCandidateValue;
+        minInterpolationValue = candidate;
+        maxInterpolationValue = candidate;
         minInterpolationRelations = fixedValueInterpolationCandidate.getValue();
         maxInterpolationRelations = minInterpolationRelations;
         continue;
       }
 
-      if (interpolationCandidateValue <= knownValueForInterpolation.getValue()
-          && (interpolationCandidateValue > minInterpolationValue
-              || minInterpolationValue > knownValueForInterpolation.getValue()))
+      if (candidate <= knownValue.getValue()
+          && (candidate > minInterpolationValue
+              || minInterpolationValue > knownValue.getValue()))
       {
-        minInterpolationValue = interpolationCandidateValue;
+        minInterpolationValue = candidate;
+        minInterpolationRelations = fixedValueInterpolationCandidate.getValue();
+      }
+      if (candidate > knownValue.getValue() && candidate < minInterpolationValue)
+      {
+        minInterpolationValue = candidate;
         minInterpolationRelations = fixedValueInterpolationCandidate.getValue();
       }
 
-      if (interpolationCandidateValue >= knownValueForInterpolation.getValue()
-          && (interpolationCandidateValue < maxInterpolationValue
-              || maxInterpolationValue < knownValueForInterpolation.getValue()))
+      if (candidate >= knownValue.getValue()
+          && (candidate < maxInterpolationValue
+              || maxInterpolationValue < knownValue.getValue()))
       {
-        maxInterpolationValue = interpolationCandidateValue;
+        maxInterpolationValue = candidate;
+        maxInterpolationRelations = fixedValueInterpolationCandidate.getValue();
+      }
+      if (candidate < knownValue.getValue() && candidate > maxInterpolationValue)
+      {
+        maxInterpolationValue = candidate;
         maxInterpolationRelations = fixedValueInterpolationCandidate.getValue();
       }
     }
     Map<PhysicalQuantityValue, QuantityRelations> result = new HashMap<>();
     result.put(
-        new PhysicalQuantityValue(knownValueForInterpolation.getPhysicalQuantity(), minInterpolationValue),
+        new PhysicalQuantityValue(knownValue.getPhysicalQuantity(), minInterpolationValue),
         minInterpolationRelations);
     if (maxInterpolationRelations != minInterpolationRelations)
     {
       result.put(
-          new PhysicalQuantityValue(knownValueForInterpolation.getPhysicalQuantity(), maxInterpolationValue),
+          new PhysicalQuantityValue(knownValue.getPhysicalQuantity(), maxInterpolationValue),
           maxInterpolationRelations);
     }
     return result;
