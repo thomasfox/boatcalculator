@@ -1,6 +1,6 @@
 package com.github.thomasfox.sailboatcalculator.boat;
 
-import java.util.Set;
+import java.util.List;
 
 import com.github.thomasfox.sailboatcalculator.boat.valueset.BoatGlobalValues;
 import com.github.thomasfox.sailboatcalculator.boat.valueset.Crew;
@@ -59,7 +59,7 @@ public abstract class Boat
     values.add(new LeverSailDaggerboardStrategy(Rigg.ID, DaggerboardOrKeel.ID, LeverSailDaggerboard.ID));
 }
 
-  public Set<ValueSet> getValueSets()
+  public List<ValueSet> getValueSets()
   {
     return values.getValueSets();
   }

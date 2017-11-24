@@ -1,8 +1,9 @@
 package com.github.thomasfox.sailboatcalculator.calculate.value;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,9 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AllValues
 {
-  private final Set<SimpleValueSet> valueSets = new LinkedHashSet<>();
+  private final List<SimpleValueSet> valueSets = new ArrayList<>();
 
-  private final Set<ComputationStrategy> computationStrategies = new LinkedHashSet<>();
+  private final List<ComputationStrategy> computationStrategies = new ArrayList<>();
 
   public AllValues(Set<SimpleValueSet> valueSets)
   {
@@ -42,9 +43,9 @@ public class AllValues
     this.valueSets.add(toAdd);
   }
 
-  public Set<ValueSet> getValueSets()
+  public List<ValueSet> getValueSets()
   {
-    return Collections.unmodifiableSet(valueSets);
+    return Collections.unmodifiableList(valueSets);
   }
 
   public ValueSet getValueSet(String id)
@@ -123,9 +124,9 @@ public class AllValues
     computationStrategies.add(computationStrategy);
   }
 
-  public Set<ComputationStrategy> getComputationStrategies()
+  public List<ComputationStrategy> getComputationStrategies()
   {
-    return Collections.unmodifiableSet(computationStrategies);
+    return Collections.unmodifiableList(computationStrategies);
   }
 
   public void calculate()
