@@ -12,9 +12,8 @@ import lombok.NonNull;
 import lombok.ToString;
 
 /**
- * A directed equality. A quantity is known to be equal to another.
- * So if the one quantity is known, the other quantities value can be set
- * equal to the value of the first quantity.
+ * A sum of values. One quantity is known to be the sum of other quantities.
+ * Optionally, factors can be applied to the parts of the sum.
  */
 @Getter
 @ToString
