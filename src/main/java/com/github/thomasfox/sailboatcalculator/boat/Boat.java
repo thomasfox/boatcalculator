@@ -56,7 +56,7 @@ public abstract class Boat
     values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BoatGlobalValues.ID, PhysicalQuantity.FLOW_DIRECTION, Rigg.ID));
     values.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BoatGlobalValues.ID, PhysicalQuantity.FLOW_DIRECTION, Crew.ID));
     values.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, Rigg.ID, PhysicalQuantity.FORCE, LeverSailDaggerboard.ID));
-    values.add(new LeverSailDaggerboardStrategy(Rigg.ID, DaggerboardOrKeel.ID, LeverSailDaggerboard.ID));
+    values.add(new LeverSailDaggerboardStrategy());
 }
 
   public List<ValueSet> getValueSets()
