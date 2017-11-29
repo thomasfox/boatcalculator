@@ -1,5 +1,6 @@
 package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
@@ -58,15 +59,7 @@ public class QuantitySum implements ComputationStrategy
 
   public boolean allSourceValuesAreKnown(AllValues allValues)
   {
-    for (PhysicalQuantityInSet source : sources)
-    {
-      Double sourceValue = allValues.getKnownValue(source);
-      if (sourceValue == null)
-      {
-        return false;
-      }
-    }
-    return true;
+    return Arrays.stream(sources).allMatch(allValues::isValueKnown);
   }
 
   public double getSumOfSourceValues(AllValues allValues)
