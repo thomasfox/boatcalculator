@@ -129,6 +129,11 @@ public class AllValues
     return Collections.unmodifiableList(computationStrategies);
   }
 
+  public boolean remove(ComputationStrategy computationStrategy)
+  {
+    return computationStrategies.remove(computationStrategy);
+  }
+
   public void calculate()
   {
     boolean changed;
