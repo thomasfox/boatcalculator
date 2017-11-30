@@ -15,11 +15,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Describes relations between multiple physical quantity along the line of
  * "if quantity a has value x, the quantity b has value y and quantity c has value z"
  */
+@Slf4j
 public class QuantityRelations
 {
   @NonNull
@@ -107,7 +109,7 @@ public class QuantityRelations
     }
     catch (InterpolatorException e)
     {
-      System.out.println("Could not calculate " + availableQuantities
+      log.info("Could not calculate " + availableQuantities
       + " for value " + knownValues.getValue(providedQuantity) + " of " + providedQuantity.getDisplayName()
       + " from quantityRelations " + name
       + " with fixed quantities " + printFixedQuantities()

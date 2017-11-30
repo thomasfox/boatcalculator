@@ -7,6 +7,9 @@ import java.util.Set;
 
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public abstract class Calculator
 {
   private final Set<PhysicalQuantity> inputQuantities;
@@ -42,6 +45,7 @@ public abstract class Calculator
     {
       if (input.getPhysicalQuantityValue(inputQuantity) == null)
       {
+        log.debug("Calculator " + getClass().getName() + " misses input quantity " + inputQuantity);
         return false;
       }
     }

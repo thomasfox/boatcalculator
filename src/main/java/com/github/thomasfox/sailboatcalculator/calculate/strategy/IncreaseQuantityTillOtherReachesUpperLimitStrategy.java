@@ -5,6 +5,7 @@ import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityInSet;
 
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Scans the unknown scanned quantity between zero and an upper limit
@@ -17,6 +18,7 @@ import lombok.ToString;
  * when the scanned quantity increases.
  */
 @ToString
+@Slf4j
 public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements ComputationStrategy
 {
   private final PhysicalQuantityInSet limitedQuantity;
@@ -79,7 +81,7 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
           + " within cutoff , last value for " + allValues.getName(scannedQuantity) + " was " + scannedValue);
     }
     clearComputedValuesAndSetScannedValue(scannedValue, allValues);
-    System.out.println("Try value " + scannedValue + " for scannedQuantity " + scannedQuantity);
+    log.info("Try value " + scannedValue + " for scannedQuantity " + scannedQuantity);
     allValues.calculate();
     Double limitedValue = allValues.getKnownValue(limitedQuantity);
     if (limitedValue == null)

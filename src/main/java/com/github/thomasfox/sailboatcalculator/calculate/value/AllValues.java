@@ -10,8 +10,10 @@ import java.util.stream.Collectors;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.ComputationStrategy;
 
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @NoArgsConstructor
+@Slf4j
 public class AllValues
 {
   private final List<SimpleValueSet> valueSets = new ArrayList<>();
@@ -201,7 +203,7 @@ public class AllValues
         {
           continue;
         }
-        System.out.println("Calculation path for " + set.getId() + ":" + calculatedValue.getPhysicalQuantity().getDisplayName());
+        log.info("Calculation path for " + set.getId() + ":" + calculatedValue.getPhysicalQuantity().getDisplayName());
         printComputationPath(calculatedValue, "  ");
       }
     }
@@ -216,7 +218,7 @@ public class AllValues
           = (CalculatedPhysicalQuantityValue) set.getCalculatedValues().getPhysicalQuantityValue(sourceQuantity.getPhysicalQuantity());
       if (calculatedFrom != null)
       {
-        System.out.println(indent + sourceQuantity.getSetId() + ":" + sourceQuantity.getPhysicalQuantity().getDisplayName());
+        log.info(indent + sourceQuantity.getSetId() + ":" + sourceQuantity.getPhysicalQuantity().getDisplayName());
         printComputationPath(calculatedFrom, indent + "  ");
       }
     }
@@ -228,14 +230,14 @@ public class AllValues
     {
       for (PhysicalQuantityValue value : valueSet.getStartValues().getAsList())
       {
-        System.out.println("  Start value: "+ valueSet.getId() + ":" + value.getPhysicalQuantity().getDisplayName() + "=" + value.getValue());
+        log.info("  Start value: "+ valueSet.getId() + ":" + value.getPhysicalQuantity().getDisplayName() + "=" + value.getValue());
       }
     }
     for (ValueSet valueSet : getValueSets())
     {
       for (PhysicalQuantityValue value : valueSet.getCalculatedValues().getAsList())
       {
-        System.out.println("  Calculated value: "+ valueSet.getId() + ":" + value.getPhysicalQuantity().getDisplayName() + "=" + value.getValue());
+        log.info("  Calculated value: "+ valueSet.getId() + ":" + value.getPhysicalQuantity().getDisplayName() + "=" + value.getValue());
       }
     }
   }

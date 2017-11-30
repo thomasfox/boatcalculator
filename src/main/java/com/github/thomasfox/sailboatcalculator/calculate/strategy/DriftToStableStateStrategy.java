@@ -6,6 +6,7 @@ import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityI
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetId;
 
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * A strategy to calculate two initially unknown values, source and target,
@@ -20,6 +21,7 @@ import lombok.ToString;
  * and so on until source and target are sufficiently equal.
  */
 @ToString
+@Slf4j
 public class DriftToStableStateStrategy implements ComputationStrategy
 {
   private final PhysicalQuantityInSet source;
@@ -72,7 +74,7 @@ public class DriftToStableStateStrategy implements ComputationStrategy
 
   private Double applyAndRecalculateSourceValue(int cutoff, AllValues allValues, double targetValue)
   {
-    System.out.println("Trying value " + targetValue + " for drifting " + target);
+    log.info("Trying value " + targetValue + " for drifting " + target);
     if (cutoff <= 0)
     {
       throw new IllegalStateException("Could not calculate "
@@ -84,7 +86,7 @@ public class DriftToStableStateStrategy implements ComputationStrategy
     Double sourceValue = allValues.getKnownValue(source);
     if (sourceValue == null)
     {
-      System.out.println("No calculated value for " + source + " was calculated for start value " + targetValue + " of " + target);
+      log.info("No calculated value for " + source + " was calculated for start value " + targetValue + " of " + target);
       return null;
     }
 

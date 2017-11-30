@@ -8,9 +8,11 @@ import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
 @ToString
+@Slf4j
 public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStrategy
 {
   private static double CUTOFF = 1E-4;
@@ -96,7 +98,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
       AllValues allValues,
       int maxTries)
   {
-    System.out.println("Try values " + targetValue1 + " and " + targetValue2
+    log.info("Try values " + targetValue1 + " and " + targetValue2
         + " for target Quantity " + targetSetId + ":" + targetQuantity
         + ", maxTries = " + maxTries);
     if (maxTries <= 0)
@@ -182,13 +184,13 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
     PhysicalQuantityValue value2 =  equalQuantity2Set.getKnownValue(equalQuantity2);
     if (value1 == null)
     {
-      System.out.println("Could not calculate " + equalQuantity1
+      log.info("Could not calculate " + equalQuantity1
           + " in " + equalQuantity1Set.getName()
           + " for value " + targetValue + " of " + targetSetId + ":" + targetQuantity);
     }
     if (value2 == null)
     {
-      System.out.println("Could not calculate " + equalQuantity2
+      log.info("Could not calculate " + equalQuantity2
           + " in " + equalQuantity2Set.getName()
           + " for value " + targetValue + " of " + targetSetId + ":" + targetQuantity);
     }
