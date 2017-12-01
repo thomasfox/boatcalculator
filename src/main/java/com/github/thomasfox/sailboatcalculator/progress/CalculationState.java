@@ -22,9 +22,18 @@ public class CalculationState
 
   public static void set(String key, double value)
   {
-    BigDecimal bd = new BigDecimal(value);
-    bd = bd.round(new MathContext(3));
-    stateMap.put(key, key + ":" + bd.toPlainString());
+    String displayValue;
+    try
+    {
+      BigDecimal bd = new BigDecimal(value);
+      bd = bd.round(new MathContext(3));
+      displayValue = bd.toPlainString();
+    }
+    catch (Exception e)
+    {
+      displayValue = Double.toString(value);
+    }
+    stateMap.put(key, key + ":" + displayValue);
     stateChanged();
   }
 
