@@ -66,7 +66,7 @@ public interface ValueSet
 
   public void clearStartValues();
 
-  public boolean calculateSinglePass(AllValues allValues);
+  public boolean calculateSinglePass(AllValues allValues, PhysicalQuantity wantedQuantity);
 
   public List<QuantityRelations> getQuantityRelations();
 }

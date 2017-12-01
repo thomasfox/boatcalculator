@@ -76,6 +76,6 @@ public abstract class Boat
 
   public void calculate()
   {
-    values.calculate();
+    values.calculate(null);
   }
 }

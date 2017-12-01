@@ -81,7 +81,7 @@ public class CombinedCalculator
     this.quantityRelationsList.addAll(quantityRelationsList);
   }
 
-  public boolean calculate(ValueSet valueSet)
+  public boolean calculate(ValueSet valueSet, PhysicalQuantity wantedQuantity)
   {
     try
     {
@@ -235,7 +235,7 @@ public class CombinedCalculator
         }
         cutoff--;
       }
-      while(changedInCurrentIteration && cutoff > 0);
+      while(changedInCurrentIteration && cutoff > 0 && !valueSet.isValueKnown(wantedQuantity));
       return changedOverall;
     }
     finally

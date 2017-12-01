@@ -181,7 +181,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
   {
     CalculationState.set(targetSetId + ":" + targetQuantity, targetValue);
     clearComputedValuesAndSetTargetValue(targetValue, allValues);
-    allValues.calculate();
+    allValues.calculate(null);
     ValueSet equalQuantity1Set = allValues.getValueSetNonNull(equalQuantity1SetId);
     ValueSet equalQuantity2Set = allValues.getValueSetNonNull(equalQuantity2SetId);
     PhysicalQuantityValue value1 =  equalQuantity1Set.getKnownValue(equalQuantity1);

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.ComputationStrategy;
 
 import lombok.NoArgsConstructor;
@@ -68,11 +69,11 @@ public class AllValues
 
   public Double getKnownValue(PhysicalQuantityInSet toResolve)
   {
-    ValueSet sourceSet = getValueSetNonNull(toResolve.getValueSetId());
-    if (sourceSet == null)
+    if (toResolve == null)
     {
       return null;
     }
+    ValueSet sourceSet = getValueSetNonNull(toResolve.getValueSetId());
     PhysicalQuantityValue knownValue = sourceSet.getKnownValue(toResolve.getPhysicalQuantity());
     if (knownValue == null)
     {
@@ -136,8 +137,19 @@ public class AllValues
     return computationStrategies.remove(computationStrategy);
   }
 
-  public void calculate()
+  public void calculate(PhysicalQuantityInSet wanted)
   {
+    if (wanted != null)
+    {
+      ValueSet valueSet = getValueSet(wanted.getValueSetId());
+      {
+        valueSet.calculateSinglePass(this, wanted.getPhysicalQuantity());
+      }
+      if (valueSet.isValueKnown(wanted.getPhysicalQuantity()))
+      {
+        return;
+      }
+    }
     boolean changed;
     int cutoff = 100;
     do
@@ -145,14 +157,19 @@ public class AllValues
       changed = false;
       for (ValueSet valueSet : valueSets)
       {
-        boolean partChanged = valueSet.calculateSinglePass(this);
+        PhysicalQuantity wantedPhysicalQuantity = null;
+        if (wanted != null && wanted.getValueSetId().equals(valueSet.getId()))
+        {
+          wantedPhysicalQuantity = wanted.getPhysicalQuantity();
+        }
+        boolean partChanged = valueSet.calculateSinglePass(this, wantedPhysicalQuantity);
         changed = changed || partChanged;
       }
       boolean changedByComputationStrategies = applyComputationStrategies();
       changed = changed || changedByComputationStrategies;
       cutoff--;
     }
-    while (changed && cutoff > 0);
+    while (changed && cutoff > 0 && !isValueKnown(wanted));
   }
 
   private boolean applyComputationStrategies()

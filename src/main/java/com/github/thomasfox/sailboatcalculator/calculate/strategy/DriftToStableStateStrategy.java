@@ -84,7 +84,7 @@ public class DriftToStableStateStrategy implements ComputationStrategy
           + " within cutoff , last value was " + targetQuantityStart);
     }
     clearComputedValuesAndSetTargetValue(targetValue, allValues);
-    allValues.calculate();
+    allValues.calculate(source);
     Double sourceValue = allValues.getKnownValue(source);
     if (sourceValue == null)
     {

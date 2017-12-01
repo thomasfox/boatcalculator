@@ -237,11 +237,11 @@ public class SimpleValueSet implements ValueSet
   }
 
   @Override
-  public boolean calculateSinglePass(AllValues allValues)
+  public boolean calculateSinglePass(AllValues allValues, PhysicalQuantity wantedQuantity)
   {
     CombinedCalculator combinedCalculator = new CombinedCalculator(quantityRelations);
 
-    boolean changed = combinedCalculator.calculate(this);
+    boolean changed = combinedCalculator.calculate(this, wantedQuantity);
     return changed;
   }
 
