@@ -38,7 +38,7 @@ public class XfoilResultLoader
     return result;
   }
 
-  public void readPrelude(BufferedReader reader) throws IOException
+  void readPrelude(BufferedReader reader) throws IOException
   {
     String line = reader.readLine();
     if (!line.trim().isEmpty())
@@ -57,7 +57,7 @@ public class XfoilResultLoader
     }
   }
 
-  public String readTitle(BufferedReader reader) throws IOException
+  String readTitle(BufferedReader reader) throws IOException
   {
     String line = reader.readLine();
     if (line.trim().isEmpty())
@@ -73,7 +73,7 @@ public class XfoilResultLoader
     return result;
   }
 
-  public PhysicalQuantityValues readFixedQuantities(BufferedReader reader) throws IOException
+  PhysicalQuantityValues readFixedQuantities(BufferedReader reader) throws IOException
   {
     PhysicalQuantityValues result = new PhysicalQuantityValues();
 
@@ -135,7 +135,7 @@ public class XfoilResultLoader
     return result;
   }
 
-  public List<PhysicalQuantityValues> readPolar(BufferedReader reader) throws IOException
+  List<PhysicalQuantityValues> readPolar(BufferedReader reader) throws IOException
   {
     List<PhysicalQuantityValues> result = new ArrayList<>();
     String line = reader.readLine();
