@@ -20,6 +20,8 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
 
   private static int MAX_TRIES = 100;
 
+  private static int TRIAL_INTERVALS = 20;
+
   private final PhysicalQuantity equalQuantity1;
 
   private final String equalQuantity1SetId;
@@ -88,7 +90,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
 
   private double getCutoffTrialInterval()
   {
-    return (upperCutoff - lowerCutoff) / MAX_TRIES;
+    return (upperCutoff - lowerCutoff) / TRIAL_INTERVALS;
   }
 
   private boolean applyAndRecalculateWithPoints(
@@ -159,7 +161,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
 //    }
     if (estimatedTargetDifference == null)
     {
-      System.out.println("Could not calculate difference between "
+      log.info("Could not calculate difference between "
           + equalQuantity1 + " in " + equalQuantity1SetId
           + " and " + equalQuantity2 + " in " + equalQuantity2SetId
           + " for target Quantity " + targetQuantity + " with value " + estimatedTarget);
