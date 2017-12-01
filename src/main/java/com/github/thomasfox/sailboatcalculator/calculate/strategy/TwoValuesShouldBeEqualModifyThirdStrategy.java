@@ -56,7 +56,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
     allValuesForCalculation.moveCalculatedValuesToStartValues();
     CalculateDifferenceResult difference1 = null;
     CalculateDifferenceResult difference2 = null;
-    while (remainingTries > 0 && (difference1 == null || difference2 == null))
+    while (targetValue1 <= targetValue2 && (difference1 == null || difference2 == null))
     {
       if (difference1 == null)
       {
@@ -75,7 +75,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
         targetValue2 -= cutoffTrialInterval;
       }
     }
-    if (remainingTries == 0)
+    if (difference1 == null || difference2 == null)
     {
       return false;
     }
