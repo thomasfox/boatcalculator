@@ -227,6 +227,8 @@ public class CombinedCalculator
                     y1.getPhysicalQuantity(),
                     y,
                     name1 + " and " + name2); // todo set origin
+                changedInCurrentIteration = true;
+                changedOverall = true;
               }
             }
           }
