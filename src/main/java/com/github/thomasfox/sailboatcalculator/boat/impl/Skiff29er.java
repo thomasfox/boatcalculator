@@ -42,7 +42,7 @@ public class Skiff29er extends Dinghy
         PhysicalQuantity.DRIVING_FORCE, Rigg.ID,
         PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
-        0d, 25d));
+        0d, 10d));
     values.add(new IncreaseQuantityTillOtherReachesUpperLimitStrategy(
         PhysicalQuantity.LEVER_WEIGHT, Crew.ID, 1.8,
         PhysicalQuantity.LIFT_COEFFICIENT, Rigg.ID, 1.2)); // 1.8m: single person, CoG 91.5 cm from rim in trapeze; caMax=1.2: rough estimate
