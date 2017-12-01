@@ -37,6 +37,7 @@ public class CalculationStateDisplay extends JPanel implements StateChangedListe
       if (label == null)
       {
         label = new JLabel();
+        label.setMinimumSize(new Dimension(250,20));
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = labels.size();
         gridBagConstraints.weightx = 1;
