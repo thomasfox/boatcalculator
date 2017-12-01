@@ -19,4 +19,10 @@ public class PhysicalQuantityInSet
 
   @NonNull
   private final String valueSetId;
+
+  @Override
+  public String toString()
+  {
+    return valueSetId + ":" + physicalQuantity;
+  }
 }

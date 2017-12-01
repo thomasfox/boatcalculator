@@ -3,6 +3,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityInSet;
+import com.github.thomasfox.sailboatcalculator.progress.CalculationState;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -80,6 +81,7 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
       throw new IllegalStateException("Could not limit quantity " + limitedQuantity
           + " within cutoff , last value for " + allValues.getName(scannedQuantity) + " was " + scannedValue);
     }
+    CalculationState.set(scannedQuantity.toString(), scannedValue);
     clearComputedValuesAndSetScannedValue(scannedValue, allValues);
     log.info("Try value " + scannedValue + " for scannedQuantity " + scannedQuantity);
     allValues.calculate();

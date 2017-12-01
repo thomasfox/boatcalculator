@@ -29,9 +29,7 @@ public class SwingHelper
     gridBagConstraints.gridy = rowOffset;
     gridBagConstraints.ipady = 5;
     JSeparator jSeparator = new JSeparator();
-//    jSeparator.setBackground(Color.BLACK);
     container.add(jSeparator, gridBagConstraints);
     return jSeparator;
   }
-
 }

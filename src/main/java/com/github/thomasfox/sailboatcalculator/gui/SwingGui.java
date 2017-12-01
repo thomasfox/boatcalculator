@@ -27,7 +27,9 @@ import com.github.thomasfox.sailboatcalculator.boat.Boat;
 import com.github.thomasfox.sailboatcalculator.boat.impl.Skiff29er;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
+import com.github.thomasfox.sailboatcalculator.progress.CalculationState;
 
 public class SwingGui
 {
@@ -63,6 +65,7 @@ public class SwingGui
     addInputPanel();
     addSingleResultsPanel();
     addChartsPanel();
+    addCalculationStateDisplay();
 
     for (ValueSet valueSet : boat.getValueSets())
     {
@@ -140,6 +143,18 @@ public class SwingGui
     frame.add(scrollPane, gridBagConstraints);
   }
 
+  private void addCalculationStateDisplay()
+  {
+    CalculationStateDisplay calculationStateDisplay = new CalculationStateDisplay();
+    CalculationState.register(calculationStateDisplay);
+    GridBagConstraints gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridwidth = 3;
+    frame.add(calculationStateDisplay, gridBagConstraints);
+  }
+
   private void createPartInput(ValueSet valueSet)
   {
     PartInput partInput = new PartInput(valueSet);
@@ -166,8 +181,16 @@ public class SwingGui
 
   public void calculateButtonPressed(ActionEvent e)
   {
-    calculateAndRefreshDisplayedResults();
-    frame.pack();
+    Runnable calculateRunnable = new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        calculateAndRefreshDisplayedResults();
+        frame.pack();
+      }
+    };
+    new Thread(calculateRunnable).start();
   }
 
   private List<QuantityInput> getScannedInputs()
@@ -229,8 +252,16 @@ public class SwingGui
 
   public void scanButtonPressed(ActionEvent e)
   {
-    calculateAndRefreshDisplayedResultsScan();
-    frame.pack();
+    Runnable calculateRunnable = new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        calculateAndRefreshDisplayedResultsScan();
+        frame.pack();
+      }
+    };
+    new Thread(calculateRunnable).start();
   }
 
   private void calculateAndRefreshDisplayedResultsScan()
@@ -259,6 +290,7 @@ public class SwingGui
     for (int i = 0; i < scannedInput.getNumberOfScanSteps(); ++i)
     {
       double xValue = scannedInput.getScanStepValue(i);
+      CalculationState.set("scan:" + scannedInput.getQuantity().toString(), xValue);
       scannedInput.setValue(xValue);
       reinitalizeValueSetInputs();
       boat.calculate();
@@ -267,8 +299,12 @@ public class SwingGui
         for (QuantityOutput shownGraph : shownGraphsPart.getValue())
         {
           ValueSet valueSet = boat.getValueSetNonNull(shownGraphsPart.getKey().getId());
-          double yValue = valueSet.getKnownValue(shownGraph.getQuantity()).getValue();
-          quantitySeries.get(shownGraph).add(xValue, yValue);
+          PhysicalQuantityValue knownValue = valueSet.getKnownValue(shownGraph.getQuantity());
+          if (knownValue != null)
+          {
+            double yValue = knownValue.getValue();
+            quantitySeries.get(shownGraph).add(xValue, yValue);
+          }
         }
       }
     }

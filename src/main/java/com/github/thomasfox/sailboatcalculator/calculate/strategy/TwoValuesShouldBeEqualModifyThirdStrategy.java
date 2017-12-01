@@ -4,6 +4,7 @@ import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
+import com.github.thomasfox.sailboatcalculator.progress.CalculationState;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -176,6 +177,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
 
   private CalculateDifferenceResult calculateDifference(double targetValue, AllValues allValues)
   {
+    CalculationState.set(targetSetId + ":" + targetQuantity, targetValue);
     clearComputedValuesAndSetTargetValue(targetValue, allValues);
     allValues.calculate();
     ValueSet equalQuantity1Set = allValues.getValueSetNonNull(equalQuantity1SetId);

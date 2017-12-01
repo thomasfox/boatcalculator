@@ -4,6 +4,7 @@ import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityInSet;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetId;
+import com.github.thomasfox.sailboatcalculator.progress.CalculationState;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -75,6 +76,7 @@ public class DriftToStableStateStrategy implements ComputationStrategy
   private Double applyAndRecalculateSourceValue(int cutoff, AllValues allValues, double targetValue)
   {
     log.info("Trying value " + targetValue + " for drifting " + target);
+    CalculationState.set(target.toString(), targetValue);
     if (cutoff <= 0)
     {
       throw new IllegalStateException("Could not calculate "
