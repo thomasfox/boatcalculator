@@ -33,7 +33,7 @@ public class Skiff29er extends Dinghy
     crew.setStartValueNoOverwrite(PhysicalQuantity.PARASITIC_DRAG_COEFFICIENT, 0.5); // rough estimate
     rigg.setStartValueNoOverwrite(PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT, 3); // rough estimate based on COG of Sail plan
     boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.WEIGHT, 100d); // old boat, nominal weight is 90 kg
-    hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "29er_153kg.txt"), "29er Hull@153kg"));
+    hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "0kg.txt"), "Hull@0kg"));
     hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "29er_204kg.txt"), "29er Hull@204kg"));
     hull.setStartValueNoOverwrite(PhysicalQuantity.WING_AREA, 0.375); // 1,5m * 25cm)
     hull.setStartValueNoOverwrite(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT, 0.5); // rough estimate
