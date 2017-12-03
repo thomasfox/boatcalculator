@@ -37,6 +37,13 @@ public class CalculationState
     stateChanged();
   }
 
+  public static void clear()
+  {
+    stateMap.clear();
+    stateChanged();
+  }
+
+
   public static void stateChanged()
   {
     for (StateChangedListener listener : listeners)
