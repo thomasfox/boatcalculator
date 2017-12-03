@@ -23,4 +23,19 @@ public class PhysicalQuantityValues extends AbstractPhysicalQuantityValues<Physi
   {
     return new PhysicalQuantityValue(physicalQuantity, value);
   }
+
+  @Override
+  public String toString()
+  {
+    StringBuilder result = new StringBuilder();
+    for (PhysicalQuantityValue value : getAsList())
+    {
+      if (result.length() > 0)
+      {
+        result.append(", ");
+      }
+      result.append(value.getPhysicalQuantity()).append("=").append(value.getValue());
+    }
+    return result.toString();
+  }
 }

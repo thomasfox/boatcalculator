@@ -15,6 +15,7 @@ import com.github.thomasfox.sailboatcalculator.calculate.impl.AreaCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.BendingCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.BrakingForceCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.DrivingForceCalculator;
+import com.github.thomasfox.sailboatcalculator.calculate.impl.FroudeNumberCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.InducedDragCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.InducedDragCoefficientCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.LateralForceCalculator;
@@ -31,6 +32,8 @@ import com.github.thomasfox.sailboatcalculator.calculate.impl.TorqueCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.TotalDragCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.TotalDragCoefficientCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.VMGCalculator;
+import com.github.thomasfox.sailboatcalculator.calculate.impl.WaveMakingDragCalculator;
+import com.github.thomasfox.sailboatcalculator.calculate.impl.WaveMakingDragCoefficientCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.WingChordFromSecondMomentOfAreaCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
@@ -77,6 +80,9 @@ public class CombinedCalculator
     calculators.add(new VMGCalculator());
     calculators.add(new SailingAngleCalculator());
     calculators.add(new BrakingForceCalculator());
+    calculators.add(new FroudeNumberCalculator());
+    calculators.add(new WaveMakingDragCoefficientCalculator());
+    calculators.add(new WaveMakingDragCalculator());
 
     this.quantityRelationsList.addAll(quantityRelationsList);
   }
