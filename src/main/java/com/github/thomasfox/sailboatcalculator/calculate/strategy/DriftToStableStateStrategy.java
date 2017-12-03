@@ -76,13 +76,14 @@ public class DriftToStableStateStrategy implements ComputationStrategy
   private Double applyAndRecalculateSourceValue(int cutoff, AllValues allValues, double targetValue)
   {
     log.info("Trying value " + targetValue + " for drifting " + target);
-    CalculationState.set(target.toString(), targetValue);
     if (cutoff <= 0)
     {
-      throw new IllegalStateException("Could not calculate "
+      log.info("Could not calculate "
           + allValues.getName(target)
           + " within cutoff , last value was " + targetQuantityStart);
+      return null;
     }
+    CalculationState.set(target.toString(), targetValue);
     clearComputedValuesAndSetTargetValue(targetValue, allValues);
     allValues.calculate(source);
     Double sourceValue = allValues.getKnownValue(source);
