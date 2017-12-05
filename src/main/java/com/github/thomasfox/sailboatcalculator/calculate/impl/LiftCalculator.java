@@ -2,7 +2,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 /**
  * https://de.wikipedia.org/wiki/Dynamischer_Auftrieb
@@ -19,12 +19,12 @@ public class LiftCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(PhysicalQuantityValues input)
+  protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double liftCoefficient = input.getValue(PhysicalQuantity.LIFT_COEFFICIENT);
-    double wingArea = input.getValue(PhysicalQuantity.WING_AREA);
-    double velocity = input.getValue(PhysicalQuantity.VELOCITY);
-    double density = input.getValue(PhysicalQuantity.DENSITY);
+    double liftCoefficient = valueSet.getKnownValue(PhysicalQuantity.LIFT_COEFFICIENT).getValue();
+    double wingArea = valueSet.getKnownValue(PhysicalQuantity.WING_AREA).getValue();
+    double velocity = valueSet.getKnownValue(PhysicalQuantity.VELOCITY).getValue();
+    double density = valueSet.getKnownValue(PhysicalQuantity.DENSITY).getValue();
 
     double lift = liftCoefficient *  velocity * velocity * density * wingArea / 2;
     return lift;

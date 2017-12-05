@@ -14,6 +14,8 @@ import org.junit.rules.ExpectedException;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.SimpleValueSet;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 public class QuantityRelationsTest
 {
@@ -108,11 +110,11 @@ public class QuantityRelationsTest
     relatedValues.add(relatedValuesEntry);
     sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
 
-    PhysicalQuantityValues knownValues = new PhysicalQuantityValues();
-    knownValues.setValue(PhysicalQuantity.BENDING, 15d);
+    ValueSet valueSet = new SimpleValueSet("valueSetId", "valueSetName");
+    valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.BENDING, 15d));
 
     // act
-    PhysicalQuantityValues result = sut.getRelatedQuantityValues(knownValues);
+    PhysicalQuantityValues result = sut.getRelatedQuantityValues(valueSet);
 
     // assert
     assertThat(result.getContainedQuantities()).containsOnly(
@@ -138,11 +140,11 @@ public class QuantityRelationsTest
     relatedValues.add(relatedValuesEntry);
     sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
 
-    PhysicalQuantityValues knownValues = new PhysicalQuantityValues();
-    knownValues.setValue(PhysicalQuantity.BENDING, 15d);
+    ValueSet valueSet = new SimpleValueSet("valueSetId", "valueSetName");
+    valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.BENDING, 15d));
 
     // act
-    PhysicalQuantityValues result = sut.getRelatedQuantityValues(knownValues);
+    PhysicalQuantityValues result = sut.getRelatedQuantityValues(valueSet);
 
     // assert
     assertThat(result.getContainedQuantities()).isEmpty();
@@ -165,11 +167,11 @@ public class QuantityRelationsTest
     relatedValues.add(relatedValuesEntry);
     sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
 
-    PhysicalQuantityValues knownValues = new PhysicalQuantityValues();
-    knownValues.setValue(PhysicalQuantity.ANGLE_OF_ATTACK, 15d);
+    ValueSet valueSet = new SimpleValueSet("valueSetId", "valueSetName");
+    valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.ANGLE_OF_ATTACK, 15d));
 
     // act
-    PhysicalQuantityValues result = sut.getRelatedQuantityValues(knownValues);
+    PhysicalQuantityValues result = sut.getRelatedQuantityValues(valueSet);
 
     // assert
     assertThat(result.getContainedQuantities()).isEmpty();
@@ -188,13 +190,13 @@ public class QuantityRelationsTest
     relatedValues.add(relatedValuesEntry);
     sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
 
-    PhysicalQuantityValues knownValues = new PhysicalQuantityValues();
-    knownValues.setValue(PhysicalQuantity.BENDING, 15d);
-    knownValues.setValue(PhysicalQuantity.ANGLE_OF_ATTACK, 0d);
-    knownValues.setValue(PhysicalQuantity.FLOW_DIRECTION, 0d);
+    ValueSet valueSet = new SimpleValueSet("valueSetId", "valueSetName");
+    valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.BENDING, 15d));
+    valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.ANGLE_OF_ATTACK, 0d));
+    valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.FLOW_DIRECTION, 0d));
 
     // act
-    Set<PhysicalQuantity> result = sut.getAvailableQuantities(knownValues);
+    Set<PhysicalQuantity> result = sut.getAvailableQuantities(valueSet);
 
     // assert
     assertThat(result).containsOnly(
@@ -214,11 +216,11 @@ public class QuantityRelationsTest
     relatedValues.add(relatedValuesEntry);
     sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
 
-    PhysicalQuantityValues knownValues = new PhysicalQuantityValues();
-    knownValues.setValue(PhysicalQuantity.FLOW_DIRECTION, 0d);
+    ValueSet valueSet = new SimpleValueSet("valueSetId", "valueSetName");
+    valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.FLOW_DIRECTION, 0d));
 
     // act
-    Set<PhysicalQuantity> result = sut.getAvailableQuantities(knownValues);
+    Set<PhysicalQuantity> result = sut.getAvailableQuantities(valueSet);
 
     // assert
     assertThat(result).isEmpty();

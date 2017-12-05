@@ -83,7 +83,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
     if (changed)
     {
       double targetValue = allValuesForCalculation.getValueSetNonNull(targetSetId).getKnownValue(targetQuantity).getValue();
-      targetSet.setCalculatedValueNoOverwrite(targetQuantity, targetValue, getClass().getSimpleName());
+      targetSet.setCalculatedValueNoOverwrite(new PhysicalQuantityValue(targetQuantity, targetValue), getClass().getSimpleName());
     }
     return changed;
   }
@@ -210,7 +210,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
   {
     allValues.clearCalculatedValues();
     ValueSet targetSet = allValues.getValueSetNonNull(targetSetId);
-    targetSet.setCalculatedValueNoOverwrite(targetQuantity, targetValue, getClass().getSimpleName() + " trial Value");
+    targetSet.setCalculatedValueNoOverwrite(new PhysicalQuantityValue(targetQuantity, targetValue), getClass().getSimpleName() + " trial Value");
   }
 
   @ToString

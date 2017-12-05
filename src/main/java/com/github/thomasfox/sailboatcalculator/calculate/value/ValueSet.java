@@ -16,8 +16,6 @@ public interface ValueSet
 
   public String getName();
 
-  public PhysicalQuantityValues getKnownValues();
-
   public boolean isValueKnown(PhysicalQuantity toCheck);
 
   public PhysicalQuantityValue getKnownValue(PhysicalQuantity toGet);
@@ -28,27 +26,27 @@ public interface ValueSet
 
   public PhysicalQuantityValues getFixedValues();
 
-  public Double getFixedValue(PhysicalQuantity physicalQuantity);
+  public PhysicalQuantityValue getFixedValue(PhysicalQuantity physicalQuantity);
 
   public void setFixedValueNoOverwrite(PhysicalQuantityValue toSet);
 
   public PhysicalQuantityValues getStartValues();
 
-  public Double getStartValue(PhysicalQuantity physicalQuantity);
+  public PhysicalQuantityValue getStartValue(PhysicalQuantity physicalQuantity);
 
   public void setStartValueNoOverwrite(PhysicalQuantityValue toSet);
 
   public CalculatedPhysicalQuantityValues getCalculatedValues();
 
+  public CalculatedPhysicalQuantityValue getCalculatedValue(PhysicalQuantity physicalQuantity);
+
   public void setCalculatedValueNoOverwrite(
-      PhysicalQuantity physicalQuantity,
-      double value,
+      PhysicalQuantityValue calculatedValue,
       String calculatedBy,
       PhysicalQuantityValueWithSetId... calculatedFrom);
 
   public void setCalculatedValueNoOverwrite(
-      PhysicalQuantity physicalQuantity,
-      double value,
+      PhysicalQuantityValue calculatedValue,
       String calculatedBy,
       PhysicalQuantityValuesWithSetIdPerValue calculatedFrom);
 

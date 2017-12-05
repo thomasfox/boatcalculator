@@ -3,24 +3,22 @@ package com.github.thomasfox.sailboatcalculator.calculate.value;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-
 import lombok.Getter;
 
 public class CalculatedPhysicalQuantityValue extends PhysicalQuantityValue
 {
+  @Getter
   public PhysicalQuantityValuesWithSetIdPerValue calculatedFrom = new PhysicalQuantityValuesWithSetIdPerValue();
 
   @Getter
   public String calculatedBy;
 
   public CalculatedPhysicalQuantityValue(
-      PhysicalQuantity physicalQuantity,
-      double value,
+      PhysicalQuantityValue calculatedValue,
       String calculatedBy,
       PhysicalQuantityValueWithSetId... calculatedFrom)
   {
-    super(physicalQuantity, value);
+    super(calculatedValue);
     this.calculatedBy = calculatedBy;
     if (calculatedFrom != null)
     {
@@ -29,12 +27,11 @@ public class CalculatedPhysicalQuantityValue extends PhysicalQuantityValue
   }
 
   public CalculatedPhysicalQuantityValue(
-      PhysicalQuantity physicalQuantity,
-      double value,
+      PhysicalQuantityValue calculatedValue,
       String calculatedBy,
       PhysicalQuantityValuesWithSetIdPerValue calculatedFrom)
   {
-    super(physicalQuantity, value);
+    super(calculatedValue);
     this.calculatedBy = calculatedBy;
     if (calculatedFrom != null)
     {

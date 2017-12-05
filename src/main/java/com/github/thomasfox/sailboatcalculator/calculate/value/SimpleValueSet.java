@@ -57,15 +57,6 @@ public class SimpleValueSet implements ValueSet
   }
 
   @Override
-  public PhysicalQuantityValues getKnownValues()
-  {
-    PhysicalQuantityValues result = new PhysicalQuantityValues(startValues);
-    result.setValues(calculatedValues);
-    result.setValues(fixedValues);
-    return result;
-  }
-
-  @Override
   public PhysicalQuantityValueWithSetId[] getKnownValuesAsArray(Collection<PhysicalQuantity> toGet)
   {
     PhysicalQuantityValueWithSetId[] result = new PhysicalQuantityValueWithSetId[toGet.size()];
@@ -159,58 +150,61 @@ public class SimpleValueSet implements ValueSet
 
   @Override
   public void setCalculatedValueNoOverwrite(
-      PhysicalQuantity physicalQuantity,
-      double value,
+      PhysicalQuantityValue calculatedValue,
       String calculatedBy,
       PhysicalQuantityValueWithSetId... calculatedFrom)
   {
-    fixedValues.checkQuantityNotSetForWrite(physicalQuantity);
-    startValues.checkQuantityNotSetForWrite(physicalQuantity);
-    calculatedValues.setValueNoOverwrite(physicalQuantity, value, calculatedBy, calculatedFrom);
+    fixedValues.checkQuantityNotSetForWrite(calculatedValue.getPhysicalQuantity());
+    startValues.checkQuantityNotSetForWrite(calculatedValue.getPhysicalQuantity());
+    calculatedValues.setValueNoOverwrite(calculatedValue, calculatedBy, calculatedFrom);
   }
 
   @Override
   public void setCalculatedValueNoOverwrite(
-      PhysicalQuantity physicalQuantity,
-      double value,
+      PhysicalQuantityValue calculatedValue,
       String calculatedBy,
       PhysicalQuantityValuesWithSetIdPerValue calculatedFrom)
   {
-    fixedValues.checkQuantityNotSetForWrite(physicalQuantity);
-    startValues.checkQuantityNotSetForWrite(physicalQuantity);
-    calculatedValues.setValueNoOverwrite(physicalQuantity, value, calculatedBy, calculatedFrom);
+    fixedValues.checkQuantityNotSetForWrite(calculatedValue.getPhysicalQuantity());
+    startValues.checkQuantityNotSetForWrite(calculatedValue.getPhysicalQuantity());
+    calculatedValues.setValueNoOverwrite(calculatedValue, calculatedBy, calculatedFrom);
   }
 
   public void setCalculatedValue(
-      PhysicalQuantity physicalQuantity,
-      double value,
+      PhysicalQuantityValue calculatedValue,
       String calculatedBy,
       PhysicalQuantityValueWithSetId... calculatedFrom)
   {
-    calculatedValues.setValue(physicalQuantity, value, calculatedBy, calculatedFrom);
+    calculatedValues.setValue(calculatedValue, calculatedBy, calculatedFrom);
   }
 
   @Override
-  public Double getFixedValue(PhysicalQuantity physicalQuantity)
+  public PhysicalQuantityValue getFixedValue(PhysicalQuantity physicalQuantity)
   {
-    return fixedValues.getValue(physicalQuantity);
+    return fixedValues.getPhysicalQuantityValue(physicalQuantity);
   }
 
   @Override
-  public Double getStartValue(PhysicalQuantity physicalQuantity)
+  public PhysicalQuantityValue getStartValue(PhysicalQuantity physicalQuantity)
   {
-    return startValues.getValue(physicalQuantity);
+    return startValues.getPhysicalQuantityValue(physicalQuantity);
   }
 
-  public Double getCalculatedValue(PhysicalQuantity physicalQuantity)
+  @Override
+  public CalculatedPhysicalQuantityValue getCalculatedValue(PhysicalQuantity physicalQuantity)
   {
-    return calculatedValues.getValue(physicalQuantity);
+    return calculatedValues.getPhysicalQuantityValue(physicalQuantity);
   }
 
   @Override
   public void addToInput(PhysicalQuantity toAdd)
   {
     toInput.add(toAdd);
+  }
+
+  protected boolean removeToInput(PhysicalQuantity toRemove)
+  {
+    return toInput.remove(toRemove);
   }
 
   @Override

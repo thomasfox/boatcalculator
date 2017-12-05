@@ -2,7 +2,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 public class AreaCalculator extends Calculator
 {
@@ -14,10 +14,10 @@ public class AreaCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(PhysicalQuantityValues input)
+  protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double wingChord = input.getValue(PhysicalQuantity.WING_CHORD);
-    double wingSpan = input.getValue(PhysicalQuantity.WING_SPAN);
+    double wingChord = valueSet.getKnownValue(PhysicalQuantity.WING_CHORD).getValue();
+    double wingSpan = valueSet.getKnownValue(PhysicalQuantity.WING_SPAN).getValue();
 
     return wingChord*wingSpan;
   }

@@ -17,7 +17,6 @@ public class Dinghy extends Boat
 {
   protected SimpleValueSet crew = new Crew();
 
-
   public Dinghy()
   {
     addValueSet(crew);

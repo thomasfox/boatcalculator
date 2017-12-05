@@ -2,7 +2,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 public class ThicknessCalculator extends Calculator
 {
@@ -14,10 +14,10 @@ public class ThicknessCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(PhysicalQuantityValues input)
+  protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double wingDepth = input.getValue(PhysicalQuantity.WING_CHORD);
-    double relativeThickness = input.getValue(PhysicalQuantity.WING_RELATIVE_THICKNESS);
+    double wingDepth = valueSet.getKnownValue(PhysicalQuantity.WING_CHORD).getValue();
+    double relativeThickness = valueSet.getKnownValue(PhysicalQuantity.WING_RELATIVE_THICKNESS).getValue();
 
     return wingDepth*relativeThickness;
   }

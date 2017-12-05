@@ -2,7 +2,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 public class LateralForceCalculator extends Calculator
 {
@@ -15,11 +15,11 @@ public class LateralForceCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(PhysicalQuantityValues input)
+  protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double drag = input.getValue(PhysicalQuantity.TOTAL_DRAG);
-    double lift = input.getValue(PhysicalQuantity.LIFT);
-    double flowDirection = input.getValue(PhysicalQuantity.FLOW_DIRECTION);
+    double drag = valueSet.getKnownValue(PhysicalQuantity.TOTAL_DRAG).getValue();
+    double lift = valueSet.getKnownValue(PhysicalQuantity.LIFT).getValue();
+    double flowDirection = valueSet.getKnownValue(PhysicalQuantity.FLOW_DIRECTION).getValue();
 
     double lateralForce = lift * Math.cos(flowDirection * Math.PI / 180d) + drag * Math.sin(flowDirection * Math.PI / 180d);
     return lateralForce;

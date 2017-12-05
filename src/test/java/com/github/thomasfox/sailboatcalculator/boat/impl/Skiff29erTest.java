@@ -1,7 +1,9 @@
 package com.github.thomasfox.sailboatcalculator.boat.impl;
 
+import static  org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
+import org.assertj.core.data.Offset;
 import org.junit.Test;
 
 import com.github.thomasfox.sailboatcalculator.boat.valueset.BoatGlobalValues;
@@ -53,9 +55,12 @@ public class Skiff29erTest
     {
       System.out.println(value.getPhysicalQuantity() + "=" + value.getValue());
     }
-    if (sut.getValueSetNonNull(BoatGlobalValues.ID).getCalculatedValues().getPhysicalQuantityValue(PhysicalQuantity.VELOCITY) == null)
+
+    PhysicalQuantityValue globalBoatVelocity = sut.getValueSetNonNull(BoatGlobalValues.ID).getCalculatedValues().getPhysicalQuantityValue(PhysicalQuantity.VELOCITY);
+    if (globalBoatVelocity == null)
     {
       fail("Velocity could not be calculated");
     }
+    assertThat(globalBoatVelocity.getValue()).isCloseTo(1.06, Offset.offset(0.01));
   }
 }

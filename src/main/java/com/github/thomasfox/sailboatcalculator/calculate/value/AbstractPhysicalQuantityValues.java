@@ -114,7 +114,7 @@ public abstract class AbstractPhysicalQuantityValues<T extends PhysicalQuantityV
     values.add(createEntry(physicalQuantity, value));
   }
 
-  public PhysicalQuantityValue getPhysicalQuantityValue(PhysicalQuantity physicalQuantity)
+  public T getPhysicalQuantityValue(PhysicalQuantity physicalQuantity)
   {
     return values.stream()
         .filter(v -> v.getPhysicalQuantity().equals(physicalQuantity))
@@ -157,31 +157,6 @@ public abstract class AbstractPhysicalQuantityValues<T extends PhysicalQuantityV
     }
     return false;
   }
-
-  public boolean containedValueEquals(PhysicalQuantityValue toCheck)
-  {
-    for (PhysicalQuantityValue value : values)
-    {
-      if (value.getPhysicalQuantity().equals(toCheck.getPhysicalQuantity()))
-      {
-        return value.getValue() == toCheck.getValue();
-      }
-    }
-    return false;
-  }
-
-  public boolean allValuesAreContainedAndEquals(PhysicalQuantityValues toCheck)
-  {
-    for (PhysicalQuantityValue valueToCheck : toCheck.getAsList())
-    {
-      if (!containedValueEquals(valueToCheck))
-      {
-        return false;
-      }
-    }
-    return true;
-  }
-
 
   public void clear()
   {

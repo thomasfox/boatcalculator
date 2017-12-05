@@ -32,8 +32,9 @@ public class LeverSailDaggerboardStrategy implements ComputationStrategy
     if (riggCenterOfEffortHeight != null && daggerboardSpan != null && !leverSailDaggerboard.isValueKnown(PhysicalQuantity.LEVER_BETWEEN_FORCES))
     {
       leverSailDaggerboard.setCalculatedValueNoOverwrite(
-          PhysicalQuantity.LEVER_BETWEEN_FORCES,
-          riggCenterOfEffortHeight.getValue() + (daggerboardSpan.getValue() / 2),
+          new PhysicalQuantityValue(
+              PhysicalQuantity.LEVER_BETWEEN_FORCES,
+              riggCenterOfEffortHeight.getValue() + (daggerboardSpan.getValue() / 2)),
           rigg.getName() + ":" +  PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT.getDisplayName()
               + ", " + leverSailDaggerboard.getName() + ":" +  PhysicalQuantity.WING_SPAN.getDisplayName(),
           new PhysicalQuantityValueWithSetId(riggCenterOfEffortHeight, rigg.getId()),

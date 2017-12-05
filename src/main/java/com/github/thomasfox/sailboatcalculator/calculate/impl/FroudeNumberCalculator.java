@@ -2,7 +2,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 /**
  * https://de.wikipedia.org/wiki/Froude-Zahl
@@ -18,11 +18,11 @@ public class FroudeNumberCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(PhysicalQuantityValues input)
+  protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double submergenceDepth = input.getValue(PhysicalQuantity.SUBMERGENCE_DEPTH);
-    double velocity = input.getValue(PhysicalQuantity.VELOCITY);
-    double gravityAcceleration = input.getValue(PhysicalQuantity.GRAVITY_ACCELERATION);
+    double submergenceDepth = valueSet.getKnownValue(PhysicalQuantity.SUBMERGENCE_DEPTH).getValue();
+    double velocity = valueSet.getKnownValue(PhysicalQuantity.VELOCITY).getValue();
+    double gravityAcceleration = valueSet.getKnownValue(PhysicalQuantity.GRAVITY_ACCELERATION).getValue();
 
     double froudeNumber = velocity / Math.sqrt(submergenceDepth * gravityAcceleration);
     return froudeNumber;

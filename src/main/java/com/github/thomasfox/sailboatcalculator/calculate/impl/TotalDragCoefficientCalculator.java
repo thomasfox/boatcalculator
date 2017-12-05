@@ -2,7 +2,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 /**
  * https://de.wikipedia.org/wiki/Dynamischer_Auftrieb
@@ -18,11 +18,11 @@ public class TotalDragCoefficientCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(PhysicalQuantityValues input)
+  protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double profileDragCoefficient = input.getValue(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT);
-    double inducedDragCoefficient = input.getValue(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT);
-    double waveMakingDragCoefficient = input.getValue(PhysicalQuantity.WAVE_MAKING_DRAG_COEFFICIENT);
+    double profileDragCoefficient = valueSet.getKnownValue(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT).getValue();
+    double inducedDragCoefficient = valueSet.getKnownValue(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT).getValue();
+    double waveMakingDragCoefficient = valueSet.getKnownValue(PhysicalQuantity.WAVE_MAKING_DRAG_COEFFICIENT).getValue();
 
     double totalDragCoefficient = profileDragCoefficient + inducedDragCoefficient + waveMakingDragCoefficient;
     return totalDragCoefficient;

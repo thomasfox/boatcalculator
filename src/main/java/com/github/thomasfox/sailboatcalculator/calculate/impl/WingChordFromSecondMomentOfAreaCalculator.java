@@ -2,7 +2,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 /**
  * Berechnet die Flächentiefe aus dem normalisierten
@@ -19,10 +19,10 @@ public class WingChordFromSecondMomentOfAreaCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(PhysicalQuantityValues input)
+  protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double moment = input.getValue(PhysicalQuantity.SECOND_MOMENT_OF_AREA);
-    double mormalizedMoment = input.getValue(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA);
+    double moment = valueSet.getKnownValue(PhysicalQuantity.SECOND_MOMENT_OF_AREA).getValue();
+    double mormalizedMoment = valueSet.getKnownValue(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA).getValue();
 
     return Math.pow(moment/mormalizedMoment, 0.25);
   }

@@ -2,7 +2,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 public class BrakingForceCalculator extends Calculator
 {
@@ -14,10 +14,10 @@ public class BrakingForceCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(PhysicalQuantityValues input)
+  protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double drag = input.getValue(PhysicalQuantity.PARASITIC_DRAG);
-    double flowDirection = input.getValue(PhysicalQuantity.FLOW_DIRECTION);
+    double drag = valueSet.getKnownValue(PhysicalQuantity.PARASITIC_DRAG).getValue();
+    double flowDirection = valueSet.getKnownValue(PhysicalQuantity.FLOW_DIRECTION).getValue();
 
     double brakingForce = drag * Math.cos(flowDirection * Math.PI / 180d);
     return brakingForce;

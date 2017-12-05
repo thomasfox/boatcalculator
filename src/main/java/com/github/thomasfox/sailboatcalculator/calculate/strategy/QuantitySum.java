@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityInSet;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetId;
 import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
@@ -48,8 +49,7 @@ public class QuantitySum implements ComputationStrategy
     if (allSourceValuesAreKnown(allValues) && !targetSet.isValueKnown(target.getPhysicalQuantity()))
     {
       targetSet.setCalculatedValueNoOverwrite(
-          target.getPhysicalQuantity(),
-          getSumOfSourceValues(allValues),
+          new PhysicalQuantityValue(target.getPhysicalQuantity(), getSumOfSourceValues(allValues)),
           getCalculatedByDescription(allValues),
           getSourceValuesWithNames(allValues));
       return true;

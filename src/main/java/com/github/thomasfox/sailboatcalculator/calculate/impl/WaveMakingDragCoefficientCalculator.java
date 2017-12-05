@@ -2,7 +2,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 /**
  * https://de.wikipedia.org/wiki/Froude-Zahl
@@ -19,12 +19,12 @@ public class WaveMakingDragCoefficientCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(PhysicalQuantityValues input)
+  protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double froudeNumber = input.getValue(PhysicalQuantity.FROUDE_NUMBER_SUMBERGENCE);
-    double submergenceDepth = input.getValue(PhysicalQuantity.SUBMERGENCE_DEPTH);
-    double liftCoefficient = input.getValue(PhysicalQuantity.LIFT_COEFFICIENT);
-    double wingChord = input.getValue(PhysicalQuantity.WING_CHORD);
+    double froudeNumber = valueSet.getKnownValue(PhysicalQuantity.FROUDE_NUMBER_SUMBERGENCE).getValue();
+    double submergenceDepth = valueSet.getKnownValue(PhysicalQuantity.SUBMERGENCE_DEPTH).getValue();
+    double liftCoefficient = valueSet.getKnownValue(PhysicalQuantity.LIFT_COEFFICIENT).getValue();
+    double wingChord = valueSet.getKnownValue(PhysicalQuantity.WING_CHORD).getValue();
 
     double waveMakingDragCoefficient = 0.5*liftCoefficient*liftCoefficient
         *wingChord/submergenceDepth

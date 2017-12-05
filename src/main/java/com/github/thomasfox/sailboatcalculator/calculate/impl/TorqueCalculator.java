@@ -2,7 +2,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 public class TorqueCalculator extends Calculator
 {
@@ -14,10 +14,10 @@ public class TorqueCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(PhysicalQuantityValues input)
+  protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double lever = input.getValue(PhysicalQuantity.LEVER_BETWEEN_FORCES);
-    double force = input.getValue(PhysicalQuantity.FORCE);
+    double lever = valueSet.getKnownValue(PhysicalQuantity.LEVER_BETWEEN_FORCES).getValue();
+    double force = valueSet.getKnownValue(PhysicalQuantity.FORCE).getValue();
 
     double torque = lever * force;
     return torque;

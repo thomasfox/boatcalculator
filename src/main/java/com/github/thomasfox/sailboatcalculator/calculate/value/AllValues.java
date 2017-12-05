@@ -106,8 +106,7 @@ public class AllValues
   {
     ValueSet targetSet = getValueSetNonNull(target.getValueSetId());
     targetSet.setCalculatedValueNoOverwrite(
-        target.getPhysicalQuantity(),
-        value,
+        new PhysicalQuantityValue(target.getPhysicalQuantity(), value),
         calculatedBy,
         calculatedFrom);
   }

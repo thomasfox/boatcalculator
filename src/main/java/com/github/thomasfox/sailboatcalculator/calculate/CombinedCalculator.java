@@ -104,18 +104,17 @@ public class CombinedCalculator
           changedInCurrentIterationInCalculatorsOnly = false;
           for (Calculator calculator: calculators)
           {
-            if (calculator.isOutputPresent(valueSet.getKnownValues()))
+            if (calculator.isOutputPresent(valueSet))
             {
               continue;
             }
-            if (!calculator.areNeededQuantitiesPresent(valueSet.getKnownValues()))
+            if (!calculator.areNeededQuantitiesPresent(valueSet))
             {
               continue;
             }
-            double calculationResult = calculator.calculate(valueSet.getKnownValues());
+            double calculationResult = calculator.calculate(valueSet);
             valueSet.setCalculatedValueNoOverwrite(
-                calculator.getOutputQuantity(),
-                calculationResult,
+                new PhysicalQuantityValue(calculator.getOutputQuantity(), calculationResult),
                 calculator.getClass().getSimpleName(),
                 valueSet.getKnownValuesAsArray(calculator.getInputQuantities()));
             changedInCurrentIteration = true;
@@ -128,7 +127,7 @@ public class CombinedCalculator
         // from here use quantityRelationsList to calculate unknown values
 
         Map<PhysicalQuantityValues, QuantityRelations> fixedValueInterpolationCandidates
-            = getFixedValueInterpolationCandidates(valueSet.getKnownValues());
+            = getFixedValueInterpolationCandidates(valueSet);
         if (fixedValueInterpolationCandidates.isEmpty())
         {
           cutoff--;
@@ -206,13 +205,13 @@ public class CombinedCalculator
               if (x1 == null)
               {
                 x1 = interpolationRelationEntry.getKey().getValue();
-                yValues1 = interpolationRelationEntry.getValue().getRelatedQuantityValues(valueSet.getKnownValues());
+                yValues1 = interpolationRelationEntry.getValue().getRelatedQuantityValues(valueSet);
                 name1 = interpolationRelationEntry.getValue().getName();
               }
               else if (x2 == null)
               {
                 x2 = interpolationRelationEntry.getKey().getValue();
-                yValues2 = interpolationRelationEntry.getValue().getRelatedQuantityValues(valueSet.getKnownValues());
+                yValues2 = interpolationRelationEntry.getValue().getRelatedQuantityValues(valueSet);
                 name2 = interpolationRelationEntry.getValue().getName();
               }
               else
@@ -230,8 +229,7 @@ public class CombinedCalculator
                     new SimpleXYPoint(x1, y1.getValue()),
                     new SimpleXYPoint(x2, y2));
                 valueSet.setCalculatedValueNoOverwrite(
-                    y1.getPhysicalQuantity(),
-                    y,
+                    new PhysicalQuantityValue(y1.getPhysicalQuantity(), y),
                     name1 + " and " + name2); // todo set origin
                 changedInCurrentIteration = true;
                 changedOverall = true;
@@ -254,15 +252,14 @@ public class CombinedCalculator
   {
     boolean changed = false;
     Set<PhysicalQuantity> usedQuantities
-        = quantityRelations.getKnownRelatedQuantities(valueSet.getKnownValues());
+        = quantityRelations.getKnownRelatedQuantities(valueSet);
     usedQuantities.addAll(quantityRelations.getFixedQuantities().getContainedQuantities());
     PhysicalQuantityValues relatedQuantities
-        = quantityRelations.getRelatedQuantityValues(valueSet.getKnownValues());
+        = quantityRelations.getRelatedQuantityValues(valueSet);
     for (PhysicalQuantityValue physicalQuantityValue : relatedQuantities.getAsList())
     {
       valueSet.setCalculatedValueNoOverwrite(
-          physicalQuantityValue.getPhysicalQuantity(),
-          physicalQuantityValue.getValue(),
+          physicalQuantityValue,
           quantityRelations.getName(),
           new PhysicalQuantityValuesWithSetIdPerValue(valueSet.getKnownValues(usedQuantities), valueSet.getId()));
       changed = true;
@@ -275,22 +272,22 @@ public class CombinedCalculator
    * Nonmatching means that either the fixed value in the qunatity relations is not equal to the known value
    * or that the fixed value is not in the known values.
    *
-   * @param knownValues the known values.
+   * @param valueSet the values to operate on.
    *
    * @return the quantity relations with the minimal number of nonmatching fixed quantities, not null, may be empty.
    */
   private Map<PhysicalQuantityValues, QuantityRelations> getFixedValueInterpolationCandidates(
-      PhysicalQuantityValues knownValues)
+      ValueSet valueSet)
   {
     int minimalNumberOfNonmatchingQuantities = Integer.MAX_VALUE;
     Map<PhysicalQuantityValues, QuantityRelations> interpolationCandidates = new HashMap<>();
     for (QuantityRelations quantityRelations : quantityRelationsList)
     {
       PhysicalQuantityValues nonmatchingFixedValues
-          = quantityRelations.getNonmatchingFixedQuantities(knownValues);
+          = quantityRelations.getNonmatchingFixedQuantities(valueSet);
       int numberOfMissingQuantities = nonmatchingFixedValues.size();
       if (numberOfMissingQuantities <= minimalNumberOfNonmatchingQuantities
-          && quantityRelations.getUnknownRelatedQuantities(knownValues).size() > 0)
+          && quantityRelations.getUnknownRelatedQuantities(valueSet).size() > 0)
       {
         if (numberOfMissingQuantities < minimalNumberOfNonmatchingQuantities)
         {

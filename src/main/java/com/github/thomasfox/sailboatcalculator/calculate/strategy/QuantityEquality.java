@@ -37,8 +37,7 @@ public class QuantityEquality implements ComputationStrategy
     if (knownValue != null && !targetSet.isValueKnown(targetQuantity))
     {
       targetSet.setCalculatedValueNoOverwrite(
-          targetQuantity,
-          knownValue.getValue(),
+          new PhysicalQuantityValue(targetQuantity, knownValue.getValue()),
           sourceSet.getName() + ":" +  sourceQuantity.getDisplayName(),
           new PhysicalQuantityValueWithSetId(knownValue, sourceSet.getId()));
       return true;

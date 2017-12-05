@@ -2,7 +2,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 public class SailingAngleCalculator extends Calculator
 {
@@ -14,10 +14,11 @@ public class SailingAngleCalculator extends Calculator
   }
 
   @Override
-  protected double calculateWithoutChecks(PhysicalQuantityValues input)
+  protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double pointingAngle = input.getValue(PhysicalQuantity.POINTING_ANGLE);
-    double driftAngle = input.getValue(PhysicalQuantity.DRIFT_ANGLE);
+    double pointingAngle = valueSet.getKnownValue(PhysicalQuantity.POINTING_ANGLE).getValue();
+    double driftAngle = valueSet.getKnownValue(PhysicalQuantity.DRIFT_ANGLE).getValue();
+
     if (pointingAngle < 0 || pointingAngle > 360)
     {
       throw new IllegalArgumentException("invalid pointing angle " + pointingAngle

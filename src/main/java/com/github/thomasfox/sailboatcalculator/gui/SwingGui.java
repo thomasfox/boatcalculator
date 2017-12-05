@@ -24,7 +24,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import com.github.thomasfox.sailboatcalculator.boat.Boat;
-import com.github.thomasfox.sailboatcalculator.boat.impl.Skiff29er;
+import com.github.thomasfox.sailboatcalculator.boat.impl.Flying29er;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
@@ -55,7 +55,7 @@ public class SwingGui
 
   private final JButton scanButton;
 
-  private final Boat boat = new Skiff29er();
+  private final Boat boat = new Flying29er();
 
   public SwingGui()
   {
@@ -163,7 +163,15 @@ public class SwingGui
     {
       if (valueSet.getFixedValue(physicalQuantity) == null)
       {
-        partInput.add(new QuantityInput(physicalQuantity, valueSet.getStartValue(physicalQuantity)));
+        PhysicalQuantityValue startValue = valueSet.getStartValue(physicalQuantity);
+        if (startValue == null)
+        {
+          partInput.add(new QuantityInput(physicalQuantity));
+        }
+        else
+        {
+          partInput.add(new QuantityInput(startValue));
+        }
       }
     }
   }
@@ -222,6 +230,7 @@ public class SwingGui
     clearResult();
     reinitalizeValueSetInputs();
     boat.calculate();
+    CalculationState.clear();
 
     QuantityOutput.Mode mode;
     List<QuantityInput> scannedInputs = getScannedInputs();
@@ -308,6 +317,7 @@ public class SwingGui
         }
       }
     }
+    CalculationState.clear();
     int row = 0;
     for (Map.Entry<QuantityOutput, XYSeries> seriesEntry : quantitySeries.entrySet())
     {

@@ -9,6 +9,7 @@ import java.util.Set;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 import com.github.thomasfox.sailboatcalculator.interpolate.Interpolator.TwoValues;
 
 import lombok.Builder;
@@ -89,19 +90,19 @@ public class QuantityRelations
     return Collections.unmodifiableSet(relatedQuantityValues.get(0).getContainedQuantities());
   }
 
-  public PhysicalQuantityValues getRelatedQuantityValues(PhysicalQuantityValues knownValues)
+  public PhysicalQuantityValues getRelatedQuantityValues(ValueSet valueSet)
   {
     PhysicalQuantityValues result = new PhysicalQuantityValues();
-    Set<PhysicalQuantity> providedQuantities = getKnownRelatedQuantities(knownValues);
+    Set<PhysicalQuantity> providedQuantities = getKnownRelatedQuantities(valueSet);
     if (providedQuantities.isEmpty())
     {
       return result;
     }
-    Set<PhysicalQuantity> availableQuantities = getAvailableQuantities(knownValues);
+    Set<PhysicalQuantity> availableQuantities = getAvailableQuantities(valueSet);
     PhysicalQuantity providedQuantity = providedQuantities.iterator().next();
     // TODO check that all other provided quantities match
 
-    double xValue = knownValues.getValue(providedQuantity);
+    double xValue = valueSet.getKnownValue(providedQuantity).getValue();
     TwoValues<PhysicalQuantityValues> enclosingPoints;
     try
     {
@@ -110,7 +111,8 @@ public class QuantityRelations
     catch (InterpolatorException e)
     {
       log.info("Could not calculate " + availableQuantities
-      + " for value " + knownValues.getValue(providedQuantity) + " of " + providedQuantity.getDisplayName()
+      + " for value " + valueSet.getKnownValue(providedQuantity).getValue()
+      + " of " + providedQuantity.getDisplayName()
       + " from quantityRelations " + name
       + " with fixed quantities " + printFixedQuantities()
       + " reason is " + e.getMessage());
@@ -154,13 +156,13 @@ public class QuantityRelations
     return true;
   }
 
-  public Set<PhysicalQuantity> getAvailableQuantities(PhysicalQuantityValues knownValues)
+  public Set<PhysicalQuantity> getAvailableQuantities(ValueSet valueSet)
   {
     Set<PhysicalQuantity> result = new HashSet<>();
     Set<PhysicalQuantity> relatedQuantities = getRelatedQuantities();
     for (PhysicalQuantity relatedQuantity : relatedQuantities)
     {
-      if (!knownValues.containsQuantity(relatedQuantity))
+      if (!valueSet.isValueKnown(relatedQuantity))
       {
         result.add(relatedQuantity);
       }
@@ -173,12 +175,12 @@ public class QuantityRelations
     return result;
   }
 
-  public Set<PhysicalQuantity> getKnownRelatedQuantities(PhysicalQuantityValues knownValues)
+  public Set<PhysicalQuantity> getKnownRelatedQuantities(ValueSet valueSet)
   {
     Set<PhysicalQuantity> result = new HashSet<>();
     for (PhysicalQuantity relatedQuantity : getRelatedQuantities())
     {
-      if (knownValues.containsQuantity(relatedQuantity))
+      if (valueSet.isValueKnown(relatedQuantity))
       {
         result.add(relatedQuantity);
       }
@@ -186,12 +188,12 @@ public class QuantityRelations
     return result;
   }
 
-  public Set<PhysicalQuantity> getUnknownRelatedQuantities(PhysicalQuantityValues knownValues)
+  public Set<PhysicalQuantity> getUnknownRelatedQuantities(ValueSet valueSet)
   {
     Set<PhysicalQuantity> result = new HashSet<>();
     for (PhysicalQuantity relatedQuantity : getRelatedQuantities())
     {
-      if (!knownValues.containsQuantity(relatedQuantity))
+      if (!valueSet.isValueKnown(relatedQuantity))
       {
         result.add(relatedQuantity);
       }
@@ -199,12 +201,12 @@ public class QuantityRelations
     return result;
   }
 
-  public PhysicalQuantityValues getNonmatchingFixedQuantities(PhysicalQuantityValues knownValues)
+  public PhysicalQuantityValues getNonmatchingFixedQuantities(ValueSet valueSet)
   {
     PhysicalQuantityValues result = new PhysicalQuantityValues();
     for (PhysicalQuantityValue fixedQuantityValue : fixedQuantities.getAsList())
     {
-      if (!knownValues.containedValueEquals(fixedQuantityValue))
+      if (!fixedQuantityValue.equals(valueSet.getKnownValue(fixedQuantityValue.getPhysicalQuantity())))
       {
         result.setValue(fixedQuantityValue);
       }

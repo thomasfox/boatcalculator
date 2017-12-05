@@ -9,7 +9,10 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.iterate.DoubleIntervalIterator;
+
+import lombok.NonNull;
 
 public class QuantityInput
 {
@@ -25,12 +28,18 @@ public class QuantityInput
 
   private final PhysicalQuantity quantity;
 
-  public QuantityInput(PhysicalQuantity quantity, Double value)
+  public QuantityInput(@NonNull PhysicalQuantity quantity)
   {
     this.quantity = quantity;
-    setValue(value);
+    setValue(null);
     label.setText(quantity.getDisplayNameIncludingUnit());
     scanNumberOfStepsField.setText("20");
+  }
+
+  public QuantityInput(PhysicalQuantityValue toInputStartValue)
+  {
+    this(toInputStartValue.getPhysicalQuantity());
+    setValue(toInputStartValue.getValue());
   }
 
   public void addToContainerInRow(Container container, int row)

@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,18 +32,18 @@ public abstract class Calculator
     return outputQuantity;
   }
 
-  public double calculate(PhysicalQuantityValues input)
+  public double calculate(ValueSet input)
   {
     checkNeededQuantitiesArePresent(input);
     checkQuantitiesAreInValidRanges(input);
     return calculateWithoutChecks(input);
   }
 
-  public boolean areNeededQuantitiesPresent(PhysicalQuantityValues input)
+  public boolean areNeededQuantitiesPresent(ValueSet valueSet)
   {
     for (PhysicalQuantity inputQuantity : inputQuantities)
     {
-      if (input.getPhysicalQuantityValue(inputQuantity) == null)
+      if (!valueSet.isValueKnown(inputQuantity))
       {
         log.debug("Calculator " + getClass().getName() + " misses input quantity " + inputQuantity);
         return false;
@@ -52,26 +52,26 @@ public abstract class Calculator
     return true;
   }
 
-  public boolean isOutputPresent(PhysicalQuantityValues input)
+  public boolean isOutputPresent(ValueSet valueSet)
   {
-    return (input.getPhysicalQuantityValue(outputQuantity) != null);
+    return (valueSet.isValueKnown(outputQuantity));
   }
 
-  protected void checkNeededQuantitiesArePresent(PhysicalQuantityValues input)
+  protected void checkNeededQuantitiesArePresent(ValueSet valueSet)
   {
     for (PhysicalQuantity inputQuantity : inputQuantities)
     {
-      if (input.getPhysicalQuantityValue(inputQuantity) == null)
+      if (!valueSet.isValueKnown(inputQuantity))
       {
         throw new QuantityNotPresentException(inputQuantity);
       }
     }
   }
 
-  protected void checkQuantitiesAreInValidRanges(PhysicalQuantityValues input)
+  protected void checkQuantitiesAreInValidRanges(ValueSet valueSet)
   {
     // do nothing per default
   }
 
-  protected abstract double calculateWithoutChecks(PhysicalQuantityValues input);
+  protected abstract double calculateWithoutChecks(ValueSet valueSet);
 }
