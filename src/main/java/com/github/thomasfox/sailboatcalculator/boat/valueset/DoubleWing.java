@@ -10,6 +10,7 @@ import com.github.thomasfox.sailboatcalculator.calculate.QuantityNotPresentExcep
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
 import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.calculate.value.HasProfile;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetId;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
@@ -17,20 +18,36 @@ import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityV
 import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
-@AllArgsConstructor
-public class DoublePart implements ValueSet
+public class DoubleWing implements ValueSet, HasProfile
 {
-  private @NonNull
-  final ValueSet singleComponent;
+  @NonNull
+  private final ValueSet singleWing;
 
-  private @NonNull
-  final String id;
+  @NonNull
+  private final String id;
 
-  private @NonNull
-  final String name;
+  @NonNull
+  private final String name;
+
+  private final String profileName;
+
+  public DoubleWing(Wing singleWing, String id, String name)
+  {
+    this.singleWing = singleWing;
+    this.id = id;
+    this.name = name;
+    this.profileName = singleWing.getProfileName();
+  }
+
+  private DoubleWing(ValueSet singleWing, String id, String name, String profileName)
+  {
+    this.singleWing = singleWing;
+    this.id = id;
+    this.name = name;
+    this.profileName = profileName;
+  }
 
   @Override
   public String getId()
@@ -47,13 +64,13 @@ public class DoublePart implements ValueSet
   @Override
   public boolean isValueKnown(PhysicalQuantity toCheck)
   {
-    return singleComponent.isValueKnown(toCheck);
+    return toCheck.getAdditive() != null && singleWing.isValueKnown(toCheck);
   }
 
   @Override
   public PhysicalQuantityValue getKnownValue(PhysicalQuantity toGet)
   {
-    PhysicalQuantityValue singleComponentValue = singleComponent.getKnownValue(toGet);
+    PhysicalQuantityValue singleComponentValue = singleWing.getKnownValue(toGet);
     return convertFromSingleComponentValue(singleComponentValue);
   }
 
@@ -84,13 +101,13 @@ public class DoublePart implements ValueSet
   @Override
   public PhysicalQuantityValues getFixedValues()
   {
-    return getAsPhysicalQuantityValuesValues(singleComponent.getFixedValues().getContainedQuantities(), this::getFixedValue);
+    return getAsPhysicalQuantityValuesValues(singleWing.getFixedValues().getContainedQuantities(), this::getFixedValue);
   }
 
   @Override
   public PhysicalQuantityValue getFixedValue(PhysicalQuantity physicalQuantity)
   {
-    PhysicalQuantityValue singleComponentValue = singleComponent.getFixedValue(physicalQuantity);
+    PhysicalQuantityValue singleComponentValue = singleWing.getFixedValue(physicalQuantity);
     return convertFromSingleComponentValue(singleComponentValue);
   }
 
@@ -98,19 +115,19 @@ public class DoublePart implements ValueSet
   public void setFixedValueNoOverwrite(PhysicalQuantityValue toSet)
   {
     PhysicalQuantityValue singleComponentValue = convertToSingleComponentValue(toSet);
-    singleComponent.setFixedValueNoOverwrite(singleComponentValue);
+    singleWing.setFixedValueNoOverwrite(singleComponentValue);
   }
 
   @Override
   public PhysicalQuantityValues getStartValues()
   {
-    return getAsPhysicalQuantityValuesValues(singleComponent.getStartValues().getContainedQuantities(), this::getStartValue);
+    return getAsPhysicalQuantityValuesValues(singleWing.getStartValues().getContainedQuantities(), this::getStartValue);
   }
 
   @Override
   public PhysicalQuantityValue getStartValue(PhysicalQuantity physicalQuantity)
   {
-    PhysicalQuantityValue singleComponentValue = singleComponent.getStartValue(physicalQuantity);
+    PhysicalQuantityValue singleComponentValue = singleWing.getStartValue(physicalQuantity);
     return convertFromSingleComponentValue(singleComponentValue);
   }
 
@@ -118,14 +135,14 @@ public class DoublePart implements ValueSet
   public void setStartValueNoOverwrite(PhysicalQuantityValue toSet)
   {
     PhysicalQuantityValue singleComponentValue = convertToSingleComponentValue(toSet);
-    singleComponent.setStartValueNoOverwrite(singleComponentValue);
+    singleWing.setStartValueNoOverwrite(singleComponentValue);
   }
 
   @Override
   public CalculatedPhysicalQuantityValues getCalculatedValues()
   {
      PhysicalQuantityValues physicalQuantityValues = getAsPhysicalQuantityValuesValues(
-         singleComponent.getCalculatedValues().getContainedQuantities(),
+         singleWing.getCalculatedValues().getContainedQuantities(),
          this::getCalculatedValue);
 
      CalculatedPhysicalQuantityValues result = new CalculatedPhysicalQuantityValues();
@@ -139,7 +156,7 @@ public class DoublePart implements ValueSet
   @Override
   public CalculatedPhysicalQuantityValue getCalculatedValue(PhysicalQuantity physicalQuantity)
   {
-    CalculatedPhysicalQuantityValue singleComponentValue = singleComponent.getCalculatedValue(physicalQuantity);
+    CalculatedPhysicalQuantityValue singleComponentValue = singleWing.getCalculatedValue(physicalQuantity);
     PhysicalQuantityValue doubleComponentValue = convertFromSingleComponentValue(singleComponentValue);
     return new CalculatedPhysicalQuantityValue(doubleComponentValue, singleComponentValue.getCalculatedBy(), singleComponentValue.getCalculatedFrom());
   }
@@ -151,7 +168,7 @@ public class DoublePart implements ValueSet
       PhysicalQuantityValueWithSetId... calculatedFrom)
   {
     PhysicalQuantityValue singleComponentValue = convertToSingleComponentValue(calculatedValue);
-    singleComponent.setCalculatedValueNoOverwrite(singleComponentValue, calculatedBy, calculatedFrom);
+    singleWing.setCalculatedValueNoOverwrite(singleComponentValue, calculatedBy, calculatedFrom);
   }
 
   @Override
@@ -161,63 +178,63 @@ public class DoublePart implements ValueSet
       PhysicalQuantityValuesWithSetIdPerValue calculatedFrom)
   {
     PhysicalQuantityValue singleComponentValue = convertToSingleComponentValue(calculatedValue);
-    singleComponent.setCalculatedValueNoOverwrite(singleComponentValue, calculatedBy, calculatedFrom);
+    singleWing.setCalculatedValueNoOverwrite(singleComponentValue, calculatedBy, calculatedFrom);
   }
 
   @Override
   public void addToInput(PhysicalQuantity toAdd)
   {
-    singleComponent.addToInput(toAdd);
+    singleWing.addToInput(toAdd);
   }
 
   @Override
   public Set<PhysicalQuantity> getToInput()
   {
-    return singleComponent.getToInput();
+    return singleWing.getToInput();
   }
 
   @Override
   public void addHiddenOutput(PhysicalQuantity toAdd)
   {
-    singleComponent.addHiddenOutput(toAdd);
+    singleWing.addHiddenOutput(toAdd);
   }
 
   @Override
   public Set<PhysicalQuantity> getHiddenOutputs()
   {
-    return singleComponent.getHiddenOutputs();
+    return singleWing.getHiddenOutputs();
   }
 
   @Override
   public void moveCalculatedValuesToStartValues()
   {
-    singleComponent.moveCalculatedValuesToStartValues();
+    singleWing.moveCalculatedValuesToStartValues();
   }
 
   @Override
   public void clearCalculatedValues()
   {
-    singleComponent.clearCalculatedValues();
+    singleWing.clearCalculatedValues();
   }
 
   @Override
   public void clearStartValues()
   {
-    singleComponent.clearStartValues();
+    singleWing.clearStartValues();
   }
 
   @Override
   public boolean calculateSinglePass(AllValues allValues,
       PhysicalQuantity wantedQuantity)
   {
-    return singleComponent.calculateSinglePass(allValues, wantedQuantity);
+    return singleWing.calculateSinglePass(allValues, wantedQuantity);
   }
 
   @Override
   public List<QuantityRelations> getQuantityRelations()
   {
     // TODO this is unclean
-    return singleComponent.getQuantityRelations();
+    return singleWing.getQuantityRelations();
   }
 
   private PhysicalQuantityValue convertFromSingleComponentValue(
@@ -279,5 +296,17 @@ public class DoublePart implements ValueSet
       result.setValueNoOverwrite(doubleValue);
     }
     return result;
+  }
+
+  @Override
+  public DoubleWing clone()
+  {
+    return new DoubleWing(singleWing.clone(), id, name, profileName);
+  }
+
+  @Override
+  public String getProfileName()
+  {
+    return profileName;
   }
 }

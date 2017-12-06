@@ -245,4 +245,10 @@ public class SimpleValueSet implements ValueSet
     startValues.setValues(calculatedValues);
     calculatedValues.clear();
   }
+
+  @Override
+  public SimpleValueSet clone()
+  {
+    return new SimpleValueSet(this);
+  }
 }

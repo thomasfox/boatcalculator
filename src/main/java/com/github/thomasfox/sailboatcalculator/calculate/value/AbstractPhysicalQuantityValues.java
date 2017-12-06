@@ -26,8 +26,6 @@ public abstract class AbstractPhysicalQuantityValues<T extends PhysicalQuantityV
    */
   private final List<T> values = new ArrayList<>();
 
-  protected abstract T copy(T toCopy);
-
   protected abstract T createEntry(PhysicalQuantity physicalQuantity, Double value);
 
   public AbstractPhysicalQuantityValues(AbstractPhysicalQuantityValues<? extends T> toCopy)
@@ -104,9 +102,10 @@ public abstract class AbstractPhysicalQuantityValues<T extends PhysicalQuantityV
     }
   }
 
+  @SuppressWarnings("unchecked")
   private boolean addValue(T toAdd)
   {
-    return values.add(copy(toAdd));
+    return values.add((T) toAdd.clone());
   }
 
   private void addValue(PhysicalQuantity physicalQuantity, Double value)

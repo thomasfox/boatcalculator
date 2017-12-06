@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.github.thomasfox.sailboatcalculator.boat.valueset.BoatGlobalValues;
 import com.github.thomasfox.sailboatcalculator.boat.valueset.Crew;
+import com.github.thomasfox.sailboatcalculator.boat.valueset.DaggerboardOrKeel;
 import com.github.thomasfox.sailboatcalculator.boat.valueset.Hull;
 import com.github.thomasfox.sailboatcalculator.boat.valueset.Rigg;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
@@ -21,9 +22,9 @@ public class Skiff29er extends Dinghy
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.223d);
     rudder.setStartValueNoOverwrite(PhysicalQuantity.LIFT, 0d); // assuming negligible force on the rudder for no heel
     rudder.setProfileName("naca0010");
-    daggerboardOrKeel.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 0.985d); // full blade span 118.5 cm, estimated box size 20 cm
-    daggerboardOrKeel.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.32d);
-    daggerboardOrKeel.setProfileName("naca0010");
+    ((DaggerboardOrKeel) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 0.985d); // full blade span 118.5 cm, estimated box size 20 cm
+    ((DaggerboardOrKeel) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.32d);
+    ((DaggerboardOrKeel) daggerboardOrKeel).setProfileName("naca0010");
     rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 6d); // rough estimate
     rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_AREA, 12d); // no gennaker taken into account
     rigg.setStartValueNoOverwrite(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, 0.18); // estimate from: https://en.wikipedia.org/wiki/Forces_on_sails

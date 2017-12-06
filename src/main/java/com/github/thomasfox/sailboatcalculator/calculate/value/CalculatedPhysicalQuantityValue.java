@@ -50,4 +50,11 @@ public class CalculatedPhysicalQuantityValue extends PhysicalQuantityValue
   {
     return Collections.unmodifiableList(calculatedFrom.getAsList());
   }
+
+
+  @Override
+  public CalculatedPhysicalQuantityValue clone()
+  {
+    return new CalculatedPhysicalQuantityValue(this);
+  }
 }

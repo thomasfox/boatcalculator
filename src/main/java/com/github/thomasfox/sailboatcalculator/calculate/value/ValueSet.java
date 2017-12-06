@@ -10,7 +10,7 @@ import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 /**
  * A set of physical Quantities.
  */
-public interface ValueSet
+public interface ValueSet extends Cloneable
 {
   public String getId();
 
@@ -67,4 +67,6 @@ public interface ValueSet
   public boolean calculateSinglePass(AllValues allValues, PhysicalQuantity wantedQuantity);
 
   public List<QuantityRelations> getQuantityRelations();
+
+  public ValueSet clone();
 }

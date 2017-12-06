@@ -14,7 +14,6 @@ import com.github.thomasfox.sailboatcalculator.calculate.strategy.DriftToStableS
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.LeverSailDaggerboardStrategy;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.SimpleValueSet;
 import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 
 public abstract class Boat
@@ -27,7 +26,7 @@ public abstract class Boat
 
   protected Hull hull = new Hull();
 
-  protected DaggerboardOrKeel daggerboardOrKeel = new DaggerboardOrKeel();
+  protected ValueSet daggerboardOrKeel = new DaggerboardOrKeel();
 
   protected Rudder rudder = new Rudder();
 
@@ -35,12 +34,12 @@ public abstract class Boat
 
   public Boat()
   {
-    addValueSet(hull);
+    addValueSet(boatGlobalValues);
     addValueSet(rigg);
+    addValueSet(leverSailDaggerboard);
+    addValueSet(hull);
     addValueSet(daggerboardOrKeel);
     addValueSet(rudder);
-    addValueSet(leverSailDaggerboard);
-    addValueSet(boatGlobalValues);
 
     hull.addHiddenOutput(PhysicalQuantity.VELOCITY);
     daggerboardOrKeel.addHiddenOutput(PhysicalQuantity.VELOCITY);
@@ -69,9 +68,14 @@ public abstract class Boat
     return values.getValueSetNonNull(name);
   }
 
-  public void addValueSet(SimpleValueSet toAdd)
+  public void addValueSet(ValueSet toAdd)
   {
     values.add(toAdd);
+  }
+
+  public boolean removeValueSet(ValueSet toRemove)
+  {
+    return values.remove(toRemove);
   }
 
   public void calculate()

@@ -29,4 +29,9 @@ public class PhysicalQuantityValueWithSetId extends PhysicalQuantityValue
     this.setId = toCopy.setId;
   }
 
+  @Override
+  public PhysicalQuantityValueWithSetId clone()
+  {
+    return new PhysicalQuantityValueWithSetId(this);
+  }
 }

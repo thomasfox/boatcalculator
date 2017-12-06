@@ -23,12 +23,6 @@ public class PhysicalQuantityValuesWithSetIdPerValue extends AbstractPhysicalQua
   }
 
   @Override
-  protected PhysicalQuantityValueWithSetId copy(PhysicalQuantityValueWithSetId toCopy)
-  {
-    return new PhysicalQuantityValueWithSetId(toCopy);
-  }
-
-  @Override
   protected PhysicalQuantityValueWithSetId createEntry(PhysicalQuantity physicalQuantity, Double value)
   {
     return new PhysicalQuantityValueWithSetId(physicalQuantity, value, null);

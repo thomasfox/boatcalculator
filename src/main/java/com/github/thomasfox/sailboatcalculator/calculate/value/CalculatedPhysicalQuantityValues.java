@@ -13,12 +13,6 @@ public class CalculatedPhysicalQuantityValues extends AbstractPhysicalQuantityVa
   }
 
   @Override
-  protected CalculatedPhysicalQuantityValue copy(CalculatedPhysicalQuantityValue toCopy)
-  {
-    return new CalculatedPhysicalQuantityValue(toCopy);
-  }
-
-  @Override
   protected CalculatedPhysicalQuantityValue createEntry(PhysicalQuantity physicalQuantity, Double value)
   {
     return new CalculatedPhysicalQuantityValue(new PhysicalQuantityValue(physicalQuantity, value), null, (PhysicalQuantityValueWithSetId[]) null);

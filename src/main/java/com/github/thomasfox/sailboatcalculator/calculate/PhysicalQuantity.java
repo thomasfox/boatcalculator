@@ -18,11 +18,11 @@ public enum PhysicalQuantity
   DRIVING_FORCE("Vortriebskraft", "N", true),
   BRAKING_FORCE("Bremskraft", "N", true),
   REYNOLDS_NUMBER("Reynoldszahl", null, false),
-  WING_SPAN("Spannweite des Flügels", "m", null, "quer zur Profilierung, von einem Ende zum anderen"),
+  WING_SPAN("Spannweite des Flügels", "m", false, "quer zur Profilierung, von einem Ende zum anderen"),
   WING_AREA("Fläche des Flügels", "m^2", true),
-  WING_CHORD("Tiefe des Flügels", "m", null, "quer zur Spannweite, gleich über die geamte Spannweite"),
-  WING_THICKNESS("Dicke des Flügels", "m", null, "Dicke an der dicksten Stelle"),
-  WING_RELATIVE_THICKNESS("Relative Dicke des Flügels", null, null, "Dicke an der dicksten Stelle geteilt durch Profiltiefe"),
+  WING_CHORD("Tiefe des Flügels", "m", false, "quer zur Spannweite, gleich über die geamte Spannweite"),
+  WING_THICKNESS("Dicke des Flügels", "m", false, "Dicke an der dicksten Stelle"),
+  WING_RELATIVE_THICKNESS("Relative Dicke des Flügels", null, false, "Dicke an der dicksten Stelle geteilt durch Profiltiefe"),
   VELOCITY("Geschwindigkeit", "m/s", false, "Geschwindigkeit der Strömung"),
   FLOW_DIRECTION("Winkel der Strömung", "°", false, "Winkel der Strömung zur Bootsachse"),
   POINTING_ANGLE("Steuerkurs", "°", false, "Winkel zwischen Symmetrieachse des Bootes und Windrichtung"),
@@ -33,7 +33,7 @@ public enum PhysicalQuantity
   DRIFT_ANGLE("Abdrift", "°", false, "Winkel zwischen Symmetrieachse des Bootes und dem Geschwindigkeitsvektor durch das Wasser"),
   WIND_SPEED("Windgeschwindigkeit", "m/s", false, "Das Wasser wird als ruhendes Bezugssystem genommen"),
   FORCE("Kraft", "N", true),
-  SUBMERGENCE_DEPTH("Eintauchtiefe", "m", null),
+  SUBMERGENCE_DEPTH("Eintauchtiefe", "m", false),
   FROUDE_NUMBER_SUMBERGENCE("Froudezahl bzgl. Eintauchtiefe", null, false),
   LEVER_BETWEEN_FORCES("Hebelarm", "m", null, "Strecke zwischen zwei gleichstarken entgegengesetzten Kräften, ohne festen Drehpunkt"),
   TORQUE_BETWEEN_FORCES("Drehmoment", "nm", null, "Drehmoment verursacht durch zwei gleichstarke entgegengesetzten Kräften, ohne festen Drehpunkt"),
@@ -45,10 +45,10 @@ public enum PhysicalQuantity
   IMMERSION_DEPTH("Eintauchtiefe des Flügels", "m", false, "für horizontal verlaufende Flügel"),
   ANGLE_OF_ATTACK("Anstellwinkel", "°", false),
   NCRIT("nCrit", null, null, "The log of the amplification factor of the most-amplified frequency which triggers transition for XFOIL Calculations", 9.0d),
-  MODULUS_OF_ELASTICITY("E-Modul", "N/m^2", null, "CFK unidirektional parallel zur Faserrichtung, reduziert wg. Handlaminiert", 100000000000d),
-  BENDING_FORCE("Biegekraft", "N", null, "am Ende eines Flügels angreifende Kraft. Der Flügel ist am anderen Ende fest eingespannt"),
-  BENDING("Durchbiegung", "m", null, "am Ende eines Flügels. Der Flügel ist am anderen Ende fest eingespannt"),
-  SECOND_MOMENT_OF_AREA("Flächenmoment 2. Ordnung für den Flügelquerschnitt", "m^4", null, "Integral y^2 dx dy"),
+  MODULUS_OF_ELASTICITY("E-Modul", "N/m^2", false, "CFK unidirektional parallel zur Faserrichtung, reduziert wg. Handlaminiert", 100000000000d),
+  BENDING_FORCE("Biegekraft", "N", true, "am Ende eines Flügels angreifende Kraft. Der Flügel ist am anderen Ende fest eingespannt"),
+  BENDING("Durchbiegung", "m", false, "am Ende eines Flügels. Der Flügel ist am anderen Ende fest eingespannt"),
+  SECOND_MOMENT_OF_AREA("Flächenmoment 2. Ordnung für den Flügelquerschnitt", "m^4", false, "Integral y^2 dx dy"),
   NORMALIZED_SECOND_MOMENT_OF_AREA("Flächenmoment 2. Ordnung", null, false, "Integral y^2 dx dy für ein Profil der Tiefe 1 und gleichem Tiefe/Dickenverhältnis wie das eigentliche Profil"),
   RIGG_CENTER_OF_EFFORT_HEIGHT("Höhe des Rigg-Druckpunktes", "m", null, "gerechnet vom Boden des Bootes (wo das Schwert/der Kiel beginnt)");
 
@@ -71,6 +71,7 @@ public enum PhysicalQuantity
   {
     this.displayName = displayName;
     this.unit = unit;
+    this.additive = additive;
   }
 
   private PhysicalQuantity(String displayName, String unit, Boolean additive, String description)
@@ -78,6 +79,7 @@ public enum PhysicalQuantity
     this.displayName = displayName;
     this.unit = unit;
     this.description = description;
+    this.additive = additive;
   }
 
   private PhysicalQuantity(String displayName, String unit, Boolean additive, String description, Double fixedValue)
@@ -86,6 +88,7 @@ public enum PhysicalQuantity
     this.unit = unit;
     this.description = description;
     this.fixedValue = fixedValue;
+    this.additive = additive;
   }
 
   public String getDisplayName()

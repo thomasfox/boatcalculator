@@ -17,25 +17,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AllValues
 {
-  private final List<SimpleValueSet> valueSets = new ArrayList<>();
+  private final List<ValueSet> valueSets = new ArrayList<>();
 
   private final List<ComputationStrategy> computationStrategies = new ArrayList<>();
 
-  public AllValues(Set<SimpleValueSet> valueSets)
+  public AllValues(Set<ValueSet> valueSets)
   {
     this.valueSets.addAll(valueSets);
   }
 
   public AllValues(AllValues toCopy)
   {
-    for (SimpleValueSet valueSetToCopy : toCopy.valueSets)
+    for (ValueSet valueSetToCopy : toCopy.valueSets)
     {
-      this.valueSets.add(new SimpleValueSet(valueSetToCopy));
+      this.valueSets.add(valueSetToCopy.clone());
     }
     this.computationStrategies.addAll(toCopy.getComputationStrategies());
   }
 
-  public void add(SimpleValueSet toAdd)
+  public void add(ValueSet toAdd)
   {
     ValueSet withSameId = getValueSet(toAdd.getId());
     if (withSameId != null)
@@ -49,6 +49,11 @@ public class AllValues
   public List<ValueSet> getValueSets()
   {
     return Collections.unmodifiableList(valueSets);
+  }
+
+  public boolean remove(ValueSet toRemove)
+  {
+    return valueSets.remove(toRemove);
   }
 
   public ValueSet getValueSet(String id)
@@ -231,7 +236,7 @@ public class AllValues
     {
       ValueSet set = getValueSetNonNull(sourceQuantity.getSetId());
       CalculatedPhysicalQuantityValue calculatedFrom
-          = (CalculatedPhysicalQuantityValue) set.getCalculatedValues().getPhysicalQuantityValue(sourceQuantity.getPhysicalQuantity());
+          = set.getCalculatedValues().getPhysicalQuantityValue(sourceQuantity.getPhysicalQuantity());
       if (calculatedFrom != null)
       {
         log.info(indent + sourceQuantity.getSetId() + ":" + sourceQuantity.getPhysicalQuantity().getDisplayName());

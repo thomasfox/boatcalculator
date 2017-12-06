@@ -14,4 +14,10 @@ public class FixedPhysicalQuantityValue extends PhysicalQuantityValue
   {
     throw new UnsupportedOperationException();
   }
+
+  @Override
+  public FixedPhysicalQuantityValue clone()
+  {
+    return new FixedPhysicalQuantityValue(getPhysicalQuantity(), getValue());
+  }
 }

@@ -2,12 +2,13 @@ package com.github.thomasfox.sailboatcalculator.boat.valueset;
 
 import com.github.thomasfox.sailboatcalculator.calculate.MaterialConstants;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.value.HasProfile;
 import com.github.thomasfox.sailboatcalculator.calculate.value.SimpleValueSet;
 
 import lombok.Getter;
 import lombok.Setter;
 
-public abstract class Wing extends SimpleValueSet
+public abstract class Wing extends SimpleValueSet implements HasProfile
 {
   @Getter
   @Setter

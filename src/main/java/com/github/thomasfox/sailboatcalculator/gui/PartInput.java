@@ -4,8 +4,8 @@ import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.thomasfox.sailboatcalculator.boat.valueset.Wing;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.calculate.value.HasProfile;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
@@ -57,9 +57,9 @@ public class PartInput
       quantityInput.addToContainerInRow(container, rowOffset + internalOffset + row++);
     }
     internalOffset += quantityInputs.size();
-    if (valueSet instanceof Wing)
+    if (valueSet instanceof HasProfile)
     {
-      profileInput = new ProfileInput(((Wing) valueSet).getProfileName());
+      profileInput = new ProfileInput(((HasProfile) valueSet).getProfileName());
       profileInput.addToContainer(container, rowOffset + internalOffset++);
     }
     return internalOffset;
