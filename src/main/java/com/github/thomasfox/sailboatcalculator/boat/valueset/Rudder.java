@@ -13,5 +13,7 @@ public class Rudder extends Hydrofoil
     super(ID, NAME);
     addToInput(PhysicalQuantity.LIFT);
     setFixedValueNoOverwrite(PhysicalQuantity.WAVE_MAKING_DRAG_COEFFICIENT, 0d);
+    addHiddenOutput(PhysicalQuantity.WAVE_MAKING_DRAG);
+    addHiddenOutput(PhysicalQuantity.WAVE_MAKING_DRAG_COEFFICIENT);
   }
 }
