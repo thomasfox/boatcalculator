@@ -321,7 +321,7 @@ public class SwingGui
     int row = 0;
     for (Map.Entry<QuantityOutput, XYSeries> seriesEntry : quantitySeries.entrySet())
     {
-      String seriesDisplayName = seriesEntry.getKey().getQuantity().getDisplayName();
+      String seriesDisplayName = seriesEntry.getKey().getSetName() + " " + seriesEntry.getKey().getQuantity().getDisplayName();
       JFreeChart chart;
       if ("°".equals(scannedInput.getQuantity().getUnit()))
       {
@@ -336,7 +336,7 @@ public class SwingGui
         chart = ChartFactory.createXYLineChart(
             seriesDisplayName,
             scannedInput.getQuantity().getDisplayNameIncludingUnit(),
-            PhysicalQuantity.VELOCITY.getDisplayNameIncludingUnit(),
+            seriesEntry.getKey().getQuantity().getDisplayNameIncludingUnit(),
             dataset);
       }
       ChartPanel chartPanel = new ChartPanel(chart);
@@ -362,7 +362,7 @@ public class SwingGui
         {
           continue;
         }
-        QuantityOutput output = new QuantityOutput(calculatedValue);
+        QuantityOutput output = new QuantityOutput(calculatedValue, valueSetInput.getValueSet().getName());
         partOutput.add(output);
       }
       outputRow += partOutput.addToContainerInRow(singleResultPanel, outputRow, mode);

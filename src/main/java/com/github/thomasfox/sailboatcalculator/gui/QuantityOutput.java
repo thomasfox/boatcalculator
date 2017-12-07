@@ -27,15 +27,19 @@ public class QuantityOutput
   @Getter
   private final PhysicalQuantity quantity;
 
+  @Getter
+  private final String setName;
+
   private Double value;
 
   private final JCheckBox showGraph = new JCheckBox();
 
   private Mode mode;
 
-  public QuantityOutput(CalculatedPhysicalQuantityValue calculatedValue)
+  public QuantityOutput(CalculatedPhysicalQuantityValue calculatedValue, String setName)
   {
     this.quantity = calculatedValue.getPhysicalQuantity();
+    this.setName = setName;
     setValue(calculatedValue.getValue());
     label.setText(quantity.getDisplayNameIncludingUnit());
     originLabel.setText(calculatedValue.getCalculatedBy());
