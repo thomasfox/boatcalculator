@@ -1,5 +1,6 @@
 package com.github.thomasfox.sailboatcalculator.gui;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -24,7 +25,6 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import com.github.thomasfox.sailboatcalculator.boat.Boat;
-import com.github.thomasfox.sailboatcalculator.boat.impl.Flying29er;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
@@ -51,21 +51,45 @@ public class SwingGui
 
   private final List<ChartPanel> chartPanels = new ArrayList<>();
 
-  private final JButton calculateButton;
+  private final JButton calculateButton = new JButton("Berechnen");
 
-  private final JButton scanButton;
+  private final JButton scanButton = new JButton("Diagramme anzeigen");
 
-  private final Boat boat = new Flying29er();
+  private final Menubar menubar = new Menubar(this::boatTypeSelected);
+
+  private Boat boat = menubar.getSelectedBoat();
 
   public SwingGui()
   {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setJMenuBar(menubar);
+
     frame.getContentPane().setLayout(new GridBagLayout());
 
     addInputPanel();
     addSingleResultsPanel();
     addChartsPanel();
     addCalculationStateDisplay();
+
+    calculateButton.addActionListener(this::calculateButtonPressed);
+    scanButton.addActionListener(this::scanButtonPressed);
+
+    createInputPanel();
+
+    frame.pack();
+    frame.setVisible(true);
+  }
+
+  private void createInputPanel()
+  {
+    synchronized (inputPanel.getTreeLock())
+    {
+      for (Component component: inputPanel.getComponents())
+      {
+        inputPanel.remove(component);
+      }
+    }
+    valueSetInputs.clear();
 
     for (ValueSet valueSet : boat.getValueSets())
     {
@@ -80,25 +104,27 @@ public class SwingGui
 
     SwingHelper.addSeparatorToContainer(inputPanel, row++, 5);
 
-    calculateButton = new JButton("Berechnen");
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = row;
-    calculateButton.addActionListener(this::calculateButtonPressed);
     inputPanel.add(calculateButton, gridBagConstraints);
 
-    scanButton = new JButton("Diagramme anzeigen");
-    scanButton.addActionListener(this::scanButtonPressed);
-    scanButton.setVisible(false);
     gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = row;
+    scanButton.setVisible(false);
     inputPanel.add(scanButton, gridBagConstraints);
+    inputPanel.revalidate();
+    inputPanel.repaint();
+  }
 
-    frame.pack();
-    frame.setVisible(true);
+  private void boatTypeSelected(Boat boat)
+  {
+    this.boat = boat;
+    clearResult();
+    createInputPanel();
   }
 
   private void addInputPanel()

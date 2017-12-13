@@ -79,4 +79,11 @@ public class Flying29er extends Skiff29er
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, MainLiftingFoil.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.BRAKING_FORCE, Crew.ID)));
   }
+
+  @Override
+  public String toString()
+  {
+    return "Flying 29er";
+  }
+
 }

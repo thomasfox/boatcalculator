@@ -51,4 +51,10 @@ public class Skiff29er extends Dinghy
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, Hull.ID));
   }
+
+  @Override
+  public String toString()
+  {
+    return "29er";
+  }
 }
