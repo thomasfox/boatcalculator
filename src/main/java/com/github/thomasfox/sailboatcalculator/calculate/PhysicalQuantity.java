@@ -44,6 +44,7 @@ public enum PhysicalQuantity
   DENSITY("Dichte", "kg/m^3", false),
   IMMERSION_DEPTH("Eintauchtiefe des Flügels", "m", false, "für horizontal verlaufende Flügel"),
   ANGLE_OF_ATTACK("Anstellwinkel", "°", false),
+  MAX_ANGLE_OF_ATTACK("maximaler Anstellwinkel", "°", false, "wenn der Anstellwinkel nicht fest ist"),
   NCRIT("nCrit", null, null, "The log of the amplification factor of the most-amplified frequency which triggers transition for XFOIL Calculations", 9.0d),
   MODULUS_OF_ELASTICITY("E-Modul", "N/m^2", false, "CFK unidirektional parallel zur Faserrichtung, reduziert wg. Handlaminiert", 100000000000d),
   BENDING_FORCE("Biegekraft", "N", true, "am Ende eines Flügels angreifende Kraft. Der Flügel ist am anderen Ende fest eingespannt"),

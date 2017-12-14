@@ -40,15 +40,15 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
   static final PhysicalQuantityInSet MAIN_FOIL_LIFT
       = new PhysicalQuantityInSet(PhysicalQuantity.LIFT, MainLiftingFoil.ID);
 
-  double maxAngleOfAttack;
+  static final PhysicalQuantityInSet MAIN_FOIL_MAX_ANGLE_OF_ATTACK
+      = new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID);
 
   @NonNull
   private final PhysicalQuantityInSet[] weightSources;
 
-  public LiftByAngleOfAttackStrategy(double maxAngleOfAttack, @NonNull PhysicalQuantityInSet... weightSources)
+  public LiftByAngleOfAttackStrategy(@NonNull PhysicalQuantityInSet... weightSources)
   {
     this.weightSources = weightSources;
-    this.maxAngleOfAttack = maxAngleOfAttack;
     checkUnits(weightSources);
   }
 
@@ -77,6 +77,10 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     {
       return false;
     }
+    if (!allValues.isValueKnown(new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID)))
+    {
+      return false;
+    }
     if (allValues.isValueKnown(new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Hull.ID)))
     {
       return false;
@@ -90,6 +94,8 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
       return false;
     }
 
+    double maxAngleOfAttack = allValues.getKnownValue(
+        new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID));
     CalculatedPhysicalQuantityValue maxLift = calculateLiftOfMainWing(maxAngleOfAttack, allValues);
     if (maxLift == null)
     {
@@ -159,10 +165,10 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     allValuesForCalculation.calculate(MAIN_FOIL_LIFT);
 
     CalculatedPhysicalQuantityValue maxLift
-        = (CalculatedPhysicalQuantityValue) allValuesForCalculation
-            .getValueSet(MainLiftingFoil.ID)
-            .getCalculatedValues()
-            .getPhysicalQuantityValue(PhysicalQuantity.LIFT);
+        = allValuesForCalculation
+        .getValueSet(MainLiftingFoil.ID)
+        .getCalculatedValues()
+        .getPhysicalQuantityValue(PhysicalQuantity.LIFT);
     return maxLift;
   }
 

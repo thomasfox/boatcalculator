@@ -12,5 +12,7 @@ public class MainLiftingFoil extends Hydrofoil
   {
     super(ID, NAME);
     addToInput(PhysicalQuantity.SUBMERGENCE_DEPTH);
+    addToInput(PhysicalQuantity.MAX_ANGLE_OF_ATTACK);
+    setStartValue(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, 10d);
   }
 }
