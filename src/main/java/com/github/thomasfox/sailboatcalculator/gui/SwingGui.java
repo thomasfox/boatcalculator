@@ -149,7 +149,8 @@ public class SwingGui
     JScrollPane scrollPane = new JScrollPane(singleResultPanel);
     scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setPreferredSize(new Dimension(600, 400));
+    scrollPane.setPreferredSize(new Dimension(450, 400));
+    scrollPane.setMinimumSize(new Dimension(450, 400));
     frame.add(scrollPane, gridBagConstraints);
     singleResultPanel.setBorder(new EmptyBorder(0,10,0,10));
   }
@@ -166,6 +167,8 @@ public class SwingGui
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 2;
     gridBagConstraints.gridy = 0;
+    gridBagConstraints.weightx = 1;
+    gridBagConstraints.weighty = 1;
     frame.add(scrollPane, gridBagConstraints);
   }
 
@@ -301,10 +304,10 @@ public class SwingGui
 
   private void calculateAndRefreshDisplayedResultsScan()
   {
-    Map<PartOutput, List<QuantityOutput>> shownGraphs = getShownGraphs();
-
     clearCharts();
+    CalculationState.clear();
 
+    Map<PartOutput, List<QuantityOutput>> shownGraphs = getShownGraphs();
     List<QuantityInput> scannedInputs = getScannedInputs();
     if (scannedInputs.size() > 1)
     {
@@ -343,8 +346,8 @@ public class SwingGui
         }
       }
     }
-    CalculationState.clear();
     int row = 0;
+    int column = 0;
     for (Map.Entry<QuantityOutput, XYSeries> seriesEntry : quantitySeries.entrySet())
     {
       String seriesDisplayName = seriesEntry.getKey().getSetName() + " " + seriesEntry.getKey().getQuantity().getDisplayName();
@@ -368,10 +371,17 @@ public class SwingGui
       ChartPanel chartPanel = new ChartPanel(chart);
       GridBagConstraints gridBagConstraints = new GridBagConstraints();
       gridBagConstraints.fill = GridBagConstraints.BOTH;
-      gridBagConstraints.gridx = 0;
-      gridBagConstraints.gridy = row++;
-      chartsPanel.add(chartPanel);
+      gridBagConstraints.gridx = column;
+      gridBagConstraints.gridy = row;
+      chartsPanel.add(chartPanel, gridBagConstraints);
       chartPanels.add(chartPanel);
+
+      row++;
+      if (row > 1)
+      {
+        row = 0;
+        column++;
+      }
     }
   }
 
