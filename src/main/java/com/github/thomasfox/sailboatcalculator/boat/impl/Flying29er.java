@@ -1,18 +1,18 @@
 package com.github.thomasfox.sailboatcalculator.boat.impl;
 
-import com.github.thomasfox.sailboatcalculator.boat.valueset.BoatGlobalValues;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.Crew;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.DaggerboardOrKeel;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.DoubleWing;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.Hull;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.MainLiftingFoil;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.Rudder;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.ComputationStrategy;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.LiftByAngleOfAttackStrategy;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantitySum;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityInSet;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityInSet;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.BoatGlobalValues;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Crew;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.DaggerboardOrKeel;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.DoubleWing;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Hull;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.MainLiftingFoil;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Rudder;
 
 public class Flying29er extends Skiff29er
 {
@@ -35,7 +35,7 @@ public class Flying29er extends Skiff29er
     singleDaggerboard.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1.5d);
     singleDaggerboard.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.16d);
     singleDaggerboard.setProfileName("m3-il");
-    daggerboardOrKeel = new DoubleWing(singleDaggerboard, singleDaggerboard.getId(), singleDaggerboard.getName());
+    daggerboardOrKeel = new DoubleWing(singleDaggerboard, singleDaggerboard.getId(), singleDaggerboard.getDisplayName());
     addValueSet(daggerboardOrKeel);
   }
 

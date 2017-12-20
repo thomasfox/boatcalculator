@@ -2,7 +2,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
+import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
 
 /**
  * Gibt die Durchbiegung eines Flügels, das an einem Ende fest gelagert

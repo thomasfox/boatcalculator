@@ -35,13 +35,13 @@ import com.github.thomasfox.sailboatcalculator.calculate.impl.VMGCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.WaveMakingDragCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.WaveMakingDragCoefficientCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.WingChordFromSecondMomentOfAreaCalculator;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValuesWithSetIdPerValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 import com.github.thomasfox.sailboatcalculator.interpolate.Interpolator;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.sailboatcalculator.interpolate.SimpleXYPoint;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValuesWithSetIdPerValue;
+import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;

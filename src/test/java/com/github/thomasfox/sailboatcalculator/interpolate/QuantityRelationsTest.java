@@ -12,10 +12,10 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.SimpleValueSet;
-import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.valueset.SimpleValueSet;
+import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
 
 public class QuantityRelationsTest
 {

@@ -1,13 +1,13 @@
 package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 
-import com.github.thomasfox.sailboatcalculator.boat.valueset.DaggerboardOrKeel;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.LeverSailDaggerboard;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.Rigg;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetId;
-import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValueWithSetId;
+import com.github.thomasfox.sailboatcalculator.valueset.AllValues;
+import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.DaggerboardOrKeel;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.LeverSailDaggerboard;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Rigg;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -35,8 +35,8 @@ public class LeverSailDaggerboardStrategy implements ComputationStrategy
           new PhysicalQuantityValue(
               PhysicalQuantity.LEVER_BETWEEN_FORCES,
               riggCenterOfEffortHeight.getValue() + (daggerboardSpan.getValue() / 2)),
-          rigg.getName() + ":" +  PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT.getDisplayName()
-              + ", " + leverSailDaggerboard.getName() + ":" +  PhysicalQuantity.WING_SPAN.getDisplayName(),
+          rigg.getDisplayName() + ":" +  PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT.getDisplayName()
+              + ", " + leverSailDaggerboard.getDisplayName() + ":" +  PhysicalQuantity.WING_SPAN.getDisplayName(),
           new PhysicalQuantityValueWithSetId(riggCenterOfEffortHeight, rigg.getId()),
           new PhysicalQuantityValueWithSetId(daggerboardSpan, daggerboard.getId()));
       return true;

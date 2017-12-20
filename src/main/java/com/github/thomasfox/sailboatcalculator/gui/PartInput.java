@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.HasProfile;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.sailboatcalculator.profile.ProfileGeometry;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.valueset.HasProfile;
+import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -45,7 +45,7 @@ public class PartInput
     {
       SwingHelper.addSeparatorToContainer(container, rowOffset + internalOffset++, 5);
     }
-    SwingHelper.addLabelToContainer(valueSet.getName(), container, 0, rowOffset + internalOffset++);
+    SwingHelper.addLabelToContainer(valueSet.getDisplayName(), container, 0, rowOffset + internalOffset++);
     SwingHelper.addLabelToContainer(" ", container, 0, rowOffset + internalOffset++);
     SwingHelper.addLabelToContainer("Fester Wert", container, 1, rowOffset + internalOffset);
     SwingHelper.addLabelToContainer("Scan Von", container, 2, rowOffset + internalOffset);
@@ -138,6 +138,6 @@ public class PartInput
   @Override
   public String toString()
   {
-    return valueSet.getName();
+    return valueSet.getDisplayName();
   }
 }

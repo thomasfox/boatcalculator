@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.CalculatedPhysicalQuantityValue;
 
 import lombok.Getter;
 import lombok.ToString;

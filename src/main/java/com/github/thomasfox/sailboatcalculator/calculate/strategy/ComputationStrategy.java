@@ -1,6 +1,6 @@
 package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 
-import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
+import com.github.thomasfox.sailboatcalculator.valueset.AllValues;
 
 public interface ComputationStrategy
 {

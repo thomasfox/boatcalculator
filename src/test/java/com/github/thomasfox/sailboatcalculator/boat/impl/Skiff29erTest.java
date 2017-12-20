@@ -6,15 +6,15 @@ import static org.junit.Assert.fail;
 import org.assertj.core.data.Offset;
 import org.junit.Test;
 
-import com.github.thomasfox.sailboatcalculator.boat.valueset.BoatGlobalValues;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.Wing;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 import com.github.thomasfox.sailboatcalculator.gui.SwingGui;
 import com.github.thomasfox.sailboatcalculator.profile.ProfileGeometry;
 import com.github.thomasfox.sailboatcalculator.profile.ProfileSelector;
+import com.github.thomasfox.sailboatcalculator.value.CalculatedPhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.BoatGlobalValues;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Wing;
 
 public class Skiff29erTest
 {

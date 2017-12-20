@@ -19,7 +19,7 @@ public enum PhysicalQuantity
   BRAKING_FORCE("Bremskraft", "N", true),
   REYNOLDS_NUMBER("Reynoldszahl", null, false),
   WING_SPAN("Spannweite des Flügels", "m", false, "quer zur Profilierung, von einem Ende zum anderen"),
-  WING_AREA("Fläche des Flügels", "m^2", true),
+  AREA("Fläche (z.B. eines Flügels)", "m^2", true),
   WING_CHORD("Tiefe des Flügels", "m", false, "quer zur Spannweite, gleich über die geamte Spannweite"),
   WING_THICKNESS("Dicke des Flügels", "m", false, "Dicke an der dicksten Stelle"),
   WING_RELATIVE_THICKNESS("Relative Dicke des Flügels", null, false, "Dicke an der dicksten Stelle geteilt durch Profiltiefe"),

@@ -1,17 +1,17 @@
 package com.github.thomasfox.sailboatcalculator.boat.impl;
 
 import com.github.thomasfox.sailboatcalculator.boat.Boat;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.BoatGlobalValues;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.Crew;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.DaggerboardOrKeel;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.Hull;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.LeverSailDaggerboard;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.Rudder;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantitySum;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityInSet;
-import com.github.thomasfox.sailboatcalculator.calculate.value.SimpleValueSet;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityInSet;
+import com.github.thomasfox.sailboatcalculator.valueset.SimpleValueSet;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.BoatGlobalValues;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Crew;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.DaggerboardOrKeel;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Hull;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.LeverSailDaggerboard;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Rudder;
 
 public class Dinghy extends Boat
 {

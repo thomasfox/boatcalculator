@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.calculate.value;
+package com.github.thomasfox.sailboatcalculator.valueset;
 
 public interface HasProfile
 {

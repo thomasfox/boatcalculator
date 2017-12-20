@@ -9,8 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.iterate.DoubleIntervalIterator;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
 
 import lombok.NonNull;
 

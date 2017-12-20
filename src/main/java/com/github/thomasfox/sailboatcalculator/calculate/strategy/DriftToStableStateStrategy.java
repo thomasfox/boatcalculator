@@ -1,10 +1,10 @@
 package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityInSet;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetId;
 import com.github.thomasfox.sailboatcalculator.progress.CalculationState;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityInSet;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValueWithSetId;
+import com.github.thomasfox.sailboatcalculator.valueset.AllValues;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;

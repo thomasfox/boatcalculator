@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.calculate.value;
+package com.github.thomasfox.sailboatcalculator.valueset;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +11,12 @@ import com.github.thomasfox.sailboatcalculator.calculate.CombinedCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.QuantityNotPresentException;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
+import com.github.thomasfox.sailboatcalculator.value.CalculatedPhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.CalculatedPhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValueWithSetId;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValuesWithSetIdPerValue;
 
 import lombok.Data;
 import lombok.NonNull;
@@ -27,7 +33,7 @@ public class SimpleValueSet implements ValueSet
   private final String id;
 
   @NonNull
-  private final String name;
+  private final String displayName;
 
   private final Set<PhysicalQuantity> toInput = new LinkedHashSet<>();
 
@@ -47,7 +53,7 @@ public class SimpleValueSet implements ValueSet
   public SimpleValueSet(SimpleValueSet toCopy)
   {
     this.id = toCopy.getId();
-    this.name = toCopy.getName();
+    this.displayName = toCopy.getDisplayName();
     this.toInput.addAll(toCopy.toInput);
     this.hiddenOutputs.addAll(toCopy.hiddenOutputs);
     this.fixedValues.setValuesFailOnOverwrite(toCopy.fixedValues);

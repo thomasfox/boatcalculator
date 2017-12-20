@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.boat.valueset;
+package com.github.thomasfox.sailboatcalculator.valueset.impl;
 
 import java.util.Collection;
 import java.util.List;
@@ -7,16 +7,16 @@ import java.util.function.Function;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.QuantityNotPresentException;
-import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.HasProfile;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetId;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValuesWithSetIdPerValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
+import com.github.thomasfox.sailboatcalculator.value.CalculatedPhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.CalculatedPhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValueWithSetId;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValuesWithSetIdPerValue;
+import com.github.thomasfox.sailboatcalculator.valueset.AllValues;
+import com.github.thomasfox.sailboatcalculator.valueset.HasProfile;
+import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
 
 import lombok.NonNull;
 
@@ -56,7 +56,7 @@ public class DoubleWing implements ValueSet, HasProfile
   }
 
   @Override
-  public String getName()
+  public String getDisplayName()
   {
     return name;
   }

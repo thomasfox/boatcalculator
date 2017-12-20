@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.calculate.value;
+package com.github.thomasfox.sailboatcalculator.value;
 
 import java.util.Collections;
 import java.util.List;

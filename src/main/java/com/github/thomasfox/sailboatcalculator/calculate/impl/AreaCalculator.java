@@ -2,13 +2,13 @@ package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
+import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
 
 public class AreaCalculator extends Calculator
 {
   public AreaCalculator()
   {
-    super(PhysicalQuantity.WING_AREA,
+    super(PhysicalQuantity.AREA,
         PhysicalQuantity.WING_CHORD,
         PhysicalQuantity.WING_SPAN);
   }

@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.boat.valueset;
+package com.github.thomasfox.sailboatcalculator.valueset.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.MaterialConstants;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;

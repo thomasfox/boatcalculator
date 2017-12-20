@@ -1,7 +1,7 @@
 package com.github.thomasfox.sailboatcalculator.calculate;
 
-import com.github.thomasfox.sailboatcalculator.calculate.value.FixedPhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.FixedPhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
 
 public class MaterialConstants
 {

@@ -2,19 +2,19 @@ package com.github.thomasfox.sailboatcalculator.boat;
 
 import java.util.List;
 
-import com.github.thomasfox.sailboatcalculator.boat.valueset.BoatGlobalValues;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.Crew;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.DaggerboardOrKeel;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.Hull;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.LeverSailDaggerboard;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.Rigg;
-import com.github.thomasfox.sailboatcalculator.boat.valueset.Rudder;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.DriftToStableStateStrategy;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.LeverSailDaggerboardStrategy;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantityEquality;
-import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
+import com.github.thomasfox.sailboatcalculator.valueset.AllValues;
+import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.BoatGlobalValues;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Crew;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.DaggerboardOrKeel;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Hull;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.LeverSailDaggerboard;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Rigg;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Rudder;
 
 public abstract class Boat
 {

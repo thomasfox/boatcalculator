@@ -3,11 +3,11 @@ package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 import java.util.Arrays;
 import java.util.Objects;
 
-import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityInSet;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValueWithSetId;
-import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityInSet;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValueWithSetId;
+import com.github.thomasfox.sailboatcalculator.valueset.AllValues;
+import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
 
 import lombok.Getter;
 import lombok.NonNull;

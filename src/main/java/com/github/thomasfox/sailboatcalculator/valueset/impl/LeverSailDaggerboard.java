@@ -1,6 +1,6 @@
-package com.github.thomasfox.sailboatcalculator.boat.valueset;
+package com.github.thomasfox.sailboatcalculator.valueset.impl;
 
-import com.github.thomasfox.sailboatcalculator.calculate.value.SimpleValueSet;
+import com.github.thomasfox.sailboatcalculator.valueset.SimpleValueSet;
 
 public class LeverSailDaggerboard extends SimpleValueSet
 {

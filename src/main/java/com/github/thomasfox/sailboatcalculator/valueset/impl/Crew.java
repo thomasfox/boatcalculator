@@ -1,8 +1,8 @@
-package com.github.thomasfox.sailboatcalculator.boat.valueset;
+package com.github.thomasfox.sailboatcalculator.valueset.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.MaterialConstants;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.SimpleValueSet;
+import com.github.thomasfox.sailboatcalculator.valueset.SimpleValueSet;
 
 public class Crew extends SimpleValueSet
 {
@@ -17,7 +17,7 @@ public class Crew extends SimpleValueSet
     setFixedValueNoOverwrite(MaterialConstants.DENSITY_AIR);
     setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_AIR);
     addToInput(PhysicalQuantity.WEIGHT);
-    addToInput(PhysicalQuantity.WING_AREA);
+    addToInput(PhysicalQuantity.AREA);
     addToInput(PhysicalQuantity.PARASITIC_DRAG_COEFFICIENT);
   }
 }

@@ -26,10 +26,10 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import com.github.thomasfox.sailboatcalculator.boat.Boat;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.CalculatedPhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 import com.github.thomasfox.sailboatcalculator.progress.CalculationState;
+import com.github.thomasfox.sailboatcalculator.value.CalculatedPhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
 
 public class SwingGui
 {
@@ -390,7 +390,7 @@ public class SwingGui
     int outputRow = 0;
     for (PartInput valueSetInput : valueSetInputs)
     {
-      PartOutput partOutput = new PartOutput(valueSetInput.getValueSet().getId(), valueSetInput.getValueSet().getName());
+      PartOutput partOutput = new PartOutput(valueSetInput.getValueSet().getId(), valueSetInput.getValueSet().getDisplayName());
       valueSetOutputs.add(partOutput);
       for (CalculatedPhysicalQuantityValue calculatedValue : valueSetInput.getValueSet().getCalculatedValues().getAsList())
       {
@@ -398,7 +398,7 @@ public class SwingGui
         {
           continue;
         }
-        QuantityOutput output = new QuantityOutput(calculatedValue, valueSetInput.getValueSet().getName());
+        QuantityOutput output = new QuantityOutput(calculatedValue, valueSetInput.getValueSet().getDisplayName());
         partOutput.add(output);
       }
       outputRow += partOutput.addToContainerInRow(singleResultPanel, outputRow, mode);

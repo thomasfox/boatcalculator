@@ -2,7 +2,7 @@ package com.github.thomasfox.sailboatcalculator.calculate.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
+import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
 
 /**
  * https://de.wikipedia.org/wiki/Induzierter_Luftwiderstand
@@ -14,7 +14,7 @@ public class InducedDragCoefficientCalculator extends Calculator
   {
     super(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT,
         PhysicalQuantity.WING_SPAN,
-        PhysicalQuantity.WING_AREA,
+        PhysicalQuantity.AREA,
         PhysicalQuantity.LIFT_COEFFICIENT);
   }
 
@@ -22,7 +22,7 @@ public class InducedDragCoefficientCalculator extends Calculator
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
     double wingSpan = valueSet.getKnownValue(PhysicalQuantity.WING_SPAN).getValue();
-    double wingArea = valueSet.getKnownValue(PhysicalQuantity.WING_AREA).getValue();
+    double wingArea = valueSet.getKnownValue(PhysicalQuantity.AREA).getValue();
     double liftCoefficient = valueSet.getKnownValue(PhysicalQuantity.LIFT_COEFFICIENT).getValue();
 
     double aspectRatio = wingSpan *wingSpan / wingArea;

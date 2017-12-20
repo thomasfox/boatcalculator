@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.calculate.value;
+package com.github.thomasfox.sailboatcalculator.value;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 

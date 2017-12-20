@@ -1,7 +1,7 @@
-package com.github.thomasfox.sailboatcalculator.boat.valueset;
+package com.github.thomasfox.sailboatcalculator.valueset.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.SimpleValueSet;
+import com.github.thomasfox.sailboatcalculator.valueset.SimpleValueSet;
 
 public class BoatGlobalValues extends SimpleValueSet
 {

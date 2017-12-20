@@ -1,10 +1,10 @@
 package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.AllValues;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
-import com.github.thomasfox.sailboatcalculator.calculate.value.ValueSet;
 import com.github.thomasfox.sailboatcalculator.progress.CalculationState;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.valueset.AllValues;
+import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -189,13 +189,13 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
     if (value1 == null)
     {
       log.info("Could not calculate " + equalQuantity1
-          + " in " + equalQuantity1Set.getName()
+          + " in " + equalQuantity1Set.getDisplayName()
           + " for value " + targetValue + " of " + targetSetId + ":" + targetQuantity);
     }
     if (value2 == null)
     {
       log.info("Could not calculate " + equalQuantity2
-          + " in " + equalQuantity2Set.getName()
+          + " in " + equalQuantity2Set.getDisplayName()
           + " for value " + targetValue + " of " + targetSetId + ":" + targetQuantity);
     }
     if (value1==null || value2 == null)

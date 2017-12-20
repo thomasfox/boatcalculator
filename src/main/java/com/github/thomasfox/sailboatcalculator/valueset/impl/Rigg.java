@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.boat.valueset;
+package com.github.thomasfox.sailboatcalculator.valueset.impl;
 
 import com.github.thomasfox.sailboatcalculator.calculate.MaterialConstants;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
@@ -17,7 +17,7 @@ public class Rigg extends Wing
     setFixedValueNoOverwrite(PhysicalQuantity.WAVE_MAKING_DRAG_COEFFICIENT, 0);
     addToInput(PhysicalQuantity.LIFT_COEFFICIENT);
     addToInput(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT);
-    addToInput(PhysicalQuantity.WING_AREA);
+    addToInput(PhysicalQuantity.AREA);
     addToInput(PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT);
   }
 }

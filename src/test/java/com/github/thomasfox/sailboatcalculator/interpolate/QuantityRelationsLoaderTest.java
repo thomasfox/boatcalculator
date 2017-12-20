@@ -8,7 +8,7 @@ import java.io.FileReader;
 import org.junit.Test;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
 
 public class QuantityRelationsLoaderTest
 {

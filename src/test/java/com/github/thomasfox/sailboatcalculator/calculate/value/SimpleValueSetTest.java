@@ -10,6 +10,11 @@ import org.junit.rules.ExpectedException;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.QuantityNotPresentException;
+import com.github.thomasfox.sailboatcalculator.value.CalculatedPhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValueWithSetId;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValues;
+import com.github.thomasfox.sailboatcalculator.valueset.SimpleValueSet;
 
 public class SimpleValueSetTest
 {
@@ -191,7 +196,7 @@ public class SimpleValueSetTest
     assertThat(result).isEqualToComparingFieldByField(sut);
     // assert setters have worked
     assertThat(result.getId()).isEqualTo("valueSetId");
-    assertThat(result.getName()).isEqualTo("valueSetName");
+    assertThat(result.getDisplayName()).isEqualTo("valueSetName");
     assertThat(result.getToInput()).containsOnly(
         PhysicalQuantity.ANGLE_OF_ATTACK, PhysicalQuantity.WEIGHT);
     assertThat(result.getFixedValues().getAsList()).containsOnly(
@@ -423,7 +428,7 @@ public class SimpleValueSetTest
 
     // assert rest of object stays the same
     assertThat(sut.getId()).isEqualTo("valueSetId");
-    assertThat(sut.getName()).isEqualTo("valueSetName");
+    assertThat(sut.getDisplayName()).isEqualTo("valueSetName");
     assertThat(sut.getToInput()).containsOnly(
         PhysicalQuantity.ANGLE_OF_ATTACK, PhysicalQuantity.WEIGHT);
     assertThat(sut.getFixedValues().getAsList()).containsOnly(
@@ -464,7 +469,7 @@ public class SimpleValueSetTest
 
     // assert rest of object stays the same
     assertThat(sut.getId()).isEqualTo("valueSetId");
-    assertThat(sut.getName()).isEqualTo("valueSetName");
+    assertThat(sut.getDisplayName()).isEqualTo("valueSetName");
     assertThat(sut.getToInput()).containsOnly(
         PhysicalQuantity.ANGLE_OF_ATTACK, PhysicalQuantity.WEIGHT);
     assertThat(sut.getFixedValues().getAsList()).containsOnly(
@@ -489,7 +494,7 @@ public class SimpleValueSetTest
 
     // assert rest of object stays the same
     assertThat(sut.getId()).isEqualTo("valueSetId");
-    assertThat(sut.getName()).isEqualTo("valueSetName");
+    assertThat(sut.getDisplayName()).isEqualTo("valueSetName");
     assertThat(sut.getToInput()).containsOnly(
         PhysicalQuantity.ANGLE_OF_ATTACK, PhysicalQuantity.WEIGHT);
     assertThat(sut.getFixedValues().getAsList()).containsOnly(
@@ -519,7 +524,7 @@ public class SimpleValueSetTest
 
     // assert rest of object stays the same
     assertThat(sut.getId()).isEqualTo("valueSetId");
-    assertThat(sut.getName()).isEqualTo("valueSetName");
+    assertThat(sut.getDisplayName()).isEqualTo("valueSetName");
     assertThat(sut.getToInput()).containsOnly(
         PhysicalQuantity.ANGLE_OF_ATTACK, PhysicalQuantity.WEIGHT);
     assertThat(sut.getFixedValues().getAsList()).containsOnly(

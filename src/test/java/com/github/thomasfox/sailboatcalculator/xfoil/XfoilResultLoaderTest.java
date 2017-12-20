@@ -10,8 +10,8 @@ import java.util.LinkedHashSet;
 import org.junit.Test;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.sailboatcalculator.calculate.value.PhysicalQuantityValues;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValues;
 import com.github.thomasfox.sailboatcalculator.xfoil.XfoilResultLoader;
 
 public class XfoilResultLoaderTest

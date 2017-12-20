@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.calculate.value;
+package com.github.thomasfox.sailboatcalculator.valueset;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,10 +9,18 @@ import java.util.stream.Collectors;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.ComputationStrategy;
+import com.github.thomasfox.sailboatcalculator.value.CalculatedPhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityInSet;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValueWithSetId;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Contains all valueSets for a boat, and the strategies
+ * which relate quantities in different valueSets.
+ */
 @NoArgsConstructor
 @Slf4j
 public class AllValues
@@ -94,7 +102,7 @@ public class AllValues
 
   public String getSetName(PhysicalQuantityInSet toBeNamed)
   {
-    return getValueSetNonNull(toBeNamed.getValueSetId()).getName();
+    return getValueSetNonNull(toBeNamed.getValueSetId()).getDisplayName();
   }
 
   public boolean isValueKnown(PhysicalQuantityInSet toCheck)
@@ -120,7 +128,7 @@ public class AllValues
   {
     return valueSets.stream()
         .filter(n -> n.getId().equals(setId))
-        .map(s -> s.getName())
+        .map(s -> s.getDisplayName())
         .findAny().orElseThrow(() -> new IllegalStateException(
             "No valueSet with id " + setId + " exists, existing valueSets are "
                 + valueSets.stream().map(ValueSet::getId).collect(Collectors.toList())));
