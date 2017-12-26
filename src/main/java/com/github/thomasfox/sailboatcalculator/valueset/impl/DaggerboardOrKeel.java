@@ -14,5 +14,6 @@ public class DaggerboardOrKeel extends Hydrofoil
     setFixedValueNoOverwrite(PhysicalQuantity.WAVE_MAKING_DRAG_COEFFICIENT, 0d);
     addHiddenOutput(PhysicalQuantity.WAVE_MAKING_DRAG);
     addHiddenOutput(PhysicalQuantity.WAVE_MAKING_DRAG_COEFFICIENT);
+    addHiddenOutput(PhysicalQuantity.VELOCITY);
   }
 }

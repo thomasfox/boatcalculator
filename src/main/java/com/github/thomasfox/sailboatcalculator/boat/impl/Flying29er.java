@@ -45,7 +45,7 @@ public class Flying29er extends Skiff29er
     for (ComputationStrategy computationStrategy : values.getComputationStrategies())
     {
       if (computationStrategy instanceof QuantitySum
-          && ((QuantitySum) computationStrategy).getTarget().equals(new PhysicalQuantityInSet(PhysicalQuantity.MASS, Hull.ID)))
+          && ((QuantitySum) computationStrategy).getTarget().equals(new PhysicalQuantityInSet(PhysicalQuantity.LIFT, Hull.ID)))
       {
         weightStrategy = computationStrategy;
         break;
@@ -53,8 +53,8 @@ public class Flying29er extends Skiff29er
     }
     values.remove(weightStrategy);
     values.add(new LiftByAngleOfAttackStrategy(
-        new PhysicalQuantityInSet(PhysicalQuantity.MASS, Crew.ID),
-        new PhysicalQuantityInSet(PhysicalQuantity.MASS, BoatGlobalValues.ID)));
+        new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Crew.ID),
+        new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BoatGlobalValues.ID)));
   }
 
   protected void replaceTotalDragStrategy()

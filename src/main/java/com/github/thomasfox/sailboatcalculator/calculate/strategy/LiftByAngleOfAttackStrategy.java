@@ -3,7 +3,6 @@ package com.github.thomasfox.sailboatcalculator.calculate.strategy;
 import java.util.Arrays;
 import java.util.Objects;
 
-import com.github.thomasfox.sailboatcalculator.calculate.MaterialConstants;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.progress.CalculationState;
 import com.github.thomasfox.sailboatcalculator.value.CalculatedPhysicalQuantityValue;
@@ -44,18 +43,18 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
       = new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID);
 
   @NonNull
-  private final PhysicalQuantityInSet[] massSources;
+  private final PhysicalQuantityInSet[] weightSources;
 
-  public LiftByAngleOfAttackStrategy(@NonNull PhysicalQuantityInSet... massSources)
+  public LiftByAngleOfAttackStrategy(@NonNull PhysicalQuantityInSet... weightSources)
   {
-    this.massSources = massSources;
-    checkUnitsOfMassSources();
+    this.weightSources = weightSources;
+    checkUnitsOfWeightSources();
   }
 
-  private void checkUnitsOfMassSources()
+  private void checkUnitsOfWeightSources()
   {
-    String targetUnit = PhysicalQuantity.MASS.getUnit();
-    for (PhysicalQuantityInSet source : massSources)
+    String targetUnit = PhysicalQuantity.WEIGHT.getUnit();
+    for (PhysicalQuantityInSet source : weightSources)
     {
       if (!Objects.equals(source.getPhysicalQuantity().getUnit(), targetUnit))
       {
@@ -81,46 +80,45 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     {
       return false;
     }
-    if (allValues.isValueKnown(new PhysicalQuantityInSet(PhysicalQuantity.MASS, Hull.ID)))
+    if (allValues.isValueKnown(new PhysicalQuantityInSet(PhysicalQuantity.LIFT, Hull.ID)))
     {
       return false;
     }
-    if (!allMassSourceValuesAreKnown(allValues))
+    if (!allWeightSourceValuesAreKnown(allValues))
     {
       return false;
     }
 
     double maxAngleOfAttack = allValues.getKnownValue(
         new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID));
-    CalculatedPhysicalQuantityValue maxLift = calculateLiftOfMainWing(maxAngleOfAttack, allValues);
-    if (maxLift == null)
+    CalculatedPhysicalQuantityValue mainWingMaxLift = calculateLiftOfMainWing(maxAngleOfAttack, allValues);
+    if (mainWingMaxLift == null)
     {
       return false;
     }
-    double mass = getSumOfMassSourcesValues(allValues);
-    double weight = mass * MaterialConstants.GRAVITY_ACCELERATION.getValue();
-    if (weight > maxLift.getValue())
+    double weight = getSumOfWeightSourcesValues(allValues);
+    if (weight > mainWingMaxLift.getValue())
     {
-      // lift cannot compensate weight
+      // main wing lift cannot compensate weight
       allValues.setCalculatedValueNoOverwrite(
           new PhysicalQuantityInSet(PhysicalQuantity.ANGLE_OF_ATTACK, MainLiftingFoil.ID),
           maxAngleOfAttack,
           getCalculatedByDescription(allValues),
           getSourceValuesWithNames(allValues));
       allValues.setCalculatedValueNoOverwrite(
-          new PhysicalQuantityInSet(PhysicalQuantity.MASS, Hull.ID),
-          (weight - maxLift.getValue()) / MaterialConstants.GRAVITY_ACCELERATION.getValue(),
+          new PhysicalQuantityInSet(PhysicalQuantity.LIFT, Hull.ID),
+          weight - mainWingMaxLift.getValue(),
           getCalculatedByDescription(allValues),
           getSourceValuesWithNames(allValues));
       return true;
     }
-    CalculatedPhysicalQuantityValue lift = maxLift;
+    CalculatedPhysicalQuantityValue mainWingLift = mainWingMaxLift;
     double angleOfAttack = maxAngleOfAttack;
     double step = angleOfAttack;
     int tries = 20;
-    while (Math.abs(weight - lift.getValue()) > weight/1000 && tries > 0)
+    while (Math.abs(weight - mainWingLift.getValue()) > weight/1000 && tries > 0)
     {
-      if (lift.getValue() > weight)
+      if (mainWingLift.getValue() > weight)
       {
         angleOfAttack -= step;
       }
@@ -129,10 +127,10 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
         angleOfAttack += step;
       }
       step = step/2;
-      lift = calculateLiftOfMainWing(angleOfAttack, allValues);
+      mainWingLift = calculateLiftOfMainWing(angleOfAttack, allValues);
       tries--;
     }
-    if (Math.abs(weight - lift.getValue()) < weight/1000)
+    if (Math.abs(weight - mainWingLift.getValue()) < weight/1000)
     {
       allValues.setCalculatedValueNoOverwrite(
           new PhysicalQuantityInSet(PhysicalQuantity.ANGLE_OF_ATTACK, MainLiftingFoil.ID),
@@ -140,7 +138,7 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
           getCalculatedByDescription(allValues),
           getSourceValuesWithNames(allValues));
       allValues.setCalculatedValueNoOverwrite(
-          new PhysicalQuantityInSet(PhysicalQuantity.MASS, Hull.ID),
+          new PhysicalQuantityInSet(PhysicalQuantity.LIFT, Hull.ID),
           0,
           getCalculatedByDescription(allValues),
           getSourceValuesWithNames(allValues));
@@ -168,15 +166,15 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     return maxLift;
   }
 
-  public boolean allMassSourceValuesAreKnown(AllValues allValues)
+  public boolean allWeightSourceValuesAreKnown(AllValues allValues)
   {
-    return Arrays.stream(massSources).allMatch(allValues::isValueKnown);
+    return Arrays.stream(weightSources).allMatch(allValues::isValueKnown);
   }
 
-  public double getSumOfMassSourcesValues(AllValues allValues)
+  public double getSumOfWeightSourcesValues(AllValues allValues)
   {
     double result = 0d;
-    for (PhysicalQuantityInSet source : massSources)
+    for (PhysicalQuantityInSet source : weightSources)
     {
       result += allValues.getKnownValue(source);
     }
@@ -186,7 +184,7 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
   public String getCalculatedByDescription(AllValues allValues)
   {
     StringBuilder result = new StringBuilder("LiftByAngleOfAttackStrategy: ");
-    for (PhysicalQuantityInSet source : massSources)
+    for (PhysicalQuantityInSet source : weightSources)
     {
       if (result.length() > 0 )
       {
@@ -201,9 +199,9 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
 
   private PhysicalQuantityValueWithSetId[] getSourceValuesWithNames(AllValues allValues)
   {
-    PhysicalQuantityValueWithSetId[] result = new PhysicalQuantityValueWithSetId[massSources.length];
+    PhysicalQuantityValueWithSetId[] result = new PhysicalQuantityValueWithSetId[weightSources.length];
     int i = 0;
-    for (PhysicalQuantityInSet source : massSources)
+    for (PhysicalQuantityInSet source : weightSources)
     {
       ValueSet sourceSet = allValues.getValueSet(source.getValueSetId());
       result[i] = new PhysicalQuantityValueWithSetId(

@@ -26,7 +26,7 @@ public class QuantityRelationsLoaderTest
 
     // verify
     assertThat(result.getFixedQuantities().getAsList()).containsExactly(
-        new PhysicalQuantityValue(PhysicalQuantity.MASS, 204d));
+        new PhysicalQuantityValue(PhysicalQuantity.LIFT, 2001d));
     assertThat(result.getRelatedQuantities()).containsExactly(PhysicalQuantity.VELOCITY, PhysicalQuantity.TOTAL_DRAG);
     assertThat(result.getRelatedQuantityValues()).hasSize(21);
     assertThat(result.getRelatedQuantityValues().get(0).getAsList()).containsOnly(

@@ -1,5 +1,5 @@
 # From Frank Bethwaite, High Performance Sailing, minus daggerboard and rudder with naca 0010 profile
-MASS	204
+LIFT	2001
 
 VELOCITY	TOTAL_DRAG
 0	0

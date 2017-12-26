@@ -19,5 +19,6 @@ public class Crew extends SimpleValueSet
     addToInput(PhysicalQuantity.MASS);
     addToInput(PhysicalQuantity.AREA);
     addToInput(PhysicalQuantity.PARASITIC_DRAG_COEFFICIENT);
+    addHiddenOutput(PhysicalQuantity.WEIGHT);
   }
 }

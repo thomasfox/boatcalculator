@@ -41,10 +41,6 @@ public abstract class Boat
     addValueSet(daggerboardOrKeel);
     addValueSet(rudder);
 
-    hull.addHiddenOutput(PhysicalQuantity.VELOCITY);
-    daggerboardOrKeel.addHiddenOutput(PhysicalQuantity.VELOCITY);
-    rudder.addHiddenOutput(PhysicalQuantity.VELOCITY);
-
     values.add(new DriftToStableStateStrategy(PhysicalQuantity.ANGLE_OF_ATTACK, DaggerboardOrKeel.ID, PhysicalQuantity.DRIFT_ANGLE, BoatGlobalValues.ID, 0d));
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, Rudder.ID));
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, DaggerboardOrKeel.ID));

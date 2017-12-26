@@ -1,5 +1,6 @@
 package com.github.thomasfox.sailboatcalculator.valueset.impl;
 
+import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.valueset.SimpleValueSet;
 
 public class Hull extends SimpleValueSet
@@ -11,5 +12,6 @@ public class Hull extends SimpleValueSet
   public Hull()
   {
     super(ID, NAME);
+    addHiddenOutput(PhysicalQuantity.VELOCITY);
   }
 }

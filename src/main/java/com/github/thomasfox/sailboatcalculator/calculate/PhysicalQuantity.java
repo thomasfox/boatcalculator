@@ -12,7 +12,7 @@ public enum PhysicalQuantity
   WAVE_MAKING_DRAG_COEFFICIENT("Widerstandsbeiwert für den Wellenwiderstand", null, false),
   TOTAL_DRAG("Gesamtwiderstand", "N", true),
   TOTAL_DRAG_COEFFICIENT("Widerstandsbeiwert für den Gesamtwiderstand", null, false),
-  LIFT("Auftrieb", "N", true, "des gesamten Flügels"),
+  LIFT("Auftrieb", "N", true),
   LIFT_COEFFICIENT("Auftriebsbeiwert", null, false, "gemittelt nach Fläche über den gesamten Flügel"),
   LATERAL_FORCE("Lateralkraft", "N", true),
   DRIVING_FORCE("Vortriebskraft", "N", true),
