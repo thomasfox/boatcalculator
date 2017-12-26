@@ -8,8 +8,10 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -28,8 +30,14 @@ import com.github.thomasfox.sailboatcalculator.boat.Boat;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.progress.CalculationState;
 import com.github.thomasfox.sailboatcalculator.value.CalculatedPhysicalQuantityValue;
+import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.BoatGlobalValues;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.DaggerboardOrKeel;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Hull;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Rigg;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Rudder;
 
 public class SwingGui
 {
@@ -61,6 +69,8 @@ public class SwingGui
 
   private Boat boat = menubar.getSelectedBoat();
 
+  private final Set<Set<PhysicalQuantityInSet>> graphSets = new HashSet<>();
+
   public SwingGui()
   {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -80,6 +90,18 @@ public class SwingGui
 
     frame.pack();
     frame.setVisible(true);
+  }
+
+  private void fillGraphSets()
+  {
+    graphSets.clear();
+    Set<PhysicalQuantityInSet> dragSet = new HashSet<>();
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Rudder.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, DaggerboardOrKeel.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Hull.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.DRIVING_FORCE, Rigg.ID));
+    graphSets.add(dragSet);
   }
 
   private void createInputPanel()
@@ -315,13 +337,75 @@ public class SwingGui
     clearCharts();
 
     Map<PartOutput, List<QuantityOutput>> shownGraphs = getShownGraphs();
+    QuantityInput scannedInput = getScannedInput();
+
+    Map<QuantityOutput, XYSeries> quantitySeries
+        = calculateQuantitySeriesForSelectedOutputs(shownGraphs, scannedInput);
+
+    calculationStateDisplay.clear();
+
+    int row = 0;
+    int column = 0;
+    for (Map.Entry<QuantityOutput, XYSeries> seriesEntry : quantitySeries.entrySet())
+    {
+      JFreeChart chart = createChart(scannedInput, seriesEntry);
+      ChartPanel chartPanel = new ChartPanel(chart);
+      GridBagConstraints gridBagConstraints = new GridBagConstraints();
+      gridBagConstraints.fill = GridBagConstraints.BOTH;
+      gridBagConstraints.gridx = column;
+      gridBagConstraints.gridy = row;
+      chartsPanel.add(chartPanel, gridBagConstraints);
+      chartPanels.add(chartPanel);
+
+      row++;
+      if (row > 1)
+      {
+        row = 0;
+        column++;
+      }
+    }
+  }
+
+  private QuantityInput getScannedInput()
+  {
     List<QuantityInput> scannedInputs = getScannedInputs();
     if (scannedInputs.size() > 1)
     {
       throw new IllegalArgumentException("Can only handle one scanned input");
     }
     QuantityInput scannedInput = scannedInputs.get(0);
+    return scannedInput;
+  }
 
+  private JFreeChart createChart(
+      QuantityInput scannedInput,
+      Map.Entry<QuantityOutput, XYSeries> seriesEntry)
+  {
+    String seriesDisplayName = seriesEntry.getKey().getSetName() + " " + seriesEntry.getKey().getQuantity().getDisplayName();
+    JFreeChart chart;
+    if ("°".equals(scannedInput.getQuantity().getUnit()))
+    {
+      XYSeriesCollection seriesCollection = new XYSeriesCollection();
+      seriesCollection.addSeries(seriesEntry.getValue());
+      chart = ChartFactory.createPolarChart(seriesDisplayName, seriesCollection, false, true, false);
+    }
+    else
+    {
+      DefaultXYDataset dataset = new DefaultXYDataset();
+      dataset.addSeries(seriesDisplayName, seriesEntry.getValue().toArray());
+      chart = ChartFactory.createXYLineChart(
+          seriesDisplayName,
+          scannedInput.getQuantity().getDisplayNameIncludingUnit(),
+          seriesEntry.getKey().getQuantity().getDisplayNameIncludingUnit(),
+          dataset);
+    }
+    return chart;
+  }
+
+  private Map<QuantityOutput, XYSeries> calculateQuantitySeriesForSelectedOutputs(
+      Map<PartOutput, List<QuantityOutput>> shownGraphs,
+      QuantityInput scannedInput)
+  {
     Map<QuantityOutput, XYSeries> quantitySeries = new HashMap<>();
     for (Map.Entry<PartOutput, List<QuantityOutput>> shownGraphsPart: shownGraphs.entrySet())
     {
@@ -353,46 +437,7 @@ public class SwingGui
         }
       }
     }
-
-    calculationStateDisplay.clear();
-
-    int row = 0;
-    int column = 0;
-    for (Map.Entry<QuantityOutput, XYSeries> seriesEntry : quantitySeries.entrySet())
-    {
-      String seriesDisplayName = seriesEntry.getKey().getSetName() + " " + seriesEntry.getKey().getQuantity().getDisplayName();
-      JFreeChart chart;
-      if ("°".equals(scannedInput.getQuantity().getUnit()))
-      {
-        XYSeriesCollection seriesCollection = new XYSeriesCollection();
-        seriesCollection.addSeries(seriesEntry.getValue());
-        chart = ChartFactory.createPolarChart(seriesDisplayName, seriesCollection, false, true, false);
-      }
-      else
-      {
-        DefaultXYDataset dataset = new DefaultXYDataset();
-        dataset.addSeries(seriesDisplayName, seriesEntry.getValue().toArray());
-        chart = ChartFactory.createXYLineChart(
-            seriesDisplayName,
-            scannedInput.getQuantity().getDisplayNameIncludingUnit(),
-            seriesEntry.getKey().getQuantity().getDisplayNameIncludingUnit(),
-            dataset);
-      }
-      ChartPanel chartPanel = new ChartPanel(chart);
-      GridBagConstraints gridBagConstraints = new GridBagConstraints();
-      gridBagConstraints.fill = GridBagConstraints.BOTH;
-      gridBagConstraints.gridx = column;
-      gridBagConstraints.gridy = row;
-      chartsPanel.add(chartPanel, gridBagConstraints);
-      chartPanels.add(chartPanel);
-
-      row++;
-      if (row > 1)
-      {
-        row = 0;
-        column++;
-      }
-    }
+    return quantitySeries;
   }
 
   private int displayCalculateResultInValueSetOutputs(QuantityOutput.Mode mode)
