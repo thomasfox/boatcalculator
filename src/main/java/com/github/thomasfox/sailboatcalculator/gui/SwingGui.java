@@ -51,6 +51,8 @@ public class SwingGui
 
   private final List<ChartPanel> chartPanels = new ArrayList<>();
 
+  private CalculationStateDisplay calculationStateDisplay;
+
   private final JButton calculateButton = new JButton("Berechnen");
 
   private final JButton scanButton = new JButton("Diagramme anzeigen");
@@ -174,7 +176,7 @@ public class SwingGui
 
   private void addCalculationStateDisplay()
   {
-    CalculationStateDisplay calculationStateDisplay = new CalculationStateDisplay();
+    calculationStateDisplay = new CalculationStateDisplay();
     CalculationState.register(calculationStateDisplay);
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -259,22 +261,13 @@ public class SwingGui
     clearResult();
     reinitalizeValueSetInputs();
     boat.calculate();
-    CalculationState.clear();
 
-    QuantityOutput.Mode mode;
-    List<QuantityInput> scannedInputs = getScannedInputs();
-    if (scannedInputs.isEmpty())
-    {
-      mode = QuantityOutput.Mode.NUMERIC_DISPLAY;
-    }
-    else
-    {
-      mode = QuantityOutput.Mode.CHECKBOX_DISPLAY;
-    }
+    calculationStateDisplay.clear();
 
+    QuantityOutput.Mode mode = getOutputMode();
     int row = displayCalculateResultInValueSetOutputs(mode);
 
-    if (!scannedInputs.isEmpty())
+    if (mode == QuantityOutput.Mode.CHECKBOX_DISPLAY)
     {
       GridBagConstraints gridBagConstraints = new GridBagConstraints();
       gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -286,6 +279,21 @@ public class SwingGui
     {
       scanButton.setVisible(false);
     }
+  }
+
+  private QuantityOutput.Mode getOutputMode()
+  {
+    QuantityOutput.Mode mode;
+    List<QuantityInput> scannedInputs = getScannedInputs();
+    if (scannedInputs.isEmpty())
+    {
+      mode = QuantityOutput.Mode.NUMERIC_DISPLAY;
+    }
+    else
+    {
+      mode = QuantityOutput.Mode.CHECKBOX_DISPLAY;
+    }
+    return mode;
   }
 
   public void scanButtonPressed(ActionEvent e)
@@ -305,7 +313,6 @@ public class SwingGui
   private void calculateAndRefreshDisplayedResultsScan()
   {
     clearCharts();
-    CalculationState.clear();
 
     Map<PartOutput, List<QuantityOutput>> shownGraphs = getShownGraphs();
     List<QuantityInput> scannedInputs = getScannedInputs();
@@ -346,6 +353,9 @@ public class SwingGui
         }
       }
     }
+
+    calculationStateDisplay.clear();
+
     int row = 0;
     int column = 0;
     for (Map.Entry<QuantityOutput, XYSeries> seriesEntry : quantitySeries.entrySet())

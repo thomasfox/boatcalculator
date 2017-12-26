@@ -16,7 +16,7 @@ public class Crew extends SimpleValueSet
     setFixedValueNoOverwrite(MaterialConstants.GRAVITY_ACCELERATION);
     setFixedValueNoOverwrite(MaterialConstants.DENSITY_AIR);
     setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_AIR);
-    addToInput(PhysicalQuantity.WEIGHT);
+    addToInput(PhysicalQuantity.MASS);
     addToInput(PhysicalQuantity.AREA);
     addToInput(PhysicalQuantity.PARASITIC_DRAG_COEFFICIENT);
   }

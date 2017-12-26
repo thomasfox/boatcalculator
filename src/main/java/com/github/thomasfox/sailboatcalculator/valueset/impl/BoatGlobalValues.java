@@ -15,7 +15,7 @@ public class BoatGlobalValues extends SimpleValueSet
     addToInput(PhysicalQuantity.WIND_SPEED);
     addToInput(PhysicalQuantity.POINTING_ANGLE);
     addToInput(PhysicalQuantity.DRIFT_ANGLE);
-    addToInput(PhysicalQuantity.WEIGHT);
+    addToInput(PhysicalQuantity.MASS);
     addToInput(PhysicalQuantity.VELOCITY);
   }
 }

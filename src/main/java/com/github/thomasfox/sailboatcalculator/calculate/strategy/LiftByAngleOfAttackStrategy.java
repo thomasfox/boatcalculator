@@ -44,18 +44,18 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
       = new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID);
 
   @NonNull
-  private final PhysicalQuantityInSet[] weightSources;
+  private final PhysicalQuantityInSet[] massSources;
 
-  public LiftByAngleOfAttackStrategy(@NonNull PhysicalQuantityInSet... weightSources)
+  public LiftByAngleOfAttackStrategy(@NonNull PhysicalQuantityInSet... massSources)
   {
-    this.weightSources = weightSources;
-    checkUnits(weightSources);
+    this.massSources = massSources;
+    checkUnitsOfMassSources();
   }
 
-  private void checkUnits(PhysicalQuantityInSet... weightSources)
+  private void checkUnitsOfMassSources()
   {
-    String targetUnit = PhysicalQuantity.WEIGHT.getUnit();
-    for (PhysicalQuantityInSet source : weightSources)
+    String targetUnit = PhysicalQuantity.MASS.getUnit();
+    for (PhysicalQuantityInSet source : massSources)
     {
       if (!Objects.equals(source.getPhysicalQuantity().getUnit(), targetUnit))
       {
@@ -81,15 +81,11 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     {
       return false;
     }
-    if (allValues.isValueKnown(new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Hull.ID)))
+    if (allValues.isValueKnown(new PhysicalQuantityInSet(PhysicalQuantity.MASS, Hull.ID)))
     {
       return false;
     }
-    if (allValues.isValueKnown(new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Hull.ID)))
-    {
-      return false;
-    }
-    if (!allWeightSourceValuesAreKnown(allValues))
+    if (!allMassSourceValuesAreKnown(allValues))
     {
       return false;
     }
@@ -101,9 +97,9 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     {
       return false;
     }
-    double weight = getSumOfWeightSourcesValues(allValues);
-    double weightForce = weight * MaterialConstants.GRAVITY_ACCELERATION.getValue();
-    if (weightForce > maxLift.getValue())
+    double mass = getSumOfMassSourcesValues(allValues);
+    double weight = mass * MaterialConstants.GRAVITY_ACCELERATION.getValue();
+    if (weight > maxLift.getValue())
     {
       // lift cannot compensate weight
       allValues.setCalculatedValueNoOverwrite(
@@ -112,8 +108,8 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
           getCalculatedByDescription(allValues),
           getSourceValuesWithNames(allValues));
       allValues.setCalculatedValueNoOverwrite(
-          new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Hull.ID),
-          (weightForce - maxLift.getValue()) / MaterialConstants.GRAVITY_ACCELERATION.getValue(),
+          new PhysicalQuantityInSet(PhysicalQuantity.MASS, Hull.ID),
+          (weight - maxLift.getValue()) / MaterialConstants.GRAVITY_ACCELERATION.getValue(),
           getCalculatedByDescription(allValues),
           getSourceValuesWithNames(allValues));
       return true;
@@ -122,9 +118,9 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     double angleOfAttack = maxAngleOfAttack;
     double step = angleOfAttack;
     int tries = 20;
-    while (Math.abs(weightForce - lift.getValue()) > weightForce/1000 && tries > 0)
+    while (Math.abs(weight - lift.getValue()) > weight/1000 && tries > 0)
     {
-      if (lift.getValue() > weightForce)
+      if (lift.getValue() > weight)
       {
         angleOfAttack -= step;
       }
@@ -136,7 +132,7 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
       lift = calculateLiftOfMainWing(angleOfAttack, allValues);
       tries--;
     }
-    if (Math.abs(weightForce - lift.getValue()) < weightForce/1000)
+    if (Math.abs(weight - lift.getValue()) < weight/1000)
     {
       allValues.setCalculatedValueNoOverwrite(
           new PhysicalQuantityInSet(PhysicalQuantity.ANGLE_OF_ATTACK, MainLiftingFoil.ID),
@@ -144,7 +140,7 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
           getCalculatedByDescription(allValues),
           getSourceValuesWithNames(allValues));
       allValues.setCalculatedValueNoOverwrite(
-          new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Hull.ID),
+          new PhysicalQuantityInSet(PhysicalQuantity.MASS, Hull.ID),
           0,
           getCalculatedByDescription(allValues),
           getSourceValuesWithNames(allValues));
@@ -172,15 +168,15 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     return maxLift;
   }
 
-  public boolean allWeightSourceValuesAreKnown(AllValues allValues)
+  public boolean allMassSourceValuesAreKnown(AllValues allValues)
   {
-    return Arrays.stream(weightSources).allMatch(allValues::isValueKnown);
+    return Arrays.stream(massSources).allMatch(allValues::isValueKnown);
   }
 
-  public double getSumOfWeightSourcesValues(AllValues allValues)
+  public double getSumOfMassSourcesValues(AllValues allValues)
   {
     double result = 0d;
-    for (PhysicalQuantityInSet source : weightSources)
+    for (PhysicalQuantityInSet source : massSources)
     {
       result += allValues.getKnownValue(source);
     }
@@ -190,7 +186,7 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
   public String getCalculatedByDescription(AllValues allValues)
   {
     StringBuilder result = new StringBuilder("LiftByAngleOfAttackStrategy: ");
-    for (PhysicalQuantityInSet source : weightSources)
+    for (PhysicalQuantityInSet source : massSources)
     {
       if (result.length() > 0 )
       {
@@ -205,9 +201,9 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
 
   private PhysicalQuantityValueWithSetId[] getSourceValuesWithNames(AllValues allValues)
   {
-    PhysicalQuantityValueWithSetId[] result = new PhysicalQuantityValueWithSetId[weightSources.length];
+    PhysicalQuantityValueWithSetId[] result = new PhysicalQuantityValueWithSetId[massSources.length];
     int i = 0;
-    for (PhysicalQuantityInSet source : weightSources)
+    for (PhysicalQuantityInSet source : massSources)
     {
       ValueSet sourceSet = allValues.getValueSet(source.getValueSetId());
       result[i] = new PhysicalQuantityValueWithSetId(

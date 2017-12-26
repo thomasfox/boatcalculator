@@ -4,25 +4,22 @@ import com.github.thomasfox.sailboatcalculator.calculate.Calculator;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
 
-public class LeverFromWeightCalculator extends Calculator
+public class WeightFromMassCalculator extends Calculator
 {
-  public LeverFromWeightCalculator()
+  public WeightFromMassCalculator()
   {
-    super(PhysicalQuantity.LEVER_WEIGHT,
-        PhysicalQuantity.WEIGHT,
-        PhysicalQuantity.TORQUE_BETWEEN_FORCES,
+    super(PhysicalQuantity.WEIGHT,
+        PhysicalQuantity.MASS,
         PhysicalQuantity.GRAVITY_ACCELERATION);
   }
 
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double weight = valueSet.getKnownValue(PhysicalQuantity.WEIGHT).getValue();
-    double torque = valueSet.getKnownValue(PhysicalQuantity.TORQUE_BETWEEN_FORCES).getValue();
+    double mass = valueSet.getKnownValue(PhysicalQuantity.MASS).getValue();
     double gravityAcceleration = valueSet.getKnownValue(PhysicalQuantity.GRAVITY_ACCELERATION).getValue();
 
-    double force = weight * gravityAcceleration;
-    double lever = torque / force;
-    return lever;
+    double weight = mass * gravityAcceleration;
+    return weight;
   }
 }

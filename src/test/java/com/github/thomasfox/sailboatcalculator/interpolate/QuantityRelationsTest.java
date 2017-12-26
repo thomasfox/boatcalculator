@@ -34,7 +34,7 @@ public class QuantityRelationsTest
   {
     // arrange
     PhysicalQuantityValues fixedValues = new PhysicalQuantityValues();
-    fixedValues.setValue(PhysicalQuantity.WEIGHT, 20d);
+    fixedValues.setValue(PhysicalQuantity.MASS, 20d);
 
     List<PhysicalQuantityValues> relatedValues = new ArrayList<>();
     PhysicalQuantityValues relatedValuesEntry = new PhysicalQuantityValues();
@@ -52,7 +52,7 @@ public class QuantityRelationsTest
     // assert
     assertThat(sut.getName()).isEqualTo("myName");
 
-    assertThat(sut.getFixedQuantities().getAsList()).containsOnly(new PhysicalQuantityValue(PhysicalQuantity.WEIGHT, 20d));
+    assertThat(sut.getFixedQuantities().getAsList()).containsOnly(new PhysicalQuantityValue(PhysicalQuantity.MASS, 20d));
     assertThat(sut.getFixedQuantities()).isNotSameAs(fixedValues);
 
     assertThat(sut.getRelatedQuantityValues()).hasSize(2);
@@ -78,7 +78,7 @@ public class QuantityRelationsTest
     relatedValues.add(relatedValuesEntry);
     relatedValuesEntry = new PhysicalQuantityValues();
     relatedValuesEntry.setValue(PhysicalQuantity.FORCE, 60d);
-    relatedValuesEntry.setValue(PhysicalQuantity.WEIGHT, 20d);
+    relatedValuesEntry.setValue(PhysicalQuantity.MASS, 20d);
     relatedValues.add(relatedValuesEntry);
 
     // assert

@@ -19,7 +19,7 @@ import com.github.thomasfox.sailboatcalculator.calculate.impl.FroudeNumberCalcul
 import com.github.thomasfox.sailboatcalculator.calculate.impl.InducedDragCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.InducedDragCoefficientCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.LateralForceCalculator;
-import com.github.thomasfox.sailboatcalculator.calculate.impl.LeverFromWeightCalculator;
+import com.github.thomasfox.sailboatcalculator.calculate.impl.LeverFromMassCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.LiftCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.LiftCoefficientCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.ParasiticDragCalculator;
@@ -76,7 +76,7 @@ public class CombinedCalculator
     calculators.add(new LateralForceCalculator());
     calculators.add(new DrivingForceCalculator());
     calculators.add(new TorqueCalculator());
-    calculators.add(new LeverFromWeightCalculator());
+    calculators.add(new LeverFromMassCalculator());
     calculators.add(new VMGCalculator());
     calculators.add(new SailingAngleCalculator());
     calculators.add(new BrakingForceCalculator());

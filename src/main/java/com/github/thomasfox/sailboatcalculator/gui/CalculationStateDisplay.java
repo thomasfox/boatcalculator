@@ -49,4 +49,14 @@ public class CalculationStateDisplay extends JPanel implements StateChangedListe
       label.repaint();
     }
   }
+
+  public void clear()
+  {
+    for (JLabel label : labels.values())
+    {
+      remove(label);
+    }
+    labels.clear();
+    CalculationState.clear();
+  }
 }
