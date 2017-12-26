@@ -114,6 +114,9 @@ public class SwingGui
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG, MainLiftingFoil.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.WAVE_MAKING_DRAG, MainLiftingFoil.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.DRIVING_FORCE, Rigg.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Rigg.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG, Rigg.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG, Rigg.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.BRAKING_FORCE, Crew.ID));
     graphSets.put("Widerstand und Vortrieb", dragSet);
   }

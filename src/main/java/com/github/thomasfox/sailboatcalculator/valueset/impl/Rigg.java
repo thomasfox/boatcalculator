@@ -19,5 +19,6 @@ public class Rigg extends Wing
     addToInput(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT);
     addToInput(PhysicalQuantity.AREA);
     addToInput(PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT);
+    addHiddenOutput(PhysicalQuantity.WAVE_MAKING_DRAG);
   }
 }
