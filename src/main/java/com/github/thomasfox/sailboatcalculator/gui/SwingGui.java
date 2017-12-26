@@ -22,6 +22,8 @@ import javax.swing.border.EmptyBorder;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PolarPlot;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -34,8 +36,10 @@ import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
 import com.github.thomasfox.sailboatcalculator.valueset.impl.BoatGlobalValues;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.Crew;
 import com.github.thomasfox.sailboatcalculator.valueset.impl.DaggerboardOrKeel;
 import com.github.thomasfox.sailboatcalculator.valueset.impl.Hull;
+import com.github.thomasfox.sailboatcalculator.valueset.impl.MainLiftingFoil;
 import com.github.thomasfox.sailboatcalculator.valueset.impl.Rigg;
 import com.github.thomasfox.sailboatcalculator.valueset.impl.Rudder;
 
@@ -69,10 +73,11 @@ public class SwingGui
 
   private Boat boat = menubar.getSelectedBoat();
 
-  private final Set<Set<PhysicalQuantityInSet>> graphSets = new HashSet<>();
+  private final Map<String, Set<PhysicalQuantityInSet>> graphSets = new HashMap<>();
 
   public SwingGui()
   {
+    fillGraphSets();
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setJMenuBar(menubar);
 
@@ -98,10 +103,19 @@ public class SwingGui
     Set<PhysicalQuantityInSet> dragSet = new HashSet<>();
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Rudder.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG, Rudder.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG, Rudder.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, DaggerboardOrKeel.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG, DaggerboardOrKeel.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG, DaggerboardOrKeel.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Hull.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, MainLiftingFoil.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG, MainLiftingFoil.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG, MainLiftingFoil.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.WAVE_MAKING_DRAG, MainLiftingFoil.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.DRIVING_FORCE, Rigg.ID));
-    graphSets.add(dragSet);
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.BRAKING_FORCE, Crew.ID));
+    graphSets.put("Widerstand und Vortrieb", dragSet);
   }
 
   private void createInputPanel()
@@ -346,16 +360,27 @@ public class SwingGui
 
     int row = 0;
     int column = 0;
+    Map<PhysicalQuantityInSet, JFreeChart> charts = new HashMap<>();
     for (Map.Entry<PhysicalQuantityInSet, XYSeries> seriesEntry : quantitySeries.entrySet())
     {
-      JFreeChart chart = createChart(scannedInput, seriesEntry);
-      ChartPanel chartPanel = new ChartPanel(chart);
-      GridBagConstraints gridBagConstraints = new GridBagConstraints();
-      gridBagConstraints.fill = GridBagConstraints.BOTH;
-      gridBagConstraints.gridx = column;
-      gridBagConstraints.gridy = row;
-      chartsPanel.add(chartPanel, gridBagConstraints);
-      chartPanels.add(chartPanel);
+      JFreeChart chart = getExistingChart(seriesEntry.getKey(), charts);
+      if (chart == null)
+      {
+        chart = createChart(scannedInput, seriesEntry);
+        charts.put(seriesEntry.getKey(), chart);
+
+        ChartPanel chartPanel = new ChartPanel(chart);
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.gridx = column;
+        gridBagConstraints.gridy = row;
+        chartsPanel.add(chartPanel, gridBagConstraints);
+        chartPanels.add(chartPanel);
+      }
+      else
+      {
+        addDataSet(seriesEntry, chart);
+      }
 
       row++;
       if (row > 1)
@@ -364,6 +389,55 @@ public class SwingGui
         column++;
       }
     }
+  }
+
+  private void addDataSet(Map.Entry<PhysicalQuantityInSet, XYSeries> seriesEntry, JFreeChart chart)
+  {
+    String seriesDisplayName = getSeriesDisplayName(seriesEntry.getKey());
+    if (chart.getPlot() instanceof PolarPlot)
+    {
+      PolarPlot plot = (PolarPlot) chart.getPlot();
+      ((XYSeriesCollection)(plot.getDataset())).addSeries(seriesEntry.getValue());
+    }
+    else if (chart.getPlot() instanceof XYPlot)
+    {
+      XYPlot plot = (XYPlot) chart.getPlot();
+      ((DefaultXYDataset) plot.getDataset()).addSeries(seriesDisplayName, seriesEntry.getValue().toArray());
+    }
+    chart.setTitle(getGraphSetInWhichQiantityIsMember(seriesEntry.getKey()).getKey());
+  }
+
+  private JFreeChart getExistingChart(PhysicalQuantityInSet forQuantity, Map<PhysicalQuantityInSet, JFreeChart> charts)
+  {
+    Map.Entry<String, Set<PhysicalQuantityInSet>> graphSetInWhichForQuantityIsMember
+        = getGraphSetInWhichQiantityIsMember(forQuantity);
+    if (graphSetInWhichForQuantityIsMember == null)
+    {
+      return null;
+    }
+    for (PhysicalQuantityInSet graphSetQuantity : graphSetInWhichForQuantityIsMember.getValue())
+    {
+      JFreeChart chart = charts.get(graphSetQuantity);
+      if (chart != null)
+      {
+        return chart;
+      }
+    }
+    return null;
+  }
+
+  private Map.Entry<String, Set<PhysicalQuantityInSet>> getGraphSetInWhichQiantityIsMember(
+      PhysicalQuantityInSet quantity)
+  {
+    Map.Entry<String, Set<PhysicalQuantityInSet>> graphSetInWhichQuantityIsMember = null;
+    for (Map.Entry<String, Set<PhysicalQuantityInSet>> candidate : graphSets.entrySet())
+    {
+      if (candidate.getValue().contains(quantity))
+      {
+        graphSetInWhichQuantityIsMember = candidate;
+      }
+    }
+    return graphSetInWhichQuantityIsMember;
   }
 
   private QuantityInput getScannedInput()
@@ -381,8 +455,7 @@ public class SwingGui
       QuantityInput scannedInput,
       Map.Entry<PhysicalQuantityInSet, XYSeries> seriesEntry)
   {
-    String seriesDisplayName = boat.getValueSetNonNull(seriesEntry.getKey().getValueSetId()).getDisplayName()
-        + " " + seriesEntry.getKey().getPhysicalQuantity().getDisplayName();
+    String seriesDisplayName = getSeriesDisplayName(seriesEntry.getKey());
     JFreeChart chart;
     if ("°".equals(scannedInput.getQuantity().getUnit()))
     {
@@ -401,6 +474,13 @@ public class SwingGui
           dataset);
     }
     return chart;
+  }
+
+  private String getSeriesDisplayName(PhysicalQuantityInSet quantity)
+  {
+    String seriesDisplayName = boat.getValueSetNonNull(quantity.getValueSetId()).getDisplayName()
+        + " " + quantity.getPhysicalQuantity().getDisplayName();
+    return seriesDisplayName;
   }
 
   private Map<PhysicalQuantityInSet, XYSeries> calculateQuantitySeriesForSelectedOutputs(
