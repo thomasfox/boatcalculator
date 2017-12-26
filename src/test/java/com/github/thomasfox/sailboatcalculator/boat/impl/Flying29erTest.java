@@ -15,16 +15,30 @@ import com.github.thomasfox.sailboatcalculator.valueset.HasProfile;
 import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
 import com.github.thomasfox.sailboatcalculator.valueset.impl.BoatGlobalValues;
 
-public class Skiff29erTest
+public class Flying29erTest
 {
   Skiff29er sut = new Skiff29er();
 
   @Test
-  public void testCalculate()
+  public void testCalculateNonFlying()
   {
-    sut = new Skiff29er();
-    sut.getValueSetNonNull(BoatGlobalValues.ID).setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.WIND_SPEED, 3d));
-    sut.getValueSetNonNull(BoatGlobalValues.ID).setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 30d));
+    sut = new Flying29er();
+    PhysicalQuantityValue globalBoatVelocity = calculateVelocity(3d, 45d);
+    assertThat(globalBoatVelocity.getValue()).isCloseTo(1.19, Offset.offset(0.01));
+  }
+
+  @Test
+  public void testCalculateFlying()
+  {
+    sut = new Flying29er();
+    PhysicalQuantityValue globalBoatVelocity = calculateVelocity(4d, 85d);
+    assertThat(globalBoatVelocity.getValue()).isCloseTo(5.74, Offset.offset(0.01));
+  }
+
+  private PhysicalQuantityValue calculateVelocity(double windSpeed, double pointingAngle)
+  {
+    sut.getValueSetNonNull(BoatGlobalValues.ID).setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.WIND_SPEED, windSpeed));
+    sut.getValueSetNonNull(BoatGlobalValues.ID).setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, pointingAngle));
 
     for (ValueSet valueSet : sut.getValueSets())
     {
@@ -56,6 +70,6 @@ public class Skiff29erTest
     {
       fail("Velocity could not be calculated");
     }
-    assertThat(globalBoatVelocity.getValue()).isCloseTo(1.06, Offset.offset(0.01));
+    return globalBoatVelocity;
   }
 }
