@@ -264,15 +264,15 @@ public class SwingGui
     return scannedInputs;
   }
 
-  private Map<PartOutput, List<QuantityOutput>> getShownGraphs()
+  private Set<PhysicalQuantityInSet> getShownGraphs()
   {
-    Map<PartOutput, List<QuantityOutput>> result = new HashMap<>();
+    Set<PhysicalQuantityInSet> result = new HashSet<>();
     for (PartOutput partOutput : valueSetOutputs)
     {
       List<QuantityOutput> shownGraphsInValueSet = partOutput.getShownGraphs();
-      if (!shownGraphsInValueSet.isEmpty())
+      for (QuantityOutput quantityOutput : shownGraphsInValueSet)
       {
-        result.put(partOutput, shownGraphsInValueSet);
+        result.add(new PhysicalQuantityInSet(quantityOutput.getQuantity(), partOutput.getId()));
       }
     }
     return result;
@@ -336,17 +336,17 @@ public class SwingGui
   {
     clearCharts();
 
-    Map<PartOutput, List<QuantityOutput>> shownGraphs = getShownGraphs();
+    Set<PhysicalQuantityInSet> shownGraphs = getShownGraphs();
     QuantityInput scannedInput = getScannedInput();
 
-    Map<QuantityOutput, XYSeries> quantitySeries
+    Map<PhysicalQuantityInSet, XYSeries> quantitySeries
         = calculateQuantitySeriesForSelectedOutputs(shownGraphs, scannedInput);
 
     calculationStateDisplay.clear();
 
     int row = 0;
     int column = 0;
-    for (Map.Entry<QuantityOutput, XYSeries> seriesEntry : quantitySeries.entrySet())
+    for (Map.Entry<PhysicalQuantityInSet, XYSeries> seriesEntry : quantitySeries.entrySet())
     {
       JFreeChart chart = createChart(scannedInput, seriesEntry);
       ChartPanel chartPanel = new ChartPanel(chart);
@@ -379,9 +379,10 @@ public class SwingGui
 
   private JFreeChart createChart(
       QuantityInput scannedInput,
-      Map.Entry<QuantityOutput, XYSeries> seriesEntry)
+      Map.Entry<PhysicalQuantityInSet, XYSeries> seriesEntry)
   {
-    String seriesDisplayName = seriesEntry.getKey().getSetName() + " " + seriesEntry.getKey().getQuantity().getDisplayName();
+    String seriesDisplayName = boat.getValueSetNonNull(seriesEntry.getKey().getValueSetId()).getDisplayName()
+        + " " + seriesEntry.getKey().getPhysicalQuantity().getDisplayName();
     JFreeChart chart;
     if ("°".equals(scannedInput.getQuantity().getUnit()))
     {
@@ -396,24 +397,21 @@ public class SwingGui
       chart = ChartFactory.createXYLineChart(
           seriesDisplayName,
           scannedInput.getQuantity().getDisplayNameIncludingUnit(),
-          seriesEntry.getKey().getQuantity().getDisplayNameIncludingUnit(),
+          seriesEntry.getKey().getPhysicalQuantity().getDisplayNameIncludingUnit(),
           dataset);
     }
     return chart;
   }
 
-  private Map<QuantityOutput, XYSeries> calculateQuantitySeriesForSelectedOutputs(
-      Map<PartOutput, List<QuantityOutput>> shownGraphs,
+  private Map<PhysicalQuantityInSet, XYSeries> calculateQuantitySeriesForSelectedOutputs(
+      Set<PhysicalQuantityInSet> shownGraphs,
       QuantityInput scannedInput)
   {
-    Map<QuantityOutput, XYSeries> quantitySeries = new HashMap<>();
-    for (Map.Entry<PartOutput, List<QuantityOutput>> shownGraphsPart: shownGraphs.entrySet())
+    Map<PhysicalQuantityInSet, XYSeries> quantitySeries = new HashMap<>();
+    for (PhysicalQuantityInSet shownGraph : shownGraphs)
     {
-      for (QuantityOutput shownGraph : shownGraphsPart.getValue())
-      {
-        XYSeries series = new XYSeries(shownGraph.getQuantity().getDisplayName(), false, true);
-        quantitySeries.put(shownGraph, series);
-      }
+      XYSeries series = new XYSeries(shownGraph.getPhysicalQuantity().getDisplayName(), false, true);
+      quantitySeries.put(shownGraph, series);
     }
 
     for (int i = 0; i < scannedInput.getNumberOfScanSteps(); ++i)
@@ -423,17 +421,14 @@ public class SwingGui
       scannedInput.setValue(xValue);
       reinitalizeValueSetInputs();
       boat.calculate();
-      for (Map.Entry<PartOutput, List<QuantityOutput>> shownGraphsPart: shownGraphs.entrySet())
+      for (PhysicalQuantityInSet shownGraph : shownGraphs)
       {
-        for (QuantityOutput shownGraph : shownGraphsPart.getValue())
+        ValueSet valueSet = boat.getValueSetNonNull(shownGraph.getValueSetId());
+        PhysicalQuantityValue knownValue = valueSet.getKnownValue(shownGraph.getPhysicalQuantity());
+        if (knownValue != null)
         {
-          ValueSet valueSet = boat.getValueSetNonNull(shownGraphsPart.getKey().getId());
-          PhysicalQuantityValue knownValue = valueSet.getKnownValue(shownGraph.getQuantity());
-          if (knownValue != null)
-          {
-            double yValue = knownValue.getValue();
-            quantitySeries.get(shownGraph).add(xValue, yValue);
-          }
+          double yValue = knownValue.getValue();
+          quantitySeries.get(shownGraph).add(xValue, yValue);
         }
       }
     }
