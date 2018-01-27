@@ -14,6 +14,7 @@ import com.github.thomasfox.sailboatcalculator.calculate.impl.ApparentWindSpeedC
 import com.github.thomasfox.sailboatcalculator.calculate.impl.AreaCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.BendingCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.BrakingForceCalculator;
+import com.github.thomasfox.sailboatcalculator.calculate.impl.CrosssectionAreaCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.DrivingForceCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.FroudeNumberCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.InducedDragCalculator;
@@ -21,7 +22,6 @@ import com.github.thomasfox.sailboatcalculator.calculate.impl.InducedDragCoeffic
 import com.github.thomasfox.sailboatcalculator.calculate.impl.LateralForceCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.LeverFromWeightCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.LiftCalculator;
-import com.github.thomasfox.sailboatcalculator.calculate.impl.LiftCoefficientCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.ParasiticDragCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.ProfileDragCalculator;
 import com.github.thomasfox.sailboatcalculator.calculate.impl.ReynoldsNumberCalculator;
@@ -65,7 +65,8 @@ public class CombinedCalculator
     calculators.add(new ParasiticDragCalculator());
     calculators.add(new BendingCalculator());
     calculators.add(new SecondMomentOfAreaCalculator());
-    calculators.add(new LiftCoefficientCalculator());
+    calculators.add(new SecondMomentOfAreaCalculator());
+    calculators.add(new CrosssectionAreaCalculator());
     calculators.add(new ThicknessCalculator());
     calculators.add(new WingChordFromSecondMomentOfAreaCalculator());
     calculators.add(new ProfileDragCalculator());

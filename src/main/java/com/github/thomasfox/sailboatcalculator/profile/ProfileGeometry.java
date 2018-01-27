@@ -115,7 +115,7 @@ public class ProfileGeometry
   /**
    * Gibt das Trägheitsmoment für die Biegesteifigkeit für ein Profil der Tiefe 1 zurück.
    *
-   * @return das Trägheitsmoment, nicht null.
+   * @return das Trägheitsmoment.
    */
   public double getSecondMomentOfArea()
   {
@@ -133,5 +133,24 @@ public class ProfileGeometry
           + (distance2FromCenter *distance2FromCenter * distance2FromCenter);
     }
     return xStep * result / 3;
+  }
+
+  /**
+   * Gibt die Querschnittsfläche für ein Profil zurück.
+   *
+   * @return die Querschnittsfläche.
+   */
+  public double getCrossectionArea()
+  {
+    double result = 0;
+    double xStep = 1d / CALCULATION_STEPS;
+    for (double x = xStep / 2; x < 1; x += xStep)
+    {
+      double minY = getLowerY(x);
+      double maxY = getUpperY(x);
+      double yDistance =  maxY - minY;
+      result += xStep * yDistance;
+    }
+    return result;
   }
 }

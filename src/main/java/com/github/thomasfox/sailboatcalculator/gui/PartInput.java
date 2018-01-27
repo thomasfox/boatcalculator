@@ -129,6 +129,9 @@ public class PartInput
       valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
           PhysicalQuantity.WING_RELATIVE_THICKNESS,
           profileGeometry.getThickness()));
+      valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
+          PhysicalQuantity.NORMALIZED_AREA_OF_CROSSECTION,
+          profileGeometry.getCrossectionArea()));
       valueSet.getQuantityRelations().addAll(
           profileInput.loadXfoilResults(
               SwingGui.PROFILE_DIRECTORY, profileName));
