@@ -149,6 +149,14 @@ public class AllValues
     return computationStrategies.remove(computationStrategy);
   }
 
+  /**
+   * Calculate unknown quantities from the known quantities
+   * and the calculation rules. The calculated quantities are stored as
+   * calculated quantities in the value sets.
+   *
+   * @param wanted the quantity to calculate, or null to calculate all
+   *        quantities than can be calculated.
+   */
   public void calculate(PhysicalQuantityInSet wanted)
   {
     if (wanted != null)

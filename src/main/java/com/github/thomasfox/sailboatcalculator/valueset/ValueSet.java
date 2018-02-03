@@ -15,6 +15,7 @@ import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValuesWithS
 
 /**
  * A collection of physical quantity values, and known relations between the quantities.
+ * Usually describes a single part or aspect of a boat, e.g. the rigg or the crew's righting moment
  *
  * Contains three sorts of values:
  * Fixed quantities (e.g. natural or material constants),

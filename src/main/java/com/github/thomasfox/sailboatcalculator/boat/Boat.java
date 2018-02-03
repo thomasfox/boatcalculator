@@ -32,6 +32,16 @@ public abstract class Boat
 
   protected AllValues values = new AllValues();
 
+  /**
+   * Holds all values and all calculation rules of a boat.
+   * The values are held in ValueSets, each of which describes a boat part
+   * or an aspect of the boat.
+   * The global values applying to the whole boat are held in the value set
+   * boatGlobalValues.
+   *
+   * This class is basically a wrapper around an AllValues object,
+   * to have named parts which can be easily accessed.
+   */
   public Boat()
   {
     addValueSet(boatGlobalValues);
