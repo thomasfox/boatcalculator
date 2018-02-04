@@ -23,7 +23,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
- * A set of physical Quantities.
+ * The default implementation of <code>ValueSet</code>.
  */
 @Data
 @RequiredArgsConstructor
