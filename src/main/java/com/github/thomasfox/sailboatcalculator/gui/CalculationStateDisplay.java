@@ -13,9 +13,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.github.thomasfox.sailboatcalculator.progress.CalculationState;
-import com.github.thomasfox.sailboatcalculator.progress.StateChangedListener;
+import com.github.thomasfox.sailboatcalculator.progress.CalculationStateChangedListener;
 
-public class CalculationStateDisplay extends JPanel implements StateChangedListener
+public class CalculationStateDisplay extends JPanel implements CalculationStateChangedListener
 {
   private static final long serialVersionUID = 1L;
 

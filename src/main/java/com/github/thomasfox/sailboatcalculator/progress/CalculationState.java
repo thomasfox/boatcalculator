@@ -19,7 +19,7 @@ public class CalculationState
 {
   private static Map<String, String> stateMap = new LinkedHashMap<>();
 
-  private static List<StateChangedListener> listeners = new ArrayList<>();
+  private static List<CalculationStateChangedListener> listeners = new ArrayList<>();
 
   /**
    * Sets the value of a trial value.
@@ -67,13 +67,13 @@ public class CalculationState
    */
   public static void stateChanged()
   {
-    for (StateChangedListener listener : listeners)
+    for (CalculationStateChangedListener listener : listeners)
     {
       listener.stateChanged();
     }
   }
 
-  public static void register(StateChangedListener listener)
+  public static void register(CalculationStateChangedListener listener)
   {
     listeners.add(listener);
   }
