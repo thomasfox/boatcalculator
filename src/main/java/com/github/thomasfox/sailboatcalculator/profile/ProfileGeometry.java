@@ -10,6 +10,10 @@ import com.github.thomasfox.sailboatcalculator.interpolate.XYPoint;
 
 import lombok.NonNull;
 
+/**
+ * Stores the cross-section of a profile.
+ * Can calculate geometric properties of the profile.
+ */
 public class ProfileGeometry
 {
   private final int CALCULATION_STEPS = 50;
@@ -44,30 +48,9 @@ public class ProfileGeometry
     }
   }
 
-  public double getThickness()
-  {
-    double minY = points.get(0).getY();
-    double maxY = points.get(0).getY();
-    for (int i = 1; i < points.size(); ++i)
-    {
-      minY = Math.min(minY, points.get(i).getY());
-      maxY = Math.max(maxY, points.get(i).getY());
-    }
-    return maxY - minY;
-  }
-
   public String getName()
   {
     return name;
-  }
-
-  private double getY(double x, List<XYPoint> points)
-  {
-    if (x < 0 || x > 1)
-    {
-      throw new IllegalArgumentException("X must be in interval[0,1] but is " + x);
-    }
-    return new Interpolator().interpolate(x, points);
   }
 
   public double getUpperY(double x)
@@ -86,6 +69,27 @@ public class ProfileGeometry
     Collections.reverse(reverseOrderOfPoints);
     double y2 = getY(x, reverseOrderOfPoints);
     return Math.min(y1, y2);
+  }
+
+  private double getY(double x, List<XYPoint> points)
+  {
+    if (x < 0 || x > 1)
+    {
+      throw new IllegalArgumentException("X must be in interval[0,1] but is " + x);
+    }
+    return new Interpolator().interpolate(x, points);
+  }
+
+  public double getThickness()
+  {
+    double minY = points.get(0).getY();
+    double maxY = points.get(0).getY();
+    for (int i = 1; i < points.size(); ++i)
+    {
+      minY = Math.min(minY, points.get(i).getY());
+      maxY = Math.max(maxY, points.get(i).getY());
+    }
+    return maxY - minY;
   }
 
   /**
