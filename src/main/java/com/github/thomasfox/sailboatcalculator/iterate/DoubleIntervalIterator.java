@@ -3,6 +3,13 @@ package com.github.thomasfox.sailboatcalculator.iterate;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Iterates in evenly distributed steps over an interval.
+ * The first point <code>scanStart</code>, the last point <code>scanEnd</code>
+ * and the number of steps are needed, then the iterator returns evenly spaced
+ * values distributed about the given interval,
+ * starting with <code>scanStart</code> and the last point being <code>scanEnd</code>.
+ */
 public class DoubleIntervalIterator implements Iterator<Double>
 {
   private final double scanStart;
