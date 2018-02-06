@@ -15,8 +15,11 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * A GUI to input start values for a <code>ValueSet</code>.
+ */
 @RequiredArgsConstructor
-public class PartInput
+public class ValueSetInput
 {
   @NonNull
   @Getter

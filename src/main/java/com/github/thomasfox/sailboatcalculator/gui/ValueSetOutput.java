@@ -10,7 +10,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class PartOutput
+public class ValueSetOutput
 {
   @NonNull
   @Getter
