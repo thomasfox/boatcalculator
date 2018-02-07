@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.gui;
+package com.github.thomasfox.sailboatcalculator.gui.panel.part;
 
 import java.awt.Container;
 import java.awt.GridBagConstraints;

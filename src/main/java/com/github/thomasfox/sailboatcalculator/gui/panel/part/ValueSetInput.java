@@ -1,10 +1,12 @@
-package com.github.thomasfox.sailboatcalculator.gui;
+package com.github.thomasfox.sailboatcalculator.gui.panel.part;
 
 import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.gui.SwingGui;
+import com.github.thomasfox.sailboatcalculator.gui.SwingHelper;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.sailboatcalculator.profile.ProfileGeometry;
 import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;

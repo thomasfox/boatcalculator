@@ -1,9 +1,11 @@
-package com.github.thomasfox.sailboatcalculator.gui;
+package com.github.thomasfox.sailboatcalculator.gui.panel.part;
 
 import java.awt.Component;
 import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.thomasfox.sailboatcalculator.gui.SwingHelper;
 
 import lombok.Getter;
 import lombok.NonNull;

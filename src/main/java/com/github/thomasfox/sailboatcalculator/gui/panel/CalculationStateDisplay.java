@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.gui;
+package com.github.thomasfox.sailboatcalculator.gui.panel;
 
 import java.awt.Color;
 import java.awt.Dimension;

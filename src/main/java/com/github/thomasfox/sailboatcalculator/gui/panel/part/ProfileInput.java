@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.gui;
+package com.github.thomasfox.sailboatcalculator.gui.panel.part;
 
 import java.awt.Container;
 import java.awt.GridBagConstraints;
@@ -9,6 +9,8 @@ import java.util.Objects;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 
+import com.github.thomasfox.sailboatcalculator.gui.SwingGui;
+import com.github.thomasfox.sailboatcalculator.gui.SwingHelper;
 import com.github.thomasfox.sailboatcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.sailboatcalculator.profile.ProfileGeometry;
 import com.github.thomasfox.sailboatcalculator.profile.ProfileSelector;

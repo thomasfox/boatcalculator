@@ -27,6 +27,11 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import com.github.thomasfox.sailboatcalculator.boat.Boat;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.sailboatcalculator.gui.panel.CalculationStateDisplay;
+import com.github.thomasfox.sailboatcalculator.gui.panel.InputPanel;
+import com.github.thomasfox.sailboatcalculator.gui.panel.TextResultPanel;
+import com.github.thomasfox.sailboatcalculator.gui.panel.part.QuantityInput;
+import com.github.thomasfox.sailboatcalculator.gui.panel.part.QuantityOutput;
 import com.github.thomasfox.sailboatcalculator.progress.CalculationState;
 import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;

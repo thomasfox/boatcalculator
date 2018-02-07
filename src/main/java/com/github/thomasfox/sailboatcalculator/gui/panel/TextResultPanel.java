@@ -1,4 +1,4 @@
-package com.github.thomasfox.sailboatcalculator.gui;
+package com.github.thomasfox.sailboatcalculator.gui.panel;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import com.github.thomasfox.sailboatcalculator.gui.panel.part.QuantityOutput;
+import com.github.thomasfox.sailboatcalculator.gui.panel.part.ValueSetOutput;
 import com.github.thomasfox.sailboatcalculator.value.CalculatedPhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
