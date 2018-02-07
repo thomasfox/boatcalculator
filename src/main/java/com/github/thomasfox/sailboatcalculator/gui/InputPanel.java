@@ -16,6 +16,9 @@ import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
 
+/**
+ * Component to input start values of the calculation.
+ */
 public class InputPanel extends JPanel
 {
   private static final long serialVersionUID = 1L;

@@ -15,7 +15,6 @@ import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -29,7 +28,6 @@ import org.jfree.data.xy.XYSeriesCollection;
 import com.github.thomasfox.sailboatcalculator.boat.Boat;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.progress.CalculationState;
-import com.github.thomasfox.sailboatcalculator.value.CalculatedPhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
@@ -55,9 +53,7 @@ public class SwingGui
 
   private final InputPanel inputPanel = new InputPanel(boat.getValueSets());
 
-  private JPanel singleResultPanel;
-
-  private final List<ValueSetOutput> valueSetOutputs = new ArrayList<>();
+  private final TextResultPanel textResultPanel = new TextResultPanel();
 
   private JPanel chartsPanel;
 
@@ -76,7 +72,7 @@ public class SwingGui
     frame.getContentPane().setLayout(new GridBagLayout());
 
     inputPanel.addToFrame(frame);
-    addSingleResultsPanel();
+    textResultPanel.addToFrame(frame);
     addChartsPanel();
     addCalculationStateDisplay();
 
@@ -116,23 +112,6 @@ public class SwingGui
     this.boat = boat;
     clearResult();
     inputPanel.reset(boat.getValueSets());
-  }
-
-  private void addSingleResultsPanel()
-  {
-    singleResultPanel = new JPanel();
-    singleResultPanel.setLayout(new GridBagLayout());
-    GridBagConstraints gridBagConstraints = new GridBagConstraints();
-    gridBagConstraints.fill = GridBagConstraints.BOTH;
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 0;
-    JScrollPane scrollPane = new JScrollPane(singleResultPanel);
-    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setPreferredSize(new Dimension(450, 400));
-    scrollPane.setMinimumSize(new Dimension(450, 400));
-    frame.add(scrollPane, gridBagConstraints);
-    singleResultPanel.setBorder(new EmptyBorder(0,10,0,10));
   }
 
   private void addChartsPanel()
@@ -190,20 +169,6 @@ public class SwingGui
     new Thread(calculateRunnable).start();
   }
 
-  private Set<PhysicalQuantityInSet> getShownGraphs()
-  {
-    Set<PhysicalQuantityInSet> result = new HashSet<>();
-    for (ValueSetOutput partOutput : valueSetOutputs)
-    {
-      List<QuantityOutput> shownGraphsInValueSet = partOutput.getShownGraphs();
-      for (QuantityOutput quantityOutput : shownGraphsInValueSet)
-      {
-        result.add(new PhysicalQuantityInSet(quantityOutput.getQuantity(), partOutput.getId()));
-      }
-    }
-    return result;
-  }
-
   private void calculateAndRefreshDisplayedResults()
   {
     clearResult();
@@ -213,14 +178,10 @@ public class SwingGui
     calculationStateDisplay.clear();
 
     QuantityOutput.Mode mode = getOutputMode();
-    int row = displayCalculateResultInValueSetOutputs(mode);
+    textResultPanel.displayCalculateResultInValueSetOutputs(mode, boat.getValueSets());
 
     if (mode == QuantityOutput.Mode.CHECKBOX_DISPLAY)
     {
-      GridBagConstraints gridBagConstraints = new GridBagConstraints();
-      gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-      gridBagConstraints.gridx = 0;
-      gridBagConstraints.gridy = row + 1;
       inputPanel.setScanButtonVisible(true);
     }
     else
@@ -262,7 +223,7 @@ public class SwingGui
   {
     clearCharts();
 
-    Set<PhysicalQuantityInSet> shownGraphs = getShownGraphs();
+    Set<PhysicalQuantityInSet> shownGraphs = textResultPanel.getShownGraphs();
     QuantityInput scannedInput = getScannedInput();
 
     Map<PhysicalQuantityInSet, XYSeries> quantitySeries
@@ -427,31 +388,10 @@ public class SwingGui
     return quantitySeries;
   }
 
-  private int displayCalculateResultInValueSetOutputs(QuantityOutput.Mode mode)
-  {
-    int outputRow = 0;
-    for (ValueSet valueSet : boat.getValueSets())
-    {
-      ValueSetOutput partOutput = new ValueSetOutput(valueSet.getId(), valueSet.getDisplayName());
-      valueSetOutputs.add(partOutput);
-      for (CalculatedPhysicalQuantityValue calculatedValue : valueSet.getCalculatedValues().getAsList())
-      {
-        if (valueSet.getHiddenOutputs().contains(calculatedValue.getPhysicalQuantity()))
-        {
-          continue;
-        }
-        QuantityOutput output = new QuantityOutput(calculatedValue, valueSet.getDisplayName());
-        partOutput.add(output);
-      }
-      outputRow += partOutput.addToContainerInRow(singleResultPanel, outputRow, mode);
-    }
-    return outputRow;
-  }
-
   private void clearResult()
   {
     clearCharts();
-    clearSingleResult();
+    textResultPanel.clear();
   }
 
   private void clearCharts()
@@ -461,14 +401,5 @@ public class SwingGui
       chartsPanel.remove(chartPanel);
     }
     chartPanels.clear();
-  }
-
-  private void clearSingleResult()
-  {
-    for (ValueSetOutput partOutput : valueSetOutputs)
-    {
-      partOutput.removeFromContainerAndReset(singleResultPanel);
-    }
-    valueSetOutputs.clear();
   }
 }
