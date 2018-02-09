@@ -119,7 +119,7 @@ public class SwingGui
 
     calculationStateDisplay.clear();
 
-    QuantityOutput.Mode mode = getOutputMode();
+    QuantityOutput.Mode mode = inputPanel.getOutputMode();
     textResultPanel.displayCalculateResultInValueSetOutputs(mode, boat.getValueSets());
 
     if (mode == QuantityOutput.Mode.CHECKBOX_DISPLAY)
@@ -132,19 +132,10 @@ public class SwingGui
     }
   }
 
-  private QuantityOutput.Mode getOutputMode()
+  private void clearResult()
   {
-    QuantityOutput.Mode mode;
-    List<QuantityInput> scannedInputs = inputPanel.getScannedInputs();
-    if (scannedInputs.isEmpty())
-    {
-      mode = QuantityOutput.Mode.NUMERIC_DISPLAY;
-    }
-    else
-    {
-      mode = QuantityOutput.Mode.CHECKBOX_DISPLAY;
-    }
-    return mode;
+    chartsPanel.clear();
+    textResultPanel.clear();
   }
 
   public void scanButtonPressed(ActionEvent e)
@@ -166,24 +157,13 @@ public class SwingGui
     chartsPanel.clear();
 
     Set<PhysicalQuantityInSet> shownGraphs = textResultPanel.getShownGraphs();
-    QuantityInput scannedInput = getScannedInput();
+    QuantityInput scannedInput = inputPanel.getScannedInput();
 
     List<SingleScanResult> scanResults
         = calculateQuantitySeriesForSelectedOutputs(shownGraphs, scannedInput);
 
     calculationStateDisplay.clear();
     chartsPanel.display(scanResults);
-  }
-
-  private QuantityInput getScannedInput()
-  {
-    List<QuantityInput> scannedInputs = inputPanel.getScannedInputs();
-    if (scannedInputs.size() > 1)
-    {
-      throw new IllegalArgumentException("Can only handle one scanned input");
-    }
-    QuantityInput scannedInput = scannedInputs.get(0);
-    return scannedInput;
   }
 
   private List<SingleScanResult> calculateQuantitySeriesForSelectedOutputs(
@@ -232,12 +212,5 @@ public class SwingGui
     String seriesDisplayName = boat.getValueSetNonNull(quantity.getValueSetId()).getDisplayName()
         + " " + quantity.getPhysicalQuantity().getDisplayName();
     return seriesDisplayName;
-  }
-
-
-  private void clearResult()
-  {
-    chartsPanel.clear();
-    textResultPanel.clear();
   }
 }

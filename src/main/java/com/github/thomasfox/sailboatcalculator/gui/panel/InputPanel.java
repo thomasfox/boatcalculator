@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.gui.SwingHelper;
 import com.github.thomasfox.sailboatcalculator.gui.panel.part.QuantityInput;
+import com.github.thomasfox.sailboatcalculator.gui.panel.part.QuantityOutput;
 import com.github.thomasfox.sailboatcalculator.gui.panel.part.ValueSetInput;
 import com.github.thomasfox.sailboatcalculator.value.PhysicalQuantityValue;
 import com.github.thomasfox.sailboatcalculator.valueset.ValueSet;
@@ -143,5 +144,29 @@ public class InputPanel extends JPanel
     return scannedInputs;
   }
 
+  public QuantityInput getScannedInput()
+  {
+    List<QuantityInput> scannedInputs = getScannedInputs();
+    if (scannedInputs.size() > 1)
+    {
+      throw new IllegalArgumentException("Can only handle one scanned input");
+    }
+    QuantityInput scannedInput = scannedInputs.get(0);
+    return scannedInput;
+  }
 
+  public QuantityOutput.Mode getOutputMode()
+  {
+    QuantityOutput.Mode mode;
+    List<QuantityInput> scannedInputs = getScannedInputs();
+    if (scannedInputs.isEmpty())
+    {
+      mode = QuantityOutput.Mode.NUMERIC_DISPLAY;
+    }
+    else
+    {
+      mode = QuantityOutput.Mode.CHECKBOX_DISPLAY;
+    }
+    return mode;
+  }
 }
