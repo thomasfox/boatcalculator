@@ -15,6 +15,7 @@ import javax.swing.JRadioButtonMenuItem;
 
 import com.github.thomasfox.sailboatcalculator.boat.Boat;
 import com.github.thomasfox.sailboatcalculator.boat.impl.Flying29er;
+import com.github.thomasfox.sailboatcalculator.boat.impl.FlyingKayak;
 import com.github.thomasfox.sailboatcalculator.boat.impl.Skiff29er;
 
 public class Menubar extends JMenuBar
@@ -40,7 +41,7 @@ public class Menubar extends JMenuBar
   public Menubar(Consumer<Boat> boatTypeSelected)
   {
     this.boatTypeSelected = boatTypeSelected;
-    for (Boat boat : new Boat[] {new Flying29er(), new Skiff29er()})
+    for (Boat boat : new Boat[] {new Flying29er(), new Skiff29er(), new FlyingKayak()})
     {
       JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem(boat.toString());
       typeSelectButtonGroup.add(rbMenuItem);

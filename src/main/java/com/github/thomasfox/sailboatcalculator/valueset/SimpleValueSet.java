@@ -208,7 +208,7 @@ public class SimpleValueSet implements ValueSet
     toInput.add(toAdd);
   }
 
-  protected boolean removeToInput(PhysicalQuantity toRemove)
+  public boolean removeToInput(PhysicalQuantity toRemove)
   {
     return toInput.remove(toRemove);
   }

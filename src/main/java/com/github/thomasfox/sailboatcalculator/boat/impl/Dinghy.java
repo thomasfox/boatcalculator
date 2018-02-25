@@ -1,6 +1,5 @@
 package com.github.thomasfox.sailboatcalculator.boat.impl;
 
-import com.github.thomasfox.sailboatcalculator.boat.Boat;
 import com.github.thomasfox.sailboatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.sailboatcalculator.calculate.strategy.QuantitySum;
@@ -13,7 +12,7 @@ import com.github.thomasfox.sailboatcalculator.valueset.impl.Hull;
 import com.github.thomasfox.sailboatcalculator.valueset.impl.LeverSailDaggerboard;
 import com.github.thomasfox.sailboatcalculator.valueset.impl.Rudder;
 
-public class Dinghy extends Boat
+public class Dinghy extends Sailboat
 {
   protected SimpleValueSet crew = new Crew();
 
