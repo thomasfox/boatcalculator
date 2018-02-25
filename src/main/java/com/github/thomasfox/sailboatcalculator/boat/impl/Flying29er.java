@@ -23,11 +23,12 @@ public class Flying29er extends Skiff29er
     values.add(mainLiftingFoil);
 
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
+    values.add(new QuantityEquality(PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID, PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
+
     replaceHullWeightStrategy();
     replaceTotalDragStrategy();
     mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1.7d);
     mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.231d);
-    mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.SUBMERGENCE_DEPTH, 1.5d);
     mainLiftingFoil.setProfileName("mh32-il");
 
     removeValueSet(daggerboardOrKeel);
