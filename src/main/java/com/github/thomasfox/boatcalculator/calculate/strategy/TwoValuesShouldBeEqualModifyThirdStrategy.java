@@ -211,6 +211,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
     allValues.clearCalculatedValues();
     ValueSet targetSet = allValues.getValueSetNonNull(targetSetId);
     targetSet.setCalculatedValueNoOverwrite(new PhysicalQuantityValue(targetQuantity, targetValue), getClass().getSimpleName() + " trial Value");
+    log.info("Trying value " + targetValue + " for modifying " + targetSetId + ":" + targetQuantity);
   }
 
   @ToString

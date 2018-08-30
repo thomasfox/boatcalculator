@@ -54,8 +54,18 @@ public class Flying29er extends Skiff29er
     }
     values.remove(weightStrategy);
     values.add(new LiftByAngleOfAttackStrategy(
-        new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Crew.ID),
-        new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BoatGlobalValues.ID)));
+        new PhysicalQuantityInSet[] {
+            new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Crew.ID),
+            new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BoatGlobalValues.ID)
+          },
+        new PhysicalQuantityInSet[] {
+            new PhysicalQuantityInSet(PhysicalQuantity.LIFT, MainLiftingFoil.ID)
+          },
+        new PhysicalQuantityInSet[] {
+            new PhysicalQuantityInSet(PhysicalQuantity.ANGLE_OF_ATTACK, MainLiftingFoil.ID)
+          },
+        new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID)
+        ));
   }
 
   protected void replaceTotalDragStrategy()

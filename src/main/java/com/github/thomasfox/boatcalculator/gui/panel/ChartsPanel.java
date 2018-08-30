@@ -32,6 +32,7 @@ import com.github.thomasfox.boatcalculator.valueset.impl.Hull;
 import com.github.thomasfox.boatcalculator.valueset.impl.MainLiftingFoil;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rigg;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rudder;
+import com.github.thomasfox.boatcalculator.valueset.impl.RudderLiftingFoil;
 
 public class ChartsPanel extends JPanel
 {
@@ -62,6 +63,10 @@ public class ChartsPanel extends JPanel
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG, MainLiftingFoil.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG, MainLiftingFoil.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.WAVE_MAKING_DRAG, MainLiftingFoil.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, RudderLiftingFoil.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG, RudderLiftingFoil.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG, RudderLiftingFoil.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.WAVE_MAKING_DRAG, RudderLiftingFoil.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.DRIVING_FORCE, Rigg.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Rigg.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG, Rigg.ID));

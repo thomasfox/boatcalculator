@@ -111,6 +111,15 @@ public class AllValues
     return value != null;
   }
 
+  public void setStartValueNoOverwrite(
+      PhysicalQuantityInSet target,
+      double value)
+  {
+    ValueSet targetSet = getValueSetNonNull(target.getValueSetId());
+    targetSet.setStartValueNoOverwrite(
+        new PhysicalQuantityValue(target.getPhysicalQuantity(), value));
+  }
+
   public void setCalculatedValueNoOverwrite(
       PhysicalQuantityInSet target,
       double value,
@@ -197,7 +206,7 @@ public class AllValues
     boolean changed = false;
     for (ComputationStrategy computationStrategy : computationStrategies)
     {
-      changed = changed || computationStrategy.setValue(this);
+      changed = computationStrategy.setValue(this) || changed;
     }
     return changed;
   }

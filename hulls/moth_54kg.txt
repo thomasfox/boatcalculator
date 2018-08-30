@@ -1,0 +1,13 @@
+# From Bill Beaver, John Zseleczky, Full Scale Measurements on a Hydrofoil International Moth
+LIFT	533
+
+VELOCITY	TOTAL_DRAG
+0	0
+0.60 0.66
+1.21 3.42
+1.83 8.48
+2.44 18.9
+3.05 30.8
+3.66 39.4
+4.27 50.0
+100 1713

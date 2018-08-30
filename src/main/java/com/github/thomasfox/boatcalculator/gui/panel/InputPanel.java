@@ -1,6 +1,7 @@
 package com.github.thomasfox.boatcalculator.gui.panel;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
@@ -11,6 +12,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.gui.SwingHelper;
@@ -95,7 +97,12 @@ public class InputPanel extends JPanel
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
-    frame.add(this, gridBagConstraints);
+    JScrollPane scrollPane = new JScrollPane(this);
+    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setPreferredSize(new Dimension(650, 800));
+    scrollPane.setMinimumSize(new Dimension(450, 400));
+    frame.add(scrollPane, gridBagConstraints);
   }
 
   public void addCalculateButtonActionListener(ActionListener actionListener)
