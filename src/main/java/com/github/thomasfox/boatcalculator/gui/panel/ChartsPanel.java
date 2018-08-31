@@ -135,17 +135,16 @@ public class ChartsPanel extends JPanel
         gridBagConstraints.gridy = row;
         add(chartPanel, gridBagConstraints);
         chartPanels.add(chartPanel);
+        row++;
+        if (row > 1)
+        {
+          row = 0;
+          column++;
+        }
       }
       else
       {
         addDataSet(singleScanResult, chart);
-      }
-
-      row++;
-      if (row > 1)
-      {
-        row = 0;
-        column++;
       }
     }
   }
