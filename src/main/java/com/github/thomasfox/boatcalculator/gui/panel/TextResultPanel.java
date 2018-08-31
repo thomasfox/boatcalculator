@@ -13,11 +13,18 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.gui.panel.part.QuantityOutput;
 import com.github.thomasfox.boatcalculator.gui.panel.part.ValueSetOutput;
 import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.boatcalculator.valueset.ValueSet;
+import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
+import com.github.thomasfox.boatcalculator.valueset.impl.DaggerboardOrKeel;
+import com.github.thomasfox.boatcalculator.valueset.impl.Hull;
+import com.github.thomasfox.boatcalculator.valueset.impl.MainLiftingFoil;
+import com.github.thomasfox.boatcalculator.valueset.impl.Rudder;
+import com.github.thomasfox.boatcalculator.valueset.impl.RudderLiftingFoil;
 
 /**
  * Component to output textual results of the calculation.
@@ -25,6 +32,20 @@ import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 public class TextResultPanel extends JPanel
 {
   private static final long serialVersionUID = 1L;
+
+  private static final Set<PhysicalQuantityInSet> preselectedGraphs;
+
+  static
+  {
+    preselectedGraphs = new HashSet<>();
+    preselectedGraphs.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID));
+    preselectedGraphs.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Rudder.ID));
+    preselectedGraphs.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, DaggerboardOrKeel.ID));
+    preselectedGraphs.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Hull.ID));
+    preselectedGraphs.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, MainLiftingFoil.ID));
+    preselectedGraphs.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, RudderLiftingFoil.ID));
+  }
+
 
   private final List<ValueSetOutput> valueSetOutputs = new ArrayList<>();
 
@@ -61,7 +82,12 @@ public class TextResultPanel extends JPanel
         {
           continue;
         }
-        QuantityOutput output = new QuantityOutput(calculatedValue, valueSet.getDisplayName());
+        QuantityOutput output = new QuantityOutput(
+            calculatedValue,
+            valueSet.getDisplayName(),
+            preselectedGraphs.contains(new PhysicalQuantityInSet(
+                calculatedValue.getPhysicalQuantity(),
+                valueSet.getId())));
         valueSetOutput.add(output);
       }
       outputRow += valueSetOutput.addToContainerInRow(this, outputRow, mode);

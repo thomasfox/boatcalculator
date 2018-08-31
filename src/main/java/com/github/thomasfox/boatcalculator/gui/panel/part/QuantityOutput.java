@@ -36,7 +36,7 @@ public class QuantityOutput
 
   private Mode mode;
 
-  public QuantityOutput(CalculatedPhysicalQuantityValue calculatedValue, String setName)
+  public QuantityOutput(CalculatedPhysicalQuantityValue calculatedValue, String setName, boolean graphPreselected)
   {
     this.quantity = calculatedValue.getPhysicalQuantity();
     this.setName = setName;
@@ -44,6 +44,7 @@ public class QuantityOutput
     label.setText(quantity.getDisplayNameIncludingUnit());
     originLabel.setText(calculatedValue.getCalculatedBy());
     mode = Mode.NOT_DISPLAYED;
+    showGraph.setSelected(graphPreselected);
   }
 
   public void addToContainerInRow(Container container, int row, Mode newMode)
