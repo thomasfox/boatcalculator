@@ -73,6 +73,22 @@ public class ChartsPanel extends JPanel
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG, Rigg.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.BRAKING_FORCE, Crew.ID));
     graphSets.put("Widerstand und Vortrieb", dragSet);
+    Set<PhysicalQuantityInSet> dragCoefficiontSet = new HashSet<>();
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT, Rudder.ID));
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT, Rudder.ID));
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, Rudder.ID));
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT, DaggerboardOrKeel.ID));
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT, DaggerboardOrKeel.ID));
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, DaggerboardOrKeel.ID));
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT, MainLiftingFoil.ID));
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT, MainLiftingFoil.ID));
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, MainLiftingFoil.ID));
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.WAVE_MAKING_DRAG_COEFFICIENT, MainLiftingFoil.ID));
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT, RudderLiftingFoil.ID));
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT, RudderLiftingFoil.ID));
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, RudderLiftingFoil.ID));
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.WAVE_MAKING_DRAG_COEFFICIENT, RudderLiftingFoil.ID));
+    graphSets.put("Widerstandsbeiwerte", dragCoefficiontSet);
   }
 
   public void addToFrame(JFrame frame)

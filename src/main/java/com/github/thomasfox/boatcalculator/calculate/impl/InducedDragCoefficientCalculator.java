@@ -25,7 +25,7 @@ public class InducedDragCoefficientCalculator extends Calculator
     double wingArea = valueSet.getKnownValue(PhysicalQuantity.AREA).getValue();
     double liftCoefficient = valueSet.getKnownValue(PhysicalQuantity.LIFT_COEFFICIENT).getValue();
 
-    double aspectRatio = wingSpan *wingSpan / wingArea;
+    double aspectRatio = wingSpan * wingSpan / wingArea;
     double result = liftCoefficient * liftCoefficient / Math.PI / aspectRatio;
     return result;
   }
