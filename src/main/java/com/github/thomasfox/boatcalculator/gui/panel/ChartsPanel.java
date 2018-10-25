@@ -166,7 +166,9 @@ public class ChartsPanel extends JPanel
   private JFreeChart createChart(SingleScanResult singleScanResult)
   {
     JFreeChart chart;
-    if ("°".equals(singleScanResult.getScannedQuantity().getUnit()))
+    if ("°".equals(singleScanResult.getScannedQuantity().getUnit())
+        && PhysicalQuantity.MAX_ANGLE_OF_ATTACK != singleScanResult.getScannedQuantity()
+        && PhysicalQuantity.ANGLE_OF_ATTACK != singleScanResult.getScannedQuantity())
     {
       XYSeriesCollection seriesCollection = new XYSeriesCollection();
       seriesCollection.addSeries(singleScanResult.getSeries());

@@ -14,6 +14,7 @@ public enum PhysicalQuantity
   TOTAL_DRAG_COEFFICIENT("Widerstandsbeiwert für den Gesamtwiderstand", null, false),
   LIFT("Auftrieb", "N", true),
   LIFT_COEFFICIENT("Auftriebsbeiwert", null, false, "gemittelt nach Fläche über den gesamten Flügel"),
+  LIFT_DIVIDED_BY_TOTAL_DRAG("Cl/Cd", null, false),
   LATERAL_FORCE("Lateralkraft", "N", true),
   DRIVING_FORCE("Vortriebskraft", "N", true),
   BRAKING_FORCE("Bremskraft", "N", true),

@@ -23,6 +23,7 @@ import com.github.thomasfox.boatcalculator.calculate.impl.LateralForceCalculator
 import com.github.thomasfox.boatcalculator.calculate.impl.LeverFromWeightCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.LiftCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.LiftCoefficientCalculator;
+import com.github.thomasfox.boatcalculator.calculate.impl.LiftDividedByTotalDragCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.ParasiticDragCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.ProfileDragCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.ReynoldsNumberCalculator;
@@ -76,6 +77,7 @@ public class CombinedCalculator
     calculators.add(new LiftCalculator());
     calculators.add(new TotalDragCoefficientCalculator());
     calculators.add(new TotalDragCalculator());
+    calculators.add(new LiftDividedByTotalDragCalculator());
     calculators.add(new LateralForceCalculator());
     calculators.add(new DrivingForceCalculator());
     calculators.add(new TorqueCalculator());
