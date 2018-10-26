@@ -116,7 +116,15 @@ public class QuantityOutput
     }
     else
     {
-      BigDecimal bd = new BigDecimal(value);
+      BigDecimal bd;
+      try
+      {
+        bd = new BigDecimal(value);
+      } catch (NumberFormatException e)
+      {
+        valueLabel.setText("");
+        return;
+      }
       bd = bd.round(new MathContext(3));
       valueLabel.setText(bd.toPlainString());
       valueLabel.setBorder(new EmptyBorder(0,10,0,10));
