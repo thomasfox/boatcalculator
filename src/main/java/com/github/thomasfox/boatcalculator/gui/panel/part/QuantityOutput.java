@@ -15,6 +15,15 @@ import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityValue
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * A GUI Element for displaying a calculated quantity.
+ * Has three modes:
+ * <ul>
+ *   <li>NOT_DISPLAYED: Element is not visible</li>
+ *   <li>NUMERIC_DISPLAY: The label and the  calculated value is shown</li>
+ *   <li>CHECKBOX_DISPLAY: The label and a checkbox is shown</li>
+ * </ul>
+ */
 @ToString(of={"label", "value"})
 public class QuantityOutput
 {
