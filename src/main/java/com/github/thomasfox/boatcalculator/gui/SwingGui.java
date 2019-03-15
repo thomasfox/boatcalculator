@@ -20,8 +20,10 @@ import com.github.thomasfox.boatcalculator.gui.panel.CalculationStateDisplay;
 import com.github.thomasfox.boatcalculator.gui.panel.ChartsPanel;
 import com.github.thomasfox.boatcalculator.gui.panel.InputPanel;
 import com.github.thomasfox.boatcalculator.gui.panel.TextResultPanel;
+import com.github.thomasfox.boatcalculator.gui.panel.part.ProfileInput;
 import com.github.thomasfox.boatcalculator.gui.panel.part.QuantityInput;
 import com.github.thomasfox.boatcalculator.gui.panel.part.QuantityOutput;
+import com.github.thomasfox.boatcalculator.gui.panel.part.ScannedInput;
 import com.github.thomasfox.boatcalculator.progress.CalculationState;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValue;
@@ -157,10 +159,18 @@ public class SwingGui
     chartsPanel.clear();
 
     Set<PhysicalQuantityInSet> shownGraphs = textResultPanel.getShownGraphs();
-    QuantityInput scannedInput = inputPanel.getScannedInput();
+    QuantityInput scannedQuantityInput = inputPanel.getScannedQuantityInput();
+    ProfileInput scannedProfileInput = inputPanel.getScannedProfileInput();
 
-    List<SingleScanResult> scanResults
-        = calculateQuantitySeriesForSelectedOutputs(shownGraphs, scannedInput);
+    List<SingleScanResult> scanResults;
+    if (scannedQuantityInput != null)
+    {
+      scanResults = calculateQuantitySeriesForSelectedOutputs(shownGraphs, scannedQuantityInput);
+    }
+    else
+    {
+      scanResults = calculateQuantitySeriesForSelectedOutputs(shownGraphs, scannedProfileInput);
+    }
 
     calculationStateDisplay.clear();
     chartsPanel.display(scanResults);
@@ -168,7 +178,7 @@ public class SwingGui
 
   private List<SingleScanResult> calculateQuantitySeriesForSelectedOutputs(
       Set<PhysicalQuantityInSet> shownGraphs,
-      QuantityInput scannedInput)
+      ScannedInput scannedInput)
   {
     Map<PhysicalQuantityInSet, XYSeries> quantitySeries = new HashMap<>();
     for (PhysicalQuantityInSet shownGraph : shownGraphs)
@@ -179,9 +189,10 @@ public class SwingGui
 
     for (int i = 0; i < scannedInput.getNumberOfScanSteps(); ++i)
     {
-      double xValue = scannedInput.getScanStepValue(i);
-      CalculationState.set("scan:" + scannedInput.getQuantity().toString(), xValue);
-      scannedInput.setValue(xValue);
+      CalculationState.set(
+          scannedInput.getScanDescription(),
+          scannedInput.getScanDescription() + ":" + scannedInput.getScanStepDescription(i));
+      scannedInput.setValueForScanStep(i);
       inputPanel.reinitalizeValueSetInputs();
       boat.calculate();
       for (PhysicalQuantityInSet shownGraph : shownGraphs)
@@ -191,7 +202,7 @@ public class SwingGui
         if (knownValue != null)
         {
           double yValue = knownValue.getValue();
-          quantitySeries.get(shownGraph).add(xValue, yValue);
+          quantitySeries.get(shownGraph).add(scannedInput.getScanXValue(i), yValue);
         }
       }
     }

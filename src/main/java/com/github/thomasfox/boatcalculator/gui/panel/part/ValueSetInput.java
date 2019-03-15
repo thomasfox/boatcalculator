@@ -83,6 +83,11 @@ public class ValueSetInput
     return result;
   }
 
+  public ProfileInput getProfileInput()
+  {
+    return profileInput;
+  }
+
   public String getProfileName()
   {
     if (profileInput == null)
@@ -128,18 +133,21 @@ public class ValueSetInput
     {
       ProfileGeometry profileGeometry = profileInput.loadProfile(
           SwingGui.PROFILE_DIRECTORY, profileName);
-      valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
-          PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA,
-          profileGeometry.getSecondMomentOfArea()));
-      valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
-          PhysicalQuantity.WING_RELATIVE_THICKNESS,
-          profileGeometry.getThickness()));
-      valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
-          PhysicalQuantity.NORMALIZED_AREA_OF_CROSSECTION,
-          profileGeometry.getCrossectionArea()));
-      valueSet.getQuantityRelations().addAll(
-          profileInput.loadXfoilResults(
-              SwingGui.PROFILE_DIRECTORY, profileName));
+      if (profileGeometry != null)
+      {
+        valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
+            PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA,
+            profileGeometry.getSecondMomentOfArea()));
+        valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
+            PhysicalQuantity.WING_RELATIVE_THICKNESS,
+            profileGeometry.getThickness()));
+        valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
+            PhysicalQuantity.NORMALIZED_AREA_OF_CROSSECTION,
+            profileGeometry.getCrossectionArea()));
+        valueSet.getQuantityRelations().addAll(
+            profileInput.loadXfoilResults(
+                SwingGui.PROFILE_DIRECTORY, profileName));
+      }
     }
   }
 

@@ -14,7 +14,7 @@ import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValue;
 
 import lombok.NonNull;
 
-public class QuantityInput
+public class QuantityInput implements ScannedInput
 {
   private final JLabel label = new JLabel();
 
@@ -116,16 +116,31 @@ public class QuantityInput
     return parseDouble(scanToField.getText());
   }
 
+  @Override
   public Integer getNumberOfScanSteps()
   {
     return parseInteger(scanNumberOfStepsField.getText());
   }
 
-  public double getScanStepValue(int step)
+  public double getValueForScanStep(int step)
   {
     return getScanFrom() + (getScanTo() - getScanFrom()) * (((double) step) / (getNumberOfScanSteps() - 1));
   }
 
+  @Override
+  public void setValueForScanStep(int step)
+  {
+    setValue(getValueForScanStep(step));
+  }
+
+  @Override
+  public Number getScanXValue(int step)
+  {
+    return getValueForScanStep(step);
+  }
+
+
+  @Override
   public boolean isScan()
   {
     return getScanFrom() != null
@@ -194,5 +209,17 @@ public class QuantityInput
   public String toString()
   {
     return label.getText();
+  }
+
+  @Override
+  public String getScanDescription()
+  {
+    return "scan:" + quantity.toString();
+  }
+
+  @Override
+  public String getScanStepDescription(int step)
+  {
+    return Double.toString(getValueForScanStep(step));
   }
 }

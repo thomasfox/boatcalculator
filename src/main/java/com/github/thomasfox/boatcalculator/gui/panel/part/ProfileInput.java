@@ -9,13 +9,14 @@ import java.util.Objects;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 
+import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.gui.SwingGui;
 import com.github.thomasfox.boatcalculator.gui.SwingHelper;
 import com.github.thomasfox.boatcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.boatcalculator.profile.ProfileGeometry;
 import com.github.thomasfox.boatcalculator.profile.ProfileSelector;
 
-public class ProfileInput
+public class ProfileInput implements ScannedInput
 {
   private final ProfileSelector profileSelector = new ProfileSelector();
 
@@ -23,13 +24,15 @@ public class ProfileInput
 
   private final JCheckBox scanSelect;
 
+  List<String> profileNames;
+
   public ProfileInput(String profileNameToSelect)
   {
     profileSelect = new JComboBox<>();
     profileSelect.addItem(null);
-    List<String> profiles = profileSelector.getProfileNames(SwingGui.PROFILE_DIRECTORY);
+    profileNames = profileSelector.getProfileNames(SwingGui.PROFILE_DIRECTORY);
     String selectedProfile = null;
-    for (String profile : profiles)
+    for (String profile : profileNames)
     {
       profileSelect.addItem(profile);
       if (Objects.equals(profile, profileNameToSelect))
@@ -64,6 +67,7 @@ public class ProfileInput
     return Objects.toString(profileSelect.getSelectedItem(), null);
   }
 
+  @Override
   public boolean isScan()
   {
     return scanSelect.isSelected();
@@ -79,4 +83,43 @@ public class ProfileInput
     return profileSelector.loadXfoilResults(directory, name);
   }
 
+  @Override
+  public Integer getNumberOfScanSteps()
+  {
+    if (!isScan())
+    {
+      return null;
+    }
+    return profileNames.size();
+  }
+
+  @Override
+  public void setValueForScanStep(int step)
+  {
+    profileSelect.setSelectedItem(profileNames.get(step));
+  }
+
+  @Override
+  public String getScanStepDescription(int step)
+  {
+    return profileNames.get(step);
+  }
+
+  @Override
+  public String getScanDescription()
+  {
+    return "profile scan: ";
+  }
+
+  @Override
+  public Number getScanXValue(int step)
+  {
+    return step;
+  }
+
+  @Override
+  public PhysicalQuantity getQuantity()
+  {
+    return PhysicalQuantity.PROFILE;
+  }
 }

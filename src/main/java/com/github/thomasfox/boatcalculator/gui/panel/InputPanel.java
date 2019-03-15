@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.gui.SwingHelper;
+import com.github.thomasfox.boatcalculator.gui.panel.part.ProfileInput;
 import com.github.thomasfox.boatcalculator.gui.panel.part.QuantityInput;
 import com.github.thomasfox.boatcalculator.gui.panel.part.QuantityOutput;
 import com.github.thomasfox.boatcalculator.gui.panel.part.ValueSetInput;
@@ -141,39 +142,82 @@ public class InputPanel extends JPanel
     }
   }
 
-  public List<QuantityInput> getScannedInputs()
+  private boolean hasScannedInput()
   {
-    List<QuantityInput> scannedInputs = new ArrayList<>();
-    for (ValueSetInput valueSetInput : valueSetInputs)
+    if (getScannedQuantityInputs().size() > 0)
     {
-      scannedInputs.addAll(valueSetInput.getScannedQuantityInputs());
+      return true;
     }
-    return scannedInputs;
+    if (getScannedProfileInputs().size() > 0)
+    {
+      return true;
+    }
+    return false;
   }
 
-  public QuantityInput getScannedInput()
+  public List<ProfileInput> getScannedProfileInputs()
   {
-    List<QuantityInput> scannedInputs = getScannedInputs();
+    List<ProfileInput> result = new ArrayList<>();
+    for (ValueSetInput valueSetInput : valueSetInputs)
+    {
+      ProfileInput profileInput = valueSetInput.getProfileInput();
+      if (profileInput != null && profileInput.isScan())
+      {
+        result.add(profileInput);
+      }
+    }
+    return result;
+  }
+
+  public ProfileInput getScannedProfileInput()
+  {
+    List<ProfileInput> scannedInputs = getScannedProfileInputs();
     if (scannedInputs.size() > 1)
     {
       throw new IllegalArgumentException("Can only handle one scanned input");
     }
-    QuantityInput scannedInput = scannedInputs.get(0);
-    return scannedInput;
+    if (!scannedInputs.isEmpty())
+    {
+      ProfileInput scannedInput = scannedInputs.get(0);
+      return scannedInput;
+    }
+    return null;
+  }
+
+  public List<QuantityInput> getScannedQuantityInputs()
+  {
+    List<QuantityInput> result = new ArrayList<>();
+    for (ValueSetInput valueSetInput : valueSetInputs)
+    {
+      result.addAll(valueSetInput.getScannedQuantityInputs());
+    }
+    return result;
+  }
+
+  public QuantityInput getScannedQuantityInput()
+  {
+    List<QuantityInput> scannedInputs = getScannedQuantityInputs();
+    if (scannedInputs.size() > 1)
+    {
+      throw new IllegalArgumentException("Can only handle one scanned input");
+    }
+    if (!scannedInputs.isEmpty())
+    {
+      QuantityInput scannedInput = scannedInputs.get(0);
+      return scannedInput;
+    }
+    return null;
   }
 
   public QuantityOutput.Mode getOutputMode()
   {
-    QuantityOutput.Mode mode;
-    List<QuantityInput> scannedInputs = getScannedInputs();
-    if (scannedInputs.isEmpty())
+    if (!hasScannedInput())
     {
-      mode = QuantityOutput.Mode.NUMERIC_DISPLAY;
+      return QuantityOutput.Mode.NUMERIC_DISPLAY;
     }
     else
     {
-      mode = QuantityOutput.Mode.CHECKBOX_DISPLAY;
+      return QuantityOutput.Mode.CHECKBOX_DISPLAY;
     }
-    return mode;
   }
 }

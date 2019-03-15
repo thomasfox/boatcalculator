@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.github.thomasfox.boatcalculator.interpolate.QuantityRelations;
+import com.github.thomasfox.boatcalculator.interpolate.XYPoint;
 import com.github.thomasfox.boatcalculator.xfoil.XfoilResultLoader;
 
 public class ProfileSelector
@@ -29,14 +30,16 @@ public class ProfileSelector
 
   public ProfileGeometry loadProfile(File directory, String name)
   {
+    List<XYPoint> pointList;
     try (FileReader reader = new FileReader(new File(directory, name + ".dat")))
     {
-      return new ProfileGeometry(name, datLoader.load(reader));
+      pointList = datLoader.load(reader);
     }
-    catch (IOException e)
+    catch (IOException | RuntimeException e)
     {
-      throw new RuntimeException(e);
+      return null;
     }
+    return new ProfileGeometry(name, pointList);
   }
 
   public List<QuantityRelations> loadXfoilResults(File directory, String name)
