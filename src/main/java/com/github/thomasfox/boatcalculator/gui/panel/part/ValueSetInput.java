@@ -131,6 +131,7 @@ public class ValueSetInput
     String profileName = getProfileName();
     if (profileName != null)
     {
+      valueSet.setProfileName(profileName);
       ProfileGeometry profileGeometry = profileInput.loadProfile(
           SwingGui.PROFILE_DIRECTORY, profileName);
       if (profileGeometry != null)

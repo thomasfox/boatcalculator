@@ -5,7 +5,7 @@ import org.jfree.data.xy.XYSeries;
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
 
-public class SingleScanResult
+public class ScanResultForSingleQuantity
 {
   private final PhysicalQuantity scannedQuantity;
 
@@ -15,7 +15,7 @@ public class SingleScanResult
 
   private XYSeries series;
 
-  public SingleScanResult(PhysicalQuantity scannedQuantity,
+  public ScanResultForSingleQuantity(PhysicalQuantity scannedQuantity,
       PhysicalQuantityInSet resultQuantity)
   {
     this.scannedQuantity = scannedQuantity;

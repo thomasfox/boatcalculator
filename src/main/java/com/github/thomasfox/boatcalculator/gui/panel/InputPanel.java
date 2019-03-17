@@ -7,7 +7,9 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -33,6 +35,8 @@ public class InputPanel extends JPanel
   private final JButton calculateButton = new JButton("Berechnen");
 
   private final JButton scanButton = new JButton("Diagramme anzeigen");
+
+  private final JButton saveResultsButton = new JButton("Ergebnis Speichern");
 
   private final List<ValueSetInput> valueSetInputs = new ArrayList<>();
 
@@ -78,6 +82,14 @@ public class InputPanel extends JPanel
     gridBagConstraints.gridy = row;
     scanButton.setVisible(false);
     add(scanButton, gridBagConstraints);
+
+    gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = row;
+    saveResultsButton.setVisible(false);
+    add(saveResultsButton, gridBagConstraints);
+
     revalidate();
     repaint();
   }
@@ -116,9 +128,19 @@ public class InputPanel extends JPanel
     scanButton.addActionListener(actionListener);
   }
 
+  public void addSaveResultsButtonActionListener(ActionListener actionListener)
+  {
+    saveResultsButton.addActionListener(actionListener);
+  }
+
   public void setScanButtonVisible(boolean visible)
   {
     scanButton.setVisible(visible);
+  }
+
+  public void setSaveResultsButtonVisible(boolean visible)
+  {
+    saveResultsButton.setVisible(visible);
   }
 
   private void createPartInput(ValueSet valueSet)
@@ -155,15 +177,15 @@ public class InputPanel extends JPanel
     return false;
   }
 
-  public List<ProfileInput> getScannedProfileInputs()
+  public Map<String, ProfileInput> getScannedProfileInputs()
   {
-    List<ProfileInput> result = new ArrayList<>();
+    Map<String, ProfileInput> result = new LinkedHashMap<>();
     for (ValueSetInput valueSetInput : valueSetInputs)
     {
       ProfileInput profileInput = valueSetInput.getProfileInput();
       if (profileInput != null && profileInput.isScan())
       {
-        result.add(profileInput);
+        result.put(valueSetInput.getValueSet().getId(), profileInput);
       }
     }
     return result;
@@ -171,14 +193,14 @@ public class InputPanel extends JPanel
 
   public ProfileInput getScannedProfileInput()
   {
-    List<ProfileInput> scannedInputs = getScannedProfileInputs();
+    Map<String, ProfileInput> scannedInputs = getScannedProfileInputs();
     if (scannedInputs.size() > 1)
     {
       throw new IllegalArgumentException("Can only handle one scanned input");
     }
     if (!scannedInputs.isEmpty())
     {
-      ProfileInput scannedInput = scannedInputs.get(0);
+      ProfileInput scannedInput = scannedInputs.values().iterator().next();
       return scannedInput;
     }
     return null;

@@ -31,7 +31,7 @@ public class DoubleWing implements ValueSet, HasProfile
   @NonNull
   private final String name;
 
-  private final String profileName;
+  private String profileName;
 
   public DoubleWing(Wing singleWing, String id, String name)
   {
@@ -308,5 +308,11 @@ public class DoubleWing implements ValueSet, HasProfile
   public String getProfileName()
   {
     return profileName;
+  }
+
+  @Override
+  public void setProfileName(String profileName)
+  {
+    this.profileName = profileName;
   }
 }

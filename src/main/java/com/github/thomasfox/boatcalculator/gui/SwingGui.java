@@ -4,9 +4,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,7 +13,9 @@ import javax.swing.JFrame;
 import org.jfree.data.xy.XYSeries;
 
 import com.github.thomasfox.boatcalculator.boat.Boat;
-import com.github.thomasfox.boatcalculator.gui.model.SingleScanResult;
+import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.boatcalculator.gui.model.ScanResult;
+import com.github.thomasfox.boatcalculator.gui.model.ScanResultForSingleQuantity;
 import com.github.thomasfox.boatcalculator.gui.panel.CalculationStateDisplay;
 import com.github.thomasfox.boatcalculator.gui.panel.ChartsPanel;
 import com.github.thomasfox.boatcalculator.gui.panel.InputPanel;
@@ -63,6 +63,7 @@ public class SwingGui
 
     inputPanel.addCalculateButtonActionListener(this::calculateButtonPressed);
     inputPanel.addScanButtonActionListener(this::scanButtonPressed);
+    inputPanel.addSaveResultsButtonActionListener(this::saveResultsButtonPressed);
 
     frame.pack();
     frame.setVisible(true);
@@ -113,6 +114,18 @@ public class SwingGui
     new Thread(calculateRunnable).start();
   }
 
+  public void saveResultsButtonPressed(ActionEvent e)
+  {
+    ScanResult scanResult = chartsPanel.getScanResult();
+    if (scanResult == null)
+    {
+      throw new IllegalStateException("no scan Result available");
+    }
+    File file = new File("results.csv");
+    scanResult.exportToCsv(file);
+  }
+
+
   private void calculateAndRefreshDisplayedResults()
   {
     clearResult();
@@ -127,10 +140,12 @@ public class SwingGui
     if (mode == QuantityOutput.Mode.CHECKBOX_DISPLAY)
     {
       inputPanel.setScanButtonVisible(true);
+      inputPanel.setSaveResultsButtonVisible(true);
     }
     else
     {
       inputPanel.setScanButtonVisible(false);
+      inputPanel.setSaveResultsButtonVisible(false);
     }
   }
 
@@ -159,34 +174,50 @@ public class SwingGui
     chartsPanel.clear();
 
     Set<PhysicalQuantityInSet> shownGraphs = textResultPanel.getShownGraphs();
+    Map<String, ProfileInput> profileInput = inputPanel.getScannedProfileInputs();
+    if (profileInput.size() > 0)
+    {
+      shownGraphs.add(new PhysicalQuantityInSet(
+          PhysicalQuantity.PROFILE,
+          profileInput.keySet().iterator().next()));
+    }
     QuantityInput scannedQuantityInput = inputPanel.getScannedQuantityInput();
     ProfileInput scannedProfileInput = inputPanel.getScannedProfileInput();
 
-    List<SingleScanResult> scanResults;
+    ScanResult scanResult;
     if (scannedQuantityInput != null)
     {
-      scanResults = calculateQuantitySeriesForSelectedOutputs(shownGraphs, scannedQuantityInput);
+      scanResult = calculateQuantitySeriesForSelectedOutputs(shownGraphs, scannedQuantityInput);
     }
     else
     {
-      scanResults = calculateQuantitySeriesForSelectedOutputs(shownGraphs, scannedProfileInput);
+      scanResult = calculateQuantitySeriesForSelectedOutputs(shownGraphs, scannedProfileInput);
     }
 
     calculationStateDisplay.clear();
-    chartsPanel.display(scanResults);
+    chartsPanel.display(scanResult);
   }
 
-  private List<SingleScanResult> calculateQuantitySeriesForSelectedOutputs(
+  private ScanResult calculateQuantitySeriesForSelectedOutputs(
       Set<PhysicalQuantityInSet> shownGraphs,
       ScannedInput scannedInput)
   {
     Map<PhysicalQuantityInSet, XYSeries> quantitySeries = new HashMap<>();
+    PhysicalQuantityInSet profileQuantity = null;
     for (PhysicalQuantityInSet shownGraph : shownGraphs)
     {
-      XYSeries series = new XYSeries(shownGraph.getPhysicalQuantity().getDisplayName(), false, true);
-      quantitySeries.put(shownGraph, series);
+      if (shownGraph.getPhysicalQuantity() == PhysicalQuantity.PROFILE)
+      {
+        profileQuantity = shownGraph;
+      }
+      else
+      {
+        XYSeries series = new XYSeries(shownGraph.getPhysicalQuantity().getDisplayName(), false, true);
+        quantitySeries.put(shownGraph, series);
+      }
     }
 
+    Map<Integer, String> profileNames = new HashMap<>();
     for (int i = 0; i < scannedInput.getNumberOfScanSteps(); ++i)
     {
       CalculationState.set(
@@ -205,15 +236,22 @@ public class SwingGui
           quantitySeries.get(shownGraph).add(scannedInput.getScanXValue(i), yValue);
         }
       }
+      if (profileQuantity != null)
+      {
+        ValueSet valueSet = boat.getValueSetNonNull(profileQuantity.getValueSetId());
+        profileNames.put(i, valueSet.getProfileName());
+      }
     }
-    List<SingleScanResult> result = new ArrayList<>();
+    ScanResult result = new ScanResult();
     for (Map.Entry<PhysicalQuantityInSet, XYSeries> singleSeries : quantitySeries.entrySet())
     {
-      SingleScanResult resultEntry = new SingleScanResult(scannedInput.getQuantity(), singleSeries.getKey());
+      ScanResultForSingleQuantity resultEntry = new ScanResultForSingleQuantity(scannedInput.getQuantity(), singleSeries.getKey());
       resultEntry.setSeries(singleSeries.getValue());
       resultEntry.setDisplayName(getSeriesDisplayName(singleSeries.getKey()));
-      result.add(resultEntry);
+      result.getSingleQuantityScanResults().add(resultEntry);
     }
+
+    result.setProfileNames(profileNames);
     return result;
   }
 

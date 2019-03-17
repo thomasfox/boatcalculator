@@ -23,7 +23,8 @@ import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.boatcalculator.gui.model.SingleScanResult;
+import com.github.thomasfox.boatcalculator.gui.model.ScanResult;
+import com.github.thomasfox.boatcalculator.gui.model.ScanResultForSingleQuantity;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
 import com.github.thomasfox.boatcalculator.valueset.impl.Crew;
@@ -41,6 +42,8 @@ public class ChartsPanel extends JPanel
   private final Map<String, Set<PhysicalQuantityInSet>> graphSets = new HashMap<>();
 
   private static final long serialVersionUID = 1L;
+
+  private ScanResult scanResult;
 
   public ChartsPanel()
   {
@@ -115,12 +118,13 @@ public class ChartsPanel extends JPanel
     chartPanels.clear();
   }
 
-  public void display(List<SingleScanResult> scanResults)
+  public void display(ScanResult scanResult)
   {
+    this.scanResult = scanResult;
     int row = 0;
     int column = 0;
     Map<PhysicalQuantityInSet, JFreeChart> charts = new HashMap<>();
-    for (SingleScanResult singleScanResult : scanResults)
+    for (ScanResultForSingleQuantity singleScanResult : scanResult.getSingleQuantityScanResults())
     {
       JFreeChart chart = getExistingChart(singleScanResult.getResultQuantity(), charts);
       if (chart == null)
@@ -149,6 +153,11 @@ public class ChartsPanel extends JPanel
     }
   }
 
+  public ScanResult getScanResult()
+  {
+    return scanResult;
+  }
+
   private Map.Entry<String, Set<PhysicalQuantityInSet>> getGraphSetInWhichQuantityIsMember(
       PhysicalQuantityInSet quantity)
   {
@@ -163,7 +172,7 @@ public class ChartsPanel extends JPanel
     return graphSetInWhichQuantityIsMember;
   }
 
-  private JFreeChart createChart(SingleScanResult singleScanResult)
+  private JFreeChart createChart(ScanResultForSingleQuantity singleScanResult)
   {
     JFreeChart chart;
     if ("°".equals(singleScanResult.getScannedQuantity().getUnit())
@@ -206,7 +215,7 @@ public class ChartsPanel extends JPanel
     return null;
   }
 
-  private void addDataSet(SingleScanResult singleScanResult, JFreeChart chart)
+  private void addDataSet(ScanResultForSingleQuantity singleScanResult, JFreeChart chart)
   {
     if (chart.getPlot() instanceof PolarPlot)
     {

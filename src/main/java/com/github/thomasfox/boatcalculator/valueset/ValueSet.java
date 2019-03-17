@@ -55,6 +55,10 @@ public interface ValueSet extends Cloneable
 
   public CalculatedPhysicalQuantityValue getCalculatedValue(PhysicalQuantity physicalQuantity);
 
+  public String getProfileName();
+
+  public void setProfileName(String profileName);
+
   /**
    * Sets a calculated value and makes sure it is not already set.
    *

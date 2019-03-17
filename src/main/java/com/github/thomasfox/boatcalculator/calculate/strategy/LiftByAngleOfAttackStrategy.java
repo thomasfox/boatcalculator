@@ -129,20 +129,31 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     }
     Double wingLift = maxLift;
     double angleOfAttack = allValues.getKnownValue(maxAngleOfAttack);
-    double step = angleOfAttack;
+    double stepUnsigned = angleOfAttack;
+    double lastStepSigned = stepUnsigned;
     int tries = 20;
+
     while (Math.abs(weight - wingLift) > weight/1000 && tries > 0)
     {
       if (wingLift > weight)
       {
-        angleOfAttack -= step;
+        angleOfAttack -= stepUnsigned;
+        lastStepSigned = -stepUnsigned;
       }
       else
       {
-        angleOfAttack += step;
+        angleOfAttack += stepUnsigned;
+        lastStepSigned = -stepUnsigned;
       }
-      step = step/2;
+      stepUnsigned = stepUnsigned/2;
       wingLift = calculateTotalWingLift(angleOfAttack, allValues);
+      while (wingLift == null && tries > 0)
+      {
+        angleOfAttack -= lastStepSigned / 2;
+        lastStepSigned = -lastStepSigned / 2;
+        tries--;
+        wingLift = calculateTotalWingLift(angleOfAttack, allValues);
+      }
       tries--;
     }
     if (Math.abs(weight - wingLift) < weight/1000)

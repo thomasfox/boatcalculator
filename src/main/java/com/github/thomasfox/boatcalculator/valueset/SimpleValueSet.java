@@ -50,6 +50,8 @@ public class SimpleValueSet implements ValueSet
 
   private final List<QuantityRelations> quantityRelations = new ArrayList<>();
 
+  private String profileName;
+
   public SimpleValueSet(SimpleValueSet toCopy)
   {
     this.id = toCopy.getId();
@@ -60,6 +62,7 @@ public class SimpleValueSet implements ValueSet
     this.startValues.setValuesFailOnOverwrite(toCopy.startValues);
     this.calculatedValues.setValuesFailOnOverwrite(toCopy.calculatedValues);
     this.quantityRelations.addAll(toCopy.getQuantityRelations());
+    this.profileName = toCopy.profileName;
   }
 
   @Override
@@ -256,5 +259,16 @@ public class SimpleValueSet implements ValueSet
   public SimpleValueSet clone()
   {
     return new SimpleValueSet(this);
+  }
+
+  @Override
+  public String getProfileName()
+  {
+    return profileName;
+  }
+
+  public void setProfileName(String profileName)
+  {
+    this.profileName = profileName;
   }
 }
