@@ -9,9 +9,9 @@ import com.github.thomasfox.boatcalculator.valueset.ValueSet;
  * und am anderen Ende mit einer Kraft Quer zum Flügel belastet wird, zurück.
  * Siehe Joos, Lehrbuch der Theoretischen Physik, 15. Auflage, S. 169
  */
-public class BendingCalculator extends Calculator
+public class PointLoadBendingCalculator extends Calculator
 {
-  public BendingCalculator()
+  public PointLoadBendingCalculator()
   {
     super(PhysicalQuantity.BENDING,
         PhysicalQuantity.WING_SPAN,

@@ -12,7 +12,7 @@ import org.slf4j.MDC;
 import com.github.thomasfox.boatcalculator.calculate.impl.ApparentWindDirectionCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.ApparentWindSpeedCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.AreaCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.BendingCalculator;
+import com.github.thomasfox.boatcalculator.calculate.impl.AreaLoadFixedMiddleBendingCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.BrakingForceCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.CrosssectionAreaCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.DrivingForceCalculator;
@@ -65,7 +65,7 @@ public class CombinedCalculator
     calculators.add(new InducedDragCoefficientCalculator());
     calculators.add(new InducedDragCalculator());
     calculators.add(new ParasiticDragCalculator());
-    calculators.add(new BendingCalculator());
+    calculators.add(new AreaLoadFixedMiddleBendingCalculator());
     calculators.add(new SecondMomentOfAreaCalculator());
     calculators.add(new LiftCoefficientCalculator());
     calculators.add(new CrosssectionAreaCalculator());

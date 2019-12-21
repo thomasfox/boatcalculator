@@ -40,6 +40,9 @@ public class Moth extends Dinghy
     mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d);
     mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.1d);
     mainLiftingFoil.setProfileName("n63412-il");
+    mainLiftingFoil.setFixedValueNoOverwrite(
+        PhysicalQuantity.MODULUS_OF_ELASTICITY,
+        PhysicalQuantity.MODULUS_OF_ELASTICITY.getFixedValue().doubleValue());
 
     ((DaggerboardOrKeel) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d);
     ((DaggerboardOrKeel) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.12d);
@@ -48,6 +51,9 @@ public class Moth extends Dinghy
     rudderLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 0.8d);
     rudderLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.1d);
     rudderLiftingFoil.setProfileName("n63412-il");
+    rudderLiftingFoil.setFixedValueNoOverwrite(
+        PhysicalQuantity.MODULUS_OF_ELASTICITY,
+        PhysicalQuantity.MODULUS_OF_ELASTICITY.getFixedValue().doubleValue());
 
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d);
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.12d);
