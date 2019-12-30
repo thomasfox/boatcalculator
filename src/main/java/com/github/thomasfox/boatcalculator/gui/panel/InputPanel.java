@@ -70,25 +70,34 @@ public class InputPanel extends JPanel
 
     SwingHelper.addSeparatorToContainer(this, row++, 5);
 
+    JPanel buttonPanel = new JPanel();
+    buttonPanel.setLayout(new GridBagLayout());
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = row;
-    add(calculateButton, gridBagConstraints);
+    gridBagConstraints.gridwidth = 5;
+    add(buttonPanel, gridBagConstraints);
+
+    gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    buttonPanel.add(calculateButton, gridBagConstraints);
 
     gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = row;
+    gridBagConstraints.gridy = 0;
     scanButton.setVisible(false);
-    add(scanButton, gridBagConstraints);
+    buttonPanel.add(scanButton, gridBagConstraints);
 
     gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = row;
+    gridBagConstraints.gridy = 0;
     saveResultsButton.setVisible(false);
-    add(saveResultsButton, gridBagConstraints);
+    buttonPanel.add(saveResultsButton, gridBagConstraints);
 
     revalidate();
     repaint();
@@ -114,7 +123,7 @@ public class InputPanel extends JPanel
     scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     scrollPane.setPreferredSize(new Dimension(650, 800));
-    scrollPane.setMinimumSize(new Dimension(450, 400));
+    scrollPane.setMinimumSize(new Dimension(500, 400));
     frame.add(scrollPane, gridBagConstraints);
   }
 

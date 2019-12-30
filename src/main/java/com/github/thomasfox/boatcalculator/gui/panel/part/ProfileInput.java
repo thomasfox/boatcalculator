@@ -2,6 +2,8 @@ package com.github.thomasfox.boatcalculator.gui.panel.part;
 
 import java.awt.Container;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
@@ -9,6 +11,7 @@ import java.util.Optional;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JPanel;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.gui.SwingGui;
@@ -54,32 +57,30 @@ public class ProfileInput implements ScannedInput
     }
   }
 
-  private void selectProfile(String profileName)
-  {
-    for (int i = 0; i < profileSelect.getItemCount(); i++)
-    {
-      ProfileInputItem item = profileSelect.getItemAt(i);
-      if (profileName.equals(item.getProfileName()))
-      {
-        profileSelect.setSelectedItem(item);
-        break;
-      }
-    }
-  }
-
   public void addToContainer(Container container, int row)
   {
     SwingHelper.addLabelToContainer("Profil", container, 0, row);
+
+    JPanel profileSelectPanel = new JPanel();
+    profileSelectPanel.setLayout(new GridBagLayout());
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = row;
-    container.add(profileSelect, gridBagConstraints);
+    gridBagConstraints.gridwidth = 4;
+    container.add(profileSelectPanel, gridBagConstraints);
+
     gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
-    gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = row;
-    container.add(scanSelect, gridBagConstraints);
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    profileSelectPanel.add(profileSelect, gridBagConstraints);
+    gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.insets = new Insets(0,2,0,2);
+    profileSelectPanel.add(scanSelect, gridBagConstraints);
   }
 
   public String getProfileName()

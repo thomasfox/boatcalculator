@@ -108,7 +108,7 @@ public class SwingGui
       public void run()
       {
         calculateAndRefreshDisplayedResults();
-        frame.pack();
+        frame.revalidate();
       }
     };
     new Thread(calculateRunnable).start();
@@ -163,7 +163,7 @@ public class SwingGui
       public void run()
       {
         calculateAndRefreshDisplayedResultsScan();
-        frame.pack();
+        frame.revalidate();
       }
     };
     new Thread(calculateRunnable).start();

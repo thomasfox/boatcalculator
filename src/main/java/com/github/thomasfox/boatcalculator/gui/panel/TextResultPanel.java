@@ -52,7 +52,7 @@ public class TextResultPanel extends JPanel
   public TextResultPanel()
   {
     setLayout(new GridBagLayout());
-    setBorder(new EmptyBorder(0,10,0,10));
+    setBorder(new EmptyBorder(0, 10, 0, 10));
   }
 
   public void addToFrame(JFrame frame)
@@ -65,7 +65,7 @@ public class TextResultPanel extends JPanel
     scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     scrollPane.setPreferredSize(new Dimension(450, 400));
-    scrollPane.setMinimumSize(new Dimension(450, 400));
+    scrollPane.setMinimumSize(new Dimension(350, 400));
     frame.add(scrollPane, gridBagConstraints);
   }
 
