@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -16,11 +17,14 @@ import com.github.thomasfox.boatcalculator.interpolate.QuantityRelations;
 import com.github.thomasfox.boatcalculator.profile.ProfileGeometry;
 import com.github.thomasfox.boatcalculator.profile.ProfileSelector;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 public class ProfileInput implements ScannedInput
 {
   private final ProfileSelector profileSelector = new ProfileSelector();
 
-  private final JComboBox<String> profileSelect;
+  private final JComboBox<ProfileInputItem> profileSelect;
 
   private final JCheckBox scanSelect;
 
@@ -31,19 +35,35 @@ public class ProfileInput implements ScannedInput
     profileSelect = new JComboBox<>();
     profileSelect.addItem(null);
     profileNames = profileSelector.getProfileNames(SwingGui.PROFILE_DIRECTORY);
-    String selectedProfile = null;
+    ProfileInputItem selectedProfile = null;
+    int i = 0;
     for (String profile : profileNames)
     {
-      profileSelect.addItem(profile);
+      i++;
+      ProfileInputItem item = new ProfileInputItem(profile, i);
+      profileSelect.addItem(item);
       if (Objects.equals(profile, profileNameToSelect))
       {
-        selectedProfile = profile;
+        selectedProfile = item;
       }
     }
     scanSelect = new JCheckBox("scan");
     if (selectedProfile != null)
     {
       profileSelect.setSelectedItem(selectedProfile);
+    }
+  }
+
+  private void selectProfile(String profileName)
+  {
+    for (int i = 0; i < profileSelect.getItemCount(); i++)
+    {
+      ProfileInputItem item = profileSelect.getItemAt(i);
+      if (profileName.equals(item.getProfileName()))
+      {
+        profileSelect.setSelectedItem(item);
+        break;
+      }
     }
   }
 
@@ -64,7 +84,9 @@ public class ProfileInput implements ScannedInput
 
   public String getProfileName()
   {
-    return Objects.toString(profileSelect.getSelectedItem(), null);
+    return Optional.ofNullable((ProfileInputItem) profileSelect.getSelectedItem())
+        .map(ProfileInputItem::getProfileName)
+        .orElse(null);
   }
 
   @Override
@@ -96,7 +118,7 @@ public class ProfileInput implements ScannedInput
   @Override
   public void setValueForScanStep(int step)
   {
-    profileSelect.setSelectedItem(profileNames.get(step));
+    profileSelect.setSelectedItem(profileSelect.getItemAt(step));
   }
 
   @Override
@@ -121,5 +143,20 @@ public class ProfileInput implements ScannedInput
   public PhysicalQuantity getQuantity()
   {
     return PhysicalQuantity.PROFILE;
+  }
+
+  @AllArgsConstructor
+  @Getter
+  private class ProfileInputItem
+  {
+    private final String profileName;
+
+    private final int index;
+
+    @Override
+    public String toString()
+    {
+      return profileName + " (" + index + ")";
+    }
   }
 }
