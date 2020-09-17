@@ -48,7 +48,7 @@ public class Moth extends Dinghy
     ((DaggerboardOrKeel) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.12d);
     ((DaggerboardOrKeel) daggerboardOrKeel).setProfileName("naca0010");
 
-    rudderLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 0.8d);
+    rudderLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 0.5d);
     rudderLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.1d);
     rudderLiftingFoil.setProfileName("n63412-il");
     rudderLiftingFoil.setFixedValueNoOverwrite(
@@ -60,10 +60,10 @@ public class Moth extends Dinghy
     rudder.setStartValueNoOverwrite(PhysicalQuantity.LIFT, 0d); // assuming negligible force on the rudder for no heel
     rudder.setProfileName("naca0010");
 
-    rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 5.8d);
+    rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 5.3d); // from north-sails-international-moth-speed-guide
     rigg.setStartValueNoOverwrite(PhysicalQuantity.AREA, 8d);
-    rigg.setStartValueNoOverwrite(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, 0.18); // estimate from: https://en.wikipedia.org/wiki/Forces_on_sails
-    rigg.setStartValueNoOverwrite(PhysicalQuantity.ANGLE_OF_ATTACK, 20); // rough estimate
+    rigg.setStartValueNoOverwrite(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, 0.1); // estimate from flying optimist paper
+    rigg.setStartValueNoOverwrite(PhysicalQuantity.ANGLE_OF_ATTACK, 27.5); // estimate from flying optimist paper
     rigg.setStartValueNoOverwrite(PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT, 2); // rough estimate
 
     crew.setStartValueNoOverwrite(PhysicalQuantity.MASS, 80d); // single person
@@ -88,7 +88,7 @@ public class Moth extends Dinghy
         0d, 10d));
     values.add(new IncreaseQuantityTillOtherReachesUpperLimitStrategy(
         PhysicalQuantity.LEVER_WEIGHT, Crew.ID, 1.0,
-        PhysicalQuantity.LIFT_COEFFICIENT, Rigg.ID, 1.2)); // caMax=1.2: rough estimate
+        PhysicalQuantity.LIFT_COEFFICIENT, Rigg.ID, 1.5)); // caMax=1.5: rough estimate from flying optimist
     values.add(new QuantityEquality(
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, Hull.ID));
