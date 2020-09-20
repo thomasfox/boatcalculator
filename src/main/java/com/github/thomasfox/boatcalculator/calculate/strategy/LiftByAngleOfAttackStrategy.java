@@ -94,11 +94,11 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     {
       return false;
     }
-    if (!allLiftSourceValuesAreUnknown(allValues))
+    if (!allLiftSourceValuesWithUnknownAngleOfAttackAreUnknown(allValues))
     {
       return false;
     }
-    if (!allAngleOfAttackSourceValuesAreUnknown(allValues))
+    if (!noAngleOfAttackSourceValuesAreCalculated(allValues))
     {
       return false;
     }
@@ -114,11 +114,14 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
       // wing lift cannot compensate weight, use maximum angle of attack
       for (PhysicalQuantityInSet angleOfAttackValue : anglesOfAttack)
       {
-        allValues.setCalculatedValueNoOverwrite(
-            angleOfAttackValue,
-            allValues.getKnownValue(maxAngleOfAttack),
-            getCalculatedByDescription(allValues),
-            getSourceValuesWithNames(allValues));
+        if (!allValues.isValueKnown(angleOfAttackValue))
+        {
+          allValues.setCalculatedValueNoOverwrite(
+              angleOfAttackValue,
+              allValues.getKnownValue(maxAngleOfAttack),
+              getCalculatedByDescription(allValues),
+              getSourceValuesWithNames(allValues));
+        }
       }
       allValues.setCalculatedValueNoOverwrite(
           new PhysicalQuantityInSet(PhysicalQuantity.LIFT, Hull.ID),
@@ -160,11 +163,14 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     {
       for (PhysicalQuantityInSet angleOfAttackValue : anglesOfAttack)
       {
-        allValues.setCalculatedValueNoOverwrite(
-            angleOfAttackValue,
-            angleOfAttack,
-            getCalculatedByDescription(allValues),
-            getSourceValuesWithNames(allValues));
+        if (!allValues.isValueKnown(angleOfAttackValue))
+        {
+          allValues.setCalculatedValueNoOverwrite(
+              angleOfAttackValue,
+              angleOfAttack,
+              getCalculatedByDescription(allValues),
+              getSourceValuesWithNames(allValues));
+        }
       }
       allValues.setCalculatedValueNoOverwrite(
           new PhysicalQuantityInSet(PhysicalQuantity.LIFT, Hull.ID),
@@ -185,7 +191,10 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     allValuesForCalculation.moveCalculatedValuesToStartValues();
     for (PhysicalQuantityInSet angleOfAttackQuantity : anglesOfAttack)
     {
-      allValuesForCalculation.setStartValueNoOverwrite(angleOfAttackQuantity, angleOfAttack);
+      if (allValues.getValueSet(angleOfAttackQuantity.getValueSetId()).getStartValue(angleOfAttackQuantity.getPhysicalQuantity()) == null)
+      {
+        allValuesForCalculation.setStartValueNoOverwrite(angleOfAttackQuantity, angleOfAttack);
+      }
     }
     double result = 0d;
     for (PhysicalQuantityInSet liftQuantity : liftSources)
@@ -206,14 +215,18 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     return Arrays.stream(weightSources).allMatch(allValues::isValueKnown);
   }
 
-  public boolean allLiftSourceValuesAreUnknown(AllValues allValues)
+  public boolean allLiftSourceValuesWithUnknownAngleOfAttackAreUnknown(AllValues allValues)
   {
-    return Arrays.stream(liftSources).allMatch(v -> !allValues.isValueKnown(v));
+    return Arrays.stream(liftSources)
+        .filter(s -> allValues.getValueSet(s.getValueSetId()).getStartValue(PhysicalQuantity.ANGLE_OF_ATTACK) == null)
+        .allMatch(v -> !allValues.isValueKnown(v));
   }
 
-  public boolean allAngleOfAttackSourceValuesAreUnknown(AllValues allValues)
+  public boolean noAngleOfAttackSourceValuesAreCalculated(AllValues allValues)
   {
-    return Arrays.stream(anglesOfAttack).allMatch(v -> !allValues.isValueKnown(v));
+    return Arrays.stream(anglesOfAttack)
+        .filter(s -> allValues.getValueSet(s.getValueSetId()).getStartValue(PhysicalQuantity.ANGLE_OF_ATTACK) == null)
+        .allMatch(v -> !allValues.isValueKnown(v));
   }
 
   public double getSumOfWeightSourcesValues(AllValues allValues)

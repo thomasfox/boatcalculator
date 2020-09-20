@@ -13,5 +13,6 @@ public class RudderLiftingFoil extends Hydrofoil
     super(ID, NAME);
     addToInput(PhysicalQuantity.MAX_ANGLE_OF_ATTACK);
     setStartValue(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, 10d);
+    addToInput(PhysicalQuantity.ANGLE_OF_ATTACK);
   }
 }
