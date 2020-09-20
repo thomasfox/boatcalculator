@@ -46,7 +46,7 @@ public class Moth extends Dinghy
 
     ((DaggerboardOrKeel) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d);
     ((DaggerboardOrKeel) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.12d);
-    ((DaggerboardOrKeel) daggerboardOrKeel).setProfileName("naca0010");
+    ((DaggerboardOrKeel) daggerboardOrKeel).setProfileName("e521-il");
 
     rudderLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 0.5d);
     rudderLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.1d);
@@ -58,7 +58,7 @@ public class Moth extends Dinghy
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d);
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.12d);
     rudder.setStartValueNoOverwrite(PhysicalQuantity.LIFT, 0d); // assuming negligible force on the rudder for no heel
-    rudder.setProfileName("naca0010");
+    rudder.setProfileName("e521-il");
 
     rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 5.3d); // from north-sails-international-moth-speed-guide
     rigg.setStartValueNoOverwrite(PhysicalQuantity.AREA, 8d);
