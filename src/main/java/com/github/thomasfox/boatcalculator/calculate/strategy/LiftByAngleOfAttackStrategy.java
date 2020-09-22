@@ -94,6 +94,10 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     {
       return false;
     }
+    if (allAnglesOfAttackAreKnown(allValues))
+    {
+      return false;
+    }
     if (!allLiftSourceValuesWithUnknownAngleOfAttackAreUnknown(allValues))
     {
       return false;
@@ -213,6 +217,13 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
   public boolean allWeightSourceValuesAreKnown(AllValues allValues)
   {
     return Arrays.stream(weightSources).allMatch(allValues::isValueKnown);
+  }
+
+  public boolean allAnglesOfAttackAreKnown(AllValues allValues)
+  {
+    return Arrays.stream(liftSources)
+        .filter(s -> allValues.getValueSet(s.getValueSetId()).getStartValue(PhysicalQuantity.ANGLE_OF_ATTACK) == null)
+        .count() == 0;
   }
 
   public boolean allLiftSourceValuesWithUnknownAngleOfAttackAreUnknown(AllValues allValues)
