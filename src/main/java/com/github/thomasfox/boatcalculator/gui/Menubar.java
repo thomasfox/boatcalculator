@@ -42,7 +42,7 @@ public class Menubar extends JMenuBar
   public Menubar(Consumer<Boat> boatTypeSelected)
   {
     this.boatTypeSelected = boatTypeSelected;
-    for (Boat boat : new Boat[] {new Flying29er(), new Skiff29er(), new FlyingKayak(), new Moth()})
+    for (Boat boat : new Boat[] {new Moth(), new Flying29er(), new Skiff29er(), new FlyingKayak()})
     {
       JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem(boat.toString());
       typeSelectButtonGroup.add(rbMenuItem);
