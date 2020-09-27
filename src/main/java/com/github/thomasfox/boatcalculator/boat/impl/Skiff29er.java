@@ -46,7 +46,7 @@ public class Skiff29er extends Dinghy
         0d, 10d));
     values.add(new IncreaseQuantityTillOtherReachesUpperLimitStrategy(
         PhysicalQuantity.LEVER_WEIGHT, Crew.ID, 1.8,
-        PhysicalQuantity.LIFT_COEFFICIENT, Rigg.ID, 1.5)); // 1.8m: single person, CoG 91.5 cm from rim in trapeze; caMax=1.5: from flying optimist
+        PhysicalQuantity.LIFT_COEFFICIENT_3D, Rigg.ID, 1.5)); // 1.8m: single person, CoG 91.5 cm from rim in trapeze; caMax=1.5: from flying optimist
     values.add(new QuantityEquality(
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, Hull.ID));

@@ -12,7 +12,7 @@ public class LiftCalculator extends Calculator
   public LiftCalculator()
   {
     super(PhysicalQuantity.LIFT,
-        PhysicalQuantity.LIFT_COEFFICIENT,
+        PhysicalQuantity.LIFT_COEFFICIENT_3D,
         PhysicalQuantity.AREA,
         PhysicalQuantity.VELOCITY,
         PhysicalQuantity.DENSITY);
@@ -21,7 +21,7 @@ public class LiftCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double liftCoefficient = valueSet.getKnownValue(PhysicalQuantity.LIFT_COEFFICIENT).getValue();
+    double liftCoefficient = valueSet.getKnownValue(PhysicalQuantity.LIFT_COEFFICIENT_3D).getValue();
     double wingArea = valueSet.getKnownValue(PhysicalQuantity.AREA).getValue();
     double velocity = valueSet.getKnownValue(PhysicalQuantity.VELOCITY).getValue();
     double density = valueSet.getKnownValue(PhysicalQuantity.DENSITY).getValue();

@@ -23,8 +23,9 @@ public class XfoilResultLoader
     {
       readPrelude(bufferedReader);
       title = readTitle(bufferedReader);
-      fixedQuantities = readFixedQuantities(bufferedReader);
-      relatedQuantityValues = readPolar(bufferedReader);
+      boolean measuredRiggPolar = title.startsWith("XFOIL MEASURED RIGG");
+      fixedQuantities = readFixedQuantities(bufferedReader, measuredRiggPolar);
+      relatedQuantityValues = readPolar(bufferedReader, measuredRiggPolar);
     }
     catch (IOException e)
     {
@@ -73,7 +74,8 @@ public class XfoilResultLoader
     return result;
   }
 
-  PhysicalQuantityValues readFixedQuantities(BufferedReader reader) throws IOException
+  PhysicalQuantityValues readFixedQuantities(BufferedReader reader, boolean measuredRiggPolar)
+      throws IOException
   {
     PhysicalQuantityValues result = new PhysicalQuantityValues();
 
@@ -116,16 +118,19 @@ public class XfoilResultLoader
     {
       throw new IOException("9th line does not contain Ncrit =");
     }
-    line = line.substring("Re =".length()).trim();
-    String reNumber = line.substring(0, line.indexOf("Ncrit ="));
-    reNumber = reNumber.replace(" ", "");
-    result.setValueNoOverwrite(PhysicalQuantity.REYNOLDS_NUMBER, Double.parseDouble(reNumber));
+    if (!measuredRiggPolar)
+    {
+      line = line.substring("Re =".length()).trim();
+      String reNumber = line.substring(0, line.indexOf("Ncrit ="));
+      reNumber = reNumber.replace(" ", "");
+      result.setValueNoOverwrite(PhysicalQuantity.REYNOLDS_NUMBER, Double.parseDouble(reNumber));
 
-    line = line.substring(line.indexOf("Ncrit =")).trim();
-    line = line.substring("Ncrit =".length()).trim();
-    String ncritNumber = line;
-    ncritNumber = ncritNumber.replace(" ", "");
-    result.setValueNoOverwrite(PhysicalQuantity.NCRIT, Double.parseDouble(ncritNumber));
+      line = line.substring(line.indexOf("Ncrit =")).trim();
+      line = line.substring("Ncrit =".length()).trim();
+      String ncritNumber = line;
+      ncritNumber = ncritNumber.replace(" ", "");
+      result.setValueNoOverwrite(PhysicalQuantity.NCRIT, Double.parseDouble(ncritNumber));
+    }
 
     line = reader.readLine();
     if (!line.trim().isEmpty())
@@ -135,7 +140,8 @@ public class XfoilResultLoader
     return result;
   }
 
-  List<PhysicalQuantityValues> readPolar(BufferedReader reader) throws IOException
+  List<PhysicalQuantityValues> readPolar(BufferedReader reader, boolean measuredRiggPolar)
+      throws IOException
   {
     List<PhysicalQuantityValues> result = new ArrayList<>();
     String line = reader.readLine();
@@ -168,8 +174,18 @@ public class XfoilResultLoader
       StringTokenizer valueLineTokenizer = new StringTokenizer(line);
       PhysicalQuantityValues parsedLine = new PhysicalQuantityValues();
       parsedLine.setValueNoOverwrite(PhysicalQuantity.ANGLE_OF_ATTACK, parseTokenAsDouble(valueLineTokenizer));
-      parsedLine.setValueNoOverwrite(PhysicalQuantity.LIFT_COEFFICIENT, parseTokenAsDouble(valueLineTokenizer));
-      parsedLine.setValueNoOverwrite(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, parseTokenAsDouble(valueLineTokenizer));
+      if (measuredRiggPolar)
+      {
+        // measured rigg polar: ca is 3d-ca, cd is for total drag
+        parsedLine.setValueNoOverwrite(PhysicalQuantity.LIFT_COEFFICIENT_3D, parseTokenAsDouble(valueLineTokenizer));
+        parsedLine.setValueNoOverwrite(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT, parseTokenAsDouble(valueLineTokenizer));
+      }
+      else
+      {
+        // normal polar
+        parsedLine.setValueNoOverwrite(PhysicalQuantity.LIFT_COEFFICIENT, parseTokenAsDouble(valueLineTokenizer));
+        parsedLine.setValueNoOverwrite(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, parseTokenAsDouble(valueLineTokenizer));
+      }
       parseTokenAsDouble(valueLineTokenizer); // ignore pressure drag coefficient
       parseTokenAsDouble(valueLineTokenizer); // ignore momentum coefficient
       parseTokenAsDouble(valueLineTokenizer); // ignore top transition

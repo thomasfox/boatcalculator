@@ -7,11 +7,11 @@ import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 /**
  * https://de.wikipedia.org/wiki/Dynamischer_Auftrieb
  */
-public class LiftCoefficientCalculator extends Calculator
+public class LiftCoefficient3DCalculator extends Calculator
 {
-  public LiftCoefficientCalculator()
+  public LiftCoefficient3DCalculator()
   {
-    super(PhysicalQuantity.LIFT_COEFFICIENT,
+    super(PhysicalQuantity.LIFT_COEFFICIENT_3D,
         PhysicalQuantity.LIFT,
         PhysicalQuantity.AREA,
         PhysicalQuantity.VELOCITY,

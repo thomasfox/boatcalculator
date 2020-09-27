@@ -22,7 +22,9 @@ import com.github.thomasfox.boatcalculator.calculate.impl.InducedDragCoefficient
 import com.github.thomasfox.boatcalculator.calculate.impl.LateralForceCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.LeverFromWeightCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.LiftCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.LiftCoefficientCalculator;
+import com.github.thomasfox.boatcalculator.calculate.impl.LiftCoefficient3DFromLiftCoefficientCalculator;
+import com.github.thomasfox.boatcalculator.calculate.impl.LiftCoefficient3DCalculator;
+import com.github.thomasfox.boatcalculator.calculate.impl.LiftCoefficientFromLiftCoefficient3DCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.LiftDividedByTotalDragCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.ParasiticDragCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.ProfileDragCalculator;
@@ -37,6 +39,7 @@ import com.github.thomasfox.boatcalculator.calculate.impl.VMGCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.WaveMakingDragCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.WaveMakingDragCoefficientCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.WeightFromMassCalculator;
+import com.github.thomasfox.boatcalculator.calculate.impl.WingChordFromAreaAndSpanCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.WingChordFromSecondMomentOfAreaCalculator;
 import com.github.thomasfox.boatcalculator.interpolate.Interpolator;
 import com.github.thomasfox.boatcalculator.interpolate.QuantityRelations;
@@ -61,13 +64,16 @@ public class CombinedCalculator
   public CombinedCalculator(List<QuantityRelations> quantityRelationsList)
   {
     calculators.add(new AreaCalculator());
+    calculators.add(new WingChordFromAreaAndSpanCalculator());
     calculators.add(new ReynoldsNumberCalculator());
     calculators.add(new InducedDragCoefficientCalculator());
     calculators.add(new InducedDragCalculator());
     calculators.add(new ParasiticDragCalculator());
     calculators.add(new AreaLoadFixedMiddleBendingCalculator());
     calculators.add(new SecondMomentOfAreaCalculator());
-    calculators.add(new LiftCoefficientCalculator());
+    calculators.add(new LiftCoefficient3DCalculator());
+    calculators.add(new LiftCoefficient3DFromLiftCoefficientCalculator());
+    calculators.add(new LiftCoefficientFromLiftCoefficient3DCalculator());
     calculators.add(new CrosssectionAreaCalculator());
     calculators.add(new ThicknessCalculator());
     calculators.add(new WingChordFromSecondMomentOfAreaCalculator());

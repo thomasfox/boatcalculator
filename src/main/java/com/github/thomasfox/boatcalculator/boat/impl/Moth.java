@@ -37,15 +37,15 @@ public class Moth extends Dinghy
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, RudderLiftingFoil.ID));
     values.add(new QuantityEquality(PhysicalQuantity.WING_SPAN, Rudder.ID, PhysicalQuantity.SUBMERGENCE_DEPTH, RudderLiftingFoil.ID));
 
-    mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d);
-    mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.1d);
+    mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d); // 1.13 for current mach 2.41
+    mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.11d); // 0.073 for current mach 2.41
     mainLiftingFoil.setProfileName("n63412-il");
     mainLiftingFoil.setFixedValueNoOverwrite(
         PhysicalQuantity.MODULUS_OF_ELASTICITY,
         PhysicalQuantity.MODULUS_OF_ELASTICITY.getFixedValue().doubleValue());
 
     ((DaggerboardOrKeel) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d);
-    ((DaggerboardOrKeel) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.11d);
+    ((DaggerboardOrKeel) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.12d);
     ((DaggerboardOrKeel) daggerboardOrKeel).setProfileName("e521-il");
 
     rudderLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 0.7d);
@@ -62,8 +62,6 @@ public class Moth extends Dinghy
 
     rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 5.3d); // from north-sails-international-moth-speed-guide
     rigg.setStartValueNoOverwrite(PhysicalQuantity.AREA, 8d);
-    rigg.setStartValueNoOverwrite(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, 0.1); // estimate from flying optimist paper
-    rigg.setStartValueNoOverwrite(PhysicalQuantity.ANGLE_OF_ATTACK, 27.5); // estimate from flying optimist paper
     rigg.setStartValueNoOverwrite(PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT, 2); // rough estimate
 
     crew.setStartValueNoOverwrite(PhysicalQuantity.MASS, 80d); // single person
@@ -85,10 +83,10 @@ public class Moth extends Dinghy
         PhysicalQuantity.DRIVING_FORCE, Rigg.ID,
         PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
-        0d, 10d));
+        0d, 15d));
     values.add(new IncreaseQuantityTillOtherReachesUpperLimitStrategy(
         PhysicalQuantity.LEVER_WEIGHT, Crew.ID, 1.0,
-        PhysicalQuantity.LIFT_COEFFICIENT, Rigg.ID, 1.5)); // caMax=1.5: rough estimate from flying optimist
+        PhysicalQuantity.LIFT_COEFFICIENT_3D, Rigg.ID, 1.55)); // caMax=1.55: rough estimate from windsurf sail paper
     values.add(new QuantityEquality(
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, Hull.ID));
