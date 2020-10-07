@@ -140,7 +140,7 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     double lastStepSigned = stepUnsigned;
     int tries = 20;
 
-    while (Math.abs(weight - wingLift) > weight/1000 && tries > 0)
+    while (wingLift != null && Math.abs(weight - wingLift) > weight/1000 && tries > 0)
     {
       if (wingLift > weight)
       {
@@ -163,7 +163,7 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
       }
       tries--;
     }
-    if (Math.abs(weight - wingLift) < weight/1000)
+    if (wingLift != null && Math.abs(weight - wingLift) < weight/1000)
     {
       for (PhysicalQuantityInSet angleOfAttackValue : anglesOfAttack)
       {
