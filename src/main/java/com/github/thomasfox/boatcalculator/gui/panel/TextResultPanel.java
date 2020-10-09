@@ -23,6 +23,7 @@ import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
 import com.github.thomasfox.boatcalculator.valueset.impl.DaggerboardOrKeel;
 import com.github.thomasfox.boatcalculator.valueset.impl.Hull;
 import com.github.thomasfox.boatcalculator.valueset.impl.MainLiftingFoil;
+import com.github.thomasfox.boatcalculator.valueset.impl.Rigg;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rudder;
 import com.github.thomasfox.boatcalculator.valueset.impl.RudderLiftingFoil;
 
@@ -44,6 +45,7 @@ public class TextResultPanel extends JPanel
     preselectedGraphs.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Hull.ID));
     preselectedGraphs.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, MainLiftingFoil.ID));
     preselectedGraphs.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, RudderLiftingFoil.ID));
+    preselectedGraphs.add(new PhysicalQuantityInSet(PhysicalQuantity.DRIVING_FORCE, Rigg.ID));
   }
 
 

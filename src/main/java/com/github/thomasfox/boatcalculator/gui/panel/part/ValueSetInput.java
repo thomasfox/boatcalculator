@@ -145,6 +145,9 @@ public class ValueSetInput
         valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
             PhysicalQuantity.NORMALIZED_AREA_OF_CROSSECTION,
             profileGeometry.getCrossectionArea()));
+        valueSet.setCalculatedValueNoOverwrite(new PhysicalQuantityValue(
+            PhysicalQuantity.MAX_RELATIVE_CAMBER,
+            profileGeometry.getMaxRelativeCamber()), profileName + " geometry");
         valueSet.getQuantityRelations().addAll(
             profileInput.loadXfoilResults(
                 SwingGui.PROFILE_DIRECTORY, profileName));

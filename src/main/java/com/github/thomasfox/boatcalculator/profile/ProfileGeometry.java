@@ -140,6 +140,33 @@ public class ProfileGeometry
   }
 
   /**
+   * Gibt die maximale relative Biegung des Profils zurück.
+   * Berechnet aus yoben + yunten / (2* Dicke)
+   *
+   * @return das Trägheitsmoment.
+   */
+  public double getMaxRelativeCamber()
+  {
+    double xStep = 1d / CALCULATION_STEPS;
+    double relativeCamber = 0;
+    double thickness = getThickness();
+    for (double x = xStep / 2; x < 1; x += xStep)
+    {
+      double minY = getLowerY(x);
+      double maxY = getUpperY(x);
+      double center = (maxY + minY) / 2;
+
+      relativeCamber = Math.max(relativeCamber, Math.abs(center / thickness));
+    }
+    return relativeCamber;
+  }
+
+  public boolean isSymmetric()
+  {
+    return getMaxRelativeCamber() < 0.001;
+  }
+
+  /**
    * Gibt die Querschnittsfläche für ein Profil zurück.
    *
    * @return die Querschnittsfläche.

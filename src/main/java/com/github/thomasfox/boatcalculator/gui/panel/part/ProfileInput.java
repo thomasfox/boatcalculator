@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,7 +32,11 @@ public class ProfileInput implements ScannedInput
 
   private final JCheckBox scanSelect;
 
+  private final JComboBox<Symmetry> symmetrySelect;
+
   List<String> profileNames;
+
+  List<String> symmetricProfileNames;
 
   public ProfileInput(String profileNameToSelect)
   {
@@ -55,6 +60,10 @@ public class ProfileInput implements ScannedInput
     {
       profileSelect.setSelectedItem(selectedProfile);
     }
+    symmetrySelect = new JComboBox<Symmetry>();
+    symmetrySelect.addItem(Symmetry.ALL);
+    symmetrySelect.addItem(Symmetry.SYMMETRIC);
+    symmetrySelect.addItem(Symmetry.ASSYMMERTRIC);
   }
 
   public void addToContainer(Container container, int row)
@@ -81,6 +90,11 @@ public class ProfileInput implements ScannedInput
     gridBagConstraints.gridy = 0;
     gridBagConstraints.insets = new Insets(0,2,0,2);
     profileSelectPanel.add(scanSelect, gridBagConstraints);
+    gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 0;
+    profileSelectPanel.add(symmetrySelect, gridBagConstraints);
   }
 
   public String getProfileName()
@@ -89,6 +103,31 @@ public class ProfileInput implements ScannedInput
         .map(ProfileInputItem::getProfileName)
         .orElse(null);
   }
+
+  public List<String> getSymmetricProfileNames()
+  {
+    if (symmetricProfileNames == null)
+    {
+      symmetricProfileNames = new ArrayList<>();
+      for (String profileName : profileNames)
+      {
+        ProfileGeometry geometry = loadProfile(SwingGui.PROFILE_DIRECTORY, profileName);
+        if (geometry != null && geometry.isSymmetric())
+        {
+          symmetricProfileNames.add(profileName);
+        }
+      }
+    }
+    return symmetricProfileNames;
+  }
+
+  public List<String> getAsymmetricProfileNames()
+  {
+    List<String> result = new ArrayList<>(profileNames);
+    result.removeAll(getSymmetricProfileNames());
+    return result;
+  }
+
 
   @Override
   public boolean isScan()
@@ -113,13 +152,51 @@ public class ProfileInput implements ScannedInput
     {
       return null;
     }
-    return profileNames.size();
+    if (symmetrySelect.getSelectedItem() == Symmetry.SYMMETRIC)
+    {
+      return getSymmetricProfileNames().size();
+    }
+    else if (symmetrySelect.getSelectedItem() == Symmetry.ASSYMMERTRIC)
+    {
+      return getAsymmetricProfileNames().size();
+    }
+    else
+    {
+      return profileNames.size();
+    }
   }
 
   @Override
   public void setValueForScanStep(int step)
   {
-    profileSelect.setSelectedItem(profileSelect.getItemAt(step));
+    if (symmetrySelect.getSelectedItem() == Symmetry.SYMMETRIC)
+    {
+      String profileName = getSymmetricProfileNames().get(step);
+      selectProfileName(profileName);
+    }
+    else if (symmetrySelect.getSelectedItem() == Symmetry.ASSYMMERTRIC)
+    {
+      String profileName = getAsymmetricProfileNames().get(step);
+      selectProfileName(profileName);
+    }
+    else
+    {
+      String profileName = profileNames.get(step);
+      selectProfileName(profileName);
+    }
+  }
+
+  private void selectProfileName(String profileName)
+  {
+    for (int i = 0; i < profileSelect.getItemCount(); i++)
+    {
+      ProfileInputItem candidate = profileSelect.getItemAt(i);
+      if (candidate != null && profileName.equals(candidate.getProfileName()))
+      {
+        profileSelect.setSelectedItem(candidate);
+        return;
+      }
+    }
   }
 
   @Override
@@ -159,5 +236,11 @@ public class ProfileInput implements ScannedInput
     {
       return profileName + " (" + index + ")";
     }
+  }
+
+  private static enum Symmetry {
+    ALL,
+    SYMMETRIC,
+    ASSYMMERTRIC
   }
 }

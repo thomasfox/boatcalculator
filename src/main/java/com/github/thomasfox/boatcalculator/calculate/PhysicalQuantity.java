@@ -56,6 +56,7 @@ public enum PhysicalQuantity
   NORMALIZED_SECOND_MOMENT_OF_AREA("Flächenmoment 2. Ordnung", null, false, "Integral y^2 dx dy für ein Profil der Tiefe 1 und gleichem Tiefe/Dickenverhältnis wie das eigentliche Profil"),
   AREA_OF_CROSSECTION("Fläche des Querschnitts", "m^2", false),
   NORMALIZED_AREA_OF_CROSSECTION("Normalisierte Fläche des Querschnitts", "m^2", false, "Querschnittsfläche für ein Profil der Tiefe 1 und gleichem Tiefe/Dickenverhältnis wie das eigentliche Profil"),
+  MAX_RELATIVE_CAMBER("Maximale relative Assymetrie", null, false, "Maximale relative Abweichung des Mittels von Ober- und Unterseite von der Nullinie des Profils bzgl der maximalen Dicke"),
   RIGG_CENTER_OF_EFFORT_HEIGHT("Höhe des Rigg-Druckpunktes", "m", null, "gerechnet vom Boden des Bootes (wo das Schwert/der Kiel beginnt)"),
   PROFILE("Profil", null, false);
 
