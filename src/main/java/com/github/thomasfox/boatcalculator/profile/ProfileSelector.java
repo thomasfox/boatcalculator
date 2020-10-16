@@ -45,7 +45,7 @@ public class ProfileSelector
   public List<QuantityRelations> loadXfoilResults(File directory, String name)
   {
     String[] filenames = directory.list(
-        (dir, filename) -> filename.indexOf("-" + name + "-") != -1 && filename.endsWith(".txt"));
+        (dir, filename) -> filename.matches("^xf-" + name + "-[\\d]*.txt"));
     List<QuantityRelations> result = new ArrayList<>();
     for (String filename : filenames)
     {
