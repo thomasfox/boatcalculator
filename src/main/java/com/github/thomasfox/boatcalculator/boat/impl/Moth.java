@@ -20,16 +20,19 @@ import com.github.thomasfox.boatcalculator.valueset.impl.MainLiftingFoil;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rigg;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rudder;
 import com.github.thomasfox.boatcalculator.valueset.impl.RudderLiftingFoil;
+import com.github.thomasfox.boatcalculator.valueset.impl.Takeoff;
 
 public class Moth extends Dinghy
 {
-  MainLiftingFoil mainLiftingFoil = new MainLiftingFoil();
-  RudderLiftingFoil rudderLiftingFoil = new RudderLiftingFoil();
+  protected MainLiftingFoil mainLiftingFoil = new MainLiftingFoil();
+  protected RudderLiftingFoil rudderLiftingFoil = new RudderLiftingFoil();
+  protected Takeoff takeoff = new Takeoff();
 
   public Moth()
   {
     addValueSet(mainLiftingFoil);
     addValueSet(rudderLiftingFoil);
+    addValueSet(takeoff);
 
     values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
     values.add(new QuantityEquality(PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID, PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
