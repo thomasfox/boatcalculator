@@ -11,8 +11,8 @@ public class WaveMakingDragCalculator extends Calculator
 {
   public WaveMakingDragCalculator()
   {
-    super(PhysicalQuantity.WAVE_MAKING_DRAG,
-        PhysicalQuantity.WAVE_MAKING_DRAG_COEFFICIENT,
+    super(PhysicalQuantity.SURFACE_PIERCING_DRAG,
+        PhysicalQuantity.SURFACE_PIERCING_DRAG_COEFFICIENT,
         PhysicalQuantity.AREA,
         PhysicalQuantity.VELOCITY,
         PhysicalQuantity.DENSITY);
@@ -21,7 +21,7 @@ public class WaveMakingDragCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double dragCoefficient = valueSet.getKnownValue(PhysicalQuantity.WAVE_MAKING_DRAG_COEFFICIENT).getValue();
+    double dragCoefficient = valueSet.getKnownValue(PhysicalQuantity.SURFACE_PIERCING_DRAG_COEFFICIENT).getValue();
     double wingArea = valueSet.getKnownValue(PhysicalQuantity.AREA).getValue();
     double velocity = valueSet.getKnownValue(PhysicalQuantity.VELOCITY).getValue();
     double density = valueSet.getKnownValue(PhysicalQuantity.DENSITY).getValue();

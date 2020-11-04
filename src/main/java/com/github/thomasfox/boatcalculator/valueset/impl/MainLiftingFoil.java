@@ -11,7 +11,10 @@ public class MainLiftingFoil extends Hydrofoil
   public MainLiftingFoil()
   {
     super(ID, NAME);
-    addToInput(PhysicalQuantity.MAX_ANGLE_OF_ATTACK);
     setStartValue(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, 10d);
+    setFixedValueNoOverwrite(PhysicalQuantity.SURFACE_PIERCING_DRAG_COEFFICIENT, 0d);
+    addToInput(PhysicalQuantity.MAX_ANGLE_OF_ATTACK);
+    addHiddenOutput(PhysicalQuantity.SURFACE_PIERCING_DRAG);
+    addHiddenOutput(PhysicalQuantity.SURFACE_PIERCING_DRAG_COEFFICIENT);
   }
 }

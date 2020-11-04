@@ -22,8 +22,8 @@ import com.github.thomasfox.boatcalculator.calculate.impl.InducedDragCoefficient
 import com.github.thomasfox.boatcalculator.calculate.impl.LateralForceCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.LeverFromWeightCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.LiftCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.LiftCoefficient3DFromLiftCoefficientCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.LiftCoefficient3DCalculator;
+import com.github.thomasfox.boatcalculator.calculate.impl.LiftCoefficient3DFromLiftCoefficientCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.LiftCoefficientFromLiftCoefficient3DCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.LiftDividedByTotalDragCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.ParasiticDragCalculator;
@@ -31,6 +31,8 @@ import com.github.thomasfox.boatcalculator.calculate.impl.ProfileDragCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.ReynoldsNumberCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.SailingAngleCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.SecondMomentOfAreaCalculator;
+import com.github.thomasfox.boatcalculator.calculate.impl.SurfacePiercingDragCalculator;
+import com.github.thomasfox.boatcalculator.calculate.impl.SurfacePiercingDragCoefficientCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.ThicknessCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.TorqueCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.TotalDragCalculator;
@@ -95,6 +97,8 @@ public class CombinedCalculator
     calculators.add(new WaveMakingDragCoefficientCalculator());
     calculators.add(new WaveMakingDragCalculator());
     calculators.add(new WeightFromMassCalculator());
+    calculators.add(new SurfacePiercingDragCalculator());
+    calculators.add(new SurfacePiercingDragCoefficientCalculator());
 
     this.quantityRelationsList.addAll(quantityRelationsList);
   }

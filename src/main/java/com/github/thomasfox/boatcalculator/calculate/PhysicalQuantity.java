@@ -10,6 +10,8 @@ public enum PhysicalQuantity
   PARASITIC_DRAG_COEFFICIENT("Widerstandsbeiwert parasitärer Widerstand", null, false),
   WAVE_MAKING_DRAG("Wellenwiderstand", "N", true),
   WAVE_MAKING_DRAG_COEFFICIENT("Widerstandsbeiwert Wellenwiderstand", null, false),
+  SURFACE_PIERCING_DRAG("Oberflächen-Widerstand", "N", true, "Widerstand durch Spray und Wellen, weil Tragfäcke die Wasseroberfläche durchstößt"),
+  SURFACE_PIERCING_DRAG_COEFFICIENT("Oberflächen-Widerstandskoeffizient", null, false),
   TOTAL_DRAG("Gesamtwiderstand", "N", true),
   TOTAL_DRAG_COEFFICIENT("Widerstandsbeiwert Gesamtwiderstand", null, false),
   LIFT("Auftrieb", "N", true),
