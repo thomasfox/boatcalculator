@@ -38,11 +38,11 @@ public class ProfileGeometry
       minX = Math.min(minX, points.get(i).getX());
       maxX = Math.max(maxX, points.get(i).getX());
     }
-    if (minX > 0.001 || minX < 0)
+    if (minX > 0.001 || minX < -0.001)
     {
       throw new IllegalArgumentException("Minimal X must be 0");
     }
-    if (maxX > 1.001 || maxX < 0.999)
+    if (maxX > 1.005 || maxX < 0.995)
     {
       throw new IllegalArgumentException("Maximal X must be 1");
     }
