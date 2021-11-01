@@ -58,9 +58,11 @@ public class ChartsPanel extends JPanel
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Rudder.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG, Rudder.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG, Rudder.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.SURFACE_PIERCING_DRAG, Rudder.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, DaggerboardOrKeel.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG, DaggerboardOrKeel.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG, DaggerboardOrKeel.ID));
+    dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.SURFACE_PIERCING_DRAG, DaggerboardOrKeel.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Hull.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, MainLiftingFoil.ID));
     dragSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG, MainLiftingFoil.ID));
@@ -80,9 +82,11 @@ public class ChartsPanel extends JPanel
     dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT, Rudder.ID));
     dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT, Rudder.ID));
     dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, Rudder.ID));
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.SURFACE_PIERCING_DRAG_COEFFICIENT, Rudder.ID));
     dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT, DaggerboardOrKeel.ID));
     dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT, DaggerboardOrKeel.ID));
     dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, DaggerboardOrKeel.ID));
+    dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.SURFACE_PIERCING_DRAG_COEFFICIENT, DaggerboardOrKeel.ID));
     dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT, MainLiftingFoil.ID));
     dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT, MainLiftingFoil.ID));
     dragCoefficiontSet.add(new PhysicalQuantityInSet(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT, MainLiftingFoil.ID));
