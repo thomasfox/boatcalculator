@@ -39,7 +39,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
   private final double upperCutoff;
 
   @Override
-  public boolean setValue(AllValues allValues)
+  public boolean calculateAndSetValue(AllValues allValues)
   {
     ValueSet targetSet = allValues.getValueSetNonNull(targetSetId);
     PhysicalQuantityValue knownTargetValue = targetSet.getKnownValue(targetQuantity);

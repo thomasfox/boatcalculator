@@ -43,7 +43,7 @@ public class QuantitySum implements ComputationStrategy
   }
 
   @Override
-  public boolean setValue(AllValues allValues)
+  public boolean calculateAndSetValue(AllValues allValues)
   {
     ValueSet targetSet = allValues.getValueSetNonNull(target.getValueSetId());
     if (allSourceValuesAreKnown(allValues) && !targetSet.isValueKnown(target.getPhysicalQuantity()))

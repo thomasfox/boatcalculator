@@ -22,7 +22,7 @@ import lombok.ToString;
 public class LeverSailDaggerboardStrategy implements ComputationStrategy
 {
   @Override
-  public boolean setValue(AllValues allValues)
+  public boolean calculateAndSetValue(AllValues allValues)
   {
     ValueSet rigg = allValues.getValueSetNonNull(Rigg.ID);
     ValueSet daggerboard = allValues.getValueSetNonNull(DaggerboardOrKeel.ID);

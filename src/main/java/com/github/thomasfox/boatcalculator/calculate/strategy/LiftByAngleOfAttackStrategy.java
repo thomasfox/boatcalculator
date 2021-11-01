@@ -88,7 +88,7 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
   }
 
   @Override
-  public boolean setValue(AllValues allValues)
+  public boolean calculateAndSetValue(AllValues allValues)
   {
     if (!allWeightSourceValuesAreKnown(allValues))
     {

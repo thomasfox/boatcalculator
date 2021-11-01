@@ -29,7 +29,7 @@ public class QuantityEquality implements ComputationStrategy
   private final String targetSetId;
 
   @Override
-  public boolean setValue(AllValues allValues)
+  public boolean calculateAndSetValue(AllValues allValues)
   {
     ValueSet sourceSet = allValues.getValueSetNonNull(sourceSetId);
     ValueSet targetSet = allValues.getValueSetNonNull(targetSetId);

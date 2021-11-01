@@ -11,5 +11,5 @@ public interface ComputationStrategy
    *
    * @return true if the values were changed, false otherwise.
    */
-  public boolean setValue(AllValues allValues);
+  public boolean calculateAndSetValue(AllValues allValues);
 }

@@ -49,7 +49,7 @@ public class CalculateTakeoffCriticalVelocityStrategy implements ComputationStra
        = new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Hull.ID);
 
    @Override
-  public boolean setValue(AllValues allValues)
+  public boolean calculateAndSetValue(AllValues allValues)
   {
     if (allValues.getValueSet(Takeoff.ID) == null)
     {

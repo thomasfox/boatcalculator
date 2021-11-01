@@ -45,7 +45,7 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
   }
 
   @Override
-  public boolean setValue(AllValues allValues)
+  public boolean calculateAndSetValue(AllValues allValues)
   {
     if (allValues.isValueKnown(limitedQuantity))
     {

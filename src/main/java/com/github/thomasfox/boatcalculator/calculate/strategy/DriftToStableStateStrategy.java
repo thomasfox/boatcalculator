@@ -44,7 +44,7 @@ public class DriftToStableStateStrategy implements ComputationStrategy
   }
 
   @Override
-  public boolean setValue(AllValues allValues)
+  public boolean calculateAndSetValue(AllValues allValues)
   {
     if (allValues.isValueKnown(target))
     {

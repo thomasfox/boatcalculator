@@ -206,7 +206,7 @@ public class AllValues
     boolean changed = false;
     for (ComputationStrategy computationStrategy : computationStrategies)
     {
-      changed = computationStrategy.setValue(this) || changed;
+      changed = computationStrategy.calculateAndSetValue(this) || changed;
     }
     return changed;
   }
