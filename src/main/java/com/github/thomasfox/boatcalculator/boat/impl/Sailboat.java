@@ -4,7 +4,9 @@ import com.github.thomasfox.boatcalculator.boat.Boat;
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.calculate.strategy.DriftToStableStateStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.LeverSailDaggerboardStrategy;
+import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityDifference;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
+import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
 import com.github.thomasfox.boatcalculator.valueset.impl.Crew;
 import com.github.thomasfox.boatcalculator.valueset.impl.DaggerboardOrKeel;
@@ -26,6 +28,10 @@ public class Sailboat extends Boat
     valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BoatGlobalValues.ID, PhysicalQuantity.FLOW_DIRECTION, Rigg.ID));
     valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BoatGlobalValues.ID, PhysicalQuantity.FLOW_DIRECTION, Crew.ID));
     valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, Rigg.ID, PhysicalQuantity.FORCE, LeverSailDaggerboard.ID));
+    valuesAndCalculationRules.add(new QuantityDifference(
+        new PhysicalQuantityInSet(PhysicalQuantity.FORWARD_FORCE, BoatGlobalValues.ID),
+        new PhysicalQuantityInSet(PhysicalQuantity.DRIVING_FORCE, Rigg.ID),
+        new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID)));
     valuesAndCalculationRules.add(new LeverSailDaggerboardStrategy());
   }
 }

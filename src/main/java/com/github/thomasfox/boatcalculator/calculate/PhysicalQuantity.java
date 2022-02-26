@@ -21,6 +21,7 @@ public enum PhysicalQuantity
   LATERAL_FORCE("Lateralkraft", "N", true),
   DRIVING_FORCE("Vortriebskraft", "N", true),
   BRAKING_FORCE("Bremskraft", "N", true),
+  FORWARD_FORCE("Gesamtkraft Vorwärts", "N", true),
   REYNOLDS_NUMBER("Reynoldszahl", null, false),
   WING_SPAN("Spannweite des Flügels", "m", false, "quer zur Profilierung, von einem Ende zum anderen"),
   AREA("Fläche (z.B. eines Flügels)", "m^2", true),
