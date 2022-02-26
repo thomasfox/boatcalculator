@@ -22,14 +22,14 @@ public class Dinghy extends Sailboat
 
     crew.addHiddenOutput(PhysicalQuantity.VELOCITY);
 
-    values.add(new QuantityEquality(
+    valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.TORQUE_BETWEEN_FORCES, LeverSailDaggerboard.ID,
         PhysicalQuantity.TORQUE_BETWEEN_FORCES, Crew.ID));
-    values.add(new QuantitySum(
+    valuesAndCalculationRules.add(new QuantitySum(
         new PhysicalQuantityInSet(PhysicalQuantity.LIFT, Hull.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Crew.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BoatGlobalValues.ID)));
-    values.add(new QuantitySum(
+    valuesAndCalculationRules.add(new QuantitySum(
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Hull.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Rudder.ID),

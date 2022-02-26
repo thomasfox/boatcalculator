@@ -20,8 +20,8 @@ public class CrosssectionAreaCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double wingDepth = valueSet.getKnownValue(PhysicalQuantity.WING_CHORD).getValue();
-    double normalizedArea = valueSet.getKnownValue(PhysicalQuantity.NORMALIZED_AREA_OF_CROSSECTION).getValue();
+    double wingDepth = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_CHORD).getValue();
+    double normalizedArea = valueSet.getKnownQuantityValue(PhysicalQuantity.NORMALIZED_AREA_OF_CROSSECTION).getValue();
 
     return normalizedArea*wingDepth*wingDepth;
   }

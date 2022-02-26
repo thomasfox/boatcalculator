@@ -10,13 +10,14 @@ import java.util.Set;
 import com.github.thomasfox.boatcalculator.calculate.CombinedCalculator;
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.calculate.QuantityNotPresentException;
-import com.github.thomasfox.boatcalculator.interpolate.QuantityRelations;
+import com.github.thomasfox.boatcalculator.interpolate.QuantityRelation;
 import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityValues;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValueWithSetId;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValues;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValuesWithSetIdPerValue;
+import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValueWithSetId;
 
 import lombok.Data;
 import lombok.NonNull;
@@ -48,14 +49,17 @@ public class SimpleValueSet implements ValueSet
   /** Values calculated from fixed values, start values and other calculated values. */
   private final CalculatedPhysicalQuantityValues calculatedValues = new CalculatedPhysicalQuantityValues();
 
-  private final List<QuantityRelations> quantityRelations = new ArrayList<>();
+  private final List<QuantityRelation> quantityRelations = new ArrayList<>();
 
   private String profileName;
+
+  private CombinedCalculator combinedCalculator = new CombinedCalculator();
 
   public SimpleValueSet(SimpleValueSet toCopy)
   {
     this.id = toCopy.getId();
     this.displayName = toCopy.getDisplayName();
+    this.combinedCalculator = toCopy.combinedCalculator;
     this.toInput.addAll(toCopy.toInput);
     this.hiddenOutputs.addAll(toCopy.hiddenOutputs);
     this.fixedValues.setValuesFailOnOverwrite(toCopy.fixedValues);
@@ -72,12 +76,12 @@ public class SimpleValueSet implements ValueSet
     int i = 0;
     for (PhysicalQuantity physicalQuantity : toGet)
     {
-      PhysicalQuantityValue knownQuantity = getKnownValue(physicalQuantity);
+      PhysicalQuantityValue knownQuantity = getKnownQuantityValue(physicalQuantity);
       if (knownQuantity == null)
       {
         throw new QuantityNotPresentException(physicalQuantity);
       }
-      result[i] = new PhysicalQuantityValueWithSetId(knownQuantity.getPhysicalQuantity(), knownQuantity.getValue(), id);
+      result[i] = new SimplePhysicalQuantityValueWithSetId(knownQuantity, id);
       ++i;
     }
     return result;
@@ -86,11 +90,11 @@ public class SimpleValueSet implements ValueSet
   @Override
   public boolean isValueKnown(PhysicalQuantity toCheck)
   {
-    return getKnownValue(toCheck) != null;
+    return getKnownQuantityValue(toCheck) != null;
   }
 
   @Override
-  public PhysicalQuantityValue getKnownValue(PhysicalQuantity toGet)
+  public PhysicalQuantityValue getKnownQuantityValue(PhysicalQuantity toGet)
   {
     PhysicalQuantityValue result = fixedValues.getPhysicalQuantityValue(toGet);
     if (result != null)
@@ -112,7 +116,7 @@ public class SimpleValueSet implements ValueSet
     PhysicalQuantityValues result = new PhysicalQuantityValues();
     for (PhysicalQuantity quantityToRead : quantitiesToRead)
     {
-      PhysicalQuantityValue knownValue = getKnownValue(quantityToRead);
+      PhysicalQuantityValue knownValue = getKnownQuantityValue(quantityToRead);
       if (knownValue == null)
       {
         throw new QuantityNotPresentException(quantityToRead);
@@ -161,30 +165,34 @@ public class SimpleValueSet implements ValueSet
   public void setCalculatedValueNoOverwrite(
       PhysicalQuantityValue calculatedValue,
       String calculatedBy,
+      boolean trialValue,
       PhysicalQuantityValueWithSetId... calculatedFrom)
   {
     fixedValues.checkQuantityNotSetForWrite(calculatedValue.getPhysicalQuantity());
     startValues.checkQuantityNotSetForWrite(calculatedValue.getPhysicalQuantity());
-    calculatedValues.setValueNoOverwrite(calculatedValue, calculatedBy, calculatedFrom);
+    calculatedValues.setValueNoOverwrite(calculatedValue, calculatedBy, trialValue, calculatedFrom);
   }
 
   @Override
   public void setCalculatedValueNoOverwrite(
       PhysicalQuantityValue calculatedValue,
       String calculatedBy,
+      boolean trialValue,
       PhysicalQuantityValuesWithSetIdPerValue calculatedFrom)
   {
     fixedValues.checkQuantityNotSetForWrite(calculatedValue.getPhysicalQuantity());
     startValues.checkQuantityNotSetForWrite(calculatedValue.getPhysicalQuantity());
-    calculatedValues.setValueNoOverwrite(calculatedValue, calculatedBy, calculatedFrom);
+    calculatedValues.setValueNoOverwrite(calculatedValue, calculatedBy, trialValue, calculatedFrom);
   }
 
+  @Override
   public void setCalculatedValue(
       PhysicalQuantityValue calculatedValue,
       String calculatedBy,
+      boolean trialValue,
       PhysicalQuantityValueWithSetId... calculatedFrom)
   {
-    calculatedValues.setValue(calculatedValue, calculatedBy, calculatedFrom);
+    calculatedValues.setValue(calculatedValue, calculatedBy, trialValue, calculatedFrom);
   }
 
   @Override
@@ -240,11 +248,11 @@ public class SimpleValueSet implements ValueSet
   }
 
   @Override
-  public boolean calculateSinglePass(AllValues allValues, PhysicalQuantity wantedQuantity)
+  public Set<String> calculateSinglePass(ValuesAndCalculationRules allValues, PhysicalQuantity wantedQuantity, int step)
   {
-    CombinedCalculator combinedCalculator = new CombinedCalculator(quantityRelations);
+    combinedCalculator.setQuantityRelations(quantityRelations);
 
-    boolean changed = combinedCalculator.calculate(this, wantedQuantity);
+    Set<String> changed = combinedCalculator.calculate(this, wantedQuantity, step);
     return changed;
   }
 
@@ -267,6 +275,7 @@ public class SimpleValueSet implements ValueSet
     return profileName;
   }
 
+  @Override
   public void setProfileName(String profileName)
   {
     this.profileName = profileName;

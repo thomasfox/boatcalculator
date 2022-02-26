@@ -9,7 +9,7 @@ import com.github.thomasfox.boatcalculator.calculate.strategy.LiftByAngleOfAttac
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantitySum;
 import com.github.thomasfox.boatcalculator.gui.SwingGui;
-import com.github.thomasfox.boatcalculator.interpolate.QuantityRelationsLoader;
+import com.github.thomasfox.boatcalculator.interpolate.QuantityRelationLoader;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.boatcalculator.valueset.SimpleValueSet;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
@@ -28,9 +28,9 @@ public class FlyingKayak extends Boat
 
   public FlyingKayak()
   {
-    values.add(mainLiftingFoil);
-    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
-    values.add(new QuantityEquality(PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID, PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(mainLiftingFoil);
+    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID, PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
 
     addValueSet(crew);
     crew.addHiddenOutput(PhysicalQuantity.VELOCITY);
@@ -40,7 +40,7 @@ public class FlyingKayak extends Boat
     boatGlobalValues.removeToInput(PhysicalQuantity.DRIFT_ANGLE);
     boatGlobalValues.removeToInput(PhysicalQuantity.POINTING_ANGLE);
     boatGlobalValues.setStartValue(PhysicalQuantity.MASS, 20d);
-    values.add(new QuantitySum(
+    valuesAndCalculationRules.add(new QuantitySum(
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Hull.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Rudder.ID),
@@ -48,7 +48,7 @@ public class FlyingKayak extends Boat
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, MainLiftingFoil.ID)));
 
     rudder.setFixedValueNoOverwrite(PhysicalQuantity.ANGLE_OF_ATTACK, 0d);
-    rudder.setProfileName("naca0010");
+    rudder.setProfileName("naca0010-il");
     rudder.setStartValue(PhysicalQuantity.WING_SPAN, 1.0);
     rudder.setStartValue(PhysicalQuantity.WING_CHORD, 0.1);
     rudder.removeToInput(PhysicalQuantity.LIFT);
@@ -73,14 +73,14 @@ public class FlyingKayak extends Boat
     daggerboardOrKeel = new DoubleWing(singleDaggerboard, singleDaggerboard.getId(), singleDaggerboard.getDisplayName());
     addValueSet(daggerboardOrKeel);
 
-    hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "0kg.txt"), "Hull@0kg"));
-    hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "fastKayak_113kg.txt"), "Kayak Hull@113kg"));
+    hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "0kg.txt"), "Hull@0kg"));
+    hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "fastKayak_113kg.txt"), "Kayak Hull@113kg"));
   }
 
   private void replaceHullWeightStrategy()
   {
     ComputationStrategy weightStrategy = null;
-    for (ComputationStrategy computationStrategy : values.getComputationStrategies())
+    for (ComputationStrategy computationStrategy : valuesAndCalculationRules.getComputationStrategies())
     {
       if (computationStrategy instanceof QuantitySum
           && ((QuantitySum) computationStrategy).getTarget().equals(new PhysicalQuantityInSet(PhysicalQuantity.LIFT, Hull.ID)))
@@ -89,8 +89,8 @@ public class FlyingKayak extends Boat
         break;
       }
     }
-    values.remove(weightStrategy);
-    values.add(new LiftByAngleOfAttackStrategy(
+    valuesAndCalculationRules.remove(weightStrategy);
+    valuesAndCalculationRules.add(new LiftByAngleOfAttackStrategy(
         new PhysicalQuantityInSet[] {
             new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Crew.ID),
             new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BoatGlobalValues.ID)

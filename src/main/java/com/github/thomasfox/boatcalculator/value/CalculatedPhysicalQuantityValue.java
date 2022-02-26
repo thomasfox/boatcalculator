@@ -5,17 +5,20 @@ import java.util.List;
 
 import lombok.Getter;
 
-public class CalculatedPhysicalQuantityValue extends PhysicalQuantityValue
+public class CalculatedPhysicalQuantityValue extends SimplePhysicalQuantityValue
 {
   @Getter
   public PhysicalQuantityValuesWithSetIdPerValue calculatedFrom = new PhysicalQuantityValuesWithSetIdPerValue();
 
   @Getter
-  public String calculatedBy;
+  public final String calculatedBy;
+
+  public final boolean trial;
 
   public CalculatedPhysicalQuantityValue(
       PhysicalQuantityValue calculatedValue,
       String calculatedBy,
+      boolean trial,
       PhysicalQuantityValueWithSetId... calculatedFrom)
   {
     super(calculatedValue);
@@ -24,11 +27,13 @@ public class CalculatedPhysicalQuantityValue extends PhysicalQuantityValue
     {
       this.calculatedFrom.setValues(calculatedFrom);
     }
+    this.trial = trial;
   }
 
   public CalculatedPhysicalQuantityValue(
       PhysicalQuantityValue calculatedValue,
       String calculatedBy,
+      boolean isTrial,
       PhysicalQuantityValuesWithSetIdPerValue calculatedFrom)
   {
     super(calculatedValue);
@@ -37,6 +42,7 @@ public class CalculatedPhysicalQuantityValue extends PhysicalQuantityValue
     {
       this.calculatedFrom.setValues(calculatedFrom);
     }
+    this.trial = isTrial;
   }
 
   public CalculatedPhysicalQuantityValue(CalculatedPhysicalQuantityValue toCopy)
@@ -44,6 +50,7 @@ public class CalculatedPhysicalQuantityValue extends PhysicalQuantityValue
     super(toCopy);
     this.calculatedBy = toCopy.calculatedBy;
     this.calculatedFrom = new PhysicalQuantityValuesWithSetIdPerValue(toCopy.calculatedFrom);
+    this.trial = toCopy.trial;
   }
 
   public List<PhysicalQuantityValueWithSetId> getCalculatedFromAsList()
@@ -51,10 +58,20 @@ public class CalculatedPhysicalQuantityValue extends PhysicalQuantityValue
     return Collections.unmodifiableList(calculatedFrom.getAsList());
   }
 
+  public PhysicalQuantityValue getPhysicalQuantityValue()
+  {
+    return new SimplePhysicalQuantityValue(getPhysicalQuantity(), getValue());
+  }
 
   @Override
   public CalculatedPhysicalQuantityValue clone()
   {
     return new CalculatedPhysicalQuantityValue(this);
+  }
+
+  @Override
+  public boolean isTrial()
+  {
+    return trial;
   }
 }

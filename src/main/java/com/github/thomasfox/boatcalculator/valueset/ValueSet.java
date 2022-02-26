@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.boatcalculator.interpolate.QuantityRelations;
+import com.github.thomasfox.boatcalculator.interpolate.QuantityRelation;
 import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityValues;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValue;
@@ -33,7 +33,7 @@ public interface ValueSet extends Cloneable
 
   public boolean isValueKnown(PhysicalQuantity toCheck);
 
-  public PhysicalQuantityValue getKnownValue(PhysicalQuantity toGet);
+  public PhysicalQuantityValue getKnownQuantityValue(PhysicalQuantity toGet);
 
   public PhysicalQuantityValues getKnownValues(Collection<PhysicalQuantity> quantitiesToRead);
 
@@ -60,7 +60,7 @@ public interface ValueSet extends Cloneable
   public void setProfileName(String profileName);
 
   /**
-   * Sets a calculated value and makes sure it is not already set.
+   * Sets a calculated value and makes sure it is not already set permanently (not as trial value).
    *
    * @param calculatedValue the value to set.
    * @param calculatedBy the way this value was calculated (e.g. the name of the used calculator)
@@ -71,10 +71,11 @@ public interface ValueSet extends Cloneable
   public void setCalculatedValueNoOverwrite(
       PhysicalQuantityValue calculatedValue,
       String calculatedBy,
+      boolean isTrialValue,
       PhysicalQuantityValueWithSetId... calculatedFrom);
 
   /**
-   * Sets a calculated value and makes sure it is not already set.
+   * Sets a calculated value and makes sure it is not already set permanently (not as trial value).
    *
    * @param calculatedValue the value to set.
    * @param calculatedBy the way this value was calculated (e.g. the name of the used calculator)
@@ -85,7 +86,15 @@ public interface ValueSet extends Cloneable
   public void setCalculatedValueNoOverwrite(
       PhysicalQuantityValue calculatedValue,
       String calculatedBy,
+      boolean isTrialValue,
       PhysicalQuantityValuesWithSetIdPerValue calculatedFrom);
+
+  public void setCalculatedValue(
+      PhysicalQuantityValue calculatedValue,
+      String calculatedBy,
+      boolean trialValue,
+      PhysicalQuantityValueWithSetId... calculatedFrom);
+
 
   public void addToInput(PhysicalQuantity toAdd);
 
@@ -101,9 +110,13 @@ public interface ValueSet extends Cloneable
 
   public void clearStartValues();
 
-  public boolean calculateSinglePass(AllValues allValues, PhysicalQuantity wantedQuantity);
+  public Set<String> calculateSinglePass(
+      ValuesAndCalculationRules allValues,
+      PhysicalQuantity
+      wantedQuantity,
+      int step);
 
-  public List<QuantityRelations> getQuantityRelations();
+  public List<QuantityRelation> getQuantityRelations();
 
   public ValueSet clone();
 }

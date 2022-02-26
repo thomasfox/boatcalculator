@@ -20,8 +20,8 @@ public class SecondMomentOfAreaCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double wingDepth = valueSet.getKnownValue(PhysicalQuantity.WING_CHORD).getValue();
-    double mormalizedMoment = valueSet.getKnownValue(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA).getValue();
+    double wingDepth = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_CHORD).getValue();
+    double mormalizedMoment = valueSet.getKnownQuantityValue(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA).getValue();
 
     return mormalizedMoment*wingDepth*wingDepth*wingDepth*wingDepth;
   }

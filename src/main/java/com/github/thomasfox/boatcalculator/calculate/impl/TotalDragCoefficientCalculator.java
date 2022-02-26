@@ -21,10 +21,10 @@ public class TotalDragCoefficientCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double profileDragCoefficient = valueSet.getKnownValue(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT).getValue();
-    double inducedDragCoefficient = valueSet.getKnownValue(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT).getValue();
-    double waveMakingDragCoefficient = valueSet.getKnownValue(PhysicalQuantity.WAVE_MAKING_DRAG_COEFFICIENT).getValue();
-    double surfacePiercingDragCoefficient = valueSet.getKnownValue(PhysicalQuantity.SURFACE_PIERCING_DRAG_COEFFICIENT).getValue();
+    double profileDragCoefficient = valueSet.getKnownQuantityValue(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT).getValue();
+    double inducedDragCoefficient = valueSet.getKnownQuantityValue(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT).getValue();
+    double waveMakingDragCoefficient = valueSet.getKnownQuantityValue(PhysicalQuantity.WAVE_MAKING_DRAG_COEFFICIENT).getValue();
+    double surfacePiercingDragCoefficient = valueSet.getKnownQuantityValue(PhysicalQuantity.SURFACE_PIERCING_DRAG_COEFFICIENT).getValue();
 
     double totalDragCoefficient = profileDragCoefficient + inducedDragCoefficient + waveMakingDragCoefficient + surfacePiercingDragCoefficient;
     return totalDragCoefficient;

@@ -22,8 +22,8 @@ public class SurfacePiercingDragCoefficientCalculator extends Calculator
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
     double coefficientBasedOnThickness = 0.3d;
-    double area = valueSet.getKnownValue(PhysicalQuantity.AREA).getValue();
-    double wingThickness = valueSet.getKnownValue(PhysicalQuantity.WING_THICKNESS).getValue();
+    double area = valueSet.getKnownQuantityValue(PhysicalQuantity.AREA).getValue();
+    double wingThickness = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_THICKNESS).getValue();
     double surfacePiercingDragCoefficient
         = coefficientBasedOnThickness * wingThickness * wingThickness / area ;
     return surfacePiercingDragCoefficient;

@@ -1,37 +1,19 @@
 package com.github.thomasfox.boatcalculator.value;
 
-import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
-
-import lombok.Getter;
-import lombok.NonNull;
-
-public class PhysicalQuantityValueWithSetId extends PhysicalQuantityValue
+public interface PhysicalQuantityValueWithSetId extends PhysicalQuantityValue
 {
-  @NonNull
-  @Getter
-  private final String setId;
+  /**
+   * Returns the id of the ValueSet in which this PhysicalQuantityValue lives.
+   *
+   * @return the set id, not null.
+   */
+  String getSetId();
 
-  public PhysicalQuantityValueWithSetId(PhysicalQuantity physicalQuantity, double value, String setId)
-  {
-    super(physicalQuantity, value);
-    this.setId = setId;
-  }
+  PhysicalQuantityValue getPhysicalQuantityValue();
 
-  public PhysicalQuantityValueWithSetId(PhysicalQuantityValue physicalQuantityValue, String setId)
-  {
-    super(physicalQuantityValue);
-    this.setId = setId;
-  }
 
-  public PhysicalQuantityValueWithSetId(PhysicalQuantityValueWithSetId toCopy)
+  default PhysicalQuantityInSet getPhysicalQuantityInSet()
   {
-    super(toCopy);
-    this.setId = toCopy.setId;
-  }
-
-  @Override
-  public PhysicalQuantityValueWithSetId clone()
-  {
-    return new PhysicalQuantityValueWithSetId(this);
+    return new PhysicalQuantityInSet(getPhysicalQuantity(), getSetId());
   }
 }

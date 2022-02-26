@@ -17,9 +17,9 @@ public class LateralForceCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double drag = valueSet.getKnownValue(PhysicalQuantity.TOTAL_DRAG).getValue();
-    double lift = valueSet.getKnownValue(PhysicalQuantity.LIFT).getValue();
-    double flowDirection = valueSet.getKnownValue(PhysicalQuantity.FLOW_DIRECTION).getValue();
+    double drag = valueSet.getKnownQuantityValue(PhysicalQuantity.TOTAL_DRAG).getValue();
+    double lift = valueSet.getKnownQuantityValue(PhysicalQuantity.LIFT).getValue();
+    double flowDirection = valueSet.getKnownQuantityValue(PhysicalQuantity.FLOW_DIRECTION).getValue();
 
     double lateralForce = lift * Math.cos(flowDirection * Math.PI / 180d) + drag * Math.sin(flowDirection * Math.PI / 180d);
     return lateralForce;

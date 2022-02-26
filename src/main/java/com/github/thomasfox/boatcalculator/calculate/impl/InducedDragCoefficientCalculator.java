@@ -21,9 +21,17 @@ public class InducedDragCoefficientCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double wingSpan = valueSet.getKnownValue(PhysicalQuantity.WING_SPAN).getValue();
-    double wingArea = valueSet.getKnownValue(PhysicalQuantity.AREA).getValue();
-    double liftCoefficient = valueSet.getKnownValue(PhysicalQuantity.LIFT_COEFFICIENT).getValue();
+    double wingSpan = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_SPAN).getValue();
+    double wingArea = valueSet.getKnownQuantityValue(PhysicalQuantity.AREA).getValue();
+    double liftCoefficient = valueSet.getKnownQuantityValue(PhysicalQuantity.LIFT_COEFFICIENT).getValue();
+    if (liftCoefficient > 3)
+    {
+      // for low velocities, the calculated lift coefficient can be huge. This of course is not realistic.
+      // So we impose a maximum lift coefficient of 3, which still unrealistic in practice,
+      // but small enough to get the order of magnitude of induced drag a,nd large enough to not
+      // change the calculated drag in any desirable operation mode
+      liftCoefficient = 3;
+    }
 
     double aspectRatio = wingSpan * wingSpan / wingArea;
     double result = liftCoefficient * liftCoefficient / Math.PI / aspectRatio;

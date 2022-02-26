@@ -14,6 +14,8 @@ import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityValue
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValueWithSetId;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValues;
+import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValue;
+import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValueWithSetId;
 import com.github.thomasfox.boatcalculator.valueset.SimpleValueSet;
 
 public class SimpleValueSetTest
@@ -36,10 +38,10 @@ public class SimpleValueSetTest
     // arrange
     sut.setFixedValueNoOverwrite(PhysicalQuantity.MASS, 10d);
     sut.setStartValue(PhysicalQuantity.MASS, 20d);
-    sut.setCalculatedValue(new PhysicalQuantityValue(PhysicalQuantity.MASS, 30d), "calculatedBy");
+    sut.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 30d), "calculatedBy", false);
 
     // act
-    PhysicalQuantityValue result = sut.getKnownValue(PhysicalQuantity.MASS);
+    PhysicalQuantityValue result = sut.getKnownQuantityValue(PhysicalQuantity.MASS);
 
     // assert
     assertThat(result.getPhysicalQuantity()).isEqualTo(PhysicalQuantity.MASS);
@@ -51,10 +53,10 @@ public class SimpleValueSetTest
   {
     // arrange
     sut.setStartValueNoOverwrite(PhysicalQuantity.MASS, 20d);
-    sut.setCalculatedValue(new PhysicalQuantityValue(PhysicalQuantity.MASS, 30d), "calculatedBy");
+    sut.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 30d), "calculatedBy", false);
 
     // act
-    PhysicalQuantityValue result = sut.getKnownValue(PhysicalQuantity.MASS);
+    PhysicalQuantityValue result = sut.getKnownQuantityValue(PhysicalQuantity.MASS);
 
     // assert
     assertThat(result.getPhysicalQuantity()).isEqualTo(PhysicalQuantity.MASS);
@@ -68,7 +70,7 @@ public class SimpleValueSetTest
     sut.setStartValueNoOverwrite(PhysicalQuantity.MASS, 20d);
 
     // act
-    PhysicalQuantityValue result = sut.getKnownValue(PhysicalQuantity.MASS);
+    PhysicalQuantityValue result = sut.getKnownQuantityValue(PhysicalQuantity.MASS);
 
     // assert
     assertThat(result.getPhysicalQuantity()).isEqualTo(PhysicalQuantity.MASS);
@@ -81,11 +83,11 @@ public class SimpleValueSetTest
     // arrange
     sut.setStartValue(PhysicalQuantity.MASS, 10d);
 
-    sut.setCalculatedValue(new PhysicalQuantityValue(PhysicalQuantity.LIFT, 20d), "someLiftCalculation");
+    sut.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.LIFT, 20d), "someLiftCalculation", false);
     sut.setStartValue(PhysicalQuantity.LIFT, 30d);
 
     sut.setFixedValueNoOverwrite(PhysicalQuantity.BENDING, 40d);
-    sut.setCalculatedValue(new PhysicalQuantityValue(PhysicalQuantity.BENDING, 50d), "someBendingCalculation");
+    sut.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.BENDING, 50d), "someBendingCalculation", false);
     sut.setStartValue(PhysicalQuantity.BENDING, 60d);
 
     sut.setStartValue(PhysicalQuantity.FORCE, 70d);
@@ -96,9 +98,9 @@ public class SimpleValueSetTest
 
     // assert
     assertThat(result.getAsList()).containsOnly(
-        new PhysicalQuantityValue(PhysicalQuantity.MASS, 10d),
-        new PhysicalQuantityValue(PhysicalQuantity.LIFT, 20d),
-        new PhysicalQuantityValue(PhysicalQuantity.BENDING, 40d));
+        new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 10d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.LIFT, 20d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.BENDING, 40d));
   }
 
   @Test
@@ -121,11 +123,11 @@ public class SimpleValueSetTest
     // arrange
     sut.setStartValue(PhysicalQuantity.MASS, 10d);
 
-    sut.setCalculatedValue(new PhysicalQuantityValue(PhysicalQuantity.LIFT, 20d), "someLiftCalculation");
+    sut.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.LIFT, 20d), "someLiftCalculation", false);
     sut.setStartValue(PhysicalQuantity.LIFT, 30d);
 
     sut.setFixedValueNoOverwrite(PhysicalQuantity.BENDING, 40d);
-    sut.setCalculatedValue(new PhysicalQuantityValue(PhysicalQuantity.BENDING, 50d), "someBendingCalculation");
+    sut.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.BENDING, 50d), "someBendingCalculation", false);
     sut.setStartValue(PhysicalQuantity.BENDING, 60d);
 
     sut.setStartValue(PhysicalQuantity.FORCE, 70d);
@@ -136,9 +138,12 @@ public class SimpleValueSetTest
 
     // assert
     assertThat(result).containsOnly(
-        new PhysicalQuantityValueWithSetId(PhysicalQuantity.MASS, 10d, "valueSetName"),
-        new PhysicalQuantityValueWithSetId(PhysicalQuantity.LIFT, 20d, "valueSetName"),
-        new PhysicalQuantityValueWithSetId(PhysicalQuantity.BENDING, 40d, "valueSetName"));
+        new SimplePhysicalQuantityValueWithSetId(
+            new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 10d), "valueSetId"),
+        new SimplePhysicalQuantityValueWithSetId(
+            new SimplePhysicalQuantityValue(PhysicalQuantity.LIFT, 20d), "valueSetId"),
+        new SimplePhysicalQuantityValueWithSetId(
+            new SimplePhysicalQuantityValue(PhysicalQuantity.BENDING, 40d), "valueSetId"));
   }
 
   @Test
@@ -174,7 +179,7 @@ public class SimpleValueSetTest
     // arrange
     sut.setFixedValueNoOverwrite(PhysicalQuantity.LIFT, 20d);
     sut.setStartValue(PhysicalQuantity.LIFT, 20d);
-    sut.setCalculatedValue(new PhysicalQuantityValue(PhysicalQuantity.LIFT, 20d), "calculatedBy");
+    sut.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.LIFT, 20d), "calculatedBy", false);
 
     // act
     boolean result = sut.isValueKnown(PhysicalQuantity.MASS);
@@ -200,14 +205,14 @@ public class SimpleValueSetTest
     assertThat(result.getToInput()).containsOnly(
         PhysicalQuantity.ANGLE_OF_ATTACK, PhysicalQuantity.MASS);
     assertThat(result.getFixedValues().getAsList()).containsOnly(
-        new PhysicalQuantityValue(PhysicalQuantity.DENSITY, 1005d),
-        new PhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 1.2E-6d));
+        new SimplePhysicalQuantityValue(PhysicalQuantity.DENSITY, 1005d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 1.2E-6d));
     assertThat(result.getStartValues().getAsList()).containsOnly(
-        new PhysicalQuantityValue(PhysicalQuantity.DRIVING_FORCE, 10d),
-        new PhysicalQuantityValue(PhysicalQuantity.LATERAL_FORCE, 13d));
+        new SimplePhysicalQuantityValue(PhysicalQuantity.DRIVING_FORCE, 10d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.LATERAL_FORCE, 13d));
     assertThat(result.getCalculatedValues().getAsList()).containsOnly(
-        new CalculatedPhysicalQuantityValue(new PhysicalQuantityValue(PhysicalQuantity.LIFT, 20d), "calculatedBy"),
-        new CalculatedPhysicalQuantityValue(new PhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d), "calculatedBy"));
+        new CalculatedPhysicalQuantityValue(new SimplePhysicalQuantityValue(PhysicalQuantity.LIFT, 20d), "calculatedBy", false),
+        new CalculatedPhysicalQuantityValue(new SimplePhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d), "calculatedBy", false));
   }
 
   @Test
@@ -217,7 +222,8 @@ public class SimpleValueSetTest
     sut.setStartValueNoOverwrite(PhysicalQuantity.MASS, 10d);
 
     // assert
-    assertThat(sut.getStartValue(PhysicalQuantity.MASS)).isEqualTo(new PhysicalQuantityValue(PhysicalQuantity.MASS, 10d));
+    assertThat(sut.getStartValue(PhysicalQuantity.MASS)).isEqualTo(
+        new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 10d));
   }
 
   @Test
@@ -237,7 +243,7 @@ public class SimpleValueSetTest
   public void testSetStartValueNoOverwrite_calculatedValueKnown()
   {
     // arrange
-    sut.setCalculatedValue(new PhysicalQuantityValue(PhysicalQuantity.MASS, 10d), "calculatedBy");
+    sut.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 10d), "calculatedBy", false);
 
     // assert
     expectedExeption.expect(IllegalArgumentException.class);
@@ -266,7 +272,8 @@ public class SimpleValueSetTest
     sut.setFixedValueNoOverwrite(PhysicalQuantity.MASS, 10d);
 
     // assert
-    assertThat(sut.getFixedValue(PhysicalQuantity.MASS)).isEqualTo(new PhysicalQuantityValue(PhysicalQuantity.MASS, 10d));
+    assertThat(sut.getFixedValue(PhysicalQuantity.MASS)).isEqualTo(
+        new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 10d));
   }
 
   @Test
@@ -286,7 +293,7 @@ public class SimpleValueSetTest
   public void testSetFixedValueNoOverwrite_calculatedValueKnown()
   {
     // arrange
-    sut.setCalculatedValue(new PhysicalQuantityValue(PhysicalQuantity.MASS, 10d), "calculatedBy");
+    sut.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 10d), "calculatedBy", false);
 
     // assert
     expectedExeption.expect(IllegalArgumentException.class);
@@ -313,16 +320,20 @@ public class SimpleValueSetTest
   {
     // act
     sut.setCalculatedValueNoOverwrite(
-        new PhysicalQuantityValue(PhysicalQuantity.MASS, 10d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 10d),
         "calculatedBy",
-        new PhysicalQuantityValueWithSetId(PhysicalQuantity.BENDING, 20d, "setName"));
+        false,
+        new SimplePhysicalQuantityValueWithSetId(new SimplePhysicalQuantityValue(
+            PhysicalQuantity.BENDING, 20d), "setName"));
 
     // assert
     assertThat(sut.getCalculatedValues().getAsList()).containsOnly(
         new CalculatedPhysicalQuantityValue(
-            new PhysicalQuantityValue(PhysicalQuantity.MASS, 10d),
+            new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 10d),
             "calculatedBy",
-            new PhysicalQuantityValueWithSetId(PhysicalQuantity.BENDING, 20d, "setName")));
+            false,
+            new SimplePhysicalQuantityValueWithSetId(new SimplePhysicalQuantityValue(
+                PhysicalQuantity.BENDING, 20d), "setName")));
   }
 
   @Test
@@ -335,20 +346,23 @@ public class SimpleValueSetTest
     expectedExeption.expect(IllegalArgumentException.class);
 
     // act
-    sut.setCalculatedValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.MASS, 10d), "calculatedBy");
+    sut.setCalculatedValueNoOverwrite(
+        new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 10d),
+        "calculatedBy",
+        false);
   }
 
   @Test
   public void testSetCalculatedValueNoOverwrite_calculatedValueKnown()
   {
     // arrange
-    sut.setCalculatedValue(new PhysicalQuantityValue(PhysicalQuantity.MASS, 10d), "calculatedBy");
+    sut.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 10d), "calculatedBy", false);
 
     // assert
     expectedExeption.expect(IllegalArgumentException.class);
 
     // act
-    sut.setCalculatedValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.MASS, 10d), "calculatedBy");
+    sut.setCalculatedValueNoOverwrite(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 10d), "calculatedBy", false);
   }
 
   @Test
@@ -361,7 +375,7 @@ public class SimpleValueSetTest
     expectedExeption.expect(IllegalArgumentException.class);
 
     // act
-    sut.setCalculatedValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.MASS, 10d), "calculatedBy");
+    sut.setCalculatedValueNoOverwrite(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 10d), "calculatedBy", false);
   }
 
   @Test
@@ -370,13 +384,13 @@ public class SimpleValueSetTest
     // arrange
     sut.setFixedValueNoOverwrite(PhysicalQuantity.MASS, 10d);
     sut.setStartValue(PhysicalQuantity.MASS, 20d);
-    sut.setCalculatedValue(new PhysicalQuantityValue(PhysicalQuantity.MASS, 30d), "calculatedBy");
+    sut.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 30d), "calculatedBy", false);
 
     // act
     PhysicalQuantityValue result = sut.getFixedValue(PhysicalQuantity.MASS);
 
     // assert
-    assertThat(result).isEqualTo(new PhysicalQuantityValue(PhysicalQuantity.MASS, 10d));
+    assertThat(result).isEqualTo(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 10d));
   }
 
   @Test
@@ -385,13 +399,13 @@ public class SimpleValueSetTest
     // arrange
     sut.setFixedValueNoOverwrite(PhysicalQuantity.MASS, 10d);
     sut.setStartValue(PhysicalQuantity.MASS, 20d);
-    sut.setCalculatedValue(new PhysicalQuantityValue(PhysicalQuantity.MASS, 30d), "calculatedBy");
+    sut.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 30d), "calculatedBy", false);
 
     // act
     PhysicalQuantityValue result = sut.getStartValue(PhysicalQuantity.MASS);
 
     // assert
-    assertThat(result).isEqualTo(new PhysicalQuantityValue(PhysicalQuantity.MASS, 20d));
+    assertThat(result).isEqualTo(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 20d));
   }
 
   @Test
@@ -400,14 +414,14 @@ public class SimpleValueSetTest
     // arrange
     sut.setFixedValueNoOverwrite(PhysicalQuantity.MASS, 10d);
     sut.setStartValue(PhysicalQuantity.MASS, 20d);
-    sut.setCalculatedValue(new PhysicalQuantityValue(PhysicalQuantity.MASS, 30d), "calculatedBy");
+    sut.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 30d), "calculatedBy", false);
 
     // act
     CalculatedPhysicalQuantityValue result = sut.getCalculatedValue(PhysicalQuantity.MASS);
 
     // assert
     assertThat(result).isEqualTo(new CalculatedPhysicalQuantityValue(
-        new PhysicalQuantityValue(PhysicalQuantity.MASS, 30d), "calculatedBy"));
+        new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 30d), "calculatedBy", false));
   }
 
 
@@ -424,7 +438,10 @@ public class SimpleValueSetTest
     assertThat(result).isEqualTo(20d);
     // assert calculated value is removed
     assertThat(sut.getCalculatedValues().getAsList()).containsOnly(
-        new CalculatedPhysicalQuantityValue(new PhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d), "calculatedBy"));
+        new CalculatedPhysicalQuantityValue(
+            new SimplePhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d),
+            "calculatedBy",
+            false));
 
     // assert rest of object stays the same
     assertThat(sut.getId()).isEqualTo("valueSetId");
@@ -432,11 +449,11 @@ public class SimpleValueSetTest
     assertThat(sut.getToInput()).containsOnly(
         PhysicalQuantity.ANGLE_OF_ATTACK, PhysicalQuantity.MASS);
     assertThat(sut.getFixedValues().getAsList()).containsOnly(
-        new PhysicalQuantityValue(PhysicalQuantity.DENSITY, 1005d),
-        new PhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 1.2E-6d));
+        new SimplePhysicalQuantityValue(PhysicalQuantity.DENSITY, 1005d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 1.2E-6d));
     assertThat(sut.getStartValues().getAsList()).containsOnly(
-        new PhysicalQuantityValue(PhysicalQuantity.DRIVING_FORCE, 10d),
-        new PhysicalQuantityValue(PhysicalQuantity.LATERAL_FORCE, 13d));
+        new SimplePhysicalQuantityValue(PhysicalQuantity.DRIVING_FORCE, 10d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.LATERAL_FORCE, 13d));
   }
 
   @Test
@@ -473,11 +490,11 @@ public class SimpleValueSetTest
     assertThat(sut.getToInput()).containsOnly(
         PhysicalQuantity.ANGLE_OF_ATTACK, PhysicalQuantity.MASS);
     assertThat(sut.getFixedValues().getAsList()).containsOnly(
-        new PhysicalQuantityValue(PhysicalQuantity.DENSITY, 1005d),
-        new PhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 1.2E-6d));
+        new SimplePhysicalQuantityValue(PhysicalQuantity.DENSITY, 1005d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 1.2E-6d));
     assertThat(sut.getStartValues().getAsList()).containsOnly(
-        new PhysicalQuantityValue(PhysicalQuantity.DRIVING_FORCE, 10d),
-        new PhysicalQuantityValue(PhysicalQuantity.LATERAL_FORCE, 13d));
+        new SimplePhysicalQuantityValue(PhysicalQuantity.DRIVING_FORCE, 10d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.LATERAL_FORCE, 13d));
   }
 
   @Test
@@ -498,11 +515,13 @@ public class SimpleValueSetTest
     assertThat(sut.getToInput()).containsOnly(
         PhysicalQuantity.ANGLE_OF_ATTACK, PhysicalQuantity.MASS);
     assertThat(sut.getFixedValues().getAsList()).containsOnly(
-        new PhysicalQuantityValue(PhysicalQuantity.DENSITY, 1005d),
-        new PhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 1.2E-6d));
+        new SimplePhysicalQuantityValue(PhysicalQuantity.DENSITY, 1005d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 1.2E-6d));
     assertThat(sut.getCalculatedValues().getAsList()).containsOnly(
-        new CalculatedPhysicalQuantityValue(new PhysicalQuantityValue(PhysicalQuantity.LIFT, 20d), "calculatedBy"),
-        new CalculatedPhysicalQuantityValue(new PhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d), "calculatedBy"));
+        new CalculatedPhysicalQuantityValue(
+            new SimplePhysicalQuantityValue(PhysicalQuantity.LIFT, 20d), "calculatedBy", false),
+        new CalculatedPhysicalQuantityValue(
+            new SimplePhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d), "calculatedBy", false));
   }
 
   @Test
@@ -516,10 +535,10 @@ public class SimpleValueSetTest
 
     // assert start and calculated values have expected content
     assertThat(sut.getStartValues().getAsList()).containsOnly(
-        new PhysicalQuantityValue(PhysicalQuantity.DRIVING_FORCE, 10d),
-        new PhysicalQuantityValue(PhysicalQuantity.LATERAL_FORCE, 13d),
-        new PhysicalQuantityValue(PhysicalQuantity.LIFT, 20d),
-        new PhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d));
+        new SimplePhysicalQuantityValue(PhysicalQuantity.DRIVING_FORCE, 10d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.LATERAL_FORCE, 13d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.LIFT, 20d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d));
     assertThat(sut.getCalculatedValues().getAsList()).containsOnly();
 
     // assert rest of object stays the same
@@ -528,8 +547,8 @@ public class SimpleValueSetTest
     assertThat(sut.getToInput()).containsOnly(
         PhysicalQuantity.ANGLE_OF_ATTACK, PhysicalQuantity.MASS);
     assertThat(sut.getFixedValues().getAsList()).containsOnly(
-        new PhysicalQuantityValue(PhysicalQuantity.DENSITY, 1005d),
-        new PhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 1.2E-6d));
+        new SimplePhysicalQuantityValue(PhysicalQuantity.DENSITY, 1005d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 1.2E-6d));
   }
 
   private void givenAllSutFieldsAreFilled()
@@ -537,10 +556,13 @@ public class SimpleValueSetTest
     sut.getToInput().add(PhysicalQuantity.ANGLE_OF_ATTACK);
     sut.addToInput(PhysicalQuantity.MASS);
     sut.setFixedValueNoOverwrite(PhysicalQuantity.DENSITY, 1005d);
-    sut.setFixedValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 1.2E-6d));
+    sut.setFixedValueNoOverwrite(
+        new SimplePhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 1.2E-6d));
     sut.setStartValue(PhysicalQuantity.DRIVING_FORCE, 10d);
     sut.setStartValueNoOverwrite(PhysicalQuantity.LATERAL_FORCE, 13d);
-    sut.setCalculatedValue(new PhysicalQuantityValue(PhysicalQuantity.LIFT, 20d), "calculatedBy");
-    sut.setCalculatedValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d), "calculatedBy");
+    sut.setCalculatedValue(
+        new SimplePhysicalQuantityValue(PhysicalQuantity.LIFT, 20d), "calculatedBy", false);
+    sut.setCalculatedValueNoOverwrite(
+        new SimplePhysicalQuantityValue(PhysicalQuantity.POINTING_ANGLE, 23d), "calculatedBy", false);
   }
 }

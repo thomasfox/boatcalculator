@@ -16,8 +16,8 @@ public class LeverFromWeightCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double weight = valueSet.getKnownValue(PhysicalQuantity.WEIGHT).getValue();
-    double torque = valueSet.getKnownValue(PhysicalQuantity.TORQUE_BETWEEN_FORCES).getValue();
+    double weight = valueSet.getKnownQuantityValue(PhysicalQuantity.WEIGHT).getValue();
+    double torque = valueSet.getKnownQuantityValue(PhysicalQuantity.TORQUE_BETWEEN_FORCES).getValue();
 
     double lever = torque / weight;
     return lever;

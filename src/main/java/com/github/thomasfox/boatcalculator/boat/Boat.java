@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
-import com.github.thomasfox.boatcalculator.valueset.AllValues;
 import com.github.thomasfox.boatcalculator.valueset.ValueSet;
+import com.github.thomasfox.boatcalculator.valueset.ValuesAndCalculationRules;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
 import com.github.thomasfox.boatcalculator.valueset.impl.DaggerboardOrKeel;
 import com.github.thomasfox.boatcalculator.valueset.impl.Hull;
@@ -24,7 +24,7 @@ public abstract class Boat
 
   protected Rudder rudder = new Rudder();
 
-  protected AllValues values = new AllValues();
+  protected ValuesAndCalculationRules valuesAndCalculationRules = new ValuesAndCalculationRules();
 
   /**
    * Holds all values and all calculation rules of a boat.
@@ -43,33 +43,40 @@ public abstract class Boat
     addValueSet(daggerboardOrKeel);
     addValueSet(rudder);
 
-    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, Rudder.ID));
-    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, DaggerboardOrKeel.ID));
-    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, Hull.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
+        PhysicalQuantity.VELOCITY, Rudder.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
+        PhysicalQuantity.VELOCITY, DaggerboardOrKeel.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
+        PhysicalQuantity.VELOCITY, Hull.ID));
 }
 
   public List<ValueSet> getValueSets()
   {
-    return values.getValueSets();
+    return valuesAndCalculationRules.getValueSets();
   }
 
   public ValueSet getValueSetNonNull(String name)
   {
-    return values.getValueSetNonNull(name);
+    return valuesAndCalculationRules.getValueSetNonNull(name);
   }
 
   public void addValueSet(ValueSet toAdd)
   {
-    values.add(toAdd);
+    valuesAndCalculationRules.add(toAdd);
   }
 
   public boolean removeValueSet(ValueSet toRemove)
   {
-    return values.remove(toRemove);
+    return valuesAndCalculationRules.remove(toRemove);
   }
 
   public void calculate()
   {
-    values.calculate(null);
+    // new CalculateTakeoffVelocitiesStrategy().setValue(values);
+    valuesAndCalculationRules.calculate(null, 500);
   }
 }

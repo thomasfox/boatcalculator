@@ -19,8 +19,8 @@ public class WingChordFromAreaAndSpanCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double wingArea = valueSet.getKnownValue(PhysicalQuantity.AREA).getValue();
-    double wingSpan = valueSet.getKnownValue(PhysicalQuantity.WING_SPAN).getValue();
+    double wingArea = valueSet.getKnownQuantityValue(PhysicalQuantity.AREA).getValue();
+    double wingSpan = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_SPAN).getValue();
 
     return wingArea/wingSpan;
   }

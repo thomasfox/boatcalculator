@@ -21,10 +21,10 @@ public class TotalDragCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double dragCoefficient = valueSet.getKnownValue(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT).getValue();
-    double area = valueSet.getKnownValue(PhysicalQuantity.AREA).getValue();
-    double velocity = valueSet.getKnownValue(PhysicalQuantity.VELOCITY).getValue();
-    double density = valueSet.getKnownValue(PhysicalQuantity.DENSITY).getValue();
+    double dragCoefficient = valueSet.getKnownQuantityValue(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT).getValue();
+    double area = valueSet.getKnownQuantityValue(PhysicalQuantity.AREA).getValue();
+    double velocity = valueSet.getKnownQuantityValue(PhysicalQuantity.VELOCITY).getValue();
+    double density = valueSet.getKnownQuantityValue(PhysicalQuantity.DENSITY).getValue();
 
     double drag = dragCoefficient *  velocity * velocity * density * area / 2;
     return drag;

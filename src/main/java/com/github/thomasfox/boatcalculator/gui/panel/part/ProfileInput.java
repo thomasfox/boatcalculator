@@ -12,12 +12,13 @@ import java.util.Optional;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.gui.SwingGui;
-import com.github.thomasfox.boatcalculator.gui.SwingHelper;
-import com.github.thomasfox.boatcalculator.interpolate.QuantityRelations;
+import com.github.thomasfox.boatcalculator.interpolate.QuantityRelation;
 import com.github.thomasfox.boatcalculator.profile.ProfileGeometry;
 import com.github.thomasfox.boatcalculator.profile.ProfileSelector;
 
@@ -68,31 +69,37 @@ public class ProfileInput implements ScannedInput
 
   public void addToContainer(Container container, int row)
   {
-    SwingHelper.addLabelToContainer("Profil", container, 0, row);
-
     JPanel profileSelectPanel = new JPanel();
     profileSelectPanel.setLayout(new GridBagLayout());
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
-    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = row;
-    gridBagConstraints.gridwidth = 4;
+    gridBagConstraints.gridwidth = 5;
     container.add(profileSelectPanel, gridBagConstraints);
 
     gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
-    profileSelectPanel.add(profileSelect, gridBagConstraints);
+    JLabel labelComponent = new JLabel("Profil");
+    labelComponent.setBorder(new EmptyBorder(0, 0, 0, 30));
+    profileSelectPanel.add(labelComponent, gridBagConstraints);
+
     gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 0;
+    profileSelectPanel.add(profileSelect, gridBagConstraints);
+    gridBagConstraints = new GridBagConstraints();
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
+    gridBagConstraints.gridx = 2;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.insets = new Insets(0,2,0,2);
     profileSelectPanel.add(scanSelect, gridBagConstraints);
     gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.fill = GridBagConstraints.BOTH;
-    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridx = 3;
     gridBagConstraints.gridy = 0;
     profileSelectPanel.add(symmetrySelect, gridBagConstraints);
   }
@@ -140,7 +147,7 @@ public class ProfileInput implements ScannedInput
     return profileSelector.loadProfile(directory, name);
   }
 
-  public List<QuantityRelations> loadXfoilResults(File directory, String name)
+  public List<QuantityRelation> loadXfoilResults(File directory, String name)
   {
     return profileSelector.loadXfoilResults(directory, name);
   }

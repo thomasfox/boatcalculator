@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.jfree.data.xy.XYSeries;
 
@@ -107,7 +108,15 @@ public class SwingGui
       @Override
       public void run()
       {
-        calculateAndRefreshDisplayedResults();
+        try
+        {
+          calculateAndRefreshDisplayedResults();
+        }
+        catch (Exception e)
+        {
+          e.printStackTrace();
+          JOptionPane.showMessageDialog(frame, "Exception occured:\n" + e.getMessage());
+        }
         frame.revalidate();
       }
     };
@@ -228,8 +237,8 @@ public class SwingGui
       boat.calculate();
       for (PhysicalQuantityInSet shownGraph : shownGraphs)
       {
-        ValueSet valueSet = boat.getValueSetNonNull(shownGraph.getValueSetId());
-        PhysicalQuantityValue knownValue = valueSet.getKnownValue(shownGraph.getPhysicalQuantity());
+        ValueSet valueSet = boat.getValueSetNonNull(shownGraph.getSetId());
+        PhysicalQuantityValue knownValue = valueSet.getKnownQuantityValue(shownGraph.getPhysicalQuantity());
         if (knownValue != null)
         {
           double yValue = knownValue.getValue();
@@ -238,7 +247,7 @@ public class SwingGui
       }
       if (profileQuantity != null)
       {
-        ValueSet valueSet = boat.getValueSetNonNull(profileQuantity.getValueSetId());
+        ValueSet valueSet = boat.getValueSetNonNull(profileQuantity.getSetId());
         profileNames.put(i, valueSet.getProfileName());
       }
     }
@@ -258,7 +267,7 @@ public class SwingGui
 
   private String getSeriesDisplayName(PhysicalQuantityInSet quantity)
   {
-    String seriesDisplayName = boat.getValueSetNonNull(quantity.getValueSetId()).getDisplayName()
+    String seriesDisplayName = boat.getValueSetNonNull(quantity.getSetId()).getDisplayName()
         + " " + quantity.getPhysicalQuantity().getDisplayName();
     return seriesDisplayName;
   }

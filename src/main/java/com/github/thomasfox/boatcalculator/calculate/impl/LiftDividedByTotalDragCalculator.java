@@ -16,9 +16,13 @@ public class LiftDividedByTotalDragCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double lift = valueSet.getKnownValue(PhysicalQuantity.LIFT).getValue();
-    double drag = valueSet.getKnownValue(PhysicalQuantity.TOTAL_DRAG).getValue();
+    double lift = valueSet.getKnownQuantityValue(PhysicalQuantity.LIFT).getValue();
+    double drag = valueSet.getKnownQuantityValue(PhysicalQuantity.TOTAL_DRAG).getValue();
 
+    if (lift == 0)
+    {
+      return 0;
+    }
     double result = lift / drag;
     return result;
   }

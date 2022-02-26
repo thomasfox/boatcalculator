@@ -1,15 +1,23 @@
 package com.github.thomasfox.boatcalculator.calculate.strategy;
 
-import com.github.thomasfox.boatcalculator.valueset.AllValues;
+import java.util.Set;
+
+import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
+import com.github.thomasfox.boatcalculator.valueset.ValuesAndCalculationRules;
 
 public interface ComputationStrategy
 {
   /**
-   * Sets the value(s) calculated by this strategy in the target set.
+   * set the value calculated by this strategy one step closer to the calculated value.
    *
    * @param allValues the values to calculate on.
+   * @param step the calculation step.
    *
-   * @return true if the values were changed, false otherwise.
+   * @return true if further calculation is needed, false otherwise
    */
-  public boolean calculateAndSetValue(AllValues allValues);
+  public boolean step(ValuesAndCalculationRules allValues);
+
+  public Set<PhysicalQuantityInSet> getOutputs();
+
+  public Set<PhysicalQuantityInSet> getInputs();
 }

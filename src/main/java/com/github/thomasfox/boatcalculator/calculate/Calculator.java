@@ -3,8 +3,13 @@ package com.github.thomasfox.boatcalculator.calculate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
+import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityValue;
+import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValueWithSetId;
+import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValuesWithSetIdPerValue;
 import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 
 import lombok.extern.slf4j.Slf4j;
@@ -32,11 +37,16 @@ public abstract class Calculator
     return outputQuantity;
   }
 
-  public double calculate(ValueSet input)
+  public CalculationResult calculate(ValueSet input)
   {
-    checkNeededQuantitiesArePresent(input);
+    boolean trialValuesAreInInput = checkNeededQuantitiesArePresentAndAreTrialValuesPresent(input);
     checkQuantitiesAreInValidRanges(input);
-    return calculateWithoutChecks(input);
+    Double oldResult = Optional.ofNullable(input.getKnownQuantityValue(outputQuantity))
+        .map(PhysicalQuantityValue::getValue)
+        .orElse(null);
+    double newResult = calculateWithoutChecks(input);
+    CalculationResult result = new CalculationResult(newResult, oldResult, trialValuesAreInInput);
+    return result;
   }
 
   public boolean areNeededQuantitiesPresent(ValueSet valueSet)
@@ -52,25 +62,51 @@ public abstract class Calculator
     return true;
   }
 
-  public boolean isOutputPresent(ValueSet valueSet)
+  public boolean isOutputFixed(ValueSet valueSet)
   {
-    return (valueSet.isValueKnown(outputQuantity));
+    PhysicalQuantityValue outputValue = valueSet.getKnownQuantityValue(outputQuantity);
+
+    if (outputValue == null)
+    {
+      return false;
+    }
+    if (!(outputValue instanceof CalculatedPhysicalQuantityValue))
+    {
+      return true;
+    }
+    PhysicalQuantityValuesWithSetIdPerValue calculatedFrom
+        = ((CalculatedPhysicalQuantityValue) outputValue).getCalculatedFrom();
+    for (PhysicalQuantityValueWithSetId calculatedFromValue : calculatedFrom.getAsList())
+    {
+      if (!calculatedFromValue.getSetId().equals(valueSet.getId())
+          || !inputQuantities.contains(calculatedFromValue.getPhysicalQuantity()))
+      {
+        log.debug("Ignoring " + getClass() + " because input quantity " + calculatedFromValue
+            + " from old calculated value does not match source quantities");
+        return true;
+      }
+    }
+    return false;
   }
 
-  protected void checkNeededQuantitiesArePresent(ValueSet valueSet)
+  protected boolean checkNeededQuantitiesArePresentAndAreTrialValuesPresent(ValueSet valueSet)
   {
+    boolean trialValuesArePresent = false;
     for (PhysicalQuantity inputQuantity : inputQuantities)
     {
-      if (!valueSet.isValueKnown(inputQuantity))
+      PhysicalQuantityValue inputValue = valueSet.getKnownQuantityValue(inputQuantity);
+      if (inputValue == null)
       {
         throw new QuantityNotPresentException(inputQuantity);
       }
+      trialValuesArePresent |= inputValue.isTrial();
     }
+    return trialValuesArePresent;
   }
 
   protected void checkQuantitiesAreInValidRanges(ValueSet valueSet)
   {
-    // do nothing per default
+    // no invalid ranges are defined here
   }
 
   protected abstract double calculateWithoutChecks(ValueSet valueSet);

@@ -16,8 +16,8 @@ public class BrakingForceCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double drag = valueSet.getKnownValue(PhysicalQuantity.PARASITIC_DRAG).getValue();
-    double flowDirection = valueSet.getKnownValue(PhysicalQuantity.FLOW_DIRECTION).getValue();
+    double drag = valueSet.getKnownQuantityValue(PhysicalQuantity.PARASITIC_DRAG).getValue();
+    double flowDirection = valueSet.getKnownQuantityValue(PhysicalQuantity.FLOW_DIRECTION).getValue();
 
     double brakingForce = drag * Math.cos(flowDirection * Math.PI / 180d);
     return brakingForce;

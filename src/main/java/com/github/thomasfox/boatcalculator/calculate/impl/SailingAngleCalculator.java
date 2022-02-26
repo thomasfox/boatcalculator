@@ -16,8 +16,8 @@ public class SailingAngleCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double pointingAngle = valueSet.getKnownValue(PhysicalQuantity.POINTING_ANGLE).getValue();
-    double driftAngle = valueSet.getKnownValue(PhysicalQuantity.DRIFT_ANGLE).getValue();
+    double pointingAngle = valueSet.getKnownQuantityValue(PhysicalQuantity.POINTING_ANGLE).getValue();
+    double driftAngle = valueSet.getKnownQuantityValue(PhysicalQuantity.DRIFT_ANGLE).getValue();
 
     if (pointingAngle < 0 || pointingAngle > 360)
     {

@@ -21,10 +21,10 @@ public class InducedDragCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double dragCoefficient = valueSet.getKnownValue(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT).getValue();
-    double wingArea = valueSet.getKnownValue(PhysicalQuantity.AREA).getValue();
-    double velocity = valueSet.getKnownValue(PhysicalQuantity.VELOCITY).getValue();
-    double density = valueSet.getKnownValue(PhysicalQuantity.DENSITY).getValue();
+    double dragCoefficient = valueSet.getKnownQuantityValue(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT).getValue();
+    double wingArea = valueSet.getKnownQuantityValue(PhysicalQuantity.AREA).getValue();
+    double velocity = valueSet.getKnownQuantityValue(PhysicalQuantity.VELOCITY).getValue();
+    double density = valueSet.getKnownQuantityValue(PhysicalQuantity.DENSITY).getValue();
 
     double drag = dragCoefficient *  velocity * velocity * density * wingArea / 2;
     return drag;

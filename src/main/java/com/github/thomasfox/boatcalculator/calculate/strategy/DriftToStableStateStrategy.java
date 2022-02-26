@@ -1,13 +1,19 @@
 package com.github.thomasfox.boatcalculator.calculate.strategy;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.github.thomasfox.boatcalculator.calculate.CalculationResult;
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.progress.CalculationState;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
-import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValueWithSetId;
-import com.github.thomasfox.boatcalculator.valueset.AllValues;
+import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValue;
+import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValueWithSetId;
+import com.github.thomasfox.boatcalculator.valueset.ValueSet;
+import com.github.thomasfox.boatcalculator.valueset.ValuesAndCalculationRules;
 
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * A strategy to calculate two initially unknown values, source and target,
@@ -22,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
  * and so on until source and target are sufficiently equal.
  */
 @ToString
-@Slf4j
 public class DriftToStableStateStrategy implements ComputationStrategy
 {
   private final PhysicalQuantityInSet source;
@@ -44,65 +49,75 @@ public class DriftToStableStateStrategy implements ComputationStrategy
   }
 
   @Override
-  public boolean calculateAndSetValue(AllValues allValues)
+  public boolean step(ValuesAndCalculationRules allValues)
   {
-    if (allValues.isValueKnown(target))
+    ValueSet targetSet = allValues.getValueSetNonNull(target.getSetId());
+    PhysicalQuantity targetQuantity = target.getPhysicalQuantity();
+    PhysicalQuantityValue knownTargetValue = targetSet.getKnownQuantityValue(targetQuantity);
+    if (knownTargetValue == null)
     {
+     PhysicalQuantityValue newTargetValue = new SimplePhysicalQuantityValue(
+         targetQuantity,
+         targetQuantityStart);
+      targetSet.setCalculatedValueNoOverwrite(
+          newTargetValue,
+          getClass().getSimpleName() + " trial value",
+          true,
+          new SimplePhysicalQuantityValueWithSetId(newTargetValue, target.getSetId()));
+      knownTargetValue = targetSet.getKnownQuantityValue(targetQuantity);
+    }
+
+    if (!knownTargetValue.isTrial())
+    {
+      // targetValue is no trial value and thus already calculated
       return false;
     }
 
-    if (allValues.isValueKnown(source))
+    PhysicalQuantity sourceQuantity = source.getPhysicalQuantity();
+    ValueSet sourceSet = allValues.getValueSetNonNull(source.getSetId());
+    PhysicalQuantityValue knownSourceValue = sourceSet.getKnownQuantityValue(sourceQuantity);
+
+    if (knownSourceValue != null && !knownSourceValue.isTrial())
     {
+      // sourceValue is no trial value and thus already calculated
       return false;
     }
 
-    AllValues allValuesForCalculation = new AllValues(allValues);
-    allValuesForCalculation.moveCalculatedValuesToStartValues();
-    Double sourceValue
-        = applyAndRecalculateSourceValue(20, allValuesForCalculation, targetQuantityStart);
-    if (sourceValue == null)
+    if (knownSourceValue == null)
     {
+      // we cannot currently drift because source was not calculated
       return false;
     }
-    allValues.setCalculatedValueNoOverwrite(
-        target,
-        sourceValue,
-        "Drift towards " + allValues.getName(source),
-        new PhysicalQuantityValueWithSetId(source.getPhysicalQuantity(), sourceValue, source.getValueSetId()));
 
-    return true;
+    CalculationState.set(target.getSetId() + ":" + target.getPhysicalQuantity(), knownSourceValue.getValue());
+    PhysicalQuantityValue newTargetValue = new SimplePhysicalQuantityValue(
+        targetQuantity,
+        knownSourceValue.getValue());
+    targetSet.setCalculatedValue(
+        newTargetValue,
+        getClass().getSimpleName() + " trial value",
+        true,
+        new SimplePhysicalQuantityValueWithSetId(knownSourceValue, source.getSetId()));
+
+    CalculationResult sourceTargetDifference = new CalculationResult(knownSourceValue.getValue(), knownTargetValue.getValue() , true);
+
+    return !sourceTargetDifference.relativeDifferenceIsBelowThreshold();
   }
 
-  private Double applyAndRecalculateSourceValue(int cutoff, AllValues allValues, double targetValue)
+  @Override
+  public Set<PhysicalQuantityInSet> getOutputs()
   {
-    log.info("Trying value " + targetValue + " for drifting " + target);
-    if (cutoff <= 0)
-    {
-      log.info("Could not calculate "
-          + allValues.getName(target)
-          + " within cutoff , last value was " + targetQuantityStart);
-      return null;
-    }
-    CalculationState.set(target.toString(), targetValue);
-    clearComputedValuesAndSetTargetValue(targetValue, allValues);
-    allValues.calculate(source);
-    Double sourceValue = allValues.getKnownValue(source);
-    if (sourceValue == null)
-    {
-      log.info("No calculated value for " + source + " was calculated for start value " + targetValue + " of " + target);
-      return null;
-    }
-
-    if (sourceValue == targetValue || (targetValue != 0 && Math.abs(sourceValue - targetValue) < Math.abs(targetValue) / 1000d))
-    {
-      return sourceValue;
-    }
-    return applyAndRecalculateSourceValue(cutoff - 1, allValues, sourceValue);
+    Set<PhysicalQuantityInSet> result = new HashSet<>();
+    return result;
   }
 
-  private void clearComputedValuesAndSetTargetValue(double targetValue, AllValues allValues)
+  @Override
+  public Set<PhysicalQuantityInSet> getInputs()
   {
-    allValues.clearCalculatedValues();
-    allValues.setCalculatedValueNoOverwrite(target, targetValue, getClass().getSimpleName() + " trial value");
+    Set<PhysicalQuantityInSet> result = new HashSet<>();
+    result.add(target);
+    result.add(source);
+    return result;
   }
+
 }

@@ -12,22 +12,22 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.boatcalculator.interpolate.QuantityRelations;
-import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityValues;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValues;
+import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.valueset.SimpleValueSet;
 import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 
 public class QuantityRelationsTest
 {
-  private QuantityRelations sut;
+  private QuantityRelation sut;
 
   @Rule
   public ExpectedException expectedExeption = ExpectedException.none();
 
   public void setUp()
   {
-    sut = QuantityRelations.builder().build();
+    sut = QuantityRelation.builder().build();
   }
 
   @Test
@@ -48,22 +48,23 @@ public class QuantityRelationsTest
     relatedValues.add(relatedValuesEntry);
 
     // act
-    sut = new QuantityRelations("myName", fixedValues, relatedValues, PhysicalQuantity.FORCE);
+    sut = new QuantityRelation("myName", fixedValues, relatedValues, PhysicalQuantity.FORCE);
 
     // assert
     assertThat(sut.getName()).isEqualTo("myName");
 
-    assertThat(sut.getFixedQuantities().getAsList()).containsOnly(new PhysicalQuantityValue(PhysicalQuantity.MASS, 20d));
+    assertThat(sut.getFixedQuantities().getAsList()).containsOnly(
+        new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 20d));
     assertThat(sut.getFixedQuantities()).isNotSameAs(fixedValues);
 
     assertThat(sut.getRelatedQuantityValues()).hasSize(2);
     assertThat(sut.getRelatedQuantityValues().get(0).getAsList()).hasSize(2);
     assertThat(sut.getRelatedQuantityValues().get(0).getAsList()).containsOnly(
-        new PhysicalQuantityValue(PhysicalQuantity.FORCE, 30d),
-        new PhysicalQuantityValue(PhysicalQuantity.BENDING, 10d));
+        new SimplePhysicalQuantityValue(PhysicalQuantity.FORCE, 30d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.BENDING, 10d));
     assertThat(sut.getRelatedQuantityValues().get(1).getAsList()).containsOnly(
-        new PhysicalQuantityValue(PhysicalQuantity.FORCE, 60d),
-        new PhysicalQuantityValue(PhysicalQuantity.BENDING, 20d));
+        new SimplePhysicalQuantityValue(PhysicalQuantity.FORCE, 60d),
+        new SimplePhysicalQuantityValue(PhysicalQuantity.BENDING, 20d));
 
     assertThat(sut.getKeyQuantity()).isEqualTo(PhysicalQuantity.FORCE);
   }
@@ -86,7 +87,7 @@ public class QuantityRelationsTest
     expectedExeption.expect(IllegalArgumentException.class);
 
     // act
-    sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
+    sut = new QuantityRelation("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
   }
 
   @Test
@@ -109,13 +110,13 @@ public class QuantityRelationsTest
     relatedValuesEntry.setValue(PhysicalQuantity.BENDING, 20d);
     relatedValuesEntry.setValue(PhysicalQuantity.VELOCITY, 80d);
     relatedValues.add(relatedValuesEntry);
-    sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
+    sut = new QuantityRelation("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
 
     ValueSet valueSet = new SimpleValueSet("valueSetId", "valueSetName");
-    valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.BENDING, 15d));
+    valueSet.setStartValueNoOverwrite(new SimplePhysicalQuantityValue(PhysicalQuantity.BENDING, 15d));
 
     // act
-    PhysicalQuantityValues result = sut.getRelatedQuantityValues(valueSet);
+    CalculatedPhysicalQuantityValues result = sut.getRelatedQuantityValues(valueSet);
 
     // assert
     assertThat(result.getContainedQuantities()).containsOnly(
@@ -139,13 +140,13 @@ public class QuantityRelationsTest
     relatedValuesEntry.setValue(PhysicalQuantity.BENDING, 10d);
     relatedValuesEntry.setValue(PhysicalQuantity.VELOCITY, 40d);
     relatedValues.add(relatedValuesEntry);
-    sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
+    sut = new QuantityRelation("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
 
     ValueSet valueSet = new SimpleValueSet("valueSetId", "valueSetName");
-    valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.BENDING, 15d));
+    valueSet.setStartValueNoOverwrite(new SimplePhysicalQuantityValue(PhysicalQuantity.BENDING, 15d));
 
     // act
-    PhysicalQuantityValues result = sut.getRelatedQuantityValues(valueSet);
+    CalculatedPhysicalQuantityValues result = sut.getRelatedQuantityValues(valueSet);
 
     // assert
     assertThat(result.getContainedQuantities()).isEmpty();
@@ -166,13 +167,13 @@ public class QuantityRelationsTest
     relatedValuesEntry.setValue(PhysicalQuantity.BENDING, 10d);
     relatedValuesEntry.setValue(PhysicalQuantity.VELOCITY, 40d);
     relatedValues.add(relatedValuesEntry);
-    sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
+    sut = new QuantityRelation("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
 
     ValueSet valueSet = new SimpleValueSet("valueSetId", "valueSetName");
-    valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.ANGLE_OF_ATTACK, 15d));
+    valueSet.setStartValueNoOverwrite(new SimplePhysicalQuantityValue(PhysicalQuantity.ANGLE_OF_ATTACK, 15d));
 
     // act
-    PhysicalQuantityValues result = sut.getRelatedQuantityValues(valueSet);
+    CalculatedPhysicalQuantityValues result = sut.getRelatedQuantityValues(valueSet);
 
     // assert
     assertThat(result.getContainedQuantities()).isEmpty();
@@ -189,20 +190,49 @@ public class QuantityRelationsTest
     relatedValuesEntry.setValue(PhysicalQuantity.VELOCITY, 0d);
     relatedValuesEntry.setValue(PhysicalQuantity.ANGLE_OF_ATTACK, 0d);
     relatedValues.add(relatedValuesEntry);
-    sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
+    sut = new QuantityRelation("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
 
     ValueSet valueSet = new SimpleValueSet("valueSetId", "valueSetName");
-    valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.BENDING, 15d));
-    valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.ANGLE_OF_ATTACK, 0d));
-    valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.FLOW_DIRECTION, 0d));
+    valueSet.setStartValueNoOverwrite(new SimplePhysicalQuantityValue(PhysicalQuantity.BENDING, 15d));
+    valueSet.setStartValueNoOverwrite(new SimplePhysicalQuantityValue(PhysicalQuantity.ANGLE_OF_ATTACK, 0d));
+    valueSet.setStartValueNoOverwrite(new SimplePhysicalQuantityValue(PhysicalQuantity.FLOW_DIRECTION, 0d));
+    valueSet.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.FORCE, 50000d), "me", true);
 
     // act
-    Set<PhysicalQuantity> result = sut.getAvailableQuantities(valueSet);
+    Set<PhysicalQuantity> result = sut.getAvailableQuantities(valueSet, PhysicalQuantity.ANGLE_OF_ATTACK);
 
     // assert
     assertThat(result).containsOnly(
         PhysicalQuantity.FORCE, PhysicalQuantity.VELOCITY);
   }
+
+  @Test
+  public void testGetAvailableQuantities_providedQuantityIsTrial()
+  {
+    // arrange
+    List<PhysicalQuantityValues> relatedValues = new ArrayList<>();
+    PhysicalQuantityValues relatedValuesEntry = new PhysicalQuantityValues();
+    relatedValuesEntry.setValue(PhysicalQuantity.FORCE, 0d);
+    relatedValuesEntry.setValue(PhysicalQuantity.BENDING, 0d);
+    relatedValuesEntry.setValue(PhysicalQuantity.VELOCITY, 0d);
+    relatedValuesEntry.setValue(PhysicalQuantity.ANGLE_OF_ATTACK, 0d);
+    relatedValues.add(relatedValuesEntry);
+    sut = new QuantityRelation("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
+
+    ValueSet valueSet = new SimpleValueSet("valueSetId", "valueSetName");
+    valueSet.setStartValueNoOverwrite(new SimplePhysicalQuantityValue(PhysicalQuantity.BENDING, 15d));
+    valueSet.setStartValueNoOverwrite(new SimplePhysicalQuantityValue(PhysicalQuantity.FLOW_DIRECTION, 0d));
+    valueSet.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.ANGLE_OF_ATTACK, 50000d), "me", true);
+    valueSet.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.FORCE, 50000d), "me", true);
+
+    // act
+    Set<PhysicalQuantity> result = sut.getAvailableQuantities(valueSet, PhysicalQuantity.ANGLE_OF_ATTACK);
+
+    // assert
+    assertThat(result).containsOnly(
+        PhysicalQuantity.FORCE, PhysicalQuantity.VELOCITY);
+  }
+
 
   @Test
   public void testGetAvailableQuantities_noKnownValue()
@@ -215,15 +245,16 @@ public class QuantityRelationsTest
     relatedValuesEntry.setValue(PhysicalQuantity.VELOCITY, 0d);
     relatedValuesEntry.setValue(PhysicalQuantity.ANGLE_OF_ATTACK, 0d);
     relatedValues.add(relatedValuesEntry);
-    sut = new QuantityRelations("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
+    sut = new QuantityRelation("myName", new PhysicalQuantityValues(), relatedValues, PhysicalQuantity.FORCE);
 
     ValueSet valueSet = new SimpleValueSet("valueSetId", "valueSetName");
-    valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.FLOW_DIRECTION, 0d));
+    valueSet.setStartValueNoOverwrite(new SimplePhysicalQuantityValue(PhysicalQuantity.FLOW_DIRECTION, 0d));
 
     // act
-    Set<PhysicalQuantity> result = sut.getAvailableQuantities(valueSet);
+    Set<PhysicalQuantity> result = sut.getAvailableQuantities(valueSet, PhysicalQuantity.ANGLE_OF_ATTACK);
 
     // assert
-    assertThat(result).isEmpty();
+    assertThat(result).containsOnly(
+        PhysicalQuantity.FORCE, PhysicalQuantity.BENDING, PhysicalQuantity.VELOCITY);
   }
 }

@@ -63,7 +63,7 @@ public class ScanResult
     }
     for (ScanResultForSingleQuantity singleQuantityResult : singleQuantityScanResults)
     {
-      fileWriter.write(singleQuantityResult.getResultQuantity().getValueSetId()
+      fileWriter.write(singleQuantityResult.getResultQuantity().getSetId()
           + ":"
           + singleQuantityResult.getResultQuantity().getPhysicalQuantity().getDisplayName() + ";");
     }

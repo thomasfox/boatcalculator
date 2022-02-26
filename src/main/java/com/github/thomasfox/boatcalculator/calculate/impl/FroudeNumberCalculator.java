@@ -20,9 +20,9 @@ public class FroudeNumberCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double submergenceDepth = valueSet.getKnownValue(PhysicalQuantity.SUBMERGENCE_DEPTH).getValue();
-    double velocity = valueSet.getKnownValue(PhysicalQuantity.VELOCITY).getValue();
-    double gravityAcceleration = valueSet.getKnownValue(PhysicalQuantity.GRAVITY_ACCELERATION).getValue();
+    double submergenceDepth = valueSet.getKnownQuantityValue(PhysicalQuantity.SUBMERGENCE_DEPTH).getValue();
+    double velocity = valueSet.getKnownQuantityValue(PhysicalQuantity.VELOCITY).getValue();
+    double gravityAcceleration = valueSet.getKnownQuantityValue(PhysicalQuantity.GRAVITY_ACCELERATION).getValue();
 
     double froudeNumber = velocity / Math.sqrt(submergenceDepth * gravityAcceleration);
     return froudeNumber;

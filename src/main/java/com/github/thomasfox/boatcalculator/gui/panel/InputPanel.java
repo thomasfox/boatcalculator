@@ -122,8 +122,8 @@ public class InputPanel extends JPanel
     JScrollPane scrollPane = new JScrollPane(this);
     scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setPreferredSize(new Dimension(650, 800));
-    scrollPane.setMinimumSize(new Dimension(500, 400));
+    scrollPane.setPreferredSize(new Dimension(480, 800));
+    scrollPane.setMinimumSize(new Dimension(400, 400));
     frame.add(scrollPane, gridBagConstraints);
   }
 

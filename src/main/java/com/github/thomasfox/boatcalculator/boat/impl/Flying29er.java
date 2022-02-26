@@ -20,10 +20,10 @@ public class Flying29er extends Skiff29er
 
   public Flying29er()
   {
-    values.add(mainLiftingFoil);
+    valuesAndCalculationRules.add(mainLiftingFoil);
 
-    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
-    values.add(new QuantityEquality(PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID, PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID, PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
 
     replaceHullWeightStrategy();
     replaceTotalDragStrategy();
@@ -43,7 +43,7 @@ public class Flying29er extends Skiff29er
   private void replaceHullWeightStrategy()
   {
     ComputationStrategy weightStrategy = null;
-    for (ComputationStrategy computationStrategy : values.getComputationStrategies())
+    for (ComputationStrategy computationStrategy : valuesAndCalculationRules.getComputationStrategies())
     {
       if (computationStrategy instanceof QuantitySum
           && ((QuantitySum) computationStrategy).getTarget().equals(new PhysicalQuantityInSet(PhysicalQuantity.LIFT, Hull.ID)))
@@ -52,8 +52,8 @@ public class Flying29er extends Skiff29er
         break;
       }
     }
-    values.remove(weightStrategy);
-    values.add(new LiftByAngleOfAttackStrategy(
+    valuesAndCalculationRules.remove(weightStrategy);
+    valuesAndCalculationRules.add(new LiftByAngleOfAttackStrategy(
         new PhysicalQuantityInSet[] {
             new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Crew.ID),
             new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BoatGlobalValues.ID)
@@ -71,7 +71,7 @@ public class Flying29er extends Skiff29er
   protected void replaceTotalDragStrategy()
   {
     ComputationStrategy totalDragStrategy = null;
-    for (ComputationStrategy computationStrategy : values.getComputationStrategies())
+    for (ComputationStrategy computationStrategy : valuesAndCalculationRules.getComputationStrategies())
     {
       if (computationStrategy instanceof QuantitySum
           && ((QuantitySum) computationStrategy).getTarget().equals(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID)))
@@ -80,8 +80,8 @@ public class Flying29er extends Skiff29er
         break;
       }
     }
-    values.remove(totalDragStrategy);
-    values.add(new QuantitySum(
+    valuesAndCalculationRules.remove(totalDragStrategy);
+    valuesAndCalculationRules.add(new QuantitySum(
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Hull.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Rudder.ID),

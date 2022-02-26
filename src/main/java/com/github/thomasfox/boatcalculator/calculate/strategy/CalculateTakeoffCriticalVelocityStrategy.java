@@ -1,8 +1,11 @@
 package com.github.thomasfox.boatcalculator.calculate.strategy;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
-import com.github.thomasfox.boatcalculator.valueset.AllValues;
+import com.github.thomasfox.boatcalculator.valueset.ValuesAndCalculationRules;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
 import com.github.thomasfox.boatcalculator.valueset.impl.Hull;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rigg;
@@ -48,8 +51,7 @@ public class CalculateTakeoffCriticalVelocityStrategy implements ComputationStra
    private static PhysicalQuantityInSet HULL_DRAG
        = new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Hull.ID);
 
-   @Override
-  public boolean calculateAndSetValue(AllValues allValues)
+  public boolean calculateAndSetValue(ValuesAndCalculationRules allValues)
   {
     if (allValues.getValueSet(Takeoff.ID) == null)
     {
@@ -80,8 +82,8 @@ public class CalculateTakeoffCriticalVelocityStrategy implements ComputationStra
         {
           WindSpeedCalculationResult takeoff = refineTakeoffWindSpeed(lastWindSpeed, windSpeed, allValues);
           System.out.println("Takeoff at wind speed " + takeoff.windSpeed + " and boat speed " + takeoff.boatSpeed);
-          allValues.setCalculatedValueNoOverwrite(TAKEOFF_BOAT_SPEED, takeoff.boatSpeed, "takeoffCalculator");
-          allValues.setCalculatedValueNoOverwrite(TAKEOFF_WIND_SPEED, takeoff.windSpeed, "takeoffCalculator");
+          allValues.setCalculatedValueNoOverwrite(TAKEOFF_BOAT_SPEED, takeoff.boatSpeed, "takeoffCalculator", false);
+          allValues.setCalculatedValueNoOverwrite(TAKEOFF_WIND_SPEED, takeoff.windSpeed, "takeoffCalculator", false);
           return true;
         }
         else
@@ -99,7 +101,7 @@ public class CalculateTakeoffCriticalVelocityStrategy implements ComputationStra
   private WindSpeedCalculationResult refineTakeoffWindSpeed(
       double lowerWindSpeedWithoutTakeoff,
       double upperWindSpeedWithTakeoff,
-      AllValues allValues)
+      ValuesAndCalculationRules allValues)
   {
     double middleWindSpeed = (upperWindSpeedWithTakeoff + lowerWindSpeedWithoutTakeoff) / 2;
     if (upperWindSpeedWithTakeoff - lowerWindSpeedWithoutTakeoff < WIND_SPEED_RESOLUTION)
@@ -122,7 +124,7 @@ public class CalculateTakeoffCriticalVelocityStrategy implements ComputationStra
     }
   }
 
-  private BoatSpeedCalculationResult calculateBoatSpeed(AllValues allValues, double windSpeed, double speedStep)
+  private BoatSpeedCalculationResult calculateBoatSpeed(ValuesAndCalculationRules allValues, double windSpeed, double speedStep)
   {
     System.out.println("wind speed " + windSpeed);
     Boolean takeoff = null;
@@ -131,13 +133,13 @@ public class CalculateTakeoffCriticalVelocityStrategy implements ComputationStra
     for (boatSpeed = speedStep; boatSpeed < BOAT_SPEED_CUTOFF; boatSpeed += speedStep)
     {
 //      System.out.println("boat speed " + boatSpeed);
-      AllValues allValuesForCalculation = new AllValues(allValues);
+      ValuesAndCalculationRules allValuesForCalculation = new ValuesAndCalculationRules(allValues);
       allValuesForCalculation.moveCalculatedValuesToStartValues();
       allValuesForCalculation.getValueSet(BoatGlobalValues.ID).getStartValues().remove(PhysicalQuantity.WIND_SPEED);
       allValuesForCalculation.getValueSet(BoatGlobalValues.ID).getStartValues().remove(PhysicalQuantity.VELOCITY);
       allValuesForCalculation.setStartValueNoOverwrite(WIND_SPEED, windSpeed);
       allValuesForCalculation.setStartValueNoOverwrite(BOAT_SPEED, boatSpeed);
-      allValuesForCalculation.calculate(BOAT_DRAG);
+      allValuesForCalculation.calculate(BOAT_DRAG, 1); // TODO is one step correct here
       if (!allValuesForCalculation.isValueKnown(BOAT_DRAG))
       {
         // try next value, perhaps velocity is too low for normal operation
@@ -147,7 +149,7 @@ public class CalculateTakeoffCriticalVelocityStrategy implements ComputationStra
       }
       if (!allValuesForCalculation.isValueKnown(RIGG_DRIVING_FORCE))
       {
-        allValuesForCalculation.calculate(RIGG_DRIVING_FORCE);
+        allValuesForCalculation.calculate(RIGG_DRIVING_FORCE, 1); // TODO is one step correct here
       }
       if (!allValuesForCalculation.isValueKnown(RIGG_DRIVING_FORCE))
       {
@@ -190,6 +192,22 @@ public class CalculateTakeoffCriticalVelocityStrategy implements ComputationStra
     return new BoatSpeedCalculationResult(boatSpeed, takeoff);
   }
 
+  @Override
+  public Set<PhysicalQuantityInSet> getOutputs()
+  {
+    Set<PhysicalQuantityInSet> result = new HashSet<>();
+    result.add(TAKEOFF_BOAT_SPEED);
+    return result;
+  }
+
+  @Override
+  public Set<PhysicalQuantityInSet> getInputs()
+  {
+    Set<PhysicalQuantityInSet> result = new HashSet<>();
+    result.add(POINTING_ANGLE); // not sure whether this makes sense here
+    return result;
+  }
+
    @AllArgsConstructor
    private static class BoatSpeedCalculationResult
    {
@@ -205,5 +223,12 @@ public class CalculateTakeoffCriticalVelocityStrategy implements ComputationStra
      double windSpeed;
 
      double boatSpeed;
+   }
+
+   @Override
+  public boolean step(ValuesAndCalculationRules allValues)
+   {
+     // TODO implement
+     return true;
    }
 }

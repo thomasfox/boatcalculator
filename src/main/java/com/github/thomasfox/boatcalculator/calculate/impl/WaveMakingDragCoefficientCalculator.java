@@ -21,10 +21,15 @@ public class WaveMakingDragCoefficientCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double froudeNumber = valueSet.getKnownValue(PhysicalQuantity.FROUDE_NUMBER_SUMBERGENCE).getValue();
-    double submergenceDepth = valueSet.getKnownValue(PhysicalQuantity.SUBMERGENCE_DEPTH).getValue();
-    double liftCoefficient = valueSet.getKnownValue(PhysicalQuantity.LIFT_COEFFICIENT).getValue();
-    double wingChord = valueSet.getKnownValue(PhysicalQuantity.WING_CHORD).getValue();
+    double froudeNumber = valueSet.getKnownQuantityValue(PhysicalQuantity.FROUDE_NUMBER_SUMBERGENCE).getValue();
+    if (froudeNumber == 0)
+    {
+      // velocity is null or submergenceDepth is infinity
+      return 0;
+    }
+    double submergenceDepth = valueSet.getKnownQuantityValue(PhysicalQuantity.SUBMERGENCE_DEPTH).getValue();
+    double liftCoefficient = valueSet.getKnownQuantityValue(PhysicalQuantity.LIFT_COEFFICIENT).getValue();
+    double wingChord = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_CHORD).getValue();
 
     double waveMakingDragCoefficient = 0.5*liftCoefficient*liftCoefficient
         *wingChord/submergenceDepth

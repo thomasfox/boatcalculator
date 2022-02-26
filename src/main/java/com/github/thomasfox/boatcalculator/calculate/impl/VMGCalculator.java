@@ -16,8 +16,8 @@ public class VMGCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double pointingAngle = valueSet.getKnownValue(PhysicalQuantity.SAILING_ANGLE).getValue();
-    double velocity = valueSet.getKnownValue(PhysicalQuantity.VELOCITY).getValue();
+    double pointingAngle = valueSet.getKnownQuantityValue(PhysicalQuantity.SAILING_ANGLE).getValue();
+    double velocity = valueSet.getKnownQuantityValue(PhysicalQuantity.VELOCITY).getValue();
 
     double vmg = velocity* Math.cos(pointingAngle * Math.PI / 180d);
     return vmg;

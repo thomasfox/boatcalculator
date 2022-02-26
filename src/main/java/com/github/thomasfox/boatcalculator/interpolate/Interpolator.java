@@ -115,9 +115,11 @@ public class Interpolator
       }
       return new TwoValues<T>(currentValue, lastValue);
     }
-    throw new InterpolatorException("The provided value, " + toEnclose
+    boolean aboveInterval = maxEncounteredValue  < toEnclose;
+    throw new OutOfInterpolationIntervalException("The provided value, " + toEnclose
         + ", does not match the interpolation interval ["
-        + minEncounteredValue + "," + maxEncounteredValue + "]");
+        + minEncounteredValue + "," + maxEncounteredValue + "]",
+        aboveInterval);
   }
 
   @Data

@@ -16,8 +16,8 @@ public class WeightFromMassCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double mass = valueSet.getKnownValue(PhysicalQuantity.MASS).getValue();
-    double gravityAcceleration = valueSet.getKnownValue(PhysicalQuantity.GRAVITY_ACCELERATION).getValue();
+    double mass = valueSet.getKnownQuantityValue(PhysicalQuantity.MASS).getValue();
+    double gravityAcceleration = valueSet.getKnownQuantityValue(PhysicalQuantity.GRAVITY_ACCELERATION).getValue();
 
     double weight = mass * gravityAcceleration;
     return weight;

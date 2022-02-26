@@ -17,9 +17,9 @@ public class ApparentWindDirectionCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double boatSpeed = valueSet.getKnownValue(PhysicalQuantity.VELOCITY).getValue();
-    double windSpeed = valueSet.getKnownValue(PhysicalQuantity.WIND_SPEED).getValue();
-    double pointingAngle = valueSet.getKnownValue(PhysicalQuantity.SAILING_ANGLE).getValue();
+    double boatSpeed = valueSet.getKnownQuantityValue(PhysicalQuantity.VELOCITY).getValue();
+    double windSpeed = valueSet.getKnownQuantityValue(PhysicalQuantity.WIND_SPEED).getValue();
+    double pointingAngle = valueSet.getKnownQuantityValue(PhysicalQuantity.SAILING_ANGLE).getValue();
 
     double apparentWindSpeedAlongBoat = boatSpeed + windSpeed * Math.cos(pointingAngle * Math.PI / 180d);
     double apparentWindSpeedPerpendicularToBoat = windSpeed * Math.sin(pointingAngle * Math.PI / 180d);

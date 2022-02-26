@@ -22,12 +22,12 @@ public class AreaLoadFixedMiddleBendingCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double wingWidth = valueSet.getKnownValue(PhysicalQuantity.WING_SPAN).getValue();
+    double wingWidth = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_SPAN).getValue();
     double beamLength = wingWidth / 2;
-    double force = valueSet.getKnownValue(PhysicalQuantity.LIFT).getValue();
+    double force = valueSet.getKnownQuantityValue(PhysicalQuantity.LIFT).getValue();
     double bendingForce = force / 2;
-    double modulusOfElasicity = valueSet.getKnownValue(PhysicalQuantity.MODULUS_OF_ELASTICITY).getValue();
-    double secondMomentOfArea = valueSet.getKnownValue(PhysicalQuantity.SECOND_MOMENT_OF_AREA).getValue();
+    double modulusOfElasicity = valueSet.getKnownQuantityValue(PhysicalQuantity.MODULUS_OF_ELASTICITY).getValue();
+    double secondMomentOfArea = valueSet.getKnownQuantityValue(PhysicalQuantity.SECOND_MOMENT_OF_AREA).getValue();
 
     return bendingForce*beamLength*beamLength*beamLength/(modulusOfElasicity*secondMomentOfArea*8);
   }

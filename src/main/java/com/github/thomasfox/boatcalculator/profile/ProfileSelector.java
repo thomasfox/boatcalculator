@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.github.thomasfox.boatcalculator.interpolate.QuantityRelations;
+import com.github.thomasfox.boatcalculator.interpolate.QuantityRelation;
 import com.github.thomasfox.boatcalculator.interpolate.XYPoint;
 import com.github.thomasfox.boatcalculator.xfoil.XfoilResultLoader;
 
@@ -42,11 +42,11 @@ public class ProfileSelector
     return new ProfileGeometry(name, pointList);
   }
 
-  public List<QuantityRelations> loadXfoilResults(File directory, String name)
+  public List<QuantityRelation> loadXfoilResults(File directory, String name)
   {
     String[] filenames = directory.list(
         (dir, filename) -> filename.matches("^xf-" + name + "-[\\d]*.txt"));
-    List<QuantityRelations> result = new ArrayList<>();
+    List<QuantityRelation> result = new ArrayList<>();
     for (String filename : filenames)
     {
       try (FileReader reader = new FileReader(new File(directory, filename)))

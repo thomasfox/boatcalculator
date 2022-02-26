@@ -10,8 +10,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValues;
+import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValue;
 
 public class PhysicalQuantityValuesTest
 {
@@ -33,7 +33,7 @@ public class PhysicalQuantityValuesTest
     sut.setValueNoOverwrite(PhysicalQuantity.MASS, 20d);
 
     // assert
-    assertThat(sut.getAsList()).containsExactly(new PhysicalQuantityValue(PhysicalQuantity.MASS, 20d));
+    assertThat(sut.getAsList()).containsExactly(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 20d));
   }
 
   @Test
@@ -53,10 +53,10 @@ public class PhysicalQuantityValuesTest
   public void testSetValueNoOverwriteWithObject_ok()
   {
     // act
-    sut.setValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.MASS, 20d));
+    sut.setValueNoOverwrite(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 20d));
 
     // assert
-    assertThat(sut.getAsList()).containsExactly(new PhysicalQuantityValue(PhysicalQuantity.MASS, 20d));
+    assertThat(sut.getAsList()).containsExactly(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 20d));
   }
 
   @Test
@@ -69,7 +69,7 @@ public class PhysicalQuantityValuesTest
     exception.expect(Exception.class);
 
     // act
-    sut.setValueNoOverwrite(new PhysicalQuantityValue(PhysicalQuantity.MASS, 20d));
+    sut.setValueNoOverwrite(new SimplePhysicalQuantityValue(PhysicalQuantity.MASS, 20d));
   }
 
   @Test

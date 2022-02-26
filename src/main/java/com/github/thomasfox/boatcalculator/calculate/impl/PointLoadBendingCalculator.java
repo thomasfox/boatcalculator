@@ -23,10 +23,10 @@ public class PointLoadBendingCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double wingWidth = valueSet.getKnownValue(PhysicalQuantity.WING_SPAN).getValue();
-    double bendingForce = valueSet.getKnownValue(PhysicalQuantity.BENDING_FORCE).getValue();
-    double modulusOfElasicity = valueSet.getKnownValue(PhysicalQuantity.MODULUS_OF_ELASTICITY).getValue();
-    double secondMomentOfArea = valueSet.getKnownValue(PhysicalQuantity.SECOND_MOMENT_OF_AREA).getValue();
+    double wingWidth = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_SPAN).getValue();
+    double bendingForce = valueSet.getKnownQuantityValue(PhysicalQuantity.BENDING_FORCE).getValue();
+    double modulusOfElasicity = valueSet.getKnownQuantityValue(PhysicalQuantity.MODULUS_OF_ELASTICITY).getValue();
+    double secondMomentOfArea = valueSet.getKnownQuantityValue(PhysicalQuantity.SECOND_MOMENT_OF_AREA).getValue();
 
     return bendingForce*wingWidth*wingWidth*wingWidth/(modulusOfElasicity*secondMomentOfArea*3);
   }

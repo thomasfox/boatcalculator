@@ -18,11 +18,11 @@ public class PhysicalQuantityInSet
   private final PhysicalQuantity physicalQuantity;
 
   @NonNull
-  private final String valueSetId;
+  private final String setId;
 
   @Override
   public String toString()
   {
-    return valueSetId + ":" + physicalQuantity;
+    return setId + ":" + physicalQuantity;
   }
 }

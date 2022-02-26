@@ -10,7 +10,7 @@ import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantitySum;
 import com.github.thomasfox.boatcalculator.calculate.strategy.TwoValuesShouldBeEqualModifyThirdStrategy;
 import com.github.thomasfox.boatcalculator.gui.SwingGui;
-import com.github.thomasfox.boatcalculator.interpolate.QuantityRelationsLoader;
+import com.github.thomasfox.boatcalculator.interpolate.QuantityRelationLoader;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
 import com.github.thomasfox.boatcalculator.valueset.impl.Crew;
@@ -34,11 +34,11 @@ public class Moth extends Dinghy
     addValueSet(rudderLiftingFoil);
     addValueSet(takeoff);
 
-    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
-    values.add(new QuantityEquality(PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID, PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID, PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
 
-    values.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, RudderLiftingFoil.ID));
-    values.add(new QuantityEquality(PhysicalQuantity.WING_SPAN, Rudder.ID, PhysicalQuantity.SUBMERGENCE_DEPTH, RudderLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, RudderLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.WING_SPAN, Rudder.ID, PhysicalQuantity.SUBMERGENCE_DEPTH, RudderLiftingFoil.ID));
 
     mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d); // 1.13 for current mach 2.41
     mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.11d); // 0.073 for current mach 2.41
@@ -73,24 +73,24 @@ public class Moth extends Dinghy
 
     boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.MASS, 40d); // waszp
 
-    hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "0kg.txt"), "Hull@0kg"));
-    hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_27kg.txt"), "Moth@27kg"));
-    hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_54kg.txt"), "Moth@54kg"));
-    hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_108kg.txt"), "Moth@108kg"));
-    hull.getQuantityRelations().add(new QuantityRelationsLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_158kg_interpolated.txt"), "Moth@158kgInterpolated"));
+    hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "0kg.txt"), "Hull@0kg"));
+    hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_27kg.txt"), "Moth@27kg"));
+    hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_54kg.txt"), "Moth@54kg"));
+    hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_108kg.txt"), "Moth@108kg"));
+    hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_158kg_interpolated.txt"), "Moth@158kgInterpolated"));
 
     hull.setStartValueNoOverwrite(PhysicalQuantity.AREA, 0.375); // 1,5m * 25cm)
     hull.setStartValueNoOverwrite(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT, 0.5); // rough estimate
 
-    values.add(new TwoValuesShouldBeEqualModifyThirdStrategy(
+    valuesAndCalculationRules.add(new TwoValuesShouldBeEqualModifyThirdStrategy(
         PhysicalQuantity.DRIVING_FORCE, Rigg.ID,
         PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         0d, 15d));
-    values.add(new IncreaseQuantityTillOtherReachesUpperLimitStrategy(
-        PhysicalQuantity.LEVER_WEIGHT, Crew.ID, 1.0,
+    valuesAndCalculationRules.add(new IncreaseQuantityTillOtherReachesUpperLimitStrategy(
+        PhysicalQuantity.LEVER_WEIGHT, Crew.ID, 1.25,
         PhysicalQuantity.LIFT_COEFFICIENT_3D, Rigg.ID, 1.55)); // caMax=1.55: rough estimate from windsurf sail paper
-    values.add(new QuantityEquality(
+    valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, Hull.ID));
     replaceHullWeightStrategy();
@@ -100,7 +100,7 @@ public class Moth extends Dinghy
   private void replaceHullWeightStrategy()
   {
     ComputationStrategy weightStrategy = null;
-    for (ComputationStrategy computationStrategy : values.getComputationStrategies())
+    for (ComputationStrategy computationStrategy : valuesAndCalculationRules.getComputationStrategies())
     {
       if (computationStrategy instanceof QuantitySum
           && ((QuantitySum) computationStrategy).getTarget().equals(new PhysicalQuantityInSet(PhysicalQuantity.LIFT, Hull.ID)))
@@ -109,8 +109,8 @@ public class Moth extends Dinghy
         break;
       }
     }
-    values.remove(weightStrategy);
-    values.add(new LiftByAngleOfAttackStrategy(
+    valuesAndCalculationRules.remove(weightStrategy);
+    valuesAndCalculationRules.add(new LiftByAngleOfAttackStrategy(
         new PhysicalQuantityInSet[] {
             new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Crew.ID),
             new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BoatGlobalValues.ID)
@@ -130,7 +130,7 @@ public class Moth extends Dinghy
   protected void replaceTotalDragStrategy()
   {
     ComputationStrategy totalDragStrategy = null;
-    for (ComputationStrategy computationStrategy : values.getComputationStrategies())
+    for (ComputationStrategy computationStrategy : valuesAndCalculationRules.getComputationStrategies())
     {
       if (computationStrategy instanceof QuantitySum
           && ((QuantitySum) computationStrategy).getTarget().equals(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID)))
@@ -139,8 +139,8 @@ public class Moth extends Dinghy
         break;
       }
     }
-    values.remove(totalDragStrategy);
-    values.add(new QuantitySum(
+    valuesAndCalculationRules.remove(totalDragStrategy);
+    valuesAndCalculationRules.add(new QuantitySum(
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Hull.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Rudder.ID),

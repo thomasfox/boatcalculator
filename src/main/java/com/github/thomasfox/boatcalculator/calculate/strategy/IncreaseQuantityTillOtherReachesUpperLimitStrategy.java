@@ -1,12 +1,22 @@
 package com.github.thomasfox.boatcalculator.calculate.strategy;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.github.thomasfox.boatcalculator.calculate.CalculationResult;
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.boatcalculator.progress.CalculationState;
+import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityValue;
+import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityWithSetId;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
-import com.github.thomasfox.boatcalculator.valueset.AllValues;
+import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValueWithSetId;
+import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValue;
+import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValueWithSetId;
+import com.github.thomasfox.boatcalculator.valueset.ValueSet;
+import com.github.thomasfox.boatcalculator.valueset.ValuesAndCalculationRules;
 
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Scans the unknown scanned quantity between zero and an upper limit
@@ -19,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
  * when the scanned quantity increases.
  */
 @ToString
-@Slf4j
 public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements ComputationStrategy
 {
   private final PhysicalQuantityInSet limitedQuantity;
@@ -29,6 +38,12 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
   private final PhysicalQuantityInSet scannedQuantity;
 
   private final double scannedQuantityUpperLimit;
+
+  private double factor = 1;
+
+  private Double lastTrialValueDifference;
+
+  private int stepsToWait = 0;
 
   public IncreaseQuantityTillOtherReachesUpperLimitStrategy(
       PhysicalQuantity limitedQuantity,
@@ -45,76 +60,205 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
   }
 
   @Override
-  public boolean calculateAndSetValue(AllValues allValues)
+  public boolean step(ValuesAndCalculationRules allValues)
   {
-    if (allValues.isValueKnown(limitedQuantity))
+    ValueSet targetSet = allValues.getValueSetNonNull(scannedQuantity.getSetId());
+    PhysicalQuantityValue knownTargetValue = targetSet.getKnownQuantityValue(scannedQuantity.getPhysicalQuantity());
+    if (knownTargetValue == null)
+    {
+      PhysicalQuantityValue newTargetValue = new SimplePhysicalQuantityValue(
+          scannedQuantity.getPhysicalQuantity(),
+          scannedQuantityUpperLimit);
+      targetSet.setCalculatedValueNoOverwrite(
+          newTargetValue,
+          getClass().getSimpleName() + " trial Value",
+          true,
+          new SimplePhysicalQuantityValueWithSetId(newTargetValue, scannedQuantity.getSetId()));
+      factor = 1;
+      stepsToWait = 0;
+      lastTrialValueDifference = null;
+      return true;
+    }
+
+    if (!knownTargetValue.isTrial())
+    {
+      // targetValue is no trial value and thus already calculated
+      return false;
+    }
+
+    PhysicalQuantityValue limitedQuantityValue = allValues.getKnownPhysicalQuantityValue(limitedQuantity);
+    if (limitedQuantityValue == null)
     {
       return false;
     }
 
-    if (allValues.isValueKnown(scannedQuantity))
+//    if (stepsToWait > 0)
+//    {
+//      stepsToWait--;
+//      return true;
+//    }
+//    stepsToWait = 7;
+//
+    double limitedValue = limitedQuantityValue.getValue();
+
+    double trialValueDifference = factor * (limitedValueLimit - limitedValue);
+
+    if (lastTrialValueDifference != null)
     {
-      return false;
+      if (trialValueDifference*lastTrialValueDifference < 0d // they have different sign
+        && Math.abs(trialValueDifference) > Math.abs(lastTrialValueDifference) * 0.9)
+      {
+        trialValueDifference = trialValueDifference * 0.5;
+        factor *= 0.5;
+      }
+    }
+    lastTrialValueDifference = trialValueDifference;
+
+    System.out.println("-------------------------------------------");
+    CalculationTreeEntry calculationTree = findInCalculationTree2(allValues, limitedQuantity);
+    calculationTree.removeLeavesExcept(limitedQuantity);
+//    calculationTree.removeDuplicatePhysicalQuantitiesInSetExcept(limitedQuantity);
+    calculationTree.print(System.out);
+
+    Set<PhysicalQuantityValueWithSetId> limitedQuantityValuesInCalculationTree = calculationTree.getAllValuesOf(limitedQuantity);
+    boolean shouldReturnTrue = false;
+    Double relativeDifference = getMaxRelativeDifference(limitedQuantityValuesInCalculationTree);
+    if (relativeDifference != null
+        && relativeDifference.doubleValue() != 0d
+        && (relativeDifference < 0
+            || knownTargetValue.getValue() == 0
+            || Math.abs(trialValueDifference / knownTargetValue.getValue()) < relativeDifference))
+    {
+      trialValueDifference = 0;
+      shouldReturnTrue = true;
     }
 
-    double interval = scannedQuantityUpperLimit / 2;
-
-    AllValues allValuesForCalculation = new AllValues(allValues);
-    allValuesForCalculation.moveCalculatedValuesToStartValues();
-    Double targetValue = applyAndRecalculateWithInterval(scannedQuantityUpperLimit, interval, 20, allValuesForCalculation);
-    if (targetValue == null)
+    if (limitedQuantityValue instanceof CalculatedPhysicalQuantityValue)
     {
-      return false;
+      new CalculatedPhysicalQuantityWithSetId(
+              (CalculatedPhysicalQuantityValue) limitedQuantityValue,
+              limitedQuantity.getSetId())
+          .printCalculationTree();
     }
-    allValues.setCalculatedValueNoOverwrite(
-        scannedQuantity,
-        targetValue,
-        "Scan " + allValues.getName(scannedQuantity) + " with max "+ scannedQuantityUpperLimit
-          + " to maximize " + allValues.getName(limitedQuantity) + " with max " + limitedValueLimit);
-    return true;
+
+    double newScanValue = knownTargetValue.getValue() + trialValueDifference;
+    if (newScanValue < 0)
+    {
+      newScanValue = 0;
+      factor *= 0.5;
+    }
+
+    if (newScanValue > scannedQuantityUpperLimit)
+    {
+      newScanValue = scannedQuantityUpperLimit;
+    }
+    targetSet.setCalculatedValueNoOverwrite(
+        new SimplePhysicalQuantityValue(scannedQuantity.getPhysicalQuantity(), newScanValue),
+        getClass().getSimpleName() + " trial Value",
+        true,
+        new SimplePhysicalQuantityValueWithSetId(
+            limitedQuantityValue,
+            limitedQuantity.getSetId()));
+
+    CalculationResult calculationResult = new CalculationResult(newScanValue, knownTargetValue.getValue(), true);
+    return !calculationResult.relativeDifferenceIsBelowThreshold() || shouldReturnTrue;
   }
 
-  private Double applyAndRecalculateWithInterval(double scannedValue, double scanInterval, int cutoff, AllValues allValues)
+  private Double getMaxRelativeDifference(
+      Set<PhysicalQuantityValueWithSetId> values)
   {
-    if (cutoff <= -5)
+    double min = Double.MAX_VALUE;
+    double max = -Double.MAX_VALUE;
+    for (PhysicalQuantityValueWithSetId physicalQuantityValue : values)
     {
-      throw new IllegalStateException("Could not limit quantity " + limitedQuantity
-          + " within cutoff , last value for " + allValues.getName(scannedQuantity) + " was " + scannedValue);
+      double value = physicalQuantityValue.getValue();
+      if (value < min)
+      {
+        min = value;
+      }
+      if (value > max)
+      {
+        max =  value;
+      }
     }
-    CalculationState.set(scannedQuantity.toString(), scannedValue);
-    clearComputedValuesAndSetScannedValue(scannedValue, allValues);
-    log.info("Try value " + scannedValue + " for scannedQuantity " + scannedQuantity);
-    allValues.calculate(limitedQuantity);
-    Double limitedValue = allValues.getKnownValue(limitedQuantity);
-    if (limitedValue == null)
+    if (min == 0 || min == Double.MAX_VALUE || max == -Double.MAX_VALUE)
     {
       return null;
     }
+    return 2 * (max - min)/(max + min);
 
-    if ((cutoff <= 0 || scannedValue == scannedQuantityUpperLimit) && limitedValue <= limitedValueLimit)
+  }
+
+  @Override
+  public Set<PhysicalQuantityInSet> getOutputs()
+  {
+    Set<PhysicalQuantityInSet> result = new HashSet<>();
+    result.add(scannedQuantity);
+    result.add(limitedQuantity);
+    return result;
+  }
+
+  @Override
+  public Set<PhysicalQuantityInSet> getInputs()
+  {
+    Set<PhysicalQuantityInSet> result = new HashSet<>();
+    return result;
+  }
+
+  private CalculationTreeEntry findInCalculationTree2(
+      ValuesAndCalculationRules allValues,
+      PhysicalQuantityInSet stopQuantity)
+  {
+    PhysicalQuantityValue quantityValue = allValues.getKnownPhysicalQuantityValue(stopQuantity);
+    PhysicalQuantityValueWithSetId startValue = new SimplePhysicalQuantityValueWithSetId(
+        quantityValue,
+        stopQuantity.getSetId());
+
+    CalculationTreeEntry root = CalculationTreeEntry.fromRoot(startValue);
+    findInCalculationTree(root, stopQuantity, 0);
+    return root;
+  }
+
+  private void findInCalculationTree(
+      CalculationTreeEntry searchRoot,
+      PhysicalQuantityInSet stopQuantity,
+      int currentDepth)
+  {
+    if (currentDepth >= 20)
     {
-      return scannedValue;
+      return;
     }
-    double newScanValue;
-    if (limitedValue > limitedValueLimit)
+    PhysicalQuantityValueWithSetId searchRootValue = searchRoot.getValue();
+
+    List<PhysicalQuantityValueWithSetId> calculatedFromList = List.of();
+    if (searchRootValue instanceof CalculatedPhysicalQuantityWithSetId)
     {
-      newScanValue = scannedValue - scanInterval;
-    }
-    else if (limitedValue < limitedValueLimit)
-    {
-      newScanValue = scannedValue + scanInterval;
+      CalculatedPhysicalQuantityWithSetId calculatedPhysicalQuantityWithSetId
+          = (CalculatedPhysicalQuantityWithSetId) searchRootValue;
+      calculatedFromList = calculatedPhysicalQuantityWithSetId.getCalculatedFrom().getAsList();
     }
     else
     {
-      // exact match
-      return scannedValue;
+      PhysicalQuantityValue physicalQuantityValue = searchRootValue.getPhysicalQuantityValue();
+      if (physicalQuantityValue instanceof CalculatedPhysicalQuantityValue)
+      {
+        calculatedFromList = ((CalculatedPhysicalQuantityValue) physicalQuantityValue).getCalculatedFromAsList();
+      }
     }
-    return applyAndRecalculateWithInterval(newScanValue, cutoff <=0 ? scanInterval : scanInterval / 2, cutoff - 1, allValues);
+    for (PhysicalQuantityValueWithSetId calculatedFrom : calculatedFromList)
+    {
+      CalculationTreeEntry nextValue = searchRoot.addChild(calculatedFrom);
+      if (calculatedFrom.getPhysicalQuantity().equals(stopQuantity.getPhysicalQuantity())
+          && calculatedFrom.getSetId().equals(stopQuantity.getSetId()))
+      {
+        System.out.println("Used " + calculatedFrom + " with depth " + currentDepth + " for " + stopQuantity);
+        continue;
+      }
+      else
+      {
+        findInCalculationTree(nextValue, stopQuantity, currentDepth + 1);
+      }
+    }
   }
 
-  private void clearComputedValuesAndSetScannedValue(double scannedValue, AllValues allValues)
-  {
-    allValues.clearCalculatedValues();
-    allValues.setCalculatedValueNoOverwrite(scannedQuantity, scannedValue, getClass().getSimpleName() + " trial value");
-  }
 }

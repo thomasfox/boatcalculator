@@ -21,8 +21,8 @@ public class WingChordFromSecondMomentOfAreaCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double moment = valueSet.getKnownValue(PhysicalQuantity.SECOND_MOMENT_OF_AREA).getValue();
-    double mormalizedMoment = valueSet.getKnownValue(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA).getValue();
+    double moment = valueSet.getKnownQuantityValue(PhysicalQuantity.SECOND_MOMENT_OF_AREA).getValue();
+    double mormalizedMoment = valueSet.getKnownQuantityValue(PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA).getValue();
 
     return Math.pow(moment/mormalizedMoment, 0.25);
   }

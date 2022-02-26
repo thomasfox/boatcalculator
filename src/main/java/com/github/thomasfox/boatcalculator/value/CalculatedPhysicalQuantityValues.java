@@ -13,32 +13,41 @@ public class CalculatedPhysicalQuantityValues extends AbstractPhysicalQuantityVa
   }
 
   @Override
-  protected CalculatedPhysicalQuantityValue createEntry(PhysicalQuantity physicalQuantity, Double value)
+  protected CalculatedPhysicalQuantityValue createEntry(
+      PhysicalQuantity physicalQuantity, Double value)
   {
-    return new CalculatedPhysicalQuantityValue(new PhysicalQuantityValue(physicalQuantity, value), null, (PhysicalQuantityValueWithSetId[]) null);
+    throw new IllegalStateException("call CalculatedPhysicalQuantityValue createEntry(PhysicalQuantity, Double, boolean) instead");
   }
+
+//  protected CalculatedPhysicalQuantityValue createEntry(PhysicalQuantity physicalQuantity, Double value, boolean trialValue)
+//  {
+//    return new CalculatedPhysicalQuantityValue(new PhysicalQuantityValue(physicalQuantity, value), null, trialValue, (PhysicalQuantityValueWithSetId[]) null);
+//  }
 
   public void setValueNoOverwrite(
       PhysicalQuantityValue calculatedValue,
       String calculatedBy,
+      boolean trialValue,
       PhysicalQuantityValueWithSetId... calculatedFrom)
   {
-    super.setValueNoOverwrite(new CalculatedPhysicalQuantityValue(calculatedValue, calculatedBy, calculatedFrom));
+    super.setValueNoOverwrite(new CalculatedPhysicalQuantityValue(calculatedValue, calculatedBy, trialValue, calculatedFrom));
   }
 
   public void setValueNoOverwrite(
       PhysicalQuantityValue calculatedValue,
       String calculatedBy,
+      boolean trialValue,
       PhysicalQuantityValuesWithSetIdPerValue calculatedFrom)
   {
-    super.setValueNoOverwrite(new CalculatedPhysicalQuantityValue(calculatedValue, calculatedBy, calculatedFrom));
+    super.setValueNoOverwrite(new CalculatedPhysicalQuantityValue(calculatedValue, calculatedBy, trialValue, calculatedFrom));
   }
 
   public void setValue(
       PhysicalQuantityValue calculatedValue,
       String calculatedBy,
+      boolean trialValue,
       PhysicalQuantityValueWithSetId... calculatedFrom)
   {
-    super.setValue(new CalculatedPhysicalQuantityValue(calculatedValue, calculatedBy, calculatedFrom));
+    super.setValue(new CalculatedPhysicalQuantityValue(calculatedValue, calculatedBy, trialValue, calculatedFrom));
   }
 }

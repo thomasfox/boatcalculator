@@ -7,16 +7,18 @@ import java.util.function.Function;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.calculate.QuantityNotPresentException;
-import com.github.thomasfox.boatcalculator.interpolate.QuantityRelations;
+import com.github.thomasfox.boatcalculator.interpolate.QuantityRelation;
 import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityValues;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValueWithSetId;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValues;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValuesWithSetIdPerValue;
-import com.github.thomasfox.boatcalculator.valueset.AllValues;
+import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValue;
+import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValueWithSetId;
 import com.github.thomasfox.boatcalculator.valueset.HasProfile;
 import com.github.thomasfox.boatcalculator.valueset.ValueSet;
+import com.github.thomasfox.boatcalculator.valueset.ValuesAndCalculationRules;
 
 import lombok.NonNull;
 
@@ -68,16 +70,16 @@ public class DoubleWing implements ValueSet, HasProfile
   }
 
   @Override
-  public PhysicalQuantityValue getKnownValue(PhysicalQuantity toGet)
+  public PhysicalQuantityValue getKnownQuantityValue(PhysicalQuantity toGet)
   {
-    PhysicalQuantityValue singleComponentValue = singleWing.getKnownValue(toGet);
+    PhysicalQuantityValue singleComponentValue = singleWing.getKnownQuantityValue(toGet);
     return convertFromSingleComponentValue(singleComponentValue);
   }
 
   @Override
   public PhysicalQuantityValues getKnownValues(Collection<PhysicalQuantity> quantitiesToRead)
   {
-    return getAsPhysicalQuantityValuesValues(quantitiesToRead, this::getKnownValue);
+    return getAsPhysicalQuantityValuesValues(quantitiesToRead, this::getKnownQuantityValue);
   }
 
   @Override
@@ -87,12 +89,12 @@ public class DoubleWing implements ValueSet, HasProfile
     int i = 0;
     for (PhysicalQuantity physicalQuantity : toGet)
     {
-      PhysicalQuantityValue knownQuantity = getKnownValue(physicalQuantity);
+      PhysicalQuantityValue knownQuantity = getKnownQuantityValue(physicalQuantity);
       if (knownQuantity == null)
       {
         throw new QuantityNotPresentException(physicalQuantity);
       }
-      result[i] = new PhysicalQuantityValueWithSetId(knownQuantity.getPhysicalQuantity(), knownQuantity.getValue(), id);
+      result[i] = new SimplePhysicalQuantityValueWithSetId(knownQuantity, id);
       ++i;
     }
     return result;
@@ -158,28 +160,42 @@ public class DoubleWing implements ValueSet, HasProfile
   {
     CalculatedPhysicalQuantityValue singleComponentValue = singleWing.getCalculatedValue(physicalQuantity);
     PhysicalQuantityValue doubleComponentValue = convertFromSingleComponentValue(singleComponentValue);
-    return new CalculatedPhysicalQuantityValue(doubleComponentValue, singleComponentValue.getCalculatedBy(), singleComponentValue.getCalculatedFrom());
+    return new CalculatedPhysicalQuantityValue(doubleComponentValue, singleComponentValue.getCalculatedBy(), singleComponentValue.isTrial(), singleComponentValue.getCalculatedFrom());
   }
 
   @Override
   public void setCalculatedValueNoOverwrite(
       PhysicalQuantityValue calculatedValue,
       String calculatedBy,
+      boolean trial,
       PhysicalQuantityValueWithSetId... calculatedFrom)
   {
-    PhysicalQuantityValue singleComponentValue = convertToSingleComponentValue(calculatedValue);
-    singleWing.setCalculatedValueNoOverwrite(singleComponentValue, calculatedBy, calculatedFrom);
+    CalculatedPhysicalQuantityValue singleComponentValue = convertToSingleComponentValue(calculatedValue);
+    singleWing.setCalculatedValueNoOverwrite(singleComponentValue, calculatedBy, trial, calculatedFrom);
   }
 
   @Override
   public void setCalculatedValueNoOverwrite(
       PhysicalQuantityValue calculatedValue,
       String calculatedBy,
+      boolean trial,
       PhysicalQuantityValuesWithSetIdPerValue calculatedFrom)
   {
     PhysicalQuantityValue singleComponentValue = convertToSingleComponentValue(calculatedValue);
-    singleWing.setCalculatedValueNoOverwrite(singleComponentValue, calculatedBy, calculatedFrom);
+    singleWing.setCalculatedValueNoOverwrite(singleComponentValue, calculatedBy, trial, calculatedFrom);
   }
+
+  @Override
+  public void setCalculatedValue(
+      PhysicalQuantityValue calculatedValue,
+      String calculatedBy,
+      boolean trialValue,
+      PhysicalQuantityValueWithSetId... calculatedFrom)
+  {
+    PhysicalQuantityValue singleComponentValue = convertToSingleComponentValue(calculatedValue);
+    singleWing.setCalculatedValue(singleComponentValue, calculatedBy, trialValue, calculatedFrom);
+  }
+
 
   @Override
   public void addToInput(PhysicalQuantity toAdd)
@@ -224,14 +240,14 @@ public class DoubleWing implements ValueSet, HasProfile
   }
 
   @Override
-  public boolean calculateSinglePass(AllValues allValues,
-      PhysicalQuantity wantedQuantity)
+  public Set<String> calculateSinglePass(ValuesAndCalculationRules allValues,
+      PhysicalQuantity wantedQuantity, int step)
   {
-    return singleWing.calculateSinglePass(allValues, wantedQuantity);
+    return singleWing.calculateSinglePass(allValues, wantedQuantity, step);
   }
 
   @Override
-  public List<QuantityRelations> getQuantityRelations()
+  public List<QuantityRelation> getQuantityRelations()
   {
     // TODO this is unclean
     return singleWing.getQuantityRelations();
@@ -251,7 +267,7 @@ public class DoubleWing implements ValueSet, HasProfile
     }
     else if (Boolean.TRUE.equals(additive))
     {
-      return new PhysicalQuantityValue(singleComponentValue.getPhysicalQuantity(), 2*singleComponentValue.getValue());
+      return new SimplePhysicalQuantityValue(singleComponentValue.getPhysicalQuantity(), 2*singleComponentValue.getValue());
     }
     else
     {
@@ -259,7 +275,7 @@ public class DoubleWing implements ValueSet, HasProfile
     }
   }
 
-  private PhysicalQuantityValue convertToSingleComponentValue(
+  private CalculatedPhysicalQuantityValue convertToSingleComponentValue(
       PhysicalQuantityValue doubleComponentValue)
   {
     if (doubleComponentValue == null)
@@ -273,11 +289,17 @@ public class DoubleWing implements ValueSet, HasProfile
     }
     else if (Boolean.TRUE.equals(additive))
     {
-      return new PhysicalQuantityValue(doubleComponentValue.getPhysicalQuantity(), 0.5d*doubleComponentValue.getValue());
+      return new CalculatedPhysicalQuantityValue(
+          new SimplePhysicalQuantityValue(doubleComponentValue.getPhysicalQuantity(), 0.5d*doubleComponentValue.getValue()),
+          null,
+          doubleComponentValue.isTrial());
     }
     else
     {
-      return doubleComponentValue;
+      return new CalculatedPhysicalQuantityValue(
+          new SimplePhysicalQuantityValue(doubleComponentValue.getPhysicalQuantity(), doubleComponentValue.getValue()),
+          null,
+          doubleComponentValue.isTrial());
     }
   }
 

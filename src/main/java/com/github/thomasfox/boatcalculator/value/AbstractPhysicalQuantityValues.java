@@ -96,7 +96,7 @@ public abstract class AbstractPhysicalQuantityValues<T extends PhysicalQuantityV
   public void checkQuantityNotSetForWrite(PhysicalQuantity physicalQuantity)
   {
     PhysicalQuantityValue physicalQuantityValue = getPhysicalQuantityValue(physicalQuantity);
-    if (physicalQuantityValue != null)
+    if (physicalQuantityValue != null && !physicalQuantityValue.isTrial())
     {
       throw new IllegalArgumentException("Tried to overwite value for quantity " + physicalQuantity);
     }
@@ -105,11 +105,13 @@ public abstract class AbstractPhysicalQuantityValues<T extends PhysicalQuantityV
   @SuppressWarnings("unchecked")
   private boolean addValue(T toAdd)
   {
+    remove(toAdd.getPhysicalQuantity());
     return values.add((T) toAdd.clone());
   }
 
   private void addValue(PhysicalQuantity physicalQuantity, Double value)
   {
+    remove(physicalQuantity);
     values.add(createEntry(physicalQuantity, value));
   }
 

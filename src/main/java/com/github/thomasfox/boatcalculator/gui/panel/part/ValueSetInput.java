@@ -7,9 +7,9 @@ import java.util.List;
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.gui.SwingGui;
 import com.github.thomasfox.boatcalculator.gui.SwingHelper;
-import com.github.thomasfox.boatcalculator.interpolate.QuantityRelations;
+import com.github.thomasfox.boatcalculator.interpolate.QuantityRelation;
 import com.github.thomasfox.boatcalculator.profile.ProfileGeometry;
-import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValue;
+import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.valueset.HasProfile;
 import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 
@@ -30,7 +30,7 @@ public class ValueSetInput
   @Getter
   private final List<QuantityInput> quantityInputs = new ArrayList<>();
 
-  private List<QuantityRelations> originalQuantityRelationsList;
+  private List<QuantityRelation> originalQuantityRelationsList;
 
   private ProfileInput profileInput;
 
@@ -51,7 +51,6 @@ public class ValueSetInput
       SwingHelper.addSeparatorToContainer(container, rowOffset + internalOffset++, 5);
     }
     SwingHelper.addLabelToContainer(valueSet.getDisplayName(), container, 0, rowOffset + internalOffset++);
-    SwingHelper.addLabelToContainer(" ", container, 0, rowOffset + internalOffset++);
     SwingHelper.addLabelToContainer("Fester Wert", container, 1, rowOffset + internalOffset);
     SwingHelper.addLabelToContainer("Scan Von", container, 2, rowOffset + internalOffset);
     SwingHelper.addLabelToContainer("Scan Bis", container, 3, rowOffset + internalOffset);
@@ -106,11 +105,11 @@ public class ValueSetInput
       {
         if (quantityInput.getValue() != null)
         {
-          valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(quantityInput.getQuantity(), quantityInput.getValue()));
+          valueSet.setStartValueNoOverwrite(new SimplePhysicalQuantityValue(quantityInput.getQuantity(), quantityInput.getValue()));
         }
         else if (quantityInput.getScanFrom() != null)
         {
-          valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(quantityInput.getQuantity(), quantityInput.getScanFrom()));
+          valueSet.setStartValueNoOverwrite(new SimplePhysicalQuantityValue(quantityInput.getQuantity(), quantityInput.getScanFrom()));
         }
       }
     }
@@ -136,18 +135,18 @@ public class ValueSetInput
           SwingGui.PROFILE_DIRECTORY, profileName);
       if (profileGeometry != null)
       {
-        valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
+        valueSet.setStartValueNoOverwrite(new SimplePhysicalQuantityValue(
             PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA,
             profileGeometry.getSecondMomentOfArea()));
-        valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
+        valueSet.setStartValueNoOverwrite(new SimplePhysicalQuantityValue(
             PhysicalQuantity.WING_RELATIVE_THICKNESS,
             profileGeometry.getThickness()));
-        valueSet.setStartValueNoOverwrite(new PhysicalQuantityValue(
+        valueSet.setStartValueNoOverwrite(new SimplePhysicalQuantityValue(
             PhysicalQuantity.NORMALIZED_AREA_OF_CROSSECTION,
             profileGeometry.getCrossectionArea()));
-        valueSet.setCalculatedValueNoOverwrite(new PhysicalQuantityValue(
+        valueSet.setCalculatedValueNoOverwrite(new SimplePhysicalQuantityValue(
             PhysicalQuantity.MAX_RELATIVE_CAMBER,
-            profileGeometry.getMaxRelativeCamber()), profileName + " geometry");
+            profileGeometry.getMaxRelativeCamber()), profileName + " geometry", false);
         valueSet.getQuantityRelations().addAll(
             profileInput.loadXfoilResults(
                 SwingGui.PROFILE_DIRECTORY, profileName));

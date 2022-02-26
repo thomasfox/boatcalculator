@@ -16,8 +16,8 @@ public class TorqueCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double lever = valueSet.getKnownValue(PhysicalQuantity.LEVER_BETWEEN_FORCES).getValue();
-    double force = valueSet.getKnownValue(PhysicalQuantity.FORCE).getValue();
+    double lever = valueSet.getKnownQuantityValue(PhysicalQuantity.LEVER_BETWEEN_FORCES).getValue();
+    double force = valueSet.getKnownQuantityValue(PhysicalQuantity.FORCE).getValue();
 
     double torque = lever * force;
     return torque;

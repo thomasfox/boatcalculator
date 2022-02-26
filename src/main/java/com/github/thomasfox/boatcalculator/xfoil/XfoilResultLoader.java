@@ -8,22 +8,25 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.boatcalculator.interpolate.QuantityRelations;
+import com.github.thomasfox.boatcalculator.interpolate.OutOfInterpolationIntervalStrategy;
+import com.github.thomasfox.boatcalculator.interpolate.QuantityRelation;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValues;
+import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValue;
 
 public class XfoilResultLoader
 {
-  public QuantityRelations load(Reader reader)
+  public QuantityRelation load(Reader reader)
   {
     BufferedReader bufferedReader = new BufferedReader(reader);
     String title;
     PhysicalQuantityValues fixedQuantities;
     List<PhysicalQuantityValues> relatedQuantityValues;
+    boolean measuredRiggPolar;
     try
     {
       readPrelude(bufferedReader);
       title = readTitle(bufferedReader);
-      boolean measuredRiggPolar = title.startsWith("XFOIL MEASURED RIGG");
+      measuredRiggPolar = title.startsWith("XFOIL MEASURED RIGG");
       fixedQuantities = readFixedQuantities(bufferedReader, measuredRiggPolar);
       relatedQuantityValues = readPolar(bufferedReader, measuredRiggPolar);
     }
@@ -31,11 +34,19 @@ public class XfoilResultLoader
     {
       throw new RuntimeException(e);
     }
-    QuantityRelations result = QuantityRelations.builder()
+    QuantityRelation result = QuantityRelation.builder()
       .name(title)
       .fixedQuantities(fixedQuantities)
       .relatedQuantityValues(relatedQuantityValues)
       .build();
+
+    OutOfInterpolationIntervalStrategy notEnoughLiftStrategy
+        = new OutOfInterpolationIntervalStrategy(measuredRiggPolar ? PhysicalQuantity.LIFT_COEFFICIENT_3D : PhysicalQuantity.LIFT_COEFFICIENT, true);
+    notEnoughLiftStrategy.addProvidedQuantities(
+        new SimplePhysicalQuantityValue(PhysicalQuantity.ANGLE_OF_ATTACK, 30d),
+        new SimplePhysicalQuantityValue(measuredRiggPolar ? PhysicalQuantity.TOTAL_DRAG_COEFFICIENT : PhysicalQuantity.PROFILE_DRAG_COEFFICIENT , 0.3d));
+    result.add(notEnoughLiftStrategy);
+
     return result;
   }
 

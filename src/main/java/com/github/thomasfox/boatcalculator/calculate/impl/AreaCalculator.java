@@ -16,8 +16,8 @@ public class AreaCalculator extends Calculator
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double wingChord = valueSet.getKnownValue(PhysicalQuantity.WING_CHORD).getValue();
-    double wingSpan = valueSet.getKnownValue(PhysicalQuantity.WING_SPAN).getValue();
+    double wingChord = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_CHORD).getValue();
+    double wingSpan = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_SPAN).getValue();
 
     return wingChord*wingSpan;
   }
