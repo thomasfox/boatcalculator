@@ -198,8 +198,10 @@ public class ValuesAndCalculationRules
    *
    * @param wanted the quantity to calculate, or null to calculate all
    *        quantities than can be calculated.
+   *
+   * @return true if the calculation converged, false otherwise
    */
-  public void calculate(PhysicalQuantityInSet wanted, int steps)
+  public boolean calculate(PhysicalQuantityInSet wanted, int steps)
   {
     // allow computation strategies to reset their internal state
     applyComputationStrategies();
@@ -212,7 +214,7 @@ public class ValuesAndCalculationRules
       }
       if (valueSet.isValueKnown(wanted.getPhysicalQuantity()))
       {
-        return;
+        return true;
       }
     }
     int step = 0;
@@ -254,6 +256,7 @@ public class ValuesAndCalculationRules
     }
     while (!changedInStep.isEmpty() && step < steps && !isValueKnown(wanted));
     System.out.println("Calculation completed in " + step + " steps");
+
     if (step >= steps)
     {
       printLongestComputationPaths();
@@ -269,7 +272,9 @@ public class ValuesAndCalculationRules
           + getKnownPhysicalQuantityValue(new PhysicalQuantityInSet(PhysicalQuantity.DRIFT_ANGLE, BoatGlobalValues.ID)));
 
       System.out.println("- changed parts: " + changedInStep);
+      return false;
     }
+    return true;
   }
 
   private Set<String> applyComputationStrategies()

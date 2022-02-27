@@ -139,22 +139,25 @@ public class SwingGui
   {
     clearResult();
     inputPanel.reinitalizeValueSetInputs();
-    boat.calculate();
+    boolean converged = boat.calculate();
 
     calculationStateDisplay.clear();
 
-    QuantityOutput.Mode mode = inputPanel.getOutputMode();
-    textResultPanel.displayCalculateResultInValueSetOutputs(mode, boat.getValueSets());
+    if (converged)
+    {
+      QuantityOutput.Mode mode = inputPanel.getOutputMode();
+      textResultPanel.displayCalculateResultInValueSetOutputs(mode, boat.getValueSets());
 
-    if (mode == QuantityOutput.Mode.CHECKBOX_DISPLAY)
-    {
-      inputPanel.setScanButtonVisible(true);
-      inputPanel.setSaveResultsButtonVisible(true);
-    }
-    else
-    {
-      inputPanel.setScanButtonVisible(false);
-      inputPanel.setSaveResultsButtonVisible(false);
+      if (mode == QuantityOutput.Mode.CHECKBOX_DISPLAY)
+      {
+        inputPanel.setScanButtonVisible(true);
+        inputPanel.setSaveResultsButtonVisible(true);
+      }
+      else
+      {
+        inputPanel.setScanButtonVisible(false);
+        inputPanel.setSaveResultsButtonVisible(false);
+      }
     }
   }
 
@@ -234,21 +237,24 @@ public class SwingGui
           scannedInput.getScanDescription() + ":" + scannedInput.getScanStepDescription(i));
       scannedInput.setValueForScanStep(i);
       inputPanel.reinitalizeValueSetInputs();
-      boat.calculate();
-      for (PhysicalQuantityInSet shownGraph : shownGraphs)
+      boolean converged = boat.calculate();
+      if (converged)
       {
-        ValueSet valueSet = boat.getValueSetNonNull(shownGraph.getSetId());
-        PhysicalQuantityValue knownValue = valueSet.getKnownQuantityValue(shownGraph.getPhysicalQuantity());
-        if (knownValue != null)
+        for (PhysicalQuantityInSet shownGraph : shownGraphs)
         {
-          double yValue = knownValue.getValue();
-          quantitySeries.get(shownGraph).add(scannedInput.getScanXValue(i), yValue);
+          ValueSet valueSet = boat.getValueSetNonNull(shownGraph.getSetId());
+          PhysicalQuantityValue knownValue = valueSet.getKnownQuantityValue(shownGraph.getPhysicalQuantity());
+          if (knownValue != null)
+          {
+            double yValue = knownValue.getValue();
+            quantitySeries.get(shownGraph).add(scannedInput.getScanXValue(i), yValue);
+          }
         }
-      }
-      if (profileQuantity != null)
-      {
-        ValueSet valueSet = boat.getValueSetNonNull(profileQuantity.getSetId());
-        profileNames.put(i, valueSet.getProfileName());
+        if (profileQuantity != null)
+        {
+          ValueSet valueSet = boat.getValueSetNonNull(profileQuantity.getSetId());
+          profileNames.put(i, valueSet.getProfileName());
+        }
       }
     }
     ScanResult result = new ScanResult();

@@ -74,9 +74,9 @@ public abstract class Boat
     return valuesAndCalculationRules.remove(toRemove);
   }
 
-  public void calculate()
+  public boolean calculate()
   {
     // new CalculateTakeoffVelocitiesStrategy().setValue(values);
-    valuesAndCalculationRules.calculate(null, 500);
+    return valuesAndCalculationRules.calculate(null, 500);
   }
 }
