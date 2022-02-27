@@ -114,11 +114,11 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
     }
     lastTrialValueDifference = trialValueDifference;
 
-    System.out.println("-------------------------------------------");
-    CalculationTreeEntry calculationTree = findInCalculationTree2(allValues, limitedQuantity);
-    calculationTree.removeLeavesExcept(limitedQuantity);
-//    calculationTree.removeDuplicatePhysicalQuantitiesInSetExcept(limitedQuantity);
-    calculationTree.print(System.out);
+//    System.out.println("-------------------------------------------");
+//    CalculationTreeEntry calculationTree = findInCalculationTree2(allValues, limitedQuantity);
+//    calculationTree.removeLeavesExcept(limitedQuantity);
+////    calculationTree.removeDuplicatePhysicalQuantitiesInSetExcept(limitedQuantity);
+//    calculationTree.print(System.out);
 
 //    Set<PhysicalQuantityValueWithSetId> limitedQuantityValuesInCalculationTree = calculationTree.getAllValuesOf(limitedQuantity);
     boolean shouldReturnTrue = false;
@@ -133,13 +133,13 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
 //      shouldReturnTrue = true;
 //    }
 
-    if (limitedQuantityValue instanceof CalculatedPhysicalQuantityValue)
-    {
-      new CalculatedPhysicalQuantityWithSetId(
-              (CalculatedPhysicalQuantityValue) limitedQuantityValue,
-              limitedQuantity.getSetId())
-          .printCalculationTree();
-    }
+//    if (limitedQuantityValue instanceof CalculatedPhysicalQuantityValue)
+//    {
+//      new CalculatedPhysicalQuantityWithSetId(
+//              (CalculatedPhysicalQuantityValue) limitedQuantityValue,
+//              limitedQuantity.getSetId())
+//          .printCalculationTree();
+//    }
 
     double newScanValue = knownTargetValue.getValue() + trialValueDifference;
     if (newScanValue < 0)
@@ -251,7 +251,7 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
       if (calculatedFrom.getPhysicalQuantity().equals(stopQuantity.getPhysicalQuantity())
           && calculatedFrom.getSetId().equals(stopQuantity.getSetId()))
       {
-        System.out.println("Used " + calculatedFrom + " with depth " + currentDepth + " for " + stopQuantity);
+//        System.out.println("Used " + calculatedFrom + " with depth " + currentDepth + " for " + stopQuantity);
         continue;
       }
       else
