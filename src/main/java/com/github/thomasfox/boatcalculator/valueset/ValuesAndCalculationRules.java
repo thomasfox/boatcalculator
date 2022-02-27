@@ -19,6 +19,7 @@ import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValueWithSetId;
 import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
 import com.github.thomasfox.boatcalculator.valueset.impl.Crew;
+import com.github.thomasfox.boatcalculator.valueset.impl.Rigg;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -244,6 +245,8 @@ public class ValuesAndCalculationRules
           + getKnownPhysicalQuantityValue(new PhysicalQuantityInSet(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID)));
       System.out.println("- Crew lever: "
           + getKnownPhysicalQuantityValue(new PhysicalQuantityInSet(PhysicalQuantity.LEVER_WEIGHT, Crew.ID)));
+      System.out.println("- Rigg: "
+          + getKnownPhysicalQuantityValue(new PhysicalQuantityInSet(PhysicalQuantity.LIFT_COEFFICIENT_3D, Rigg.ID)));
       System.out.println("- Drift angle: "
           + getKnownPhysicalQuantityValue(new PhysicalQuantityInSet(PhysicalQuantity.DRIFT_ANGLE, BoatGlobalValues.ID)));
 
@@ -260,6 +263,8 @@ public class ValuesAndCalculationRules
           + getKnownPhysicalQuantityValue(new PhysicalQuantityInSet(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID)));
       System.out.println("- Crew lever: "
           + getKnownPhysicalQuantityValue(new PhysicalQuantityInSet(PhysicalQuantity.LEVER_WEIGHT, Crew.ID)));
+      System.out.println("- Rigg: "
+          + getKnownPhysicalQuantityValue(new PhysicalQuantityInSet(PhysicalQuantity.LIFT_COEFFICIENT_3D, Rigg.ID)));
       System.out.println("- Drift angle: "
           + getKnownPhysicalQuantityValue(new PhysicalQuantityInSet(PhysicalQuantity.DRIFT_ANGLE, BoatGlobalValues.ID)));
 
