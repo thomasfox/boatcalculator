@@ -120,18 +120,18 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements Compu
 //    calculationTree.removeDuplicatePhysicalQuantitiesInSetExcept(limitedQuantity);
     calculationTree.print(System.out);
 
-    Set<PhysicalQuantityValueWithSetId> limitedQuantityValuesInCalculationTree = calculationTree.getAllValuesOf(limitedQuantity);
+//    Set<PhysicalQuantityValueWithSetId> limitedQuantityValuesInCalculationTree = calculationTree.getAllValuesOf(limitedQuantity);
     boolean shouldReturnTrue = false;
-    Double relativeDifference = getMaxRelativeDifference(limitedQuantityValuesInCalculationTree);
-    if (relativeDifference != null
-        && relativeDifference.doubleValue() != 0d
-        && (relativeDifference < 0
-            || knownTargetValue.getValue() == 0
-            || Math.abs(trialValueDifference / knownTargetValue.getValue()) < relativeDifference))
-    {
-      trialValueDifference = 0;
-      shouldReturnTrue = true;
-    }
+//    Double relativeDifference = getMaxRelativeDifference(limitedQuantityValuesInCalculationTree);
+//    if (relativeDifference != null
+//        && relativeDifference.doubleValue() != 0d
+//        && (relativeDifference < 0
+//            || knownTargetValue.getValue() == 0
+//            || Math.abs(trialValueDifference / knownTargetValue.getValue()) < relativeDifference))
+//    {
+//      trialValueDifference = 0;
+//      shouldReturnTrue = true;
+//    }
 
     if (limitedQuantityValue instanceof CalculatedPhysicalQuantityValue)
     {
