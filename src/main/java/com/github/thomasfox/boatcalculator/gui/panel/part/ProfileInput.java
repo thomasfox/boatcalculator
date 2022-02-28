@@ -230,6 +230,12 @@ public class ProfileInput implements ScannedInput
     return PhysicalQuantity.PROFILE;
   }
 
+  @Override
+  public double getStepWidth()
+  {
+    return 1;
+  }
+
   @AllArgsConstructor
   @Getter
   private class ProfileInputItem

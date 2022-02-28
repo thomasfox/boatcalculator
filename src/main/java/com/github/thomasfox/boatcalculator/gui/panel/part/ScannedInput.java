@@ -20,4 +20,6 @@ public interface ScannedInput
   boolean isScan();
 
   PhysicalQuantity getQuantity();
+
+  double getStepWidth();
 }

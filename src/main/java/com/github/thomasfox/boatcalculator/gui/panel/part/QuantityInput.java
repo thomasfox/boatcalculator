@@ -84,6 +84,7 @@ public class QuantityInput implements ScannedInput
     frame.remove(scanNumberOfStepsField);
   }
 
+  @Override
   public PhysicalQuantity getQuantity()
   {
     return quantity;
@@ -122,9 +123,15 @@ public class QuantityInput implements ScannedInput
     return parseInteger(scanNumberOfStepsField.getText());
   }
 
+  @Override
+  public double getStepWidth()
+  {
+    return (getScanTo() - getScanFrom()) / (getNumberOfScanSteps() - 1);
+  }
+
   public double getValueForScanStep(int step)
   {
-    return getScanFrom() + (getScanTo() - getScanFrom()) * (((double) step) / (getNumberOfScanSteps() - 1));
+    return getScanFrom() + getStepWidth() * step;
   }
 
   @Override

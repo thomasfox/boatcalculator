@@ -222,22 +222,11 @@ public class InputPanel extends JPanel
     {
       result.addAll(valueSetInput.getScannedQuantityInputs());
     }
+    if (result.size() > 2)
+    {
+      throw new IllegalArgumentException("Can handle at most two scanned inputs");
+    }
     return result;
-  }
-
-  public QuantityInput getScannedQuantityInput()
-  {
-    List<QuantityInput> scannedInputs = getScannedQuantityInputs();
-    if (scannedInputs.size() > 1)
-    {
-      throw new IllegalArgumentException("Can only handle one scanned input");
-    }
-    if (!scannedInputs.isEmpty())
-    {
-      QuantityInput scannedInput = scannedInputs.get(0);
-      return scannedInput;
-    }
-    return null;
   }
 
   public QuantityOutput.Mode getOutputMode()

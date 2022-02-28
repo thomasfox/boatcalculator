@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,8 +16,10 @@ import org.jfree.data.xy.XYSeries;
 
 import com.github.thomasfox.boatcalculator.boat.Boat;
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.boatcalculator.gui.model.ScanResult;
-import com.github.thomasfox.boatcalculator.gui.model.ScanResultForSingleQuantity;
+import com.github.thomasfox.boatcalculator.gui.model.ScanResult1D;
+import com.github.thomasfox.boatcalculator.gui.model.ScanResult2D;
+import com.github.thomasfox.boatcalculator.gui.model.ScanResultForSingleQuantity1D;
+import com.github.thomasfox.boatcalculator.gui.model.ScanResultForSingleQuantity2D;
 import com.github.thomasfox.boatcalculator.gui.panel.CalculationStateDisplay;
 import com.github.thomasfox.boatcalculator.gui.panel.ChartsPanel;
 import com.github.thomasfox.boatcalculator.gui.panel.InputPanel;
@@ -125,10 +128,10 @@ public class SwingGui
 
   public void saveResultsButtonPressed(ActionEvent e)
   {
-    ScanResult scanResult = chartsPanel.getScanResult();
+    ScanResult1D scanResult = chartsPanel.getScanResult();
     if (scanResult == null)
     {
-      throw new IllegalStateException("no scan Result available");
+      throw new IllegalStateException("no 1D scan result available");
     }
     File file = new File("results.csv");
     scanResult.exportToCsv(file);
@@ -193,24 +196,39 @@ public class SwingGui
           PhysicalQuantity.PROFILE,
           profileInput.keySet().iterator().next()));
     }
-    QuantityInput scannedQuantityInput = inputPanel.getScannedQuantityInput();
+    List<QuantityInput> scannedQuantityInputs = inputPanel.getScannedQuantityInputs();
     ProfileInput scannedProfileInput = inputPanel.getScannedProfileInput();
 
-    ScanResult scanResult;
-    if (scannedQuantityInput != null)
+    ScanResult1D scanResult1D = null;
+    ScanResult2D scanResult2D = null;
+    if (scannedQuantityInputs.size() == 1)
     {
-      scanResult = calculateQuantitySeriesForSelectedOutputs(shownGraphs, scannedQuantityInput);
+      scanResult1D = calculateQuantitySeriesForSelectedOutputs(shownGraphs, scannedQuantityInputs.get(0));
+    }
+    else if (scannedQuantityInputs.size() == 2)
+    {
+      scanResult2D = calculateQuantitySeriesForSelectedOutputs(
+          shownGraphs,
+          scannedQuantityInputs.get(0),
+          scannedQuantityInputs.get(1));
     }
     else
     {
-      scanResult = calculateQuantitySeriesForSelectedOutputs(shownGraphs, scannedProfileInput);
+      scanResult1D = calculateQuantitySeriesForSelectedOutputs(shownGraphs, scannedProfileInput);
     }
 
     calculationStateDisplay.clear();
-    chartsPanel.display(scanResult);
+    if (scannedQuantityInputs.size() == 2)
+    {
+      chartsPanel.display(scanResult2D);
+    }
+    else
+    {
+      chartsPanel.display(scanResult1D);
+    }
   }
 
-  private ScanResult calculateQuantitySeriesForSelectedOutputs(
+  private ScanResult1D calculateQuantitySeriesForSelectedOutputs(
       Set<PhysicalQuantityInSet> shownGraphs,
       ScannedInput scannedInput)
   {
@@ -257,10 +275,10 @@ public class SwingGui
         }
       }
     }
-    ScanResult result = new ScanResult();
+    ScanResult1D result = new ScanResult1D();
     for (Map.Entry<PhysicalQuantityInSet, XYSeries> singleSeries : quantitySeries.entrySet())
     {
-      ScanResultForSingleQuantity resultEntry = new ScanResultForSingleQuantity(scannedInput.getQuantity(), singleSeries.getKey());
+      ScanResultForSingleQuantity1D resultEntry = new ScanResultForSingleQuantity1D(scannedInput.getQuantity(), singleSeries.getKey());
       resultEntry.setSeries(singleSeries.getValue());
       resultEntry.setDisplayName(getSeriesDisplayName(singleSeries.getKey()));
       result.getSingleQuantityScanResults().add(resultEntry);
@@ -269,6 +287,67 @@ public class SwingGui
     result.setProfileNames(profileNames);
     return result;
   }
+
+  private ScanResult2D calculateQuantitySeriesForSelectedOutputs(
+      Set<PhysicalQuantityInSet> shownGraphs,
+      ScannedInput scannedInput1,
+      ScannedInput scannedInput2)
+  {
+    ScanResult2D result = new ScanResult2D();
+    for (PhysicalQuantityInSet shownGraph : shownGraphs)
+    {
+      if (shownGraph.getPhysicalQuantity() == PhysicalQuantity.PROFILE)
+      {
+        throw new IllegalArgumentException("no profile scan for 2D scan");
+      }
+      else
+      {
+         result.getSingleQuantityScanResults().add(new ScanResultForSingleQuantity2D(
+            scannedInput1.getQuantity(),
+            scannedInput2.getQuantity(),
+            new PhysicalQuantityInSet(shownGraph.getPhysicalQuantity(), shownGraph.getSetId()),
+            scannedInput1.getStepWidth(),
+            scannedInput2.getStepWidth()));
+      }
+    }
+
+    for (int i = 0; i < scannedInput1.getNumberOfScanSteps(); ++i)
+    {
+      for (int j = 0; j < scannedInput2.getNumberOfScanSteps(); ++j)
+      {
+        CalculationState.set(
+            scannedInput1.getScanDescription(),
+            scannedInput1.getScanDescription() + ":" + scannedInput1.getScanStepDescription(i));
+            scannedInput1.setValueForScanStep(i);
+        CalculationState.set(
+            scannedInput2.getScanDescription(),
+            scannedInput2.getScanDescription() + ":" + scannedInput2.getScanStepDescription(j));
+            scannedInput2.setValueForScanStep(j);
+        inputPanel.reinitalizeValueSetInputs();
+        boolean converged = boat.calculate();
+        if (converged)
+        {
+          int shownGraphIndex = 0;
+          for (PhysicalQuantityInSet shownGraph : shownGraphs)
+          {
+            ValueSet valueSet = boat.getValueSetNonNull(shownGraph.getSetId());
+            PhysicalQuantityValue knownValue = valueSet.getKnownQuantityValue(shownGraph.getPhysicalQuantity());
+            if (knownValue != null)
+            {
+              double zValue = knownValue.getValue();
+              result.getSingleQuantityScanResults().get(shownGraphIndex).add(
+                  (double) scannedInput1.getScanXValue(i),
+                  (double) scannedInput2.getScanXValue(j),
+                  zValue);
+            }
+            shownGraphIndex++;
+          }
+        }
+      }
+    }
+    return result;
+  }
+
 
 
   private String getSeriesDisplayName(PhysicalQuantityInSet quantity)

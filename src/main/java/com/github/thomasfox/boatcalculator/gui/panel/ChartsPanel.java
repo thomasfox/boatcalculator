@@ -17,14 +17,20 @@ import javax.swing.JScrollPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PolarPlot;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.PaintScale;
+import org.jfree.chart.renderer.xy.XYBlockRenderer;
 import org.jfree.data.xy.DefaultXYDataset;
+import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.boatcalculator.gui.model.ScanResult;
-import com.github.thomasfox.boatcalculator.gui.model.ScanResultForSingleQuantity;
+import com.github.thomasfox.boatcalculator.gui.model.ScanResult1D;
+import com.github.thomasfox.boatcalculator.gui.model.ScanResult2D;
+import com.github.thomasfox.boatcalculator.gui.model.ScanResultForSingleQuantity1D;
+import com.github.thomasfox.boatcalculator.gui.model.ScanResultForSingleQuantity2D;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
 import com.github.thomasfox.boatcalculator.valueset.impl.Crew;
@@ -43,7 +49,7 @@ public class ChartsPanel extends JPanel
 
   private static final long serialVersionUID = 1L;
 
-  private ScanResult scanResult;
+  private ScanResult1D scanResult;
 
   public ChartsPanel()
   {
@@ -122,13 +128,13 @@ public class ChartsPanel extends JPanel
     chartPanels.clear();
   }
 
-  public void display(ScanResult scanResult)
+  public void display(ScanResult1D scanResult)
   {
     this.scanResult = scanResult;
     int row = 0;
     int column = 0;
     Map<PhysicalQuantityInSet, JFreeChart> charts = new HashMap<>();
-    for (ScanResultForSingleQuantity singleScanResult : scanResult.getSingleQuantityScanResults())
+    for (ScanResultForSingleQuantity1D singleScanResult : scanResult.getSingleQuantityScanResults())
     {
       JFreeChart chart = getExistingChart(singleScanResult.getResultQuantity(), charts);
       if (chart == null)
@@ -157,7 +163,34 @@ public class ChartsPanel extends JPanel
     }
   }
 
-  public ScanResult getScanResult()
+  public void display(ScanResult2D scanResult)
+  {
+    int row = 0;
+    int column = 0;
+    Map<PhysicalQuantityInSet, JFreeChart> charts = new HashMap<>();
+    for (ScanResultForSingleQuantity2D singleScanResult : scanResult.getSingleQuantityScanResults())
+    {
+      JFreeChart chart = createChart(singleScanResult);
+      charts.put(singleScanResult.getResultQuantity(), chart);
+
+      ChartPanel chartPanel = new ChartPanel(chart);
+      GridBagConstraints gridBagConstraints = new GridBagConstraints();
+      gridBagConstraints.fill = GridBagConstraints.BOTH;
+      gridBagConstraints.gridx = column;
+      gridBagConstraints.gridy = row;
+      add(chartPanel, gridBagConstraints);
+      chartPanels.add(chartPanel);
+      row++;
+      if (row > 1)
+      {
+        row = 0;
+        column++;
+      }
+    }
+  }
+
+
+  public ScanResult1D getScanResult()
   {
     return scanResult;
   }
@@ -176,7 +209,7 @@ public class ChartsPanel extends JPanel
     return graphSetInWhichQuantityIsMember;
   }
 
-  private JFreeChart createChart(ScanResultForSingleQuantity singleScanResult)
+  private JFreeChart createChart(ScanResultForSingleQuantity1D singleScanResult)
   {
     JFreeChart chart;
     if ("°".equals(singleScanResult.getScannedQuantity().getUnit())
@@ -200,6 +233,25 @@ public class ChartsPanel extends JPanel
     return chart;
   }
 
+  private JFreeChart createChart(ScanResultForSingleQuantity2D doubleScanResult)
+  {
+    XYBlockRenderer renderer = new XYBlockRenderer();
+    renderer.setBlockWidth(doubleScanResult.getStepWidthX());
+    renderer.setBlockHeight(doubleScanResult.getStepWidthY());
+    NumberAxis xAxis = new NumberAxis(doubleScanResult.getScannedQuantityX().getDisplayNameIncludingUnit());
+    NumberAxis yAxis = new NumberAxis(doubleScanResult.getScannedQuantityY().getDisplayNameIncludingUnit());
+    PaintScale scale = new BlueRedPaintScale(doubleScanResult.getMaximumAbsoluteValue());
+    renderer.setPaintScale(scale);
+    DefaultXYZDataset dataset = new DefaultXYZDataset();
+    doubleScanResult.addSeriesTo(dataset);
+
+    XYPlot plot = new XYPlot(dataset, xAxis, yAxis, renderer);
+    JFreeChart chart = new JFreeChart(doubleScanResult.getDisplayName(), plot);
+    return chart;
+  }
+
+
+
   private JFreeChart getExistingChart(PhysicalQuantityInSet forQuantity, Map<PhysicalQuantityInSet, JFreeChart> charts)
   {
     Map.Entry<String, Set<PhysicalQuantityInSet>> graphSetInWhichForQuantityIsMember
@@ -219,7 +271,7 @@ public class ChartsPanel extends JPanel
     return null;
   }
 
-  private void addDataSet(ScanResultForSingleQuantity singleScanResult, JFreeChart chart)
+  private void addDataSet(ScanResultForSingleQuantity1D singleScanResult, JFreeChart chart)
   {
     if (chart.getPlot() instanceof PolarPlot)
     {
