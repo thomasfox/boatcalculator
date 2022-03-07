@@ -239,19 +239,6 @@ public class ValuesAndCalculationRules
           + (changedInStep.isEmpty() ? "empty" : "not empty")
           + " after applying computation strategies in step " + step);
 
-      System.out.println("Step " + step);
-
-//      System.out.println("- Wind speed: "
-//          + getKnownPhysicalQuantityValue(new PhysicalQuantityInSet(PhysicalQuantity.WIND_SPEED, BoatGlobalValues.ID)));
-      System.out.println("- Boat velocity: "
-          + getKnownPhysicalQuantityValue(new PhysicalQuantityInSet(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID)));
-      System.out.println("- Crew lever: "
-          + getKnownPhysicalQuantityValue(new PhysicalQuantityInSet(PhysicalQuantity.LEVER_WEIGHT, Crew.ID)));
-      System.out.println("- Rigg: "
-          + getKnownPhysicalQuantityValue(new PhysicalQuantityInSet(PhysicalQuantity.LIFT_COEFFICIENT_3D, Rigg.ID)));
-      System.out.println("- Drift angle: "
-          + getKnownPhysicalQuantityValue(new PhysicalQuantityInSet(PhysicalQuantity.DRIFT_ANGLE, BoatGlobalValues.ID)));
-
       step++;
     }
     while (!changedInStep.isEmpty() && step < steps && !isValueKnown(wanted));
