@@ -66,10 +66,10 @@ public class BlueRedPaintScale implements PaintScale
     {
       return new Color(127, 127, 127);
     }
-    int intensity = (int) (value / maximumAbsoluteValue * 255);
+    int intensity = Math.min(255, 55 + ((int) (Math.abs(value) / maximumAbsoluteValue * 200)));
     if (value < 0)
     {
-      return new Color(0, 0, -intensity);
+      return new Color(0, 0, intensity);
     }
     return new Color(intensity, 0, 0);
   }
