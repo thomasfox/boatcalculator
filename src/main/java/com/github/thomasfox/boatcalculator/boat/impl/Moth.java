@@ -68,8 +68,10 @@ public class Moth extends Dinghy
     rigg.setStartValueNoOverwrite(PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT, 2); // rough estimate
 
     crew.setStartValueNoOverwrite(PhysicalQuantity.MASS, 80d); // single person
-    crew.setStartValueNoOverwrite(PhysicalQuantity.AREA, 0.58); // 1.8m * 0.3m
-    crew.setStartValueNoOverwrite(PhysicalQuantity.PARASITIC_DRAG_COEFFICIENT, 0.5); // rough estimate
+    // Area and parasitic drag coefficient together roughly get to a parasitic drag of 17 N at a speed of 6.1 m/s
+    // which was measured by Beaver. This contains the parasitic drag from both boat and crew.
+    crew.setStartValueNoOverwrite(PhysicalQuantity.AREA, 1);
+    crew.setStartValueNoOverwrite(PhysicalQuantity.PARASITIC_DRAG_COEFFICIENT, 0.75);
 
     boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.MASS, 40d); // waszp
 
@@ -78,9 +80,6 @@ public class Moth extends Dinghy
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_54kg.txt"), "Moth@54kg"));
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_108kg.txt"), "Moth@108kg"));
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_158kg_interpolated.txt"), "Moth@158kgInterpolated"));
-
-    hull.setStartValueNoOverwrite(PhysicalQuantity.AREA, 0.375); // 1,5m * 25cm)
-    hull.setStartValueNoOverwrite(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT, 0.5); // rough estimate
 
     valuesAndCalculationRules.add(new TwoValuesShouldBeEqualModifyThirdStrategy(
         PhysicalQuantity.DRIVING_FORCE, Rigg.ID,
