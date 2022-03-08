@@ -122,4 +122,24 @@ public class ScanResultForSingleQuantity2D
   {
     return displayName;
   }
+
+  public double getMinX()
+  {
+    return Math.min(xValues.get(0), xValues.get(xValues.size() - 1));
+  }
+
+  public double getMaxX()
+  {
+    return Math.max(xValues.get(0), xValues.get(xValues.size() - 1));
+  }
+
+  public double getMinY()
+  {
+    return Math.min(yValues.get(0), yValues.get(yValues.size() - 1));
+  }
+
+  public double getMaxY()
+  {
+    return Math.max(yValues.get(0), yValues.get(yValues.size() - 1));
+  }
 }

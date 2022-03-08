@@ -22,6 +22,7 @@ import org.jfree.chart.plot.PolarPlot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.PaintScale;
 import org.jfree.chart.renderer.xy.XYBlockRenderer;
+import org.jfree.data.Range;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -239,7 +240,13 @@ public class ChartsPanel extends JPanel
     renderer.setBlockWidth(doubleScanResult.getStepWidthX());
     renderer.setBlockHeight(doubleScanResult.getStepWidthY());
     NumberAxis xAxis = new NumberAxis(doubleScanResult.getScannedQuantityX().getDisplayNameIncludingUnit());
+    xAxis.setRange(new Range(
+        doubleScanResult.getMinX() - doubleScanResult.getStepWidthX(),
+        doubleScanResult.getMaxX() + doubleScanResult.getStepWidthX()));
     NumberAxis yAxis = new NumberAxis(doubleScanResult.getScannedQuantityY().getDisplayNameIncludingUnit());
+    yAxis.setRange(new Range(
+        doubleScanResult.getMinY() - doubleScanResult.getStepWidthY(),
+        doubleScanResult.getMaxY() + doubleScanResult.getStepWidthY()));
     PaintScale scale = new BlueRedPaintScale(doubleScanResult.getMaximumAbsoluteValue());
     renderer.setPaintScale(scale);
     DefaultXYZDataset dataset = new DefaultXYZDataset();
