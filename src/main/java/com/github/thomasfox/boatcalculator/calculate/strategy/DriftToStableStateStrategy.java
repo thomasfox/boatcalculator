@@ -28,7 +28,7 @@ import lombok.ToString;
  * and so on until source and target are sufficiently equal.
  */
 @ToString
-public class DriftToStableStateStrategy implements ComputationStrategy
+public class DriftToStableStateStrategy implements StepComputationStrategy
 {
   private final PhysicalQuantityInSet source;
 

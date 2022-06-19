@@ -196,6 +196,12 @@ public class SimpleValueSet implements ValueSet
   }
 
   @Override
+  public void removeCalculatedValue(PhysicalQuantity toRemove)
+  {
+    calculatedValues.remove(toRemove);
+  }
+
+  @Override
   public PhysicalQuantityValue getFixedValue(PhysicalQuantity physicalQuantity)
   {
     return fixedValues.getPhysicalQuantityValue(physicalQuantity);

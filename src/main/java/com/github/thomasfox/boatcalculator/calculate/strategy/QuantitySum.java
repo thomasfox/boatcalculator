@@ -24,7 +24,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString
-public class QuantitySum implements ComputationStrategy
+public class QuantitySum implements StepComputationStrategy
 {
   @NonNull
   private final PhysicalQuantityInSet target;

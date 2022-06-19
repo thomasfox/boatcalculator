@@ -33,7 +33,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString
-public class LiftByAngleOfAttackStrategy implements ComputationStrategy
+public class LiftByAngleOfAttackStrategy implements StepComputationStrategy
 {
   @NonNull
   private final PhysicalQuantityInSet[] weightSources;

@@ -1,10 +1,10 @@
 package com.github.thomasfox.boatcalculator.boat.impl;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.boatcalculator.calculate.strategy.ComputationStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.LiftByAngleOfAttackStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantitySum;
+import com.github.thomasfox.boatcalculator.calculate.strategy.StepComputationStrategy;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
 import com.github.thomasfox.boatcalculator.valueset.impl.Crew;
@@ -42,8 +42,8 @@ public class Flying29er extends Skiff29er
 
   private void replaceHullWeightStrategy()
   {
-    ComputationStrategy weightStrategy = null;
-    for (ComputationStrategy computationStrategy : valuesAndCalculationRules.getComputationStrategies())
+    StepComputationStrategy weightStrategy = null;
+    for (StepComputationStrategy computationStrategy : valuesAndCalculationRules.getStepComputationStrategies())
     {
       if (computationStrategy instanceof QuantitySum
           && ((QuantitySum) computationStrategy).getTarget().equals(new PhysicalQuantityInSet(PhysicalQuantity.LIFT, Hull.ID)))
@@ -70,8 +70,8 @@ public class Flying29er extends Skiff29er
 
   protected void replaceTotalDragStrategy()
   {
-    ComputationStrategy totalDragStrategy = null;
-    for (ComputationStrategy computationStrategy : valuesAndCalculationRules.getComputationStrategies())
+    StepComputationStrategy totalDragStrategy = null;
+    for (StepComputationStrategy computationStrategy : valuesAndCalculationRules.getStepComputationStrategies())
     {
       if (computationStrategy instanceof QuantitySum
           && ((QuantitySum) computationStrategy).getTarget().equals(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID)))

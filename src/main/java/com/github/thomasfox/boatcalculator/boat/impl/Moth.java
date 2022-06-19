@@ -3,11 +3,11 @@ package com.github.thomasfox.boatcalculator.boat.impl;
 import java.io.File;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.boatcalculator.calculate.strategy.ComputationStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.IncreaseQuantityTillOtherReachesUpperLimitStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.LiftByAngleOfAttackStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantitySum;
+import com.github.thomasfox.boatcalculator.calculate.strategy.StepComputationStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.TwoValuesShouldBeEqualModifyThirdStrategy;
 import com.github.thomasfox.boatcalculator.gui.SwingGui;
 import com.github.thomasfox.boatcalculator.interpolate.QuantityRelationLoader;
@@ -98,8 +98,8 @@ public class Moth extends Dinghy
 
   private void replaceHullWeightStrategy()
   {
-    ComputationStrategy weightStrategy = null;
-    for (ComputationStrategy computationStrategy : valuesAndCalculationRules.getComputationStrategies())
+    StepComputationStrategy weightStrategy = null;
+    for (StepComputationStrategy computationStrategy : valuesAndCalculationRules.getStepComputationStrategies())
     {
       if (computationStrategy instanceof QuantitySum
           && ((QuantitySum) computationStrategy).getTarget().equals(new PhysicalQuantityInSet(PhysicalQuantity.LIFT, Hull.ID)))
@@ -128,8 +128,8 @@ public class Moth extends Dinghy
 
   protected void replaceTotalDragStrategy()
   {
-    ComputationStrategy totalDragStrategy = null;
-    for (ComputationStrategy computationStrategy : valuesAndCalculationRules.getComputationStrategies())
+    StepComputationStrategy totalDragStrategy = null;
+    for (StepComputationStrategy computationStrategy : valuesAndCalculationRules.getStepComputationStrategies())
     {
       if (computationStrategy instanceof QuantitySum
           && ((QuantitySum) computationStrategy).getTarget().equals(new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID)))

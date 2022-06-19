@@ -27,9 +27,9 @@ import lombok.extern.slf4j.Slf4j;
  * It is assumed that if equalQuantity1 is larger than equalQuantity2, targetQuantity must be increased,
  * whereas if equalQuantity1 is smaller than equalQuantity2, targetQuantity must be decreased.
  */
-public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStrategy
+public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationFromConvergedResultStrategy
 {
-  private static final double FACTOR_START_VALUE = 0.01;
+  private static final double FACTOR_START_VALUE = 0.03;
 
   private final PhysicalQuantity equalQuantity1;
 
@@ -51,11 +51,112 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
 
   private Double lastTrialValueDifference;
 
+  private Double trialTargetValue = null;
+
   private double differenceToTargetDifferenceFactor = FACTOR_START_VALUE;
 
+  @Override
+  public void reset()
+  {
+    lastDifference = null;
+    lastTrialValueDifference = null;
+    trialTargetValue = null;
+    differenceToTargetDifferenceFactor = FACTOR_START_VALUE;
+  }
 
   @Override
-  public boolean step(ValuesAndCalculationRules allValues)
+  public void setStartValues(ValuesAndCalculationRules allValues)
+  {
+    ValueSet targetSet = allValues.getValueSetNonNull(targetSetId);
+    PhysicalQuantityValue knownTargetValue = targetSet.getKnownQuantityValue(targetQuantity);
+    if (knownTargetValue == null)
+    {
+      if (trialTargetValue == null)
+      {
+        trialTargetValue = lowerCutoff;
+      }
+      PhysicalQuantityValue newTargetValue = new SimplePhysicalQuantityValue(targetQuantity, trialTargetValue);
+      targetSet.setCalculatedValueNoOverwrite(
+          newTargetValue,
+          getClass().getSimpleName() + " trial Value",
+          true,
+          new SimplePhysicalQuantityValueWithSetId(newTargetValue, targetSetId));
+    }
+  }
+
+  @Override
+  public boolean stepAfterConvergence(ValuesAndCalculationRules allValues)
+  {
+    ValueSet targetSet = allValues.getValueSetNonNull(targetSetId);
+    PhysicalQuantityValue knownTargetValue = targetSet.getKnownQuantityValue(targetQuantity);
+
+    if (!knownTargetValue.isTrial())
+    {
+      // targetValue is no trial value and thus already calculated
+      targetSet.removeCalculatedValue(targetQuantity);
+      return false;
+    }
+
+    double trialValue = knownTargetValue.getValue();
+    CalculateDifferenceResult difference = getDifference(allValues);
+    if (difference == null)
+    {
+      // difference is not available
+      return false;
+    }
+
+    if (lastDifference != null && difference.getDifference() == lastDifference)
+    {
+      // there was no new value calculated, or already arrived at target
+      return false;
+    }
+    lastDifference = difference.getDifference();
+
+    if (difference.getRelativeDifference() < CompareWithOldResult.RELATIVE_DIFFERENCE_THRESHOLD)
+    {
+      // already arrived at target
+      return false;
+    }
+
+    double trialValueDifference = difference.getDifference() * differenceToTargetDifferenceFactor;
+    if (lastTrialValueDifference != null)
+    {
+      if (trialValueDifference*lastTrialValueDifference < 0d // they have different sign
+        && Math.abs(trialValueDifference) > Math.abs(lastTrialValueDifference) * 0.5)
+      {
+        trialValueDifference = trialValueDifference * 0.5;
+        differenceToTargetDifferenceFactor *= 0.5;
+      }
+    }
+    lastTrialValueDifference = trialValueDifference;
+    double newTrialValue = trialValue + trialValueDifference;
+    if (newTrialValue < lowerCutoff)
+    {
+      newTrialValue = lowerCutoff;
+      differenceToTargetDifferenceFactor *= 0.5;
+    }
+    if (newTrialValue > upperCutoff)
+    {
+      newTrialValue = upperCutoff;
+      differenceToTargetDifferenceFactor *= 0.5;
+    }
+    trialTargetValue = newTrialValue;
+    targetSet.setCalculatedValueNoOverwrite(
+        new SimplePhysicalQuantityValue(targetQuantity, newTrialValue),
+        getClass().getSimpleName() + " trial Value",
+        true,
+        difference.getValue1(),
+        difference.getValue2());
+    if (newTrialValue != 0
+        && Math.abs(trialValueDifference/newTrialValue) > CompareWithOldResult.RELATIVE_DIFFERENCE_THRESHOLD)
+    {
+      return true;
+    }
+    return false;
+  }
+
+
+  private boolean step(ValuesAndCalculationRules allValues)
   {
     ValueSet targetSet = allValues.getValueSetNonNull(targetSetId);
     PhysicalQuantityValue knownTargetValue = targetSet.getKnownQuantityValue(targetQuantity);

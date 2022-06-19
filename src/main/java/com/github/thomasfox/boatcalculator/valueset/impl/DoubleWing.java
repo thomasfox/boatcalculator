@@ -196,6 +196,11 @@ public class DoubleWing implements ValueSet, HasProfile
     singleWing.setCalculatedValue(singleComponentValue, calculatedBy, trialValue, calculatedFrom);
   }
 
+  @Override
+  public void removeCalculatedValue(PhysicalQuantity toRemove)
+  {
+    singleWing.removeCalculatedValue(toRemove);
+  }
 
   @Override
   public void addToInput(PhysicalQuantity toAdd)

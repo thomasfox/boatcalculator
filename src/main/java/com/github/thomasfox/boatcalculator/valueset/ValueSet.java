@@ -95,6 +95,7 @@ public interface ValueSet extends Cloneable
       boolean trialValue,
       PhysicalQuantityValueWithSetId... calculatedFrom);
 
+  void removeCalculatedValue(PhysicalQuantity toRemove);
 
   public void addToInput(PhysicalQuantity toAdd);
 
@@ -119,4 +120,5 @@ public interface ValueSet extends Cloneable
   public List<QuantityRelation> getQuantityRelations();
 
   public ValueSet clone();
+
 }

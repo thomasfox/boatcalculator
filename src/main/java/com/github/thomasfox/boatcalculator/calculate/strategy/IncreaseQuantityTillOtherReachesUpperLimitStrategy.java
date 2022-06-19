@@ -29,7 +29,7 @@ import lombok.ToString;
  * when the scanned quantity increases.
  */
 @ToString
-public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements ComputationStrategy
+public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements StepComputationStrategy
 {
   private final PhysicalQuantityInSet limitedQuantity;
 

@@ -10,7 +10,9 @@ import java.util.stream.Collectors;
 import com.github.thomasfox.boatcalculator.calculate.Calculator;
 import com.github.thomasfox.boatcalculator.calculate.CombinedCalculator;
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.boatcalculator.calculate.strategy.ComputationFromConvergedResultStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.ComputationStrategy;
+import com.github.thomasfox.boatcalculator.calculate.strategy.StepComputationStrategy;
 import com.github.thomasfox.boatcalculator.interpolate.QuantityRelation;
 import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
@@ -34,7 +36,10 @@ public class ValuesAndCalculationRules
 {
   private final List<ValueSet> valueSets = new ArrayList<>();
 
-  private final List<ComputationStrategy> computationStrategies = new ArrayList<>();
+  private final List<StepComputationStrategy> stepComputationStrategies = new ArrayList<>();
+
+  private final List<ComputationFromConvergedResultStrategy> computationFromConvergedResultStrategies
+      = new ArrayList<>();
 
   public ValuesAndCalculationRules(Set<ValueSet> valueSets)
   {
@@ -47,7 +52,9 @@ public class ValuesAndCalculationRules
     {
       this.valueSets.add(valueSetToCopy.clone());
     }
-    this.computationStrategies.addAll(toCopy.getComputationStrategies());
+    this.stepComputationStrategies.addAll(toCopy.getStepComputationStrategies());
+    this.computationFromConvergedResultStrategies.addAll(
+        toCopy.getComputationFromConvergedResultStrategies());
   }
 
   public void add(ValueSet toAdd)
@@ -158,20 +165,44 @@ public class ValuesAndCalculationRules
                 + valueSets.stream().map(ValueSet::getId).collect(Collectors.toList())));
   }
 
-  public void add(ComputationStrategy computationStrategy)
+  public void add(StepComputationStrategy computationStrategy)
   {
-    computationStrategies.add(computationStrategy);
+    stepComputationStrategies.add(computationStrategy);
   }
 
-  public List<ComputationStrategy> getComputationStrategies()
+  public List<StepComputationStrategy> getStepComputationStrategies()
   {
-    return Collections.unmodifiableList(computationStrategies);
+    return Collections.unmodifiableList(stepComputationStrategies);
   }
 
-  public boolean remove(ComputationStrategy computationStrategy)
+  public boolean remove(StepComputationStrategy computationStrategy)
   {
-    return computationStrategies.remove(computationStrategy);
+    return stepComputationStrategies.remove(computationStrategy);
   }
+
+  public void add(ComputationFromConvergedResultStrategy computationStrategy)
+  {
+    computationFromConvergedResultStrategies.add(computationStrategy);
+  }
+
+  public List<ComputationFromConvergedResultStrategy> getComputationFromConvergedResultStrategies()
+  {
+    return Collections.unmodifiableList(computationFromConvergedResultStrategies);
+  }
+
+  public boolean remove(ComputationFromConvergedResultStrategy computationStrategy)
+  {
+    return computationFromConvergedResultStrategies.remove(computationStrategy);
+  }
+
+  public List<ComputationStrategy> getAllComputationStrategies()
+  {
+    List<ComputationStrategy> result = new ArrayList<>();
+    result.addAll(stepComputationStrategies);
+    result.addAll(computationFromConvergedResultStrategies);
+    return Collections.unmodifiableList(result);
+  }
+
 
   /**
    * Calculate unknown quantities from the known quantities
@@ -185,8 +216,54 @@ public class ValuesAndCalculationRules
    */
   public boolean calculate(PhysicalQuantityInSet wanted, int steps)
   {
+    if (computationFromConvergedResultStrategies.isEmpty())
+    {
+      return calculateUntilConvergence(wanted, steps);
+    }
+
+    List<ComputationFromConvergedResultStrategy> strategiesToApply
+        = new ArrayList<>(computationFromConvergedResultStrategies);
+    return applyComputationFromConvergedResultStrategies(strategiesToApply, new ArrayList<>(), wanted, steps);
+  }
+
+  private boolean applyComputationFromConvergedResultStrategies(
+      List<ComputationFromConvergedResultStrategy> toApply,
+      List<ComputationFromConvergedResultStrategy> toSetStartValues,
+      PhysicalQuantityInSet wanted,
+      int steps)
+  {
+    if (toApply.isEmpty())
+    {
+      return true;
+    }
+    ComputationFromConvergedResultStrategy computationStrategy = toApply.remove(0);
+    toSetStartValues.add(computationStrategy);
+    int step = 0;
+    boolean furtherCalculationIsNeeded;
+    computationStrategy.reset();
+    do
+    {
+      clearCalculatedValues();
+      for (ComputationFromConvergedResultStrategy toSetStartValuesStrategy : toSetStartValues)
+      {
+        toSetStartValuesStrategy.setStartValues(this);
+      }
+      calculateUntilConvergence(wanted, steps);
+      furtherCalculationIsNeeded = computationStrategy.stepAfterConvergence(this);
+      if (!applyComputationFromConvergedResultStrategies(toApply, toSetStartValues, wanted, steps))
+      {
+        return false;
+      }
+      step++;
+    }
+    while (furtherCalculationIsNeeded && step < steps && !isValueKnown(wanted));
+    return !furtherCalculationIsNeeded;
+  }
+
+  private boolean calculateUntilConvergence(PhysicalQuantityInSet wanted, int steps)
+  {
     // allow computation strategies to reset their internal state
-    applyComputationStrategies();
+    computationStrategiesStep();
 
     if (wanted != null)
     {
@@ -215,7 +292,7 @@ public class ValuesAndCalculationRules
         changedInStep.addAll(partChanged);
       }
       log.debug("changed is " + changedInStep + " after calculating in valueSets in step " + step);
-      Set<String> changedByComputationStrategies = applyComputationStrategies();
+      Set<String> changedByComputationStrategies = computationStrategiesStep();
       changedInStep.addAll(changedByComputationStrategies);
       log.debug("changedInStep is "
           + (changedInStep.isEmpty() ? "empty" : "not empty")
@@ -246,12 +323,13 @@ public class ValuesAndCalculationRules
     return true;
   }
 
-  private Set<String> applyComputationStrategies()
+  private Set<String> computationStrategiesStep()
   {
     Set<String> changed = new HashSet<>();
-    for (ComputationStrategy computationStrategy : computationStrategies)
+    for (StepComputationStrategy computationStrategy : stepComputationStrategies)
     {
       boolean changedinStrategy = computationStrategy.step(this);
+
       if (changedinStrategy)
       {
         changed.add(computationStrategy.getClass().getSimpleName());
@@ -443,7 +521,7 @@ public class ValuesAndCalculationRules
         }
       }
     }
-    for (ComputationStrategy computationStrategy : getComputationStrategies())
+    for (ComputationStrategy computationStrategy : getAllComputationStrategies())
     {
       if (computationStrategy.getOutputs().contains(soughtValue))
       {

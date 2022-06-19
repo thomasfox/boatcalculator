@@ -25,7 +25,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class QuantityEquality implements ComputationStrategy
+public class QuantityEquality implements StepComputationStrategy
 {
   private final PhysicalQuantity sourceQuantity;
 

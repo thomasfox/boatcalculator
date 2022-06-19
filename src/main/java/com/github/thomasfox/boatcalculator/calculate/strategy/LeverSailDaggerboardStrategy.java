@@ -24,7 +24,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString
-public class LeverSailDaggerboardStrategy implements ComputationStrategy
+public class LeverSailDaggerboardStrategy implements StepComputationStrategy
 {
   @Override
   public boolean step(ValuesAndCalculationRules allValues)

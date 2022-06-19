@@ -13,7 +13,7 @@ import com.github.thomasfox.boatcalculator.valueset.impl.Takeoff;
 
 import lombok.AllArgsConstructor;
 
-public class CalculateTakeoffCriticalVelocityStrategy implements ComputationStrategy
+public class CalculateTakeoffCriticalVelocityStrategy implements StepComputationStrategy
 {
   private static final double WIND_SPEED_STEP = 2d;
 

@@ -22,7 +22,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString
-public class QuantityDifference implements ComputationStrategy
+public class QuantityDifference implements StepComputationStrategy
 {
   @NonNull
   private final PhysicalQuantityInSet target;
