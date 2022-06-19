@@ -30,7 +30,6 @@ import lombok.ToString;
  *
  * So this strategy sets two values, hull weight and angle of attack of the
  * main lifting foil.
- *
  */
 @Getter
 @ToString
@@ -94,7 +93,7 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     }
   }
 
-  public String getCalculatedByDescription(ValuesAndCalculationRules allValues)
+  private String getCalculatedByDescription(ValuesAndCalculationRules allValues)
   {
     StringBuilder result = new StringBuilder("LiftByAngleOfAttackStrategy: ");
     for (PhysicalQuantityInSet source : weightSources)
@@ -258,38 +257,17 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     return converged;
   }
 
-  public boolean allWeightSourceValuesAreKnown(ValuesAndCalculationRules allValues)
+  private boolean allWeightSourceValuesAreKnown(ValuesAndCalculationRules allValues)
   {
     return Arrays.stream(weightSources).allMatch(allValues::isValueKnown);
   }
 
-  public boolean allLiftSourceValuesAreKnown(ValuesAndCalculationRules allValues)
+  private boolean allLiftSourceValuesAreKnown(ValuesAndCalculationRules allValues)
   {
     return Arrays.stream(liftSources).allMatch(allValues::isValueKnown);
   }
 
-  public boolean allAnglesOfAttackAreKnown(ValuesAndCalculationRules allValues)
-  {
-    return Arrays.stream(liftSources)
-        .filter(s -> allValues.getValueSet(s.getSetId()).getStartValue(PhysicalQuantity.ANGLE_OF_ATTACK) == null)
-        .count() == 0;
-  }
-
-  public boolean allLiftSourceValuesWithUnknownAngleOfAttackAreUnknown(ValuesAndCalculationRules allValues)
-  {
-    return Arrays.stream(liftSources)
-        .filter(s -> allValues.getValueSet(s.getSetId()).getStartValue(PhysicalQuantity.ANGLE_OF_ATTACK) == null)
-        .allMatch(v -> !allValues.isValueKnown(v));
-  }
-
-  public boolean noAngleOfAttackSourceValuesAreCalculated(ValuesAndCalculationRules allValues)
-  {
-    return Arrays.stream(anglesOfAttack)
-        .filter(s -> allValues.getValueSet(s.getSetId()).getStartValue(PhysicalQuantity.ANGLE_OF_ATTACK) == null)
-        .allMatch(v -> !allValues.isValueKnown(v));
-  }
-
-  public double getSumOfWeightSourcesValues(ValuesAndCalculationRules allValues)
+  private double getSumOfWeightSourcesValues(ValuesAndCalculationRules allValues)
   {
     double result = 0d;
     for (PhysicalQuantityInSet source : weightSources)
@@ -299,7 +277,7 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     return result;
   }
 
-  public double getSumOfLiftSourcesValues(ValuesAndCalculationRules allValues)
+  private double getSumOfLiftSourcesValues(ValuesAndCalculationRules allValues)
   {
     double result = 0d;
     for (PhysicalQuantityInSet source : liftSources)
@@ -334,5 +312,4 @@ public class LiftByAngleOfAttackStrategy implements ComputationStrategy
     }
     return result;
   }
-
 }

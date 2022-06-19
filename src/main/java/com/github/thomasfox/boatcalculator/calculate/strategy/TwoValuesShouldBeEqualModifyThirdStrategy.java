@@ -164,6 +164,22 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
         new SimplePhysicalQuantityValueWithSetId(value2, equalQuantity2SetId));
   }
 
+  @Override
+  public Set<PhysicalQuantityInSet> getOutputs()
+  {
+    Set<PhysicalQuantityInSet> result = new HashSet<>();
+    result.add(new PhysicalQuantityInSet(targetQuantity, targetSetId));
+    result.add(new PhysicalQuantityInSet(equalQuantity1, equalQuantity1SetId));
+    result.add(new PhysicalQuantityInSet(equalQuantity2, equalQuantity2SetId));
+    return result;
+  }
+
+  @Override
+  public Set<PhysicalQuantityInSet> getInputs()
+  {
+    Set<PhysicalQuantityInSet> result = new HashSet<>();
+    return result;
+  }
 
   private static class CalculateDifferenceResult
   {
@@ -209,22 +225,5 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationStr
         relativeDifference = absoluteDifference / maxAbsoluteValue;
       }
     }
-  }
-
-  @Override
-  public Set<PhysicalQuantityInSet> getOutputs()
-  {
-    Set<PhysicalQuantityInSet> result = new HashSet<>();
-    result.add(new PhysicalQuantityInSet(targetQuantity, targetSetId));
-    result.add(new PhysicalQuantityInSet(equalQuantity1, equalQuantity1SetId));
-    result.add(new PhysicalQuantityInSet(equalQuantity2, equalQuantity2SetId));
-    return result;
-  }
-
-  @Override
-  public Set<PhysicalQuantityInSet> getInputs()
-  {
-    Set<PhysicalQuantityInSet> result = new HashSet<>();
-    return result;
   }
 }

@@ -54,12 +54,12 @@ public class QuantityDifference implements ComputationStrategy
     }
   }
 
-  public boolean allSourceValuesAreKnown(ValuesAndCalculationRules allValues)
+  private boolean allSourceValuesAreKnown(ValuesAndCalculationRules allValues)
   {
     return allValues.isValueKnown(toSubtractFrom) && allValues.isValueKnown(toSubtract);
   }
 
-  public CalculationResult getDifferenceOfSourceValues(ValuesAndCalculationRules allValues)
+  private CalculationResult getDifferenceOfSourceValues(ValuesAndCalculationRules allValues)
   {
     double newValue = 0d;
     boolean trialValue = false;
@@ -81,7 +81,7 @@ public class QuantityDifference implements ComputationStrategy
     return result;
   }
 
-  public String getCalculatedByDescription(ValuesAndCalculationRules allValues)
+  private String getCalculatedByDescription(ValuesAndCalculationRules allValues)
   {
     StringBuilder result = new StringBuilder();
     result.append(allValues.getNameOfSetWithId(toSubtractFrom.getSetId()))

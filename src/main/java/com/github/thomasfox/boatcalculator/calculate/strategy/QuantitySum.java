@@ -47,12 +47,12 @@ public class QuantitySum implements ComputationStrategy
     }
   }
 
-  public boolean allSourceValuesAreKnown(ValuesAndCalculationRules allValues)
+  private boolean allSourceValuesAreKnown(ValuesAndCalculationRules allValues)
   {
     return Arrays.stream(sources).allMatch(allValues::isValueKnown);
   }
 
-  public CalculationResult getSumOfSourceValues(ValuesAndCalculationRules allValues)
+  private CalculationResult getSumOfSourceValues(ValuesAndCalculationRules allValues)
   {
     double newValue = 0d;
     boolean trialValue = false;
@@ -70,7 +70,7 @@ public class QuantitySum implements ComputationStrategy
     return result;
   }
 
-  public String getCalculatedByDescription(ValuesAndCalculationRules allValues)
+  private String getCalculatedByDescription(ValuesAndCalculationRules allValues)
   {
     StringBuilder result = new StringBuilder();
     for (PhysicalQuantityInSet source : sources)
