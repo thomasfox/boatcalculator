@@ -8,10 +8,12 @@ import com.github.thomasfox.boatcalculator.valueset.ValuesAndCalculationRules;
 public interface ComputationStrategy
 {
   /**
-   * set the value calculated by this strategy one step closer to the calculated value.
+   * If the quantities calculated by this strategy are calculated in an iterative manner,
+   * do one step in the iteration and set the new calculated quantities in allValues.
+   * If the quantities calculated by this strategy can be calculated in a single step,
+   * do the calculation and set the new calculated quantities in allValues.
    *
    * @param allValues the values to calculate on.
-   * @param step the calculation step.
    *
    * @return true if further calculation is needed, false otherwise
    */
