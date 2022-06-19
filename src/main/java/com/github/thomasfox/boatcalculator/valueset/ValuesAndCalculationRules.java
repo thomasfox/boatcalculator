@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Contains all valueSets for a boat, and the strategies
+ * Contains all valueSets for a boat, and the calculation strategies
  * which relate quantities in different valueSets.
  */
 @NoArgsConstructor
@@ -35,8 +35,6 @@ public class ValuesAndCalculationRules
   private final List<ValueSet> valueSets = new ArrayList<>();
 
   private final List<ComputationStrategy> computationStrategies = new ArrayList<>();
-
-  private final Set<ComputationStrategy> ignoredComputationStrategies = new HashSet<>();
 
   public ValuesAndCalculationRules(Set<ValueSet> valueSets)
   {
@@ -50,7 +48,6 @@ public class ValuesAndCalculationRules
       this.valueSets.add(valueSetToCopy.clone());
     }
     this.computationStrategies.addAll(toCopy.getComputationStrategies());
-    this.ignoredComputationStrategies.addAll(toCopy.getIgnoredComputationStrategies());
   }
 
   public void add(ValueSet toAdd)
@@ -67,21 +64,6 @@ public class ValuesAndCalculationRules
   public List<ValueSet> getValueSets()
   {
     return Collections.unmodifiableList(valueSets);
-  }
-
-  public Set<ComputationStrategy> getIgnoredComputationStrategies()
-  {
-    return Collections.unmodifiableSet(ignoredComputationStrategies);
-  }
-
-  public void addIgnoredComputationStrategy(ComputationStrategy toAdd)
-  {
-    ignoredComputationStrategies.add(toAdd);
-  }
-
-  public boolean removeIgnoredComputationStrategy(ComputationStrategy toRemove)
-  {
-    return ignoredComputationStrategies.remove(toRemove);
   }
 
   public boolean remove(ValueSet toRemove)
@@ -269,11 +251,6 @@ public class ValuesAndCalculationRules
     Set<String> changed = new HashSet<>();
     for (ComputationStrategy computationStrategy : computationStrategies)
     {
-      if (ignoredComputationStrategies.contains(computationStrategy))
-      {
-        continue;
-      }
-
       boolean changedinStrategy = computationStrategy.step(this);
       if (changedinStrategy)
       {
