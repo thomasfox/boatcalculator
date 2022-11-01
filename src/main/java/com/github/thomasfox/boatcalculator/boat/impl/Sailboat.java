@@ -7,6 +7,7 @@ import com.github.thomasfox.boatcalculator.calculate.strategy.LeverSailDaggerboa
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityDifference;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
+import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
 import com.github.thomasfox.boatcalculator.valueset.impl.Crew;
 import com.github.thomasfox.boatcalculator.valueset.impl.DaggerboardOrKeel;
@@ -17,9 +18,14 @@ public class Sailboat extends Boat
 {
   protected Rigg rigg = new Rigg();
 
+  protected ValueSet daggerboardOrKeel = new DaggerboardOrKeel();
+
+  protected LeverSailDaggerboard leverSailDaggerboard = new LeverSailDaggerboard();
+
   public Sailboat()
   {
     addValueSet(rigg);
+    addValueSet(daggerboardOrKeel);
     addValueSet(leverSailDaggerboard);
     valuesAndCalculationRules.add(new DriftToStableStateStrategy(PhysicalQuantity.ANGLE_OF_ATTACK, DaggerboardOrKeel.ID, PhysicalQuantity.DRIFT_ANGLE, BoatGlobalValues.ID, 0d));
     valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, Rigg.ID, PhysicalQuantity.LIFT, DaggerboardOrKeel.ID)); // assumption: rudder has no force

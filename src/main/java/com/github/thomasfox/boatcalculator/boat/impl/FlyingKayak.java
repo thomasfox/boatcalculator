@@ -12,6 +12,7 @@ import com.github.thomasfox.boatcalculator.gui.SwingGui;
 import com.github.thomasfox.boatcalculator.interpolate.QuantityRelationLoader;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.boatcalculator.valueset.SimpleValueSet;
+import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
 import com.github.thomasfox.boatcalculator.valueset.impl.Crew;
 import com.github.thomasfox.boatcalculator.valueset.impl.DaggerboardOrKeel;
@@ -23,6 +24,8 @@ import com.github.thomasfox.boatcalculator.valueset.impl.Rudder;
 public class FlyingKayak extends Boat
 {
   MainLiftingFoil mainLiftingFoil = new MainLiftingFoil();
+
+  protected ValueSet daggerboardOrKeel = new DaggerboardOrKeel();
 
   protected SimpleValueSet crew = new Crew();
 
@@ -63,8 +66,6 @@ public class FlyingKayak extends Boat
     mainLiftingFoil.setProfileName("mh32-il");
     mainLiftingFoil.setStartValue(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, 7d);
 
-
-    removeValueSet(daggerboardOrKeel);
     DaggerboardOrKeel singleDaggerboard = new DaggerboardOrKeel();
     singleDaggerboard.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1.0d);
     singleDaggerboard.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.16d);

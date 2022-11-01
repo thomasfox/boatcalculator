@@ -9,18 +9,13 @@ import com.github.thomasfox.boatcalculator.valueset.ValuesAndCalculationRules;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
 import com.github.thomasfox.boatcalculator.valueset.impl.DaggerboardOrKeel;
 import com.github.thomasfox.boatcalculator.valueset.impl.Hull;
-import com.github.thomasfox.boatcalculator.valueset.impl.LeverSailDaggerboard;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rudder;
 
 public abstract class Boat
 {
   protected BoatGlobalValues boatGlobalValues = new BoatGlobalValues();
 
-  protected LeverSailDaggerboard leverSailDaggerboard = new LeverSailDaggerboard();
-
   protected Hull hull = new Hull();
-
-  protected ValueSet daggerboardOrKeel = new DaggerboardOrKeel();
 
   protected Rudder rudder = new Rudder();
 
@@ -40,7 +35,6 @@ public abstract class Boat
   {
     addValueSet(boatGlobalValues);
     addValueSet(hull);
-    addValueSet(daggerboardOrKeel);
     addValueSet(rudder);
 
     valuesAndCalculationRules.add(new QuantityEquality(
