@@ -1,0 +1,11 @@
+# kinematic viscosity for water
+# https://en.wikipedia.org/wiki/Viscosity#Kinematic_viscosity
+
+TEMPERATURE	KINEMATIC_VISCOSITY
+2	0.00000167
+5	0.00000152
+10	0.00000130
+15	0.00000113
+20	0.00000100
+25	8.91e-7
+30	7.97e-7
