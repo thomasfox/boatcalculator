@@ -9,7 +9,6 @@ public abstract class Hydrofoil extends Wing
   {
     super(id, name);
     setFixedValueNoOverwrite(MaterialConstants.DENSITY_WATER);
-    setFixedValueNoOverwrite(MaterialConstants.KINEMATIC_VISCOSITY_WATER);
     addToInput(PhysicalQuantity.WING_CHORD);
     addToInput(PhysicalQuantity.SECOND_MOMENT_OF_AREA);
     addHiddenOutput(PhysicalQuantity.VELOCITY); // same velocity as boat

@@ -48,6 +48,7 @@ public enum PhysicalQuantity
   GRAVITY_ACCELERATION("Fallbeschleunigung", "m/s^2", false, "Im schwerefeld der Erde"),
   KINEMATIC_VISCOSITY("Kinematische Viskosität", "m^2/s", false),
   DENSITY("Dichte", "kg/m^3", false),
+  TEMPERATURE("Temperatur", "°C", false),
   IMMERSION_DEPTH("Eintauchtiefe des Flügels", "m", false, "für horizontal verlaufende Flügel"),
   ANGLE_OF_ATTACK("Anstellwinkel", "°", false),
   MAX_ANGLE_OF_ATTACK("maximaler Anstellwinkel", "°", false, "wenn der Anstellwinkel nicht fest ist"),

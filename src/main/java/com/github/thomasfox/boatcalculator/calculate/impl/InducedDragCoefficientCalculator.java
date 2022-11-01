@@ -28,7 +28,7 @@ public class InducedDragCoefficientCalculator extends Calculator
     {
       // for low velocities, the calculated lift coefficient can be huge. This of course is not realistic.
       // So we impose a maximum lift coefficient of 3, which still unrealistic in practice,
-      // but small enough to get the order of magnitude of induced drag a,nd large enough to not
+      // but small enough to get the order of magnitude of induced drag and large enough to not
       // change the calculated drag in any desirable operation mode
       liftCoefficient = 3;
     }

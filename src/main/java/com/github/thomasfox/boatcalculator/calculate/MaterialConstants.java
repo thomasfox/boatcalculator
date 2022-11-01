@@ -5,10 +5,6 @@ import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValue;
 
 public class MaterialConstants
 {
-  // Water at 15°C
-  public static final PhysicalQuantityValue KINEMATIC_VISCOSITY_WATER
-     = new SimplePhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 0.000001375d);
-
   public static final PhysicalQuantityValue KINEMATIC_VISCOSITY_AIR
       = new SimplePhysicalQuantityValue(PhysicalQuantity.KINEMATIC_VISCOSITY, 15.2E-6d);
 

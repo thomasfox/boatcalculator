@@ -21,6 +21,7 @@ import com.github.thomasfox.boatcalculator.valueset.impl.Rigg;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rudder;
 import com.github.thomasfox.boatcalculator.valueset.impl.RudderLiftingFoil;
 import com.github.thomasfox.boatcalculator.valueset.impl.Takeoff;
+import com.github.thomasfox.boatcalculator.valueset.impl.Water;
 
 public class Moth extends Dinghy
 {
@@ -34,11 +35,25 @@ public class Moth extends Dinghy
     addValueSet(rudderLiftingFoil);
     addValueSet(takeoff);
 
-    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
-    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID, PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
+        PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID,
+        PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.KINEMATIC_VISCOSITY, Water.ID,
+        PhysicalQuantity.KINEMATIC_VISCOSITY, MainLiftingFoil.ID));
 
-    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, RudderLiftingFoil.ID));
-    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.WING_SPAN, Rudder.ID, PhysicalQuantity.SUBMERGENCE_DEPTH, RudderLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
+        PhysicalQuantity.VELOCITY, RudderLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.WING_SPAN, Rudder.ID,
+        PhysicalQuantity.SUBMERGENCE_DEPTH, RudderLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.KINEMATIC_VISCOSITY, Water.ID,
+        PhysicalQuantity.KINEMATIC_VISCOSITY, RudderLiftingFoil.ID));
 
     mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d); // 1.13 for current mach 2.41
     mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.11d); // 0.073 for current mach 2.41

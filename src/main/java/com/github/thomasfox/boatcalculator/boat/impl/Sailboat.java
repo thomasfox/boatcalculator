@@ -13,6 +13,7 @@ import com.github.thomasfox.boatcalculator.valueset.impl.Crew;
 import com.github.thomasfox.boatcalculator.valueset.impl.DaggerboardOrKeel;
 import com.github.thomasfox.boatcalculator.valueset.impl.LeverSailDaggerboard;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rigg;
+import com.github.thomasfox.boatcalculator.valueset.impl.Water;
 
 public class Sailboat extends Boat
 {
@@ -27,13 +28,31 @@ public class Sailboat extends Boat
     addValueSet(rigg);
     addValueSet(daggerboardOrKeel);
     addValueSet(leverSailDaggerboard);
-    valuesAndCalculationRules.add(new DriftToStableStateStrategy(PhysicalQuantity.ANGLE_OF_ATTACK, DaggerboardOrKeel.ID, PhysicalQuantity.DRIFT_ANGLE, BoatGlobalValues.ID, 0d));
-    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, Rigg.ID, PhysicalQuantity.LIFT, DaggerboardOrKeel.ID)); // assumption: rudder has no force
-    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, Rigg.ID));
-    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_SPEED, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, Crew.ID));
-    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BoatGlobalValues.ID, PhysicalQuantity.FLOW_DIRECTION, Rigg.ID));
-    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.APPARENT_WIND_ANGLE, BoatGlobalValues.ID, PhysicalQuantity.FLOW_DIRECTION, Crew.ID));
-    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.LATERAL_FORCE, Rigg.ID, PhysicalQuantity.FORCE, LeverSailDaggerboard.ID));
+    valuesAndCalculationRules.add(new DriftToStableStateStrategy(
+        PhysicalQuantity.ANGLE_OF_ATTACK, DaggerboardOrKeel.ID,
+        PhysicalQuantity.DRIFT_ANGLE, BoatGlobalValues.ID,
+        0d));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.LATERAL_FORCE, Rigg.ID,
+        PhysicalQuantity.LIFT, DaggerboardOrKeel.ID)); // assumption: rudder has no force
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.APPARENT_WIND_SPEED, BoatGlobalValues.ID,
+        PhysicalQuantity.VELOCITY, Rigg.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.APPARENT_WIND_SPEED, BoatGlobalValues.ID,
+        PhysicalQuantity.VELOCITY, Crew.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.APPARENT_WIND_ANGLE, BoatGlobalValues.ID,
+        PhysicalQuantity.FLOW_DIRECTION, Rigg.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.APPARENT_WIND_ANGLE, BoatGlobalValues.ID,
+        PhysicalQuantity.FLOW_DIRECTION, Crew.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.LATERAL_FORCE, Rigg.ID,
+        PhysicalQuantity.FORCE, LeverSailDaggerboard.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.KINEMATIC_VISCOSITY, Water.ID,
+        PhysicalQuantity.KINEMATIC_VISCOSITY, DaggerboardOrKeel.ID));
     valuesAndCalculationRules.add(new QuantityDifference(
         new PhysicalQuantityInSet(PhysicalQuantity.FORWARD_FORCE, BoatGlobalValues.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.DRIVING_FORCE, Rigg.ID),

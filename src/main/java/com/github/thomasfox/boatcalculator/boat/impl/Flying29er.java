@@ -13,6 +13,7 @@ import com.github.thomasfox.boatcalculator.valueset.impl.DoubleWing;
 import com.github.thomasfox.boatcalculator.valueset.impl.Hull;
 import com.github.thomasfox.boatcalculator.valueset.impl.MainLiftingFoil;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rudder;
+import com.github.thomasfox.boatcalculator.valueset.impl.Water;
 
 public class Flying29er extends Skiff29er
 {
@@ -22,8 +23,15 @@ public class Flying29er extends Skiff29er
   {
     valuesAndCalculationRules.add(mainLiftingFoil);
 
-    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
-    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID, PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
+        PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID,
+        PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.KINEMATIC_VISCOSITY, Water.ID,
+        PhysicalQuantity.KINEMATIC_VISCOSITY, MainLiftingFoil.ID));
 
     replaceHullWeightStrategy();
     replaceTotalDragStrategy();

@@ -20,6 +20,7 @@ import com.github.thomasfox.boatcalculator.valueset.impl.DoubleWing;
 import com.github.thomasfox.boatcalculator.valueset.impl.Hull;
 import com.github.thomasfox.boatcalculator.valueset.impl.MainLiftingFoil;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rudder;
+import com.github.thomasfox.boatcalculator.valueset.impl.Water;
 
 public class FlyingKayak extends Boat
 {
@@ -32,8 +33,18 @@ public class FlyingKayak extends Boat
   public FlyingKayak()
   {
     valuesAndCalculationRules.add(mainLiftingFoil);
-    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.VELOCITY, BoatGlobalValues.ID, PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
-    valuesAndCalculationRules.add(new QuantityEquality(PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID, PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
+        PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID,
+        PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.KINEMATIC_VISCOSITY, Water.ID,
+        PhysicalQuantity.KINEMATIC_VISCOSITY, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.KINEMATIC_VISCOSITY, Water.ID,
+        PhysicalQuantity.KINEMATIC_VISCOSITY, DaggerboardOrKeel.ID));
 
     addValueSet(crew);
     crew.addHiddenOutput(PhysicalQuantity.VELOCITY);
