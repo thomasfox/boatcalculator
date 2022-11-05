@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.github.thomasfox.boatcalculator.calculate.CompareWithOldResult;
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.boatcalculator.progress.CalculationState;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValueWithSetId;
@@ -147,6 +148,7 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationFro
         true,
         difference.getValue1(),
         difference.getValue2());
+    CalculationState.set(targetSet.getId() + ":" + targetQuantity, newTrialValue);
     if (newTrialValue != 0
         && Math.abs(trialValueDifference/newTrialValue) > CompareWithOldResult.RELATIVE_DIFFERENCE_THRESHOLD)
     {
