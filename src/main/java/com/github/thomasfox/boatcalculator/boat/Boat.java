@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
+import com.github.thomasfox.boatcalculator.calculate.strategy.ReduceSpanInMediumWhenFoilingStrategy;
 import com.github.thomasfox.boatcalculator.interpolate.QuantityRelationLoader;
 import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 import com.github.thomasfox.boatcalculator.valueset.ValuesAndCalculationRules;
@@ -56,6 +57,7 @@ public abstract class Boat
     valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.KINEMATIC_VISCOSITY, Water.ID,
         PhysicalQuantity.KINEMATIC_VISCOSITY, Rudder.ID));
+    valuesAndCalculationRules.add(new ReduceSpanInMediumWhenFoilingStrategy(rudder));
 
     Reader kinematicViscosityWaterRader = new InputStreamReader(getClass().getResourceAsStream("/kinematicViscosity_water.txt"));
     water.getQuantityRelations().add(new QuantityRelationLoader().load(kinematicViscosityWaterRader, "kinematicViscosityWater"));

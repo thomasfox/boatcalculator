@@ -25,16 +25,17 @@ public class Skiff29er extends Dinghy
     ((DaggerboardOrKeel) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 0.985d); // full blade span 118.5 cm, estimated box size 20 cm
     ((DaggerboardOrKeel) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.32d);
     ((DaggerboardOrKeel) daggerboardOrKeel).setProfileName("naca0010-il");
-    rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 6d); // rough estimate
-    rigg.setStartValueNoOverwrite(PhysicalQuantity.AREA, 12d); // no gennaker taken into account
+    rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN_IN_MEDIUM, 6d); // rough estimate
+    rigg.setStartValueNoOverwrite(PhysicalQuantity.AREA_IN_MEDIUM, 12d); // no gennaker taken into account
     crew.setStartValueNoOverwrite(PhysicalQuantity.MASS, 80d); // single person
-    crew.setStartValueNoOverwrite(PhysicalQuantity.AREA, 0.58); // 1.8m * 0.3m
+    crew.setStartValueNoOverwrite(PhysicalQuantity.AREA_IN_MEDIUM, 0.58); // 1.8m * 0.3m
     crew.setStartValueNoOverwrite(PhysicalQuantity.PARASITIC_DRAG_COEFFICIENT, 0.5); // rough estimate
-    rigg.setStartValueNoOverwrite(PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT, 3); // rough estimate based on COG of Sail plan
+    rigg.setStartValueNoOverwrite(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT, 3); // rough estimate based on COG of Sail plan
     boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.MASS, 100d); // old boat, nominal weight is 90 kg
+    boatGlobalValues.setFixedValueNoOverwrite(PhysicalQuantity.RIDING_HEIGHT, 0d);
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "0kg.txt"), "Hull@0kg"));
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "29er_204kg.txt"), "29er Hull@204kg"));
-    hull.setStartValueNoOverwrite(PhysicalQuantity.AREA, 0.375); // 1,5m * 25cm)
+    hull.setStartValueNoOverwrite(PhysicalQuantity.AREA_IN_MEDIUM, 0.375); // 1,5m * 25cm)
     hull.setStartValueNoOverwrite(PhysicalQuantity.TOTAL_DRAG_COEFFICIENT, 0.5); // rough estimate
 
     valuesAndCalculationRules.add(new TwoValuesShouldBeEqualModifyThirdStrategy(

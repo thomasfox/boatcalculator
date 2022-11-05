@@ -4,7 +4,7 @@ import java.io.File;
 
 import com.github.thomasfox.boatcalculator.boat.Boat;
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.boatcalculator.calculate.strategy.LiftByAngleOfAttackStrategy;
+import com.github.thomasfox.boatcalculator.calculate.strategy.LiftAndAngleOfAttackStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantitySum;
 import com.github.thomasfox.boatcalculator.calculate.strategy.StepComputationStrategy;
@@ -37,8 +37,11 @@ public class FlyingKayak extends Boat
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
     valuesAndCalculationRules.add(new QuantityEquality(
-        PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID,
+        PhysicalQuantity.WING_SPAN_IN_MEDIUM, DaggerboardOrKeel.ID,
         PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.WING_SPAN, MainLiftingFoil.ID,
+        PhysicalQuantity.WING_SPAN_IN_MEDIUM, MainLiftingFoil.ID));
     valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.KINEMATIC_VISCOSITY, Water.ID,
         PhysicalQuantity.KINEMATIC_VISCOSITY, MainLiftingFoil.ID));
@@ -54,6 +57,9 @@ public class FlyingKayak extends Boat
     boatGlobalValues.removeToInput(PhysicalQuantity.DRIFT_ANGLE);
     boatGlobalValues.removeToInput(PhysicalQuantity.POINTING_ANGLE);
     boatGlobalValues.setStartValue(PhysicalQuantity.MASS, 20d);
+    boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.RIDING_HEIGHT, 0.1);
+    boatGlobalValues.addToInput(PhysicalQuantity.RIDING_HEIGHT);
+
     valuesAndCalculationRules.add(new QuantitySum(
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Hull.ID),
@@ -102,17 +108,12 @@ public class FlyingKayak extends Boat
       }
     }
     valuesAndCalculationRules.remove(weightStrategy);
-    valuesAndCalculationRules.add(new LiftByAngleOfAttackStrategy(
+    valuesAndCalculationRules.add(new LiftAndAngleOfAttackStrategy(
         new PhysicalQuantityInSet[] {
             new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Crew.ID),
             new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BoatGlobalValues.ID)
           },
-        new PhysicalQuantityInSet[] {
-            new PhysicalQuantityInSet(PhysicalQuantity.LIFT, MainLiftingFoil.ID)
-          },
-        new PhysicalQuantityInSet[] {
-            new PhysicalQuantityInSet(PhysicalQuantity.ANGLE_OF_ATTACK, MainLiftingFoil.ID)
-          },
+        new ValueSet[] {mainLiftingFoil},
         new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID)
         ));
   }

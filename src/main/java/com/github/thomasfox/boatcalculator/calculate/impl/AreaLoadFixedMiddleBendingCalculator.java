@@ -7,6 +7,7 @@ import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 /**
  * Gibt die Durchbiegung eines Flügels, der in der Mitte fest gelagert ist an den Enden frei ist, zurück.
  * Der Flügel ist über die gesamte Fläche gleichmäßig belastet.
+ * TODO passt nicht für WING_SPAN_IN_MEDIUM
  */
 public class AreaLoadFixedMiddleBendingCalculator extends Calculator
 {

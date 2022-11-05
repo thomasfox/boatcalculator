@@ -10,6 +10,7 @@ import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityValue
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValueWithSetId;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValuesWithSetIdPerValue;
+import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,43 @@ public abstract class Calculator
   public PhysicalQuantity getOutputQuantity()
   {
     return outputQuantity;
+  }
+
+  /**
+   * Calculates and sets the calculated value in the passed value set,
+   * if calculation is possible.
+   *
+   * @param valueSet the value set to apply the calculator to, not null.
+   *
+   * @return whether the value was changed by a non-negligible amount.
+   */
+  public boolean apply(ValueSet valueSet)
+  {
+    if (isOutputFixed(valueSet))
+    {
+      return false;
+    }
+    if (!areNeededQuantitiesPresent(valueSet))
+    {
+      return false;
+    }
+    CalculationResult calculationResult = calculate(valueSet);
+    boolean changed = !calculationResult.relativeDifferenceIsBelowThreshold();
+    if (changed)
+    {
+      log.debug("Calculated new value " + calculationResult.getValue() + " for " + outputQuantity + " in " + valueSet.getId());
+      valueSet.setCalculatedValueNoOverwrite(
+          new SimplePhysicalQuantityValue(getOutputQuantity(), calculationResult.getValue()),
+          getClass().getSimpleName(),
+          calculationResult.isTrial(),
+          valueSet.getKnownValuesAsArray(getInputQuantities()));
+      return true;
+    }
+    else
+    {
+      log.debug("Relative difference is below Threshold for " + getOutputQuantity() + " in " + valueSet.getId());
+      return false;
+    }
   }
 
   public CalculationResult calculate(ValueSet input)

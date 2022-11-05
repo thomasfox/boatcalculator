@@ -13,16 +13,16 @@ public class InducedDragCoefficientCalculator extends Calculator
   public InducedDragCoefficientCalculator()
   {
     super(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT,
-        PhysicalQuantity.WING_SPAN,
-        PhysicalQuantity.AREA,
+        PhysicalQuantity.WING_SPAN_IN_MEDIUM,
+        PhysicalQuantity.AREA_IN_MEDIUM,
         PhysicalQuantity.LIFT_COEFFICIENT);
   }
 
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
-    double wingSpan = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_SPAN).getValue();
-    double wingArea = valueSet.getKnownQuantityValue(PhysicalQuantity.AREA).getValue();
+    double wingSpan = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_SPAN_IN_MEDIUM).getValue();
+    double wingArea = valueSet.getKnownQuantityValue(PhysicalQuantity.AREA_IN_MEDIUM).getValue();
     double liftCoefficient = valueSet.getKnownQuantityValue(PhysicalQuantity.LIFT_COEFFICIENT).getValue();
     if (liftCoefficient > 3)
     {

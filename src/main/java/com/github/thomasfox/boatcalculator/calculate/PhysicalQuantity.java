@@ -24,7 +24,8 @@ public enum PhysicalQuantity
   FORWARD_FORCE("Gesamtkraft Vorwärts", "N", true),
   REYNOLDS_NUMBER("Reynoldszahl", null, false),
   WING_SPAN("Spannweite des Flügels", "m", false, "quer zur Profilierung, von einem Ende zum anderen"),
-  AREA("Fläche (z.B. eines Flügels)", "m^2", true),
+  WING_SPAN_IN_MEDIUM("Spannweite im Medium", "m", false, "quer zur Profilierung, die Länge die im dichten Medium (Wasser) ist"),
+  AREA_IN_MEDIUM("Fläche im Medium", "m^2", true),
   WING_CHORD("Tiefe des Flügels", "m", false, "quer zur Spannweite, gleich über die geamte Spannweite"),
   WING_THICKNESS("Dicke des Flügels", "m", false, "Dicke an der dicksten Stelle"),
   WING_RELATIVE_THICKNESS("Relative Dicke des Flügels", null, false, "Dicke an der dicksten Stelle geteilt durch Profiltiefe"),
@@ -61,7 +62,8 @@ public enum PhysicalQuantity
   AREA_OF_CROSSECTION("Fläche des Querschnitts", "m^2", false),
   NORMALIZED_AREA_OF_CROSSECTION("Normalisierte Fläche des Querschnitts", "m^2", false, "Querschnittsfläche für ein Profil der Tiefe 1 und gleichem Tiefe/Dickenverhältnis wie das eigentliche Profil"),
   MAX_RELATIVE_CAMBER("Maximale relative Assymetrie", null, false, "Maximale relative Abweichung des Mittels von Ober- und Unterseite von der Nullinie des Profils bzgl der maximalen Dicke"),
-  RIGG_CENTER_OF_EFFORT_HEIGHT("Höhe des Rigg-Druckpunktes", "m", null, "gerechnet vom Boden des Bootes (wo das Schwert/der Kiel beginnt)"),
+  CENTER_OF_EFFORT_HEIGHT("Höhe des Druckpunktes", "m", false, "gerechnet vom Boden des Bootes (wo das Schwert/der Kiel beginnt)"),
+  RIDING_HEIGHT("Flughöhe", "m", null, "Abstand Wasseroberfläche zum Boden des Bootes (wo das Schwert beginnt)"),
   PROFILE("Profil", null, false);
 
   private String displayName;

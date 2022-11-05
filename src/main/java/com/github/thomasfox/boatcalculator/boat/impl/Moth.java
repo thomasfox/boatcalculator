@@ -4,7 +4,7 @@ import java.io.File;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.calculate.strategy.IncreaseQuantityTillOtherReachesUpperLimitStrategy;
-import com.github.thomasfox.boatcalculator.calculate.strategy.LiftByAngleOfAttackStrategy;
+import com.github.thomasfox.boatcalculator.calculate.strategy.LiftAndAngleOfAttackStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantitySum;
 import com.github.thomasfox.boatcalculator.calculate.strategy.StepComputationStrategy;
@@ -12,10 +12,12 @@ import com.github.thomasfox.boatcalculator.calculate.strategy.TwoValuesShouldBeE
 import com.github.thomasfox.boatcalculator.gui.SwingGui;
 import com.github.thomasfox.boatcalculator.interpolate.QuantityRelationLoader;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
+import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
 import com.github.thomasfox.boatcalculator.valueset.impl.Crew;
 import com.github.thomasfox.boatcalculator.valueset.impl.DaggerboardOrKeel;
 import com.github.thomasfox.boatcalculator.valueset.impl.Hull;
+import com.github.thomasfox.boatcalculator.valueset.impl.Hydrofoil;
 import com.github.thomasfox.boatcalculator.valueset.impl.MainLiftingFoil;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rigg;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rudder;
@@ -39,21 +41,27 @@ public class Moth extends Dinghy
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
     valuesAndCalculationRules.add(new QuantityEquality(
-        PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID,
+        PhysicalQuantity.WING_SPAN_IN_MEDIUM, DaggerboardOrKeel.ID,
         PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
     valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.KINEMATIC_VISCOSITY, Water.ID,
         PhysicalQuantity.KINEMATIC_VISCOSITY, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.WING_SPAN, MainLiftingFoil.ID,
+        PhysicalQuantity.WING_SPAN_IN_MEDIUM, MainLiftingFoil.ID));
 
     valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, RudderLiftingFoil.ID));
     valuesAndCalculationRules.add(new QuantityEquality(
-        PhysicalQuantity.WING_SPAN, Rudder.ID,
+        PhysicalQuantity.WING_SPAN_IN_MEDIUM, Rudder.ID,
         PhysicalQuantity.SUBMERGENCE_DEPTH, RudderLiftingFoil.ID));
     valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.KINEMATIC_VISCOSITY, Water.ID,
         PhysicalQuantity.KINEMATIC_VISCOSITY, RudderLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.WING_SPAN, RudderLiftingFoil.ID,
+        PhysicalQuantity.WING_SPAN_IN_MEDIUM, RudderLiftingFoil.ID));
 
     mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d); // 1.13 for current mach 2.41
     mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.11d); // 0.073 for current mach 2.41
@@ -61,10 +69,11 @@ public class Moth extends Dinghy
     mainLiftingFoil.setFixedValueNoOverwrite(
         PhysicalQuantity.MODULUS_OF_ELASTICITY,
         PhysicalQuantity.MODULUS_OF_ELASTICITY.getFixedValue().doubleValue());
+    mainLiftingFoil.addHiddenOutput(PhysicalQuantity.WING_SPAN_IN_MEDIUM);
 
-    ((DaggerboardOrKeel) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d);
-    ((DaggerboardOrKeel) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.12d);
-    ((DaggerboardOrKeel) daggerboardOrKeel).setProfileName("e521-il");
+    ((Hydrofoil) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d);
+    ((Hydrofoil) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.12d);
+    ((Hydrofoil) daggerboardOrKeel).setProfileName("e521-il");
 
     rudderLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 0.7d);
     rudderLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.08d);
@@ -72,6 +81,7 @@ public class Moth extends Dinghy
     rudderLiftingFoil.setFixedValueNoOverwrite(
         PhysicalQuantity.MODULUS_OF_ELASTICITY,
         PhysicalQuantity.MODULUS_OF_ELASTICITY.getFixedValue().doubleValue());
+    rudderLiftingFoil.addHiddenOutput(PhysicalQuantity.WING_SPAN_IN_MEDIUM);
 
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d);
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.12d);
@@ -79,16 +89,18 @@ public class Moth extends Dinghy
     rudder.setProfileName("e521-il");
 
     rigg.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 5.3d); // from north-sails-international-moth-speed-guide
-    rigg.setStartValueNoOverwrite(PhysicalQuantity.AREA, 8d);
-    rigg.setStartValueNoOverwrite(PhysicalQuantity.RIGG_CENTER_OF_EFFORT_HEIGHT, 2); // rough estimate
+    rigg.setStartValueNoOverwrite(PhysicalQuantity.AREA_IN_MEDIUM, 8d);
+    rigg.setStartValueNoOverwrite(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT, 3.08); // from picture with Hyde A2m sail
 
     crew.setStartValueNoOverwrite(PhysicalQuantity.MASS, 80d); // single person
     // Area and parasitic drag coefficient together roughly get to a parasitic drag of 17 N at a speed of 6.1 m/s
     // which was measured by Beaver. This contains the parasitic drag from both boat and crew.
-    crew.setStartValueNoOverwrite(PhysicalQuantity.AREA, 1);
+    crew.setStartValueNoOverwrite(PhysicalQuantity.AREA_IN_MEDIUM, 1);
     crew.setStartValueNoOverwrite(PhysicalQuantity.PARASITIC_DRAG_COEFFICIENT, 0.75);
 
     boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.MASS, 40d); // waszp
+    boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.RIDING_HEIGHT, 0.3);
+    boatGlobalValues.addToInput(PhysicalQuantity.RIDING_HEIGHT);
 
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "0kg.txt"), "Hull@0kg"));
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_27kg.txt"), "Moth@27kg"));
@@ -124,19 +136,12 @@ public class Moth extends Dinghy
       }
     }
     valuesAndCalculationRules.remove(weightStrategy);
-    valuesAndCalculationRules.add(new LiftByAngleOfAttackStrategy(
+    valuesAndCalculationRules.add(new LiftAndAngleOfAttackStrategy(
         new PhysicalQuantityInSet[] {
             new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Crew.ID),
             new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BoatGlobalValues.ID)
           },
-        new PhysicalQuantityInSet[] {
-            new PhysicalQuantityInSet(PhysicalQuantity.LIFT, MainLiftingFoil.ID),
-            new PhysicalQuantityInSet(PhysicalQuantity.LIFT, RudderLiftingFoil.ID)
-          },
-        new PhysicalQuantityInSet[] {
-            new PhysicalQuantityInSet(PhysicalQuantity.ANGLE_OF_ATTACK, MainLiftingFoil.ID),
-            new PhysicalQuantityInSet(PhysicalQuantity.ANGLE_OF_ATTACK, RudderLiftingFoil.ID)
-          },
+        new ValueSet[] {mainLiftingFoil, rudderLiftingFoil},
         new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID)
         ));
   }

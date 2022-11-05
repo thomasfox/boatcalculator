@@ -3,6 +3,7 @@ package com.github.thomasfox.boatcalculator.boat.impl;
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantitySum;
+import com.github.thomasfox.boatcalculator.calculate.strategy.ReduceSpanInMediumWhenFoilingStrategy;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.boatcalculator.valueset.SimpleValueSet;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
@@ -35,5 +36,6 @@ public class Dinghy extends Sailboat
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, Rudder.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, DaggerboardOrKeel.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.BRAKING_FORCE, Crew.ID)));
+    valuesAndCalculationRules.add(new ReduceSpanInMediumWhenFoilingStrategy(rudder));
   }
 }

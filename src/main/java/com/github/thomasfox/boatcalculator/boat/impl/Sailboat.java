@@ -6,6 +6,7 @@ import com.github.thomasfox.boatcalculator.calculate.strategy.DriftToStableState
 import com.github.thomasfox.boatcalculator.calculate.strategy.LeverSailDaggerboardStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityDifference;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
+import com.github.thomasfox.boatcalculator.calculate.strategy.ReduceSpanInMediumWhenFoilingStrategy;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
 import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
@@ -53,10 +54,15 @@ public class Sailboat extends Boat
     valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.KINEMATIC_VISCOSITY, Water.ID,
         PhysicalQuantity.KINEMATIC_VISCOSITY, DaggerboardOrKeel.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.WING_SPAN, Rigg.ID,
+        PhysicalQuantity.WING_SPAN_IN_MEDIUM, Rigg.ID));
+    valuesAndCalculationRules.add(new ReduceSpanInMediumWhenFoilingStrategy(daggerboardOrKeel));
     valuesAndCalculationRules.add(new QuantityDifference(
         new PhysicalQuantityInSet(PhysicalQuantity.FORWARD_FORCE, BoatGlobalValues.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.DRIVING_FORCE, Rigg.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID)));
     valuesAndCalculationRules.add(new LeverSailDaggerboardStrategy());
+
   }
 }

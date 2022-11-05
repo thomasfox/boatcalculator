@@ -1,11 +1,13 @@
 package com.github.thomasfox.boatcalculator.boat.impl;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.boatcalculator.calculate.strategy.LiftByAngleOfAttackStrategy;
+import com.github.thomasfox.boatcalculator.calculate.strategy.LiftAndAngleOfAttackStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantitySum;
+import com.github.thomasfox.boatcalculator.calculate.strategy.ReduceSpanInMediumWhenFoilingStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.StepComputationStrategy;
 import com.github.thomasfox.boatcalculator.value.PhysicalQuantityInSet;
+import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 import com.github.thomasfox.boatcalculator.valueset.impl.BoatGlobalValues;
 import com.github.thomasfox.boatcalculator.valueset.impl.Crew;
 import com.github.thomasfox.boatcalculator.valueset.impl.DaggerboardOrKeel;
@@ -27,11 +29,17 @@ public class Flying29er extends Skiff29er
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, MainLiftingFoil.ID));
     valuesAndCalculationRules.add(new QuantityEquality(
-        PhysicalQuantity.WING_SPAN, DaggerboardOrKeel.ID,
+        PhysicalQuantity.WING_SPAN_IN_MEDIUM, DaggerboardOrKeel.ID,
         PhysicalQuantity.SUBMERGENCE_DEPTH, MainLiftingFoil.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.WING_SPAN, MainLiftingFoil.ID,
+        PhysicalQuantity.WING_SPAN_IN_MEDIUM, MainLiftingFoil.ID));
     valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.KINEMATIC_VISCOSITY, Water.ID,
         PhysicalQuantity.KINEMATIC_VISCOSITY, MainLiftingFoil.ID));
+
+    boatGlobalValues.setStartValue(PhysicalQuantity.RIDING_HEIGHT, 0.1);
+    boatGlobalValues.addToInput(PhysicalQuantity.RIDING_HEIGHT);
 
     replaceHullWeightStrategy();
     replaceTotalDragStrategy();
@@ -44,6 +52,7 @@ public class Flying29er extends Skiff29er
     singleDaggerboard.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1.5d);
     singleDaggerboard.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.16d);
     singleDaggerboard.setProfileName("m3-il");
+    valuesAndCalculationRules.add(new ReduceSpanInMediumWhenFoilingStrategy(singleDaggerboard));
     daggerboardOrKeel = new DoubleWing(singleDaggerboard, singleDaggerboard.getId(), singleDaggerboard.getDisplayName());
     addValueSet(daggerboardOrKeel);
   }
@@ -61,17 +70,12 @@ public class Flying29er extends Skiff29er
       }
     }
     valuesAndCalculationRules.remove(weightStrategy);
-    valuesAndCalculationRules.add(new LiftByAngleOfAttackStrategy(
+    valuesAndCalculationRules.add(new LiftAndAngleOfAttackStrategy(
         new PhysicalQuantityInSet[] {
             new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Crew.ID),
             new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BoatGlobalValues.ID)
           },
-        new PhysicalQuantityInSet[] {
-            new PhysicalQuantityInSet(PhysicalQuantity.LIFT, MainLiftingFoil.ID)
-          },
-        new PhysicalQuantityInSet[] {
-            new PhysicalQuantityInSet(PhysicalQuantity.ANGLE_OF_ATTACK, MainLiftingFoil.ID)
-          },
+        new ValueSet[] {mainLiftingFoil},
         new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID)
         ));
   }

@@ -133,6 +133,14 @@ public class SimpleValueSet implements ValueSet
     fixedValues.setValueNoOverwrite(physicalQuantity, value);
   }
 
+  public void removeFixedValueNoOverwrite(PhysicalQuantity physicalQuantity)
+  {
+    startValues.checkQuantityNotSetForWrite(physicalQuantity);
+    calculatedValues.checkQuantityNotSetForWrite(physicalQuantity);
+    fixedValues.remove(physicalQuantity);
+  }
+
+
   @Override
   public void setFixedValueNoOverwrite(PhysicalQuantityValue toSet)
   {
@@ -234,6 +242,12 @@ public class SimpleValueSet implements ValueSet
   public void addHiddenOutput(PhysicalQuantity toAdd)
   {
     hiddenOutputs.add(toAdd);
+  }
+
+
+  public boolean removeHiddenOutput(PhysicalQuantity toRemove)
+  {
+    return hiddenOutputs.remove(toRemove);
   }
 
   @Override

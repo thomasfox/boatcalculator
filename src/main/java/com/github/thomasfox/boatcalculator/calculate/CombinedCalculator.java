@@ -10,7 +10,7 @@ import org.slf4j.MDC;
 
 import com.github.thomasfox.boatcalculator.calculate.impl.ApparentWindDirectionCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.ApparentWindSpeedCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.AreaCalculator;
+import com.github.thomasfox.boatcalculator.calculate.impl.AreaInMediumCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.AreaLoadFixedMiddleBendingCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.BrakingForceCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.CrosssectionAreaCalculator;
@@ -40,11 +40,10 @@ import com.github.thomasfox.boatcalculator.calculate.impl.VMGCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.WaveMakingDragCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.WaveMakingDragCoefficientCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.WeightFromMassCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.WingChordFromAreaAndSpanCalculator;
+import com.github.thomasfox.boatcalculator.calculate.impl.WingChordFromAreaAndSpanInMediumCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.WingChordFromSecondMomentOfAreaCalculator;
 import com.github.thomasfox.boatcalculator.interpolate.QuantityRelation;
 import com.github.thomasfox.boatcalculator.interpolate.QuantityRelationsCalculator;
-import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 
 import lombok.extern.slf4j.Slf4j;
@@ -58,8 +57,8 @@ public class CombinedCalculator
 
   public CombinedCalculator()
   {
-    calculators.add(new AreaCalculator());
-    calculators.add(new WingChordFromAreaAndSpanCalculator());
+    calculators.add(new AreaInMediumCalculator());
+    calculators.add(new WingChordFromAreaAndSpanInMediumCalculator());
     calculators.add(new ReynoldsNumberCalculator());
     calculators.add(new InducedDragCoefficientCalculator());
     calculators.add(new InducedDragCalculator());
@@ -142,30 +141,10 @@ public class CombinedCalculator
       changedInCurrentIteration = false;
       for (Calculator calculator: calculators)
       {
-        if (calculator.isOutputFixed(valueSet))
+        if (calculator.apply(valueSet))
         {
-          continue;
-        }
-        if (!calculator.areNeededQuantitiesPresent(valueSet))
-        {
-          continue;
-        }
-        CalculationResult calculationResult = calculator.calculate(valueSet);
-        boolean changed = !calculationResult.relativeDifferenceIsBelowThreshold();
-        changedInCurrentIteration |= changed;
-        if (changed)
-        {
-          log.debug("Calculated new value " + calculationResult.getValue() + " for " + calculator.getOutputQuantity() + " in " + valueSet.getId());
-          valueSet.setCalculatedValueNoOverwrite(
-              new SimplePhysicalQuantityValue(calculator.getOutputQuantity(), calculationResult.getValue()),
-              calculator.getClass().getSimpleName(),
-              calculationResult.isTrial(),
-              valueSet.getKnownValuesAsArray(calculator.getInputQuantities()));
+          changedInCurrentIteration = true;
           changedOverall.add(valueSet.getId() + ":" + calculator.getOutputQuantity());
-        }
-        else
-        {
-          log.debug("Relative difference is below Threshold for " + calculator.getOutputQuantity() + " in " + valueSet.getId());
         }
       }
     }

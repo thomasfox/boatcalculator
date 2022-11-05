@@ -13,16 +13,16 @@ public class LiftCoefficient3DFromLiftCoefficientCalculator extends Calculator
   {
     super(PhysicalQuantity.LIFT_COEFFICIENT_3D,
         PhysicalQuantity.LIFT_COEFFICIENT,
-        PhysicalQuantity.WING_SPAN,
-        PhysicalQuantity.AREA);
+        PhysicalQuantity.WING_SPAN_IN_MEDIUM,
+        PhysicalQuantity.AREA_IN_MEDIUM);
   }
 
   @Override
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
     double liftCoefficient = valueSet.getKnownQuantityValue(PhysicalQuantity.LIFT_COEFFICIENT).getValue();
-    double wingSpan = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_SPAN).getValue();
-    double wingArea = valueSet.getKnownQuantityValue(PhysicalQuantity.AREA).getValue();
+    double wingSpan = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_SPAN_IN_MEDIUM).getValue();
+    double wingArea = valueSet.getKnownQuantityValue(PhysicalQuantity.AREA_IN_MEDIUM).getValue();
 
     double aspectRatio = wingSpan * wingSpan / wingArea;
     double result = liftCoefficient / (1 + 2 / aspectRatio);

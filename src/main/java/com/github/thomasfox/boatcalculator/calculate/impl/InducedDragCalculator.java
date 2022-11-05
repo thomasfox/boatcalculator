@@ -13,7 +13,7 @@ public class InducedDragCalculator extends Calculator
   {
     super(PhysicalQuantity.INDUCED_DRAG,
         PhysicalQuantity.INDUCED_DRAG_COEFFICIENT,
-        PhysicalQuantity.AREA,
+        PhysicalQuantity.AREA_IN_MEDIUM,
         PhysicalQuantity.VELOCITY,
         PhysicalQuantity.DENSITY);
   }
@@ -22,7 +22,7 @@ public class InducedDragCalculator extends Calculator
   protected double calculateWithoutChecks(ValueSet valueSet)
   {
     double dragCoefficient = valueSet.getKnownQuantityValue(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT).getValue();
-    double wingArea = valueSet.getKnownQuantityValue(PhysicalQuantity.AREA).getValue();
+    double wingArea = valueSet.getKnownQuantityValue(PhysicalQuantity.AREA_IN_MEDIUM).getValue();
     double velocity = valueSet.getKnownQuantityValue(PhysicalQuantity.VELOCITY).getValue();
     double density = valueSet.getKnownQuantityValue(PhysicalQuantity.DENSITY).getValue();
 
