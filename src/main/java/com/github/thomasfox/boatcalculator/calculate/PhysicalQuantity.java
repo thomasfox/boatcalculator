@@ -23,10 +23,12 @@ public enum PhysicalQuantity
   BRAKING_FORCE("Bremskraft", "N", true),
   FORWARD_FORCE("Gesamtkraft Vorwärts", "N", true),
   REYNOLDS_NUMBER("Reynoldszahl", null, false),
+  HALFWING_SPAN("Spannweite des Flügels", "m", false, "quer zur Profilierung, von einem Ende zum anderen, ein Ende ist die Mitte"),
   WING_SPAN("Spannweite des Flügels", "m", false, "quer zur Profilierung, von einem Ende zum anderen"),
   WING_SPAN_IN_MEDIUM("Spannweite im Medium", "m", false, "quer zur Profilierung, die Länge die im dichten Medium (Wasser) ist"),
   AREA_IN_MEDIUM("Fläche im Medium", "m^2", true),
   WING_CHORD("Tiefe des Flügels", "m", false, "quer zur Spannweite, gleich über die geamte Spannweite"),
+  SEMIWING_ASPECT_RATIO("Halbflügelstreckung", null, false),
   WING_THICKNESS("Dicke des Flügels", "m", false, "Dicke an der dicksten Stelle"),
   WING_RELATIVE_THICKNESS("Relative Dicke des Flügels", null, false, "Dicke an der dicksten Stelle geteilt durch Profiltiefe"),
   VELOCITY("Geschwindigkeit", "m/s", false, "Geschwindigkeit der Strömung"),
@@ -36,7 +38,13 @@ public enum PhysicalQuantity
   VMG("VMG", "m/s", false, "Komponente der Geschwindigkeit in Windrichtung"),
   APPARENT_WIND_ANGLE("Scheinbare Windrichtung", "°", false, "Winkel zwischen Symmetrieachse des Bootes und Scheinbarer Windrichtung"),
   APPARENT_WIND_SPEED("Scheinbarer Wind", "m/s", false),
+  // die folgenden 2 Punkte bechreiben die Abweichung einer Fläche zur Horizontalen
+  // die X-Achse ist nach hinten, die X-Achse seitwärts und die Z-Aches nach oben
+  // Erst wird die Flächennormale aus der Z-Richtung hinaus in der X-Y-Ebene um den seitlichen Kippwinkel gedreht,
+  // und dann wird sie in Richtung X-Achse um den Rückwärts-Kippwinkel gedreht.
   DRIFT_ANGLE("Abdrift", "°", false, "Winkel zwischen Symmetrieachse des Bootes und dem Geschwindigkeitsvektor durch das Wasser"),
+  SIDEWAY_ANGLE("Seitlicher Kippwinkel", "°", false, "wieviel der Flügel/die Fläche um die X-Achse im Vergleich zur Horizontalen gedreht ist"),
+  BACKWAY_ANGLE("Rückwärts-Kippwinkel", "°", false, "wieviel der Flügel/die Fläche um die um dem Kippwinkel gedrehte Y-Achse im Vergleich zur Horizontalen gedreht ist"),
   WIND_SPEED("Windgeschwindigkeit", "m/s", false, "Das Wasser wird als ruhendes Bezugssystem genommen"),
   FORCE("Kraft", "N", true),
   SUBMERGENCE_DEPTH("Eintauchtiefe", "m", false),

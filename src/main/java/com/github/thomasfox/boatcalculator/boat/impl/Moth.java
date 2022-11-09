@@ -7,6 +7,7 @@ import com.github.thomasfox.boatcalculator.calculate.strategy.IncreaseQuantityTi
 import com.github.thomasfox.boatcalculator.calculate.strategy.LiftAndAngleOfAttackStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantitySum;
+import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityTimesMinusOne;
 import com.github.thomasfox.boatcalculator.calculate.strategy.StepComputationStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.TwoValuesShouldBeEqualModifyThirdStrategy;
 import com.github.thomasfox.boatcalculator.gui.SwingGui;
@@ -23,18 +24,24 @@ import com.github.thomasfox.boatcalculator.valueset.impl.Rigg;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rudder;
 import com.github.thomasfox.boatcalculator.valueset.impl.RudderLiftingFoil;
 import com.github.thomasfox.boatcalculator.valueset.impl.Takeoff;
+import com.github.thomasfox.boatcalculator.valueset.impl.TrampolineWing1;
+import com.github.thomasfox.boatcalculator.valueset.impl.TrampolineWing2;
 import com.github.thomasfox.boatcalculator.valueset.impl.Water;
 
 public class Moth extends Dinghy
 {
   protected MainLiftingFoil mainLiftingFoil = new MainLiftingFoil();
   protected RudderLiftingFoil rudderLiftingFoil = new RudderLiftingFoil();
+  protected TrampolineWing1 trampolineWing1 = new TrampolineWing1();
+  protected TrampolineWing2 trampolineWing2 = new TrampolineWing2();
   protected Takeoff takeoff = new Takeoff();
 
   public Moth()
   {
     addValueSet(mainLiftingFoil);
     addValueSet(rudderLiftingFoil);
+    addValueSet(trampolineWing1);
+    addValueSet(trampolineWing2);
     addValueSet(takeoff);
 
     valuesAndCalculationRules.add(new QuantityEquality(
@@ -62,6 +69,41 @@ public class Moth extends Dinghy
     valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.WING_SPAN, RudderLiftingFoil.ID,
         PhysicalQuantity.WING_SPAN_IN_MEDIUM, RudderLiftingFoil.ID));
+
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.APPARENT_WIND_ANGLE, BoatGlobalValues.ID,
+        PhysicalQuantity.APPARENT_WIND_ANGLE, TrampolineWing1.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.APPARENT_WIND_ANGLE, BoatGlobalValues.ID,
+        PhysicalQuantity.APPARENT_WIND_ANGLE, TrampolineWing2.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.HALFWING_SPAN, TrampolineWing1.ID,
+        PhysicalQuantity.WING_SPAN_IN_MEDIUM, TrampolineWing1.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.HALFWING_SPAN, TrampolineWing2.ID,
+        PhysicalQuantity.WING_SPAN_IN_MEDIUM, TrampolineWing2.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.APPARENT_WIND_SPEED, BoatGlobalValues.ID,
+        PhysicalQuantity.VELOCITY, TrampolineWing1.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.APPARENT_WIND_SPEED, BoatGlobalValues.ID,
+        PhysicalQuantity.VELOCITY, TrampolineWing2.ID));
+
+    valuesAndCalculationRules.add(new QuantityTimesMinusOne(
+        PhysicalQuantity.SIDEWAY_ANGLE, TrampolineWing1.ID,
+        PhysicalQuantity.SIDEWAY_ANGLE, TrampolineWing2.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.BACKWAY_ANGLE, TrampolineWing1.ID,
+        PhysicalQuantity.BACKWAY_ANGLE, TrampolineWing2.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.WING_CHORD, TrampolineWing1.ID,
+        PhysicalQuantity.WING_CHORD, TrampolineWing2.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.HALFWING_SPAN, TrampolineWing1.ID,
+        PhysicalQuantity.HALFWING_SPAN, TrampolineWing2.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT, TrampolineWing1.ID,
+        PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT, TrampolineWing2.ID));
 
     mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d); // 1.13 for current mach 2.41
     mainLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.11d); // 0.073 for current mach 2.41
@@ -107,6 +149,13 @@ public class Moth extends Dinghy
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_54kg.txt"), "Moth@54kg"));
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_108kg.txt"), "Moth@108kg"));
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_158kg_interpolated.txt"), "Moth@158kgInterpolated"));
+
+    trampolineWing1.setStartValue(PhysicalQuantity.SIDEWAY_ANGLE, 20);
+    trampolineWing1.setStartValue(PhysicalQuantity.BACKWAY_ANGLE, 0);
+    trampolineWing1.setStartValue(PhysicalQuantity.WING_CHORD, 2.5);
+    trampolineWing1.setStartValue(PhysicalQuantity.HALFWING_SPAN, 1.25);
+    trampolineWing1.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "flatPlate_140000_ar05.txt"), "flatPlate@140000,0.5"));
+    trampolineWing2.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "flatPlate_140000_ar05.txt"), "flatPlate@140000,0.5"));
 
     valuesAndCalculationRules.add(new TwoValuesShouldBeEqualModifyThirdStrategy(
         PhysicalQuantity.DRIVING_FORCE, Rigg.ID,

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.MDC;
 
+import com.github.thomasfox.boatcalculator.calculate.impl.AngleOfAttackFromAngleToHorizontalCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.ApparentWindDirectionCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.ApparentWindSpeedCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.AreaInMediumCalculator;
@@ -15,6 +16,7 @@ import com.github.thomasfox.boatcalculator.calculate.impl.AreaLoadFixedMiddleBen
 import com.github.thomasfox.boatcalculator.calculate.impl.BrakingForceCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.CrosssectionAreaCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.DrivingForceCalculator;
+import com.github.thomasfox.boatcalculator.calculate.impl.DrivingForceForBentWingCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.FroudeNumberCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.InducedDragCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.InducedDragCoefficientCalculator;
@@ -30,10 +32,12 @@ import com.github.thomasfox.boatcalculator.calculate.impl.ProfileDragCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.ReynoldsNumberCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.SailingAngleCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.SecondMomentOfAreaCalculator;
+import com.github.thomasfox.boatcalculator.calculate.impl.SemiwingAspectRatioCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.SurfacePiercingDragCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.SurfacePiercingDragCoefficientCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.ThicknessCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.TorqueCalculator;
+import com.github.thomasfox.boatcalculator.calculate.impl.TorqueForBentWingCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.TotalDragCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.TotalDragCoefficientCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.VMGCalculator;
@@ -57,7 +61,9 @@ public class CombinedCalculator
 
   public CombinedCalculator()
   {
+    calculators.add(new AngleOfAttackFromAngleToHorizontalCalculator());
     calculators.add(new AreaInMediumCalculator());
+    calculators.add(new SemiwingAspectRatioCalculator());
     calculators.add(new WingChordFromAreaAndSpanInMediumCalculator());
     calculators.add(new ReynoldsNumberCalculator());
     calculators.add(new InducedDragCoefficientCalculator());
@@ -91,6 +97,8 @@ public class CombinedCalculator
     calculators.add(new WeightFromMassCalculator());
     calculators.add(new SurfacePiercingDragCalculator());
     calculators.add(new SurfacePiercingDragCoefficientCalculator());
+    calculators.add(new DrivingForceForBentWingCalculator());
+    calculators.add(new TorqueForBentWingCalculator());
   }
 
   public void setQuantityRelations(List<QuantityRelation> quantityRelationsList)
