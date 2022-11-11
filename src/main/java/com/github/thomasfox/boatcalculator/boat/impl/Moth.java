@@ -3,8 +3,8 @@ package com.github.thomasfox.boatcalculator.boat.impl;
 import java.io.File;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
-import com.github.thomasfox.boatcalculator.calculate.strategy.IncreaseQuantityTillOtherReachesUpperLimitStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.LiftAndAngleOfAttackStrategy;
+import com.github.thomasfox.boatcalculator.calculate.strategy.MothRideoutHeelAngleStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantitySum;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityTimesMinusOne;
@@ -135,14 +135,22 @@ public class Moth extends Dinghy
     rigg.setStartValueNoOverwrite(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT, 3.08); // from picture with Hyde A2m sail
 
     crew.setStartValueNoOverwrite(PhysicalQuantity.MASS, 80d); // single person
+    crew.setStartValueNoOverwrite(PhysicalQuantity.MAX_LEVER_WEIGHT, 1.25);
+    crew.setStartValueNoOverwrite(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT, 1.25);
     // Area and parasitic drag coefficient together roughly get to a parasitic drag of 17 N at a speed of 6.1 m/s
     // which was measured by Beaver. This contains the parasitic drag from both boat and crew.
     crew.setStartValueNoOverwrite(PhysicalQuantity.AREA_IN_MEDIUM, 1);
     crew.setStartValueNoOverwrite(PhysicalQuantity.PARASITIC_DRAG_COEFFICIENT, 0.75);
+    crew.addToInput(PhysicalQuantity.MAX_LEVER_WEIGHT);
+    crew.addToInput(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT);
 
-    boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.MASS, 40d); // waszp
+    boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.MASS, 40d); // waszp.
     boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.RIDING_HEIGHT, 0.3);
+    boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.MAX_WINDWARD_HEEL_ANGLE, 20);
+    boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT, 1.25); // height of the center of mass of the complete rigged boa above bottom of the boat. TODO check should be approximately at boom level
     boatGlobalValues.addToInput(PhysicalQuantity.RIDING_HEIGHT);
+    boatGlobalValues.addToInput(PhysicalQuantity.MAX_WINDWARD_HEEL_ANGLE);
+    boatGlobalValues.addToInput(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT);
 
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "0kg.txt"), "Hull@0kg"));
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_27kg.txt"), "Moth@27kg"));
@@ -162,12 +170,13 @@ public class Moth extends Dinghy
         PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         0d, 15d));
-    valuesAndCalculationRules.add(new IncreaseQuantityTillOtherReachesUpperLimitStrategy(
-        PhysicalQuantity.LEVER_WEIGHT, Crew.ID, 1.25,
-        PhysicalQuantity.LIFT_COEFFICIENT_3D, Rigg.ID, 1.55)); // caMax=1.55: rough estimate from windsurf sail paper
     valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, Hull.ID));
+    // TODO Heel angle decreases FLOW_DIRECTION of RIGG, probably by a factor of cos (heelAngle)
+    // TODO Windward heel also cerates lift from sail
+    // TODO Force on Daggerboard is decreased when heeled windward
+    valuesAndCalculationRules.add(new MothRideoutHeelAngleStrategy());
     replaceHullWeightStrategy();
     replaceTotalDragStrategy();
   }
