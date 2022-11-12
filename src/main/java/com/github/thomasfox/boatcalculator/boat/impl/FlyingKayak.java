@@ -59,6 +59,7 @@ public class FlyingKayak extends Boat
     boatGlobalValues.removeToInput(PhysicalQuantity.POINTING_ANGLE);
     boatGlobalValues.setStartValue(PhysicalQuantity.MASS, 20d);
     boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.RIDING_HEIGHT, 0.1);
+    boatGlobalValues.setFixedValueNoOverwrite(PhysicalQuantity.WINDWARD_HEEL_ANGLE, 0d);
     boatGlobalValues.addToInput(PhysicalQuantity.RIDING_HEIGHT);
 
     valuesAndCalculationRules.add(new QuantitySum(
@@ -117,7 +118,9 @@ public class FlyingKayak extends Boat
             new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BoatGlobalValues.ID)
           },
         new ValueSet[] {mainLiftingFoil},
-        new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID)
+        new ValueSet[] {},
+        new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID),
+        new PhysicalQuantityInSet(PhysicalQuantity.WINDWARD_HEEL_ANGLE, BoatGlobalValues.ID)
         ));
   }
 

@@ -1,7 +1,9 @@
 package com.github.thomasfox.boatcalculator.calculate.strategy;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -47,7 +49,13 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
   private final PhysicalQuantityInSet[] weightSources;
 
   @NonNull
-  private final ValueSet[] liftValueSets;
+  private final List<ValueSet> cosineOfHeelAngleLiftValueSets;
+
+  @NonNull
+  private final List<ValueSet> sineOfHeelAngleLiftValueSets;
+
+  @NonNull
+  private final PhysicalQuantityInSet heelAngle;
 
   @NonNull
   private final PhysicalQuantityInSet maxAngleOfAttack;
@@ -59,13 +67,29 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
 
   private final QuantityRelationsCalculator quantityRelationsCalculator = new QuantityRelationsCalculator();
 
+  /**
+   *
+   * @param weightSources all PhysicalQuantityInSets which add to the global weight force.
+   * @param cosineOfHeelAngleLiftValueSets all value sets which lift counterbalances weight
+   *        proportional to the cosine of the windward heel angle.
+   *        These value sets are affected by the angle of attach which is set by this strategy.
+   * @param sineOfHeelAngleLiftValueSets all value sets which lift counterbalances weight
+   *        proportional to the sine of the windward heel angle.
+   *        These value sets are NOT affected by the angle of attach which is set by this strategy.
+   * @param maxAngleOfAttack source of the the maximum possible angle of attack
+   * @param heelAngle source of the the windward heel angle.
+   */
   public LiftAndAngleOfAttackStrategy(
       @NonNull PhysicalQuantityInSet[] weightSources,
-      @NonNull ValueSet[] liftValueSets,
-      @NonNull PhysicalQuantityInSet maxAngleOfAttack)
+      @NonNull ValueSet[] cosineOfHeelAngleLiftValueSets,
+      @NonNull ValueSet[] sineOfHeelAngleLiftValueSets,
+      @NonNull PhysicalQuantityInSet maxAngleOfAttack,
+      @NonNull PhysicalQuantityInSet heelAngle)
   {
     this.weightSources = weightSources;
-    this.liftValueSets = liftValueSets;
+    this.cosineOfHeelAngleLiftValueSets = Arrays.asList(cosineOfHeelAngleLiftValueSets);
+    this.sineOfHeelAngleLiftValueSets = Arrays.asList(sineOfHeelAngleLiftValueSets);
+    this.heelAngle = heelAngle;
     this.maxAngleOfAttack = maxAngleOfAttack;
     checkUnitsOfWeightSources();
   }
@@ -128,18 +152,47 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
     {
       return false;
     }
+    Double heelAngleValue = allValues.getKnownValue(heelAngle);
+    if (heelAngleValue == null)
+    {
+      return false;
+    }
+    double cosineOfHeelAngle = Math.cos(heelAngleValue * Math.PI / 180);
+    double sineOfHeelAngle = Math.sin(heelAngleValue * Math.PI / 180);
 
     double alreadyCalculatedLift = 0;
     Double trialAngleOfAttack = null;
-    Set<ValueSet> modifiableLiftValueSets = new HashSet<>();
-    for (ValueSet liftValueSet : liftValueSets)
+    List<ValueSet> modifiableLiftValueSets = new ArrayList<>();
+    List<ValueSet> allLiftValueSets = new ArrayList<>();
+    allLiftValueSets.addAll(cosineOfHeelAngleLiftValueSets);
+    allLiftValueSets.addAll(sineOfHeelAngleLiftValueSets);
+    for (ValueSet liftValueSet : allLiftValueSets)
     {
       PhysicalQuantityValue lift
           = liftValueSet.getKnownQuantityValue(PhysicalQuantity.LIFT);
       if (lift != null && !lift.isTrial())
       {
-        alreadyCalculatedLift += lift.getValue();
+        if (cosineOfHeelAngleLiftValueSets.contains(liftValueSet))
+        {
+          alreadyCalculatedLift += lift.getValue() * cosineOfHeelAngle;
+        }
+        else
+        {
+          alreadyCalculatedLift += lift.getValue() * sineOfHeelAngle;
+        }
         continue;
+      }
+      if (!cosineOfHeelAngleLiftValueSets.contains(liftValueSet))
+      {
+        if (sineOfHeelAngle < 0.00001)
+        {
+          continue;
+        }
+        if (lift == null)
+        {
+          return false;
+        }
+        alreadyCalculatedLift += lift.getValue() * sineOfHeelAngle;
       }
       PhysicalQuantityValue angleOfAttack
           = liftValueSet.getKnownQuantityValue(PhysicalQuantity.ANGLE_OF_ATTACK);
@@ -196,9 +249,9 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
         modifiableLift += lift.getValue();
       }
 
-      double totalLift = modifiableLift + alreadyCalculatedLift;
+      double totalLift = modifiableLift * cosineOfHeelAngle + alreadyCalculatedLift;
       CompareWithOldResult liftWeightDifference
-          = new CompareWithOldResult(modifiableLift + alreadyCalculatedLift, weight);
+          = new CompareWithOldResult(totalLift, weight);
       boolean converged = liftWeightDifference.relativeDifferenceIsBelowThreshold();
       if (converged
           || (totalLift < weight && trialAngleOfAttack == maxAngleOfAttackValue))
@@ -222,7 +275,7 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
       double trialValueDifference = -factor * (totalLift - weight) / weight;
       if (lastTrialValueDifference != null)
       {
-        if (trialValueDifference*lastTrialValueDifference < 0d // they have different sign
+        if (trialValueDifference * lastTrialValueDifference < 0d // they have different sign
           && Math.abs(trialValueDifference) > Math.abs(lastTrialValueDifference) * 0.9)
         {
           trialValueDifference = trialValueDifference * 0.5;
@@ -259,7 +312,7 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
   public Set<PhysicalQuantityInSet> getOutputs()
   {
     Set<PhysicalQuantityInSet> result = new HashSet<>();
-    for (ValueSet liftValueSet : liftValueSets)
+    for (ValueSet liftValueSet : cosineOfHeelAngleLiftValueSets)
     {
       String setId = liftValueSet.getId();
       result.add(new PhysicalQuantityInSet(PhysicalQuantity.ANGLE_OF_ATTACK, setId));

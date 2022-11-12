@@ -174,7 +174,6 @@ public class Moth extends Dinghy
     valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, Hull.ID));
-    // TODO Windward heel also creates lift from sail
     // TODO Force on Daggerboard is decreased when heeled windward
     valuesAndCalculationRules.add(new MothRideoutHeelAngleStrategy());
     replaceHullWeightStrategy();
@@ -200,7 +199,9 @@ public class Moth extends Dinghy
             new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BoatGlobalValues.ID)
           },
         new ValueSet[] {mainLiftingFoil, rudderLiftingFoil},
-        new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID)
+        new ValueSet[] {rigg},
+        new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID),
+        new PhysicalQuantityInSet(PhysicalQuantity.WINDWARD_HEEL_ANGLE, BoatGlobalValues.ID)
         ));
   }
 
