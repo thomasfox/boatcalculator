@@ -151,6 +151,7 @@ public class Moth extends Dinghy
     boatGlobalValues.addToInput(PhysicalQuantity.RIDING_HEIGHT);
     boatGlobalValues.addToInput(PhysicalQuantity.MAX_WINDWARD_HEEL_ANGLE);
     boatGlobalValues.addToInput(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT);
+    boatGlobalValues.removeStartValue(PhysicalQuantity.WINDWARD_HEEL_ANGLE);
 
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "0kg.txt"), "Hull@0kg"));
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "moth_27kg.txt"), "Moth@27kg"));
@@ -173,8 +174,7 @@ public class Moth extends Dinghy
     valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, Hull.ID));
-    // TODO Heel angle decreases FLOW_DIRECTION of RIGG, probably by a factor of cos (heelAngle)
-    // TODO Windward heel also cerates lift from sail
+    // TODO Windward heel also creates lift from sail
     // TODO Force on Daggerboard is decreased when heeled windward
     valuesAndCalculationRules.add(new MothRideoutHeelAngleStrategy());
     replaceHullWeightStrategy();

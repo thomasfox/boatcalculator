@@ -22,8 +22,8 @@ import lombok.ToString;
 
 /**
  * Checks whether the boat is foiling.
- * If yes, the span in Medium is set ot the span minus the riding height.
- * If no, sthe span in medium is set to the span.
+ * If yes, the span in Medium is set to the span minus the riding height.
+ * If no, the span in medium is set to the span.
  */
 @Getter
 @ToString

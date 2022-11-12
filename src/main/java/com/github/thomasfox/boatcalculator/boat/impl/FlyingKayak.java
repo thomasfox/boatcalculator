@@ -7,6 +7,7 @@ import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.calculate.strategy.LiftAndAngleOfAttackStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantitySum;
+import com.github.thomasfox.boatcalculator.calculate.strategy.ReduceSpanInMediumWhenFoilingStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.StepComputationStrategy;
 import com.github.thomasfox.boatcalculator.gui.SwingGui;
 import com.github.thomasfox.boatcalculator.interpolate.QuantityRelationLoader;
@@ -90,6 +91,8 @@ public class FlyingKayak extends Boat
     singleDaggerboard.setFixedValueNoOverwrite(PhysicalQuantity.ANGLE_OF_ATTACK, 0d);
     daggerboardOrKeel = new DoubleWing(singleDaggerboard, singleDaggerboard.getId(), singleDaggerboard.getDisplayName());
     addValueSet(daggerboardOrKeel);
+    valuesAndCalculationRules.add(
+        new ReduceSpanInMediumWhenFoilingStrategy(daggerboardOrKeel));
 
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "0kg.txt"), "Hull@0kg"));
     hull.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "fastKayak_113kg.txt"), "Kayak Hull@113kg"));

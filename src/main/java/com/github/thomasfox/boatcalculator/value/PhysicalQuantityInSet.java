@@ -9,10 +9,11 @@ import lombok.NonNull;
 /**
  * The key for a certain physical quantity in a certain value set,
  * e.g. the weight of the crew.
+ * The instances of this class are immutable.
  */
 @AllArgsConstructor
 @Data
-public class PhysicalQuantityInSet
+public final class PhysicalQuantityInSet
 {
   @NonNull
   private final PhysicalQuantity physicalQuantity;

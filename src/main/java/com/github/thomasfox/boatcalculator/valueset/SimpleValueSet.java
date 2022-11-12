@@ -156,6 +156,11 @@ public class SimpleValueSet implements ValueSet
     startValues.setValueNoOverwrite(physicalQuantity, value);
   }
 
+  public void removeStartValue(PhysicalQuantity physicalQuantity)
+  {
+    startValues.remove(physicalQuantity);
+  }
+
   @Override
   public void setStartValueNoOverwrite(PhysicalQuantityValue toSet)
   {

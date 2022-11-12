@@ -68,6 +68,17 @@ public class MothRideoutHeelAngleStrategy implements StepComputationStrategy
         || (windwardHeelAngle != null && !windwardHeelAngle.isTrial())
         || (crewLeverWeight != null && !crewLeverWeight.isTrial()))
     {
+      if (windwardHeelAngle == null)
+      {
+        windwardHeelAngle = new SimplePhysicalQuantityValue(
+            PhysicalQuantity.WINDWARD_HEEL_ANGLE,
+            0d);
+        globalValues.setCalculatedValueNoOverwrite(
+            windwardHeelAngle,
+            getClass().getSimpleName() + " trial Value",
+            true);
+
+      }
       return false;
     }
 
@@ -99,6 +110,10 @@ public class MothRideoutHeelAngleStrategy implements StepComputationStrategy
       new TorqueCalculator().apply(leverSailDaggerboard);
 
       PhysicalQuantityValue sailTorque = leverSailDaggerboard.getKnownQuantityValue(PhysicalQuantity.TORQUE_BETWEEN_FORCES);
+      if (sailTorque == null)
+      {
+        return false;
+      }
       double crewLever = sailTorque.getValue() / crewWeight.getValue();
       if (crewLever < maxCrewLeverWeight.getValue() && LIFT_COEFFICIENT_3D_MAX_VALUE == liftCoefficient3D.getValue())
       {
