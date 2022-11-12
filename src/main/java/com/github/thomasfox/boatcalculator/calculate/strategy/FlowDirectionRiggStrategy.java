@@ -15,10 +15,6 @@ import com.github.thomasfox.boatcalculator.valueset.impl.Rigg;
 import lombok.Getter;
 import lombok.ToString;
 
-/**
- * A sum of values. One quantity is known to be the sum of other quantities.
- * Optionally, factors can be applied to the parts of the sum.
- */
 @Getter
 @ToString
 public class FlowDirectionRiggStrategy implements StepComputationStrategy
@@ -42,7 +38,7 @@ public class FlowDirectionRiggStrategy implements StepComputationStrategy
     {
       if (result.length() > 0 )
       {
-        result.append(" + ");
+        result.append(", ");
       }
       result.append(allValues.getNameOfSetWithId(source.getSetId()))
           .append(":")

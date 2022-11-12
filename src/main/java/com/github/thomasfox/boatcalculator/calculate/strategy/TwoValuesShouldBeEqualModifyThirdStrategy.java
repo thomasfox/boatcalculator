@@ -125,8 +125,8 @@ public class TwoValuesShouldBeEqualModifyThirdStrategy implements ComputationFro
       if (trialValueDifference*lastTrialValueDifference < 0d // they have different sign
         && Math.abs(trialValueDifference) > Math.abs(lastTrialValueDifference) * 0.5)
       {
-        trialValueDifference = trialValueDifference * 0.5;
-        differenceToTargetDifferenceFactor *= 0.5;
+        trialValueDifference = trialValueDifference * 0.75;
+        differenceToTargetDifferenceFactor *= 0.75;
       }
     }
     lastTrialValueDifference = trialValueDifference;

@@ -35,9 +35,6 @@ public class Sailboat extends Boat
         PhysicalQuantity.DRIFT_ANGLE, BoatGlobalValues.ID,
         0d));
     valuesAndCalculationRules.add(new QuantityEquality(
-        PhysicalQuantity.LATERAL_FORCE, Rigg.ID,
-        PhysicalQuantity.LIFT, DaggerboardOrKeel.ID)); // assumption: rudder has no force
-    valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.APPARENT_WIND_SPEED, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, Rigg.ID));
     valuesAndCalculationRules.add(new QuantityEquality(

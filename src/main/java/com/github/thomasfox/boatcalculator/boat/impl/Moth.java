@@ -147,7 +147,7 @@ public class Moth extends Dinghy
     boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.MASS, 40d); // waszp.
     boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.RIDING_HEIGHT, 0.3);
     boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.MAX_WINDWARD_HEEL_ANGLE, 20);
-    boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT, 1.25); // height of the center of mass of the complete rigged boa above bottom of the boat. TODO check should be approximately at boom level
+    boatGlobalValues.setStartValueNoOverwrite(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT, 1.25); // height of the center of mass of the complete rigged boat above bottom of the boat. TODO check should be approximately at boom level
     boatGlobalValues.addToInput(PhysicalQuantity.RIDING_HEIGHT);
     boatGlobalValues.addToInput(PhysicalQuantity.MAX_WINDWARD_HEEL_ANGLE);
     boatGlobalValues.addToInput(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT);
@@ -174,7 +174,6 @@ public class Moth extends Dinghy
     valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, Hull.ID));
-    // TODO Force on Daggerboard is decreased when heeled windward
     valuesAndCalculationRules.add(new MothRideoutHeelAngleStrategy());
     replaceHullWeightStrategy();
     replaceTotalDragStrategy();

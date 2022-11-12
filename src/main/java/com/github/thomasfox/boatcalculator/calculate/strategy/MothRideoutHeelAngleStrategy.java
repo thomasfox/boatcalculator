@@ -39,10 +39,6 @@ public class MothRideoutHeelAngleStrategy implements StepComputationStrategy
 
   private final QuantityRelationsCalculator quantityRelationsCalculator = new QuantityRelationsCalculator();
 
-  private final double factor = 1;
-
-  private Double lastTrialValueDifference;
-
   private final int stepsToWait = 0;
 
   @Override

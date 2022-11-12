@@ -92,13 +92,6 @@ public class IncreaseQuantityTillOtherReachesUpperLimitStrategy implements StepC
       return false;
     }
 
-//    if (stepsToWait > 0)
-//    {
-//      stepsToWait--;
-//      return true;
-//    }
-//    stepsToWait = 7;
-//
     double limitedValue = limitedQuantityValue.getValue();
 
     double trialValueDifference = factor * (limitedValueLimit - limitedValue);

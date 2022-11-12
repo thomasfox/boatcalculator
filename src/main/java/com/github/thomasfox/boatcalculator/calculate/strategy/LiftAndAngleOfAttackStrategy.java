@@ -193,6 +193,7 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
           return false;
         }
         alreadyCalculatedLift += lift.getValue() * sineOfHeelAngle;
+        continue;
       }
       PhysicalQuantityValue angleOfAttack
           = liftValueSet.getKnownQuantityValue(PhysicalQuantity.ANGLE_OF_ATTACK);
@@ -258,7 +259,7 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
       {
         double hullLift = weight - totalLift;
         if (hullLift < 0
-            || (converged && trialAngleOfAttack != maxAngleOfAttackValue))
+            || (converged && trialAngleOfAttack < maxAngleOfAttackValue))
         {
           hullLift = 0;
         }
@@ -276,7 +277,7 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
       if (lastTrialValueDifference != null)
       {
         if (trialValueDifference * lastTrialValueDifference < 0d // they have different sign
-          && Math.abs(trialValueDifference) > Math.abs(lastTrialValueDifference) * 0.9)
+          && Math.abs(trialValueDifference) > Math.abs(lastTrialValueDifference) * 0.5)
         {
           trialValueDifference = trialValueDifference * 0.5;
           factor *= 0.5;

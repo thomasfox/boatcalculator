@@ -1,6 +1,7 @@
 package com.github.thomasfox.boatcalculator.boat.impl;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.boatcalculator.calculate.strategy.DaggerboardLiftStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantitySum;
 import com.github.thomasfox.boatcalculator.calculate.strategy.ReduceSpanInMediumWhenFoilingStrategy;
@@ -37,5 +38,9 @@ public class Dinghy extends Sailboat
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, DaggerboardOrKeel.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.BRAKING_FORCE, Crew.ID)));
     valuesAndCalculationRules.add(new ReduceSpanInMediumWhenFoilingStrategy(rudder));
+    valuesAndCalculationRules.add(new DaggerboardLiftStrategy(new PhysicalQuantityInSet[] {
+        new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, Crew.ID),
+        new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BoatGlobalValues.ID)
+      })); // assumption: rudder has no force
   }
 }
