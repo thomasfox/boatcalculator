@@ -3,6 +3,7 @@ package com.github.thomasfox.boatcalculator.boat.impl;
 import java.io.File;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
+import com.github.thomasfox.boatcalculator.calculate.strategy.LeverSailDaggerboardStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.LiftAndAngleOfAttackStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.MothRideoutHeelAngleStrategy;
 import com.github.thomasfox.boatcalculator.calculate.strategy.QuantityEquality;
@@ -88,6 +89,12 @@ public class Moth extends Dinghy
     valuesAndCalculationRules.add(new QuantityEquality(
         PhysicalQuantity.APPARENT_WIND_SPEED, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, TrampolineWing2.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.WINDWARD_HEEL_ANGLE, BoatGlobalValues.ID,
+        PhysicalQuantity.WINDWARD_HEEL_ANGLE, TrampolineWing1.ID));
+    valuesAndCalculationRules.add(new QuantityEquality(
+        PhysicalQuantity.WINDWARD_HEEL_ANGLE, BoatGlobalValues.ID,
+        PhysicalQuantity.WINDWARD_HEEL_ANGLE, TrampolineWing2.ID));
 
     valuesAndCalculationRules.add(new QuantityTimesMinusOne(
         PhysicalQuantity.SIDEWAY_ANGLE, TrampolineWing1.ID,
@@ -137,10 +144,12 @@ public class Moth extends Dinghy
     crew.setStartValueNoOverwrite(PhysicalQuantity.MASS, 80d); // single person
     crew.setStartValueNoOverwrite(PhysicalQuantity.MAX_LEVER_WEIGHT, 1.25);
     crew.setStartValueNoOverwrite(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT, 1.25);
-    // Area and parasitic drag coefficient together roughly get to a parasitic drag of 17 N at a speed of 6.1 m/s
-    // which was measured by Beaver. This contains the parasitic drag from both boat and crew.
+    // Beaver measured a parasitic drag of 17N(0°)/14N(15°)/13N(30°) by both boat and crew at 6.1 m/s and a relative wind angle of 24 degrees.
+    // We put hull and crew drag in this number, but not the drag from the trampoline wings.
+    // As (constant boat+crew drag plus trampoline drag) vs heel angle differs substantially from beaver's measured value,
+    // gauging the boat+crew drag is difficult. Assumed here is that at a heel angle of 20°, the total force is 14N
     crew.setStartValueNoOverwrite(PhysicalQuantity.AREA_IN_MEDIUM, 1);
-    crew.setStartValueNoOverwrite(PhysicalQuantity.PARASITIC_DRAG_COEFFICIENT, 0.75);
+    crew.setStartValueNoOverwrite(PhysicalQuantity.PARASITIC_DRAG_COEFFICIENT, 0.37);
     crew.addToInput(PhysicalQuantity.MAX_LEVER_WEIGHT);
     crew.addToInput(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT);
 
@@ -163,8 +172,14 @@ public class Moth extends Dinghy
     trampolineWing1.setStartValue(PhysicalQuantity.BACKWAY_ANGLE, 0);
     trampolineWing1.setStartValue(PhysicalQuantity.WING_CHORD, 2.5);
     trampolineWing1.setStartValue(PhysicalQuantity.HALFWING_SPAN, 1.25);
+    trampolineWing1.setStartValue(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT, 1.25);
+    trampolineWing1.addHiddenOutput(PhysicalQuantity.WINDWARD_HEEL_ANGLE);
     trampolineWing1.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "flatPlate_140000_ar05.txt"), "flatPlate@140000,0.5"));
+    trampolineWing1.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "flatPlate_140000_ar1.txt"), "flatPlate@140000,0.5"));
     trampolineWing2.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "flatPlate_140000_ar05.txt"), "flatPlate@140000,0.5"));
+    trampolineWing2.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "flatPlate_140000_ar1.txt"), "flatPlate@140000,0.5"));
+    trampolineWing2.addHiddenOutput(PhysicalQuantity.WINDWARD_HEEL_ANGLE);
+    trampolineWing2.addHiddenOutput(PhysicalQuantity.WINDWARD_HEEL_ANGLE);
 
     valuesAndCalculationRules.add(new TwoValuesShouldBeEqualModifyThirdStrategy(
         PhysicalQuantity.DRIVING_FORCE, Rigg.ID,
@@ -175,6 +190,9 @@ public class Moth extends Dinghy
         PhysicalQuantity.VELOCITY, BoatGlobalValues.ID,
         PhysicalQuantity.VELOCITY, Hull.ID));
     valuesAndCalculationRules.add(new MothRideoutHeelAngleStrategy());
+    valuesAndCalculationRules.add(new LeverSailDaggerboardStrategy(trampolineWing1, trampolineWing1));
+    valuesAndCalculationRules.add(new LeverSailDaggerboardStrategy(trampolineWing2, trampolineWing2));
+
     replaceHullWeightStrategy();
     replaceTotalDragStrategy();
   }
@@ -224,7 +242,9 @@ public class Moth extends Dinghy
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, DaggerboardOrKeel.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, MainLiftingFoil.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, RudderLiftingFoil.ID),
-        new PhysicalQuantityInSet(PhysicalQuantity.BRAKING_FORCE, Crew.ID)));
+        new PhysicalQuantityInSet(PhysicalQuantity.BRAKING_FORCE, Crew.ID),
+        new PhysicalQuantityInSet(PhysicalQuantity.BRAKING_FORCE, TrampolineWing1.ID),
+        new PhysicalQuantityInSet(PhysicalQuantity.BRAKING_FORCE, TrampolineWing2.ID)));
   }
 
   @Override

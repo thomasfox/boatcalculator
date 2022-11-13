@@ -4,11 +4,11 @@ import com.github.thomasfox.boatcalculator.calculate.Calculator;
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 
-public class DrivingForceForBentWingCalculator extends Calculator
+public class BrakingForceForBentWingCalculator extends Calculator
 {
-  public DrivingForceForBentWingCalculator()
+  public BrakingForceForBentWingCalculator()
   {
-    super(PhysicalQuantity.DRIVING_FORCE,
+    super(PhysicalQuantity.BRAKING_FORCE,
         PhysicalQuantity.SIDEWAY_ANGLE,
         PhysicalQuantity.BACKWAY_ANGLE,
         PhysicalQuantity.APPARENT_WIND_ANGLE,
@@ -56,7 +56,7 @@ public class DrivingForceForBentWingCalculator extends Calculator
     double FY = lift * fLiftY + drag*windVectorY;
     double FZ = lift * fLiftZ;
 
-    double drivingForce = -FX;
-    return drivingForce;
+    double brakingForce = FX;
+    return brakingForce;
   }
 }

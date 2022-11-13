@@ -58,6 +58,6 @@ public class Sailboat extends Boat
         new PhysicalQuantityInSet(PhysicalQuantity.FORWARD_FORCE, BoatGlobalValues.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.DRIVING_FORCE, Rigg.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.TOTAL_DRAG, BoatGlobalValues.ID)));
-    valuesAndCalculationRules.add(new LeverSailDaggerboardStrategy());
+    valuesAndCalculationRules.add(new LeverSailDaggerboardStrategy(rigg, leverSailDaggerboard));
   }
 }

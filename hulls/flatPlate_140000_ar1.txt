@@ -1,0 +1,20 @@
+# Alain Pelletier and Thomas J. Mueller, Low Reynolds Number Aerodynamics of Low-Aspect-Ratio, Thin/Flat/Cambered-Plate Wings
+# REYNOLDS_NUMBER	140000
+SEMIWING_ASPECT_RATIO 1
+
+ANGLE_OF_ATTACK	TOTAL_DRAG_COEFFICIENT	LIFT_COEFFICIENT_3D
+-25	0.33	-0.67
+-20	0.28	-0.75
+-15	0.18	-0.7
+-10	0.08	-0.5
+-8	0.06	-0.4
+-6	0.03	-0.3
+-3	0.02 -0.15
+0	0.015	0
+3	0.02	0.15
+6	0.03	0.3
+8	0.06	0.4
+10	0.08	0.5
+15	0.18	0.7
+20	0.28	0.75
+25	0.33	0.67

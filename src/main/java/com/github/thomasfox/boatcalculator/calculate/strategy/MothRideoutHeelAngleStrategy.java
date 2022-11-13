@@ -22,6 +22,8 @@ import com.github.thomasfox.boatcalculator.valueset.impl.Crew;
 import com.github.thomasfox.boatcalculator.valueset.impl.DaggerboardOrKeel;
 import com.github.thomasfox.boatcalculator.valueset.impl.LeverSailDaggerboard;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rigg;
+import com.github.thomasfox.boatcalculator.valueset.impl.TrampolineWing1;
+import com.github.thomasfox.boatcalculator.valueset.impl.TrampolineWing2;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +50,8 @@ public class MothRideoutHeelAngleStrategy implements StepComputationStrategy
     ValueSet rigg = allValues.getValueSetNonNull(Rigg.ID);
     ValueSet crew = allValues.getValueSetNonNull(Crew.ID);
     ValueSet leverSailDaggerboard = allValues.getValueSetNonNull(LeverSailDaggerboard.ID);
+    ValueSet trampolineWing1 = allValues.getValueSetNonNull(TrampolineWing1.ID);
+    ValueSet trampolineWing2 = allValues.getValueSetNonNull(TrampolineWing2.ID);
 
     PhysicalQuantityValue liftCoefficient3D = rigg.getKnownQuantityValue(PhysicalQuantity.LIFT_COEFFICIENT_3D);
     PhysicalQuantityValue crewWeight = crew.getKnownQuantityValue(PhysicalQuantity.WEIGHT);
@@ -56,10 +60,14 @@ public class MothRideoutHeelAngleStrategy implements StepComputationStrategy
     PhysicalQuantityValue leverSailDggerboardLever = leverSailDaggerboard.getKnownQuantityValue(PhysicalQuantity.LEVER_BETWEEN_FORCES);
     PhysicalQuantityValue maxWindwardHeelAngle = globalValues.getKnownQuantityValue(PhysicalQuantity.MAX_WINDWARD_HEEL_ANGLE);
     PhysicalQuantityValue windwardHeelAngle = globalValues.getKnownQuantityValue(PhysicalQuantity.WINDWARD_HEEL_ANGLE);
+    PhysicalQuantityValue trampolineWing1Torque = trampolineWing1.getKnownQuantityValue(PhysicalQuantity.TORQUE_BETWEEN_FORCES);
+    PhysicalQuantityValue trampolineWing2Torque = trampolineWing2.getKnownQuantityValue(PhysicalQuantity.TORQUE_BETWEEN_FORCES);
     if (maxWindwardHeelAngle == null
         || crewWeight == null
         || maxCrewLeverWeight == null
         || leverSailDggerboardLever == null
+        || trampolineWing1Torque == null
+        || trampolineWing2Torque == null
         || (liftCoefficient3D != null && !liftCoefficient3D.isTrial())
         || (windwardHeelAngle != null && !windwardHeelAngle.isTrial())
         || (crewLeverWeight != null && !crewLeverWeight.isTrial()))
@@ -110,7 +118,10 @@ public class MothRideoutHeelAngleStrategy implements StepComputationStrategy
       {
         return false;
       }
-      double crewLever = sailTorque.getValue() / crewWeight.getValue();
+      double sailAndTrampolineTorque = sailTorque.getValue()
+          + trampolineWing1Torque.getValue()
+          + trampolineWing2Torque.getValue();
+      double crewLever = sailAndTrampolineTorque / crewWeight.getValue();
       if (crewLever < maxCrewLeverWeight.getValue() && LIFT_COEFFICIENT_3D_MAX_VALUE == liftCoefficient3D.getValue())
       {
         allValues.setCalculatedValueNoOverwrite(
@@ -119,6 +130,8 @@ public class MothRideoutHeelAngleStrategy implements StepComputationStrategy
             MothRideoutHeelAngleStrategy.class.getSimpleName(),
             true,
             new SimplePhysicalQuantityValueWithSetId(sailTorque, leverSailDaggerboard.getId()),
+            new SimplePhysicalQuantityValueWithSetId(trampolineWing1Torque, trampolineWing1.getId()),
+            new SimplePhysicalQuantityValueWithSetId(trampolineWing2Torque, trampolineWing2.getId()),
             new SimplePhysicalQuantityValueWithSetId(crewWeight, crew.getId()));
         allValues.setCalculatedValueNoOverwrite(
             new PhysicalQuantityInSet(PhysicalQuantity.WINDWARD_HEEL_ANGLE, BoatGlobalValues.ID),
@@ -126,6 +139,8 @@ public class MothRideoutHeelAngleStrategy implements StepComputationStrategy
             MothRideoutHeelAngleStrategy.class.getSimpleName(),
             true,
             new SimplePhysicalQuantityValueWithSetId(sailTorque, leverSailDaggerboard.getId()),
+            new SimplePhysicalQuantityValueWithSetId(trampolineWing1Torque, trampolineWing1.getId()),
+            new SimplePhysicalQuantityValueWithSetId(trampolineWing2Torque, trampolineWing2.getId()),
             new SimplePhysicalQuantityValueWithSetId(crewWeight, crew.getId()));
         return false;
       }
@@ -155,7 +170,7 @@ public class MothRideoutHeelAngleStrategy implements StepComputationStrategy
         double maxPossibleTorque = horizontalTorque*Math.cos(maxAngleRad)+verticalTorque*Math.sin(maxAngleRad);
 
         CompareWithOldResult torqueDifference
-            = new CompareWithOldResult(sailTorque.getValue(), maxPossibleTorque);
+            = new CompareWithOldResult(sailAndTrampolineTorque, maxPossibleTorque);
         boolean converged = torqueDifference.relativeDifferenceIsBelowThreshold();
         if (converged)
         {
@@ -165,6 +180,8 @@ public class MothRideoutHeelAngleStrategy implements StepComputationStrategy
               MothRideoutHeelAngleStrategy.class.getSimpleName(),
               true,
               new SimplePhysicalQuantityValueWithSetId(sailTorque, leverSailDaggerboard.getId()),
+              new SimplePhysicalQuantityValueWithSetId(trampolineWing1Torque, trampolineWing1.getId()),
+              new SimplePhysicalQuantityValueWithSetId(trampolineWing2Torque, trampolineWing2.getId()),
               new SimplePhysicalQuantityValueWithSetId(crewWeight, crew.getId()));
           allValues.setCalculatedValueNoOverwrite(
               new PhysicalQuantityInSet(PhysicalQuantity.WINDWARD_HEEL_ANGLE, BoatGlobalValues.ID),
@@ -172,16 +189,18 @@ public class MothRideoutHeelAngleStrategy implements StepComputationStrategy
               MothRideoutHeelAngleStrategy.class.getSimpleName(),
               true,
               new SimplePhysicalQuantityValueWithSetId(sailTorque, leverSailDaggerboard.getId()),
+              new SimplePhysicalQuantityValueWithSetId(trampolineWing1Torque, trampolineWing1.getId()),
+              new SimplePhysicalQuantityValueWithSetId(trampolineWing2Torque, trampolineWing2.getId()),
               new SimplePhysicalQuantityValueWithSetId(crewWeight, crew.getId()));
           return false;
         }
 
-        if (sailTorque.getValue() < totalTorque && LIFT_COEFFICIENT_3D_MAX_VALUE == liftCoefficient3D.getValue())
+        if (sailAndTrampolineTorque < totalTorque && LIFT_COEFFICIENT_3D_MAX_VALUE == liftCoefficient3D.getValue())
         {
           // there is a heel angle where a force balance is reached
           // horizontalTorque*sin(lambda)+verticalTorque*cos(lambda) = totalTorque*cos(lambda-phaseShift)
           double phaseShiftRad = Math.atan(verticalTorque/horizontalTorque);
-          double lambdaMinusPhaseShift = Math.acos(sailTorque.getValue()/totalTorque);
+          double lambdaMinusPhaseShift = Math.acos(sailAndTrampolineTorque/totalTorque);
           double heelAngleRad = (lambdaMinusPhaseShift + phaseShiftRad);
           if (heelAngleRad > phaseShiftRad)
           {
@@ -196,6 +215,8 @@ public class MothRideoutHeelAngleStrategy implements StepComputationStrategy
                 MothRideoutHeelAngleStrategy.class.getSimpleName(),
                 true,
                 new SimplePhysicalQuantityValueWithSetId(sailTorque, leverSailDaggerboard.getId()),
+                new SimplePhysicalQuantityValueWithSetId(trampolineWing1Torque, trampolineWing1.getId()),
+                new SimplePhysicalQuantityValueWithSetId(trampolineWing2Torque, trampolineWing2.getId()),
                 new SimplePhysicalQuantityValueWithSetId(crewWeight, crew.getId()));
             allValues.setCalculatedValueNoOverwrite(
                 new PhysicalQuantityInSet(PhysicalQuantity.WINDWARD_HEEL_ANGLE, BoatGlobalValues.ID),
@@ -203,11 +224,13 @@ public class MothRideoutHeelAngleStrategy implements StepComputationStrategy
                 MothRideoutHeelAngleStrategy.class.getSimpleName(),
                 true,
                 new SimplePhysicalQuantityValueWithSetId(sailTorque, leverSailDaggerboard.getId()),
+                new SimplePhysicalQuantityValueWithSetId(trampolineWing1Torque, trampolineWing1.getId()),
+                new SimplePhysicalQuantityValueWithSetId(trampolineWing2Torque, trampolineWing2.getId()),
                 new SimplePhysicalQuantityValueWithSetId(crewWeight, crew.getId()));
             return false;
           }
         }
-        double newLiftCoefficient3D = liftCoefficient3D.getValue() * maxPossibleTorque / sailTorque.getValue();
+        double newLiftCoefficient3D = liftCoefficient3D.getValue() * maxPossibleTorque / sailAndTrampolineTorque;
         if (newLiftCoefficient3D > LIFT_COEFFICIENT_3D_MAX_VALUE)
         {
           newLiftCoefficient3D = LIFT_COEFFICIENT_3D_MAX_VALUE;

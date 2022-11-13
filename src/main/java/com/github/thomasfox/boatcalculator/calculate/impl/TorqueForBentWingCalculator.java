@@ -9,12 +9,13 @@ public class TorqueForBentWingCalculator extends Calculator
   public TorqueForBentWingCalculator()
   {
     super(PhysicalQuantity.TORQUE_BETWEEN_FORCES,
+        PhysicalQuantity.WINDWARD_HEEL_ANGLE,
         PhysicalQuantity.SIDEWAY_ANGLE,
         PhysicalQuantity.BACKWAY_ANGLE,
         PhysicalQuantity.APPARENT_WIND_ANGLE,
         PhysicalQuantity.TOTAL_DRAG,
         PhysicalQuantity.HALFWING_SPAN,
-        PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT,
+        PhysicalQuantity.LEVER_BETWEEN_FORCES,
         PhysicalQuantity.LIFT);
   }
 
@@ -23,11 +24,13 @@ public class TorqueForBentWingCalculator extends Calculator
   {
     double drag = valueSet.getKnownQuantityValue(PhysicalQuantity.TOTAL_DRAG).getValue();
     double lift = valueSet.getKnownQuantityValue(PhysicalQuantity.LIFT).getValue();
-    double sidewayAngleInRad = valueSet.getKnownQuantityValue(PhysicalQuantity.SIDEWAY_ANGLE).getValue()*Math.PI/180;
+    double sidewayAngleInRad =
+        (valueSet.getKnownQuantityValue(PhysicalQuantity.SIDEWAY_ANGLE).getValue()
+          + valueSet.getKnownQuantityValue(PhysicalQuantity.WINDWARD_HEEL_ANGLE).getValue())*Math.PI/180;
     double backwayAngleInRad = valueSet.getKnownQuantityValue(PhysicalQuantity.BACKWAY_ANGLE).getValue()*Math.PI/180;
     double apparentWindAngleInRad = valueSet.getKnownQuantityValue(PhysicalQuantity.APPARENT_WIND_ANGLE).getValue()*Math.PI/180;
     double halfwingSpan = valueSet.getKnownQuantityValue(PhysicalQuantity.HALFWING_SPAN).getValue();
-    double height = valueSet.getKnownQuantityValue(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT).getValue();
+    double height = valueSet.getKnownQuantityValue(PhysicalQuantity.LEVER_BETWEEN_FORCES).getValue();
 
     double areaNormalVectorX = Math.sin(backwayAngleInRad);
     double areaNormalVectorY = Math.sin(sidewayAngleInRad)*Math.cos(backwayAngleInRad);

@@ -16,7 +16,7 @@ import com.github.thomasfox.boatcalculator.calculate.impl.AreaLoadFixedMiddleBen
 import com.github.thomasfox.boatcalculator.calculate.impl.BrakingForceCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.CrosssectionAreaCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.DrivingForceCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.DrivingForceForBentWingCalculator;
+import com.github.thomasfox.boatcalculator.calculate.impl.BrakingForceForBentWingCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.FroudeNumberCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.InducedDragCalculator;
 import com.github.thomasfox.boatcalculator.calculate.impl.InducedDragCoefficientCalculator;
@@ -97,7 +97,7 @@ public class CombinedCalculator
     calculators.add(new WeightFromMassCalculator());
     calculators.add(new SurfacePiercingDragCalculator());
     calculators.add(new SurfacePiercingDragCoefficientCalculator());
-    calculators.add(new DrivingForceForBentWingCalculator());
+    calculators.add(new BrakingForceForBentWingCalculator());
     calculators.add(new TorqueForBentWingCalculator());
   }
 
