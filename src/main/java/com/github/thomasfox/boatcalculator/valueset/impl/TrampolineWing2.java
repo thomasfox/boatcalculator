@@ -20,7 +20,6 @@ public class TrampolineWing2 extends TrampolineWing
     removeToInput(PhysicalQuantity.WING_CHORD);
     removeToInput(PhysicalQuantity.SIDEWAY_ANGLE);
     removeToInput(PhysicalQuantity.BACKWAY_ANGLE);
-    removeToInput(PhysicalQuantity.HALFWING_SPAN);
     removeToInput(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT);
   }
 }

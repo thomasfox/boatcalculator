@@ -117,19 +117,19 @@ public class Moth extends Dinghy
     mainLiftingFoil.setProfileName("n63412-il");
     mainLiftingFoil.setFixedValueNoOverwrite(
         PhysicalQuantity.MODULUS_OF_ELASTICITY,
-        PhysicalQuantity.MODULUS_OF_ELASTICITY.getFixedValue().doubleValue());
+        PhysicalQuantity.MODULUS_OF_ELASTICITY.getFixedValue());
     mainLiftingFoil.addHiddenOutput(PhysicalQuantity.WING_SPAN_IN_MEDIUM);
 
     ((Hydrofoil) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d);
     ((Hydrofoil) daggerboardOrKeel).setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.12d);
-    ((Hydrofoil) daggerboardOrKeel).setProfileName("e521-il");
+    (daggerboardOrKeel).setProfileName("e521-il");
 
     rudderLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 0.7d);
     rudderLiftingFoil.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.08d);
     rudderLiftingFoil.setProfileName("n63412-il");
     rudderLiftingFoil.setFixedValueNoOverwrite(
         PhysicalQuantity.MODULUS_OF_ELASTICITY,
-        PhysicalQuantity.MODULUS_OF_ELASTICITY.getFixedValue().doubleValue());
+        PhysicalQuantity.MODULUS_OF_ELASTICITY.getFixedValue());
     rudderLiftingFoil.addHiddenOutput(PhysicalQuantity.WING_SPAN_IN_MEDIUM);
 
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d);
@@ -174,10 +174,6 @@ public class Moth extends Dinghy
     trampolineWing1.setStartValue(PhysicalQuantity.HALFWING_SPAN, 1.25);
     trampolineWing1.setStartValue(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT, 1.25);
     trampolineWing1.addHiddenOutput(PhysicalQuantity.WINDWARD_HEEL_ANGLE);
-    trampolineWing1.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "flatPlate_140000_ar05.txt"), "flatPlate@140000,0.5"));
-    trampolineWing1.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "flatPlate_140000_ar1.txt"), "flatPlate@140000,0.5"));
-    trampolineWing2.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "flatPlate_140000_ar05.txt"), "flatPlate@140000,0.5"));
-    trampolineWing2.getQuantityRelations().add(new QuantityRelationLoader().load(new File(SwingGui.HULL_DIRECTORY, "flatPlate_140000_ar1.txt"), "flatPlate@140000,0.5"));
     trampolineWing2.addHiddenOutput(PhysicalQuantity.WINDWARD_HEEL_ANGLE);
     trampolineWing2.addHiddenOutput(PhysicalQuantity.WINDWARD_HEEL_ANGLE);
 
