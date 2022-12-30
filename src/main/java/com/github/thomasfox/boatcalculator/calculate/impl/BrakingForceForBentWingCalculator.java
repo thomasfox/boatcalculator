@@ -9,6 +9,7 @@ public class BrakingForceForBentWingCalculator extends Calculator
   public BrakingForceForBentWingCalculator()
   {
     super(PhysicalQuantity.BRAKING_FORCE,
+        PhysicalQuantity.WINDWARD_HEEL_ANGLE,
         PhysicalQuantity.SIDEWAY_ANGLE,
         PhysicalQuantity.BACKWAY_ANGLE,
         PhysicalQuantity.APPARENT_WIND_ANGLE,
@@ -21,7 +22,9 @@ public class BrakingForceForBentWingCalculator extends Calculator
   {
     double drag = valueSet.getKnownQuantityValue(PhysicalQuantity.TOTAL_DRAG).getValue();
     double lift = valueSet.getKnownQuantityValue(PhysicalQuantity.LIFT).getValue();
-    double sidewayAngleInRad = valueSet.getKnownQuantityValue(PhysicalQuantity.SIDEWAY_ANGLE).getValue()*Math.PI/180;
+    double sidewayAngleInRad =
+            (valueSet.getKnownQuantityValue(PhysicalQuantity.SIDEWAY_ANGLE).getValue()
+              + valueSet.getKnownQuantityValue(PhysicalQuantity.WINDWARD_HEEL_ANGLE).getValue())*Math.PI/180;
     double backwayAngleInRad = valueSet.getKnownQuantityValue(PhysicalQuantity.BACKWAY_ANGLE).getValue()*Math.PI/180;
     double apparentWindAngleInRad = valueSet.getKnownQuantityValue(PhysicalQuantity.APPARENT_WIND_ANGLE).getValue()*Math.PI/180;
 
