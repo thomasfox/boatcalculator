@@ -2,18 +2,16 @@ package com.github.thomasfox.boatcalculator.valueset.impl;
 
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 
-public class TrampolineWing2 extends TrampolineWing
+public class TrampolineWindwardWing extends TrampolineWing
 {
-  public static final String ID = TrampolineWing2.class.getSimpleName();
+  public static final String ID = TrampolineWindwardWing.class.getSimpleName();
 
-  private static final String NAME = "TrampolinWing2";
+  private static final String NAME = "TrampolinWindwardWing";
 
-  public TrampolineWing2()
+  public TrampolineWindwardWing()
   {
     super(ID, NAME);
     addHiddenOutput(PhysicalQuantity.WING_SPAN_IN_MEDIUM);
-    addHiddenOutput(PhysicalQuantity.INDUCED_DRAG);
-    addHiddenOutput(PhysicalQuantity.INDUCED_DRAG_COEFFICIENT);
     addHiddenOutput(PhysicalQuantity.SIDEWAY_ANGLE);
     addHiddenOutput(PhysicalQuantity.BACKWAY_ANGLE);
     addHiddenOutput(PhysicalQuantity.WING_CHORD);

@@ -24,20 +24,20 @@ public class TorqueForBentWingCalculator extends Calculator
   {
     double drag = valueSet.getKnownQuantityValue(PhysicalQuantity.TOTAL_DRAG).getValue();
     double lift = valueSet.getKnownQuantityValue(PhysicalQuantity.LIFT).getValue();
+    double heelAngleInRad = valueSet.getKnownQuantityValue(PhysicalQuantity.WINDWARD_HEEL_ANGLE).getValue()*Math.PI/180;
     double sidewayAngleInRad =
-        (valueSet.getKnownQuantityValue(PhysicalQuantity.SIDEWAY_ANGLE).getValue()
-          + valueSet.getKnownQuantityValue(PhysicalQuantity.WINDWARD_HEEL_ANGLE).getValue())*Math.PI/180;
+        - valueSet.getKnownQuantityValue(PhysicalQuantity.SIDEWAY_ANGLE).getValue()*Math.PI/180 - heelAngleInRad;
     double backwayAngleInRad = valueSet.getKnownQuantityValue(PhysicalQuantity.BACKWAY_ANGLE).getValue()*Math.PI/180;
     double apparentWindAngleInRad = valueSet.getKnownQuantityValue(PhysicalQuantity.APPARENT_WIND_ANGLE).getValue()*Math.PI/180;
     double halfwingSpan = valueSet.getKnownQuantityValue(PhysicalQuantity.HALFWING_SPAN).getValue();
-    double height = valueSet.getKnownQuantityValue(PhysicalQuantity.LEVER_BETWEEN_FORCES).getValue();
+    double height = valueSet.getKnownQuantityValue(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT).getValue();
 
     double areaNormalVectorX = Math.sin(backwayAngleInRad);
     double areaNormalVectorY = Math.sin(sidewayAngleInRad)*Math.cos(backwayAngleInRad);
     double areaNormalVectorZ = Math.cos(sidewayAngleInRad)*Math.cos(backwayAngleInRad);
 
     double windVectorX = Math.cos(apparentWindAngleInRad);
-    double windVectorY = -Math.sin(apparentWindAngleInRad);
+    double windVectorY = Math.sin(apparentWindAngleInRad);
     // windVectorZ is null;
 
     double scalarProductWindAreaNormal = areaNormalVectorX * windVectorX + areaNormalVectorY * windVectorY;
@@ -54,14 +54,10 @@ public class TorqueForBentWingCalculator extends Calculator
     double FY = lift * fLiftY + drag*windVectorY;
     double FZ = lift * fLiftZ;
 
-    double forceAmountYZ = Math.sqrt(FY*FY+FZ*FZ);
+    double ry = Math.cos(heelAngleInRad) * halfwingSpan/2 - Math.sin(heelAngleInRad) * height;
+    double rz = Math.cos(heelAngleInRad) * height + Math.sin(heelAngleInRad) * halfwingSpan/2;
 
-    double scalarProductForceR = -halfwingSpan/2 * FY + height * FZ;
-
-    double torqueY = -halfwingSpan/2*forceAmountYZ-scalarProductForceR*FY/forceAmountYZ;
-    double torqueZ = height*forceAmountYZ-scalarProductForceR*FZ/forceAmountYZ;
-
-    double torque = Math.sqrt(torqueY*torqueY+torqueZ*torqueZ);
+    double torque = ry * FZ - rz *FY;
     return torque;
   }
 }

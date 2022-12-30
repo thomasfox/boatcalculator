@@ -22,8 +22,8 @@ import com.github.thomasfox.boatcalculator.valueset.impl.Crew;
 import com.github.thomasfox.boatcalculator.valueset.impl.DaggerboardOrKeel;
 import com.github.thomasfox.boatcalculator.valueset.impl.LeverSailDaggerboard;
 import com.github.thomasfox.boatcalculator.valueset.impl.Rigg;
-import com.github.thomasfox.boatcalculator.valueset.impl.TrampolineWing1;
-import com.github.thomasfox.boatcalculator.valueset.impl.TrampolineWing2;
+import com.github.thomasfox.boatcalculator.valueset.impl.TrampolineLeewardWing;
+import com.github.thomasfox.boatcalculator.valueset.impl.TrampolineWindwardWing;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -50,8 +50,8 @@ public class MothRideoutHeelAngleStrategy implements StepComputationStrategy
     ValueSet rigg = allValues.getValueSetNonNull(Rigg.ID);
     ValueSet crew = allValues.getValueSetNonNull(Crew.ID);
     ValueSet leverSailDaggerboard = allValues.getValueSetNonNull(LeverSailDaggerboard.ID);
-    ValueSet trampolineWing1 = allValues.getValueSetNonNull(TrampolineWing1.ID);
-    ValueSet trampolineWing2 = allValues.getValueSetNonNull(TrampolineWing2.ID);
+    ValueSet trampolineWing1 = allValues.getValueSetNonNull(TrampolineLeewardWing.ID);
+    ValueSet trampolineWing2 = allValues.getValueSetNonNull(TrampolineWindwardWing.ID);
 
     PhysicalQuantityValue liftCoefficient3D = rigg.getKnownQuantityValue(PhysicalQuantity.LIFT_COEFFICIENT_3D);
     PhysicalQuantityValue crewWeight = crew.getKnownQuantityValue(PhysicalQuantity.WEIGHT);
