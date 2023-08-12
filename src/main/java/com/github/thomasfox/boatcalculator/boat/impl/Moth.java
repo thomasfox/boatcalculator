@@ -128,6 +128,7 @@ public class Moth extends Dinghy
         PhysicalQuantity.MODULUS_OF_ELASTICITY,
         PhysicalQuantity.MODULUS_OF_ELASTICITY.getFixedValue());
     rudderLiftingFoil.addHiddenOutput(PhysicalQuantity.WING_SPAN_IN_MEDIUM);
+    rudderLiftingFoil.removeToInput(PhysicalQuantity.MAX_ANGLE_OF_ATTACK);
 
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d);
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.12d);
@@ -221,6 +222,7 @@ public class Moth extends Dinghy
           },
         new ValueSet[] {mainLiftingFoil, rudderLiftingFoil},
         new ValueSet[] {rigg},
+        new ValueSet[] {daggerboardOrKeel, rudder},
         new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.WINDWARD_HEEL_ANGLE, BoatGlobalValues.ID)
         ));

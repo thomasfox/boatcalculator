@@ -54,6 +54,8 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
   @NonNull
   private final List<ValueSet> sineOfHeelAngleLiftValueSets;
 
+  private final List<ValueSet> minusSineOfHeelAngleLiftValueSets;
+
   @NonNull
   private final PhysicalQuantityInSet heelAngle;
 
@@ -76,6 +78,9 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
    * @param sineOfHeelAngleLiftValueSets all value sets which lift counterbalances weight
    *        proportional to the sine of the windward heel angle.
    *        These value sets are NOT affected by the angle of attach which is set by this strategy.
+   * @param minusSineOfHeelAngleLiftValueSets all value sets which lift adds to the weight
+   *        proportional to the sine of the windward heel angle.
+   *        These value sets are NOT affected by the angle of attach which is set by this strategy.
    * @param maxAngleOfAttack source of the the maximum possible angle of attack
    * @param heelAngle source of the the windward heel angle.
    */
@@ -83,12 +88,14 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
       @NonNull PhysicalQuantityInSet[] weightSources,
       @NonNull ValueSet[] cosineOfHeelAngleLiftValueSets,
       @NonNull ValueSet[] sineOfHeelAngleLiftValueSets,
+      @NonNull ValueSet[] minusSineOfHeelAngleLiftValueSets,
       @NonNull PhysicalQuantityInSet maxAngleOfAttack,
       @NonNull PhysicalQuantityInSet heelAngle)
   {
     this.weightSources = weightSources;
     this.cosineOfHeelAngleLiftValueSets = Arrays.asList(cosineOfHeelAngleLiftValueSets);
     this.sineOfHeelAngleLiftValueSets = Arrays.asList(sineOfHeelAngleLiftValueSets);
+    this.minusSineOfHeelAngleLiftValueSets = Arrays.asList(minusSineOfHeelAngleLiftValueSets);
     this.heelAngle = heelAngle;
     this.maxAngleOfAttack = maxAngleOfAttack;
     checkUnitsOfWeightSources();
@@ -160,29 +167,32 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
     double cosineOfHeelAngle = Math.cos(heelAngleValue * Math.PI / 180);
     double sineOfHeelAngle = Math.sin(heelAngleValue * Math.PI / 180);
 
-    double alreadyCalculatedLift = 0;
+    double alreadyCalculatedVerticalLift = 0;
     Double trialAngleOfAttack = null;
     List<ValueSet> modifiableLiftValueSets = new ArrayList<>();
     List<ValueSet> allLiftValueSets = new ArrayList<>();
     allLiftValueSets.addAll(cosineOfHeelAngleLiftValueSets);
     allLiftValueSets.addAll(sineOfHeelAngleLiftValueSets);
+    allLiftValueSets.addAll(minusSineOfHeelAngleLiftValueSets);
     for (ValueSet liftValueSet : allLiftValueSets)
     {
       PhysicalQuantityValue lift
           = liftValueSet.getKnownQuantityValue(PhysicalQuantity.LIFT);
-      if (lift != null && !lift.isTrial())
+      PhysicalQuantityValue angleOfAttack
+              = liftValueSet.getKnownQuantityValue(PhysicalQuantity.ANGLE_OF_ATTACK);
+      if (cosineOfHeelAngleLiftValueSets.contains(liftValueSet))
       {
-        if (cosineOfHeelAngleLiftValueSets.contains(liftValueSet))
+        if (angleOfAttack != null && !angleOfAttack.isTrial())
         {
-          alreadyCalculatedLift += lift.getValue() * cosineOfHeelAngle;
+          if (lift == null)
+          {
+            return false;
+          }
+          alreadyCalculatedVerticalLift += lift.getValue() * cosineOfHeelAngle;
+          continue;
         }
-        else
-        {
-          alreadyCalculatedLift += lift.getValue() * sineOfHeelAngle;
-        }
-        continue;
       }
-      if (!cosineOfHeelAngleLiftValueSets.contains(liftValueSet))
+      else
       {
         if (sineOfHeelAngle < 0.00001)
         {
@@ -192,11 +202,17 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
         {
           return false;
         }
-        alreadyCalculatedLift += lift.getValue() * sineOfHeelAngle;
+        if (sineOfHeelAngleLiftValueSets.contains(liftValueSet))
+        {
+          alreadyCalculatedVerticalLift += lift.getValue() * sineOfHeelAngle;
+        }
+        else
+        {
+          alreadyCalculatedVerticalLift -= lift.getValue() * sineOfHeelAngle;
+        }
         continue;
       }
-      PhysicalQuantityValue angleOfAttack
-          = liftValueSet.getKnownQuantityValue(PhysicalQuantity.ANGLE_OF_ATTACK);
+      // now we know cosineOfHeelAngleLiftValueSets.contains(liftValueSet) and angleOfAttack.isTrial() == true
       if (angleOfAttack != null)
       {
         if (!angleOfAttack.isTrial())
@@ -208,9 +224,9 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
           trialAngleOfAttack = angleOfAttack.getValue();
         }
       }
-      PhysicalQuantityValue liftCoefficient3D
+      PhysicalQuantityValue lift3D
           = liftValueSet.getKnownQuantityValue(PhysicalQuantity.LIFT);
-      if (liftCoefficient3D != null && !liftCoefficient3D.isTrial())
+      if (lift3D != null && !lift3D.isTrial())
       {
         continue;
       }
@@ -250,12 +266,12 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
         modifiableLift += lift.getValue();
       }
 
-      double totalLift = modifiableLift * cosineOfHeelAngle + alreadyCalculatedLift;
+      double totalLift = modifiableLift * cosineOfHeelAngle + alreadyCalculatedVerticalLift;
       CompareWithOldResult liftWeightDifference
           = new CompareWithOldResult(totalLift, weight);
       boolean converged = liftWeightDifference.relativeDifferenceIsBelowThreshold();
       if (converged
-          || (totalLift < weight && trialAngleOfAttack == maxAngleOfAttackValue))
+          || (totalLift < weight && trialAngleOfAttack.equals(maxAngleOfAttackValue)))
       {
         double hullLift = weight - totalLift;
         if (hullLift < 0
@@ -325,11 +341,6 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
   @Override
   public Set<PhysicalQuantityInSet> getInputs()
   {
-    Set<PhysicalQuantityInSet> result = new HashSet<>();
-    for (PhysicalQuantityInSet weightSource : weightSources)
-    {
-      result.add(weightSource);
-    }
-    return result;
+    return new HashSet<>(Arrays.asList(weightSources));
   }
 }

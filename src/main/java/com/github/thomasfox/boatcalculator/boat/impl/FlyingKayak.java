@@ -27,7 +27,7 @@ public class FlyingKayak extends Boat
 {
   MainLiftingFoil mainLiftingFoil = new MainLiftingFoil();
 
-  protected ValueSet daggerboardOrKeel = new DaggerboardOrKeel();
+  protected ValueSet daggerboardOrKeel;
 
   protected SimpleValueSet crew = new Crew();
 
@@ -118,6 +118,7 @@ public class FlyingKayak extends Boat
             new PhysicalQuantityInSet(PhysicalQuantity.WEIGHT, BoatGlobalValues.ID)
           },
         new ValueSet[] {mainLiftingFoil},
+        new ValueSet[] {},
         new ValueSet[] {},
         new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.WINDWARD_HEEL_ANGLE, BoatGlobalValues.ID)

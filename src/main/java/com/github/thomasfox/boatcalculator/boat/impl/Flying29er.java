@@ -77,6 +77,7 @@ public class Flying29er extends Skiff29er
           },
         new ValueSet[] {mainLiftingFoil},
         new ValueSet[] {rigg},
+        new ValueSet[] {daggerboardOrKeel, rudder},
         new PhysicalQuantityInSet(PhysicalQuantity.MAX_ANGLE_OF_ATTACK, MainLiftingFoil.ID),
         new PhysicalQuantityInSet(PhysicalQuantity.WINDWARD_HEEL_ANGLE, BoatGlobalValues.ID)
         ));
