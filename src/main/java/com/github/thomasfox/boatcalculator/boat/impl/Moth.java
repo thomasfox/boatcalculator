@@ -130,6 +130,8 @@ public class Moth extends Dinghy
     rudderLiftingFoil.addHiddenOutput(PhysicalQuantity.WING_SPAN_IN_MEDIUM);
     rudderLiftingFoil.removeToInput(PhysicalQuantity.MAX_ANGLE_OF_ATTACK);
     rudderLiftingFoil.addToInput(PhysicalQuantity.LIFT);
+    rudderLiftingFoil.addToInput(PhysicalQuantity.AREA_IN_MEDIUM);
+    rudderLiftingFoil.addToInput(PhysicalQuantity.BENDING);
 
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_SPAN, 1d);
     rudder.setStartValueNoOverwrite(PhysicalQuantity.WING_CHORD, 0.12d);

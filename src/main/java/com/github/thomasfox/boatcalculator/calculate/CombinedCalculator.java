@@ -6,46 +6,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.github.thomasfox.boatcalculator.calculate.impl.*;
 import org.slf4j.MDC;
 
-import com.github.thomasfox.boatcalculator.calculate.impl.AngleOfAttackFromAngleToHorizontalCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.ApparentWindDirectionCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.ApparentWindSpeedCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.AreaInMediumCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.AreaLoadFixedMiddleBendingCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.BrakingForceCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.CrosssectionAreaCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.DrivingForceCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.BrakingForceForBentWingCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.FroudeNumberCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.InducedDragCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.InducedDragCoefficientCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.LateralForceCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.LeverFromWeightCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.LiftCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.LiftCoefficient3DCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.LiftCoefficient3DFromLiftCoefficientCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.LiftCoefficientFromLiftCoefficient3DCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.LiftDividedByTotalDragCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.ParasiticDragCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.ProfileDragCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.ReynoldsNumberCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.SailingAngleCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.SecondMomentOfAreaCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.SemiwingAspectRatioCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.SurfacePiercingDragCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.SurfacePiercingDragCoefficientCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.ThicknessCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.TorqueCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.TorqueForBentWingCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.TotalDragCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.TotalDragCoefficientCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.VMGCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.WaveMakingDragCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.WaveMakingDragCoefficientCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.WeightFromMassCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.WingChordFromAreaAndSpanInMediumCalculator;
-import com.github.thomasfox.boatcalculator.calculate.impl.WingChordFromSecondMomentOfAreaCalculator;
 import com.github.thomasfox.boatcalculator.interpolate.QuantityRelation;
 import com.github.thomasfox.boatcalculator.interpolate.QuantityRelationsCalculator;
 import com.github.thomasfox.boatcalculator.valueset.ValueSet;
@@ -99,6 +62,7 @@ public class CombinedCalculator
     calculators.add(new SurfacePiercingDragCoefficientCalculator());
     calculators.add(new BrakingForceForBentWingCalculator());
     calculators.add(new TorqueForBentWingCalculator());
+    calculators.add(new WingSpanFromFixedAreaLoadAndAreaCalculator());
   }
 
   public void setQuantityRelations(List<QuantityRelation> quantityRelationsList)
