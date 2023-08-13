@@ -182,7 +182,8 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
               = liftValueSet.getKnownQuantityValue(PhysicalQuantity.ANGLE_OF_ATTACK);
       if (cosineOfHeelAngleLiftValueSets.contains(liftValueSet))
       {
-        if (angleOfAttack != null && !angleOfAttack.isTrial())
+        if ((angleOfAttack != null && !angleOfAttack.isTrial())
+            || (lift != null && !lift.isTrial()))
         {
           if (lift == null)
           {
