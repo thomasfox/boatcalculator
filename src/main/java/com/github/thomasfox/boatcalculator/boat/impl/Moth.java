@@ -172,7 +172,7 @@ public class Moth extends Dinghy
     trampolineLeewardWing.setStartValue(PhysicalQuantity.SIDEWAY_ANGLE, 20);
     trampolineLeewardWing.setStartValue(PhysicalQuantity.BACKWAY_ANGLE, 0);
     trampolineLeewardWing.setStartValue(PhysicalQuantity.WING_CHORD, 2);
-    trampolineLeewardWing.setStartValue(PhysicalQuantity.HALFWING_SPAN, 1.25);
+    trampolineLeewardWing.setStartValue(PhysicalQuantity.HALFWING_SPAN, 1.125);
     trampolineLeewardWing.setStartValue(PhysicalQuantity.CENTER_OF_EFFORT_HEIGHT, 1.125);
     trampolineLeewardWing.addHiddenOutput(PhysicalQuantity.WINDWARD_HEEL_ANGLE);
     trampolineLeewardWing.addHiddenOutput(PhysicalQuantity.VELOCITY);
