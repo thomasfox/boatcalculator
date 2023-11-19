@@ -21,14 +21,14 @@ public class XfoilResultLoader
     String title;
     PhysicalQuantityValues fixedQuantities;
     List<PhysicalQuantityValues> relatedQuantityValues;
-    boolean measuredRiggPolar;
+    boolean measuredPolar; // a measured polar already contains induced lift
     try
     {
       readPrelude(bufferedReader);
       title = readTitle(bufferedReader);
-      measuredRiggPolar = title.startsWith("MEASURED RIGG");
-      fixedQuantities = readFixedQuantities(bufferedReader, measuredRiggPolar);
-      relatedQuantityValues = readPolar(bufferedReader, measuredRiggPolar);
+      measuredPolar = title.startsWith("MEASURED");
+      fixedQuantities = readFixedQuantities(bufferedReader, measuredPolar);
+      relatedQuantityValues = readPolar(bufferedReader, measuredPolar);
     }
     catch (IOException e)
     {
@@ -41,10 +41,10 @@ public class XfoilResultLoader
       .build();
 
     OutOfInterpolationIntervalStrategy notEnoughLiftStrategy
-        = new OutOfInterpolationIntervalStrategy(measuredRiggPolar ? PhysicalQuantity.LIFT_COEFFICIENT_3D : PhysicalQuantity.LIFT_COEFFICIENT, true);
+        = new OutOfInterpolationIntervalStrategy(measuredPolar ? PhysicalQuantity.LIFT_COEFFICIENT_3D : PhysicalQuantity.LIFT_COEFFICIENT, true);
     notEnoughLiftStrategy.addProvidedQuantities(
         new SimplePhysicalQuantityValue(PhysicalQuantity.ANGLE_OF_ATTACK, 30d),
-        new SimplePhysicalQuantityValue(measuredRiggPolar ? PhysicalQuantity.TOTAL_DRAG_COEFFICIENT : PhysicalQuantity.PROFILE_DRAG_COEFFICIENT , 0.3d));
+        new SimplePhysicalQuantityValue(measuredPolar ? PhysicalQuantity.TOTAL_DRAG_COEFFICIENT : PhysicalQuantity.PROFILE_DRAG_COEFFICIENT , 0.3d));
     result.add(notEnoughLiftStrategy);
 
     return result;
