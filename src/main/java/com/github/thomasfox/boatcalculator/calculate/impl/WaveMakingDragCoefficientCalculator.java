@@ -14,7 +14,7 @@ public class WaveMakingDragCoefficientCalculator extends Calculator
     super(PhysicalQuantity.WAVE_MAKING_DRAG_COEFFICIENT,
         PhysicalQuantity.FROUDE_NUMBER_SUMBERGENCE,
         PhysicalQuantity.SUBMERGENCE_DEPTH,
-        PhysicalQuantity.LIFT_COEFFICIENT,
+        PhysicalQuantity.LIFT_COEFFICIENT_3D,
         PhysicalQuantity.WING_CHORD);
   }
 
@@ -28,7 +28,7 @@ public class WaveMakingDragCoefficientCalculator extends Calculator
       return 0;
     }
     double submergenceDepth = valueSet.getKnownQuantityValue(PhysicalQuantity.SUBMERGENCE_DEPTH).getValue();
-    double liftCoefficient = valueSet.getKnownQuantityValue(PhysicalQuantity.LIFT_COEFFICIENT).getValue();
+    double liftCoefficient = valueSet.getKnownQuantityValue(PhysicalQuantity.LIFT_COEFFICIENT_3D).getValue();
     double wingChord = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_CHORD).getValue();
 
     double waveMakingDragCoefficient = 0.5*liftCoefficient*liftCoefficient
