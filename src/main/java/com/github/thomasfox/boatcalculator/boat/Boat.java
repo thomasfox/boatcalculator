@@ -59,8 +59,8 @@ public abstract class Boat
         PhysicalQuantity.KINEMATIC_VISCOSITY, Rudder.ID));
     valuesAndCalculationRules.add(new ReduceSpanInMediumWhenFoilingStrategy(rudder));
 
-    Reader kinematicViscosityWaterRader = new InputStreamReader(getClass().getResourceAsStream("/kinematicViscosity_water.txt"));
-    water.getQuantityRelations().add(new QuantityRelationLoader().load(kinematicViscosityWaterRader, "kinematicViscosityWater"));
+    Reader kinematicViscosityWaterReader = new InputStreamReader(getClass().getResourceAsStream("/kinematicViscosity_water.txt"));
+    water.getQuantityRelations().add(new QuantityRelationLoader().load(kinematicViscosityWaterReader, "kinematicViscosityWater"));
     water.setStartValueNoOverwrite(PhysicalQuantity.TEMPERATURE, 15);
   }
 
