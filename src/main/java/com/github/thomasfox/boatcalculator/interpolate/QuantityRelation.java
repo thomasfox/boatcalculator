@@ -103,34 +103,49 @@ public class QuantityRelation
 
   public CalculatedPhysicalQuantityValues getRelatedQuantityValues(ValueSet valueSet)
   {
-    CalculatedPhysicalQuantityValues result = new CalculatedPhysicalQuantityValues();
     PhysicalQuantity providedQuantity = getProvidedQuantity(valueSet);
     if (providedQuantity == null)
     {
-      return result;
+      return new CalculatedPhysicalQuantityValues();
     }
-    Set<PhysicalQuantity> availableQuantities = getAvailableQuantities(valueSet, providedQuantity);
 
     PhysicalQuantityValue xQuantityValue = valueSet.getKnownQuantityValue(providedQuantity);
+    CalculatedPhysicalQuantityValues result = getRelatedQuantityValues(xQuantityValue);
+    Set<PhysicalQuantity> calculateablePhysicalQuantities = getCalculateableQuantities(valueSet, providedQuantity);
+    for (PhysicalQuantity physicalQuantity : result.getContainedQuantities())
+    {
+      if (!calculateablePhysicalQuantities.contains(physicalQuantity))
+      {
+        result.remove(physicalQuantity);
+      }
+    }
+    return result;
+  }
+
+  public CalculatedPhysicalQuantityValues getRelatedQuantityValues(PhysicalQuantityValue xQuantityValue)
+  {
+    CalculatedPhysicalQuantityValues result = new CalculatedPhysicalQuantityValues();
     double xValue = xQuantityValue.getValue();
     TwoValues<PhysicalQuantityValues> enclosingPoints;
     try
     {
-      enclosingPoints = interpolator.getEnclosing(xValue, relatedQuantityValues, x -> x.getValue(providedQuantity));
+      enclosingPoints = interpolator.getEnclosing(
+          xValue,
+          relatedQuantityValues,
+          x -> x.getValue(xQuantityValue.getPhysicalQuantity()));
     }
     catch (OutOfInterpolationIntervalException e)
     {
       for (OutOfInterpolationIntervalStrategy strategy : outOfInterpolationStrategies)
       {
-        if (strategy.getKnownQuantity() == providedQuantity
+        if (strategy.getKnownQuantity() == xQuantityValue.getPhysicalQuantity()
             && strategy.isAboveKnownInterval() == e.isAboveInterval())
         {
           return strategy.getProvidedQuantities();
         }
       }
-      log.info("Could not calculate " + availableQuantities
-      + " for value " + valueSet.getKnownQuantityValue(providedQuantity).getValue()
-      + " of " + providedQuantity.getDisplayName()
+      log.info("Could not calculate related values for value " + xQuantityValue.getValue()
+      + " of " + xQuantityValue.getPhysicalQuantity().getDisplayName()
       + " from quantityRelations " + name
       + " with fixed quantities " + printFixedQuantities()
       + " reason is " + e.getMessage());
@@ -138,22 +153,25 @@ public class QuantityRelation
     }
     catch (InterpolatorException e)
     {
-      log.info("Could not calculate " + availableQuantities
-      + " for value " + valueSet.getKnownQuantityValue(providedQuantity).getValue()
-      + " of " + providedQuantity.getDisplayName()
+      log.info("Could not calculate related values for value " +  xQuantityValue.getValue()
+      + " of " + xQuantityValue.getPhysicalQuantity().getDisplayName()
       + " from quantityRelations " + name
       + " with fixed quantities " + printFixedQuantities()
       + " reason is " + e.getMessage());
       return result;
     }
 
-    for (PhysicalQuantity wantedQuantity : availableQuantities)
+    for (PhysicalQuantity wantedQuantity : getRelatedQuantities())
     {
+      if (wantedQuantity == xQuantityValue.getPhysicalQuantity())
+      {
+        continue;
+      }
       double interpolatedValue = interpolator.interpolateY(
           xValue,
-          new SimpleXYPoint(enclosingPoints.value1.getValue(providedQuantity), enclosingPoints.value1.getValue(wantedQuantity)),
-          new SimpleXYPoint(enclosingPoints.value2.getValue(providedQuantity), enclosingPoints.value2.getValue(wantedQuantity)));
-        result.setValueNoOverwrite(new SimplePhysicalQuantityValue(wantedQuantity, interpolatedValue), name, xQuantityValue.isTrial());
+          new SimpleXYPoint(enclosingPoints.value1.getValue(xQuantityValue.getPhysicalQuantity()), enclosingPoints.value1.getValue(wantedQuantity)),
+          new SimpleXYPoint(enclosingPoints.value2.getValue(xQuantityValue.getPhysicalQuantity()), enclosingPoints.value2.getValue(wantedQuantity)));
+      result.setValueNoOverwrite(new SimplePhysicalQuantityValue(wantedQuantity, interpolatedValue), name, xQuantityValue.isTrial());
     }
     return result;
   }
@@ -233,7 +251,7 @@ public class QuantityRelation
     return true;
   }
 
-  public Set<PhysicalQuantity> getAvailableQuantities(ValueSet valueSet, PhysicalQuantity providedQuantity)
+  Set<PhysicalQuantity> getCalculateableQuantities(ValueSet valueSet, PhysicalQuantity providedQuantity)
   {
     Set<PhysicalQuantity> result = new HashSet<>();
     Set<PhysicalQuantity> relatedQuantities = getRelatedQuantities();
@@ -285,6 +303,34 @@ public class QuantityRelation
       if (!fixedQuantityValue.equals(valueSet.getKnownQuantityValue(fixedQuantityValue.getPhysicalQuantity())))
       {
         result.setValue(fixedQuantityValue);
+      }
+    }
+    return result;
+  }
+
+  public Double getSmallestRelatedValue(PhysicalQuantity physicalQuantity)
+  {
+    Double result = null;
+    for (PhysicalQuantityValues physicalQuantityValue : relatedQuantityValues)
+    {
+      Double trialValue = physicalQuantityValue.getValue(physicalQuantity);
+      if (result == null || (trialValue != null && trialValue < result))
+      {
+        result = trialValue;
+      }
+    }
+    return result;
+  }
+
+  public Double getGreatestRelatedValue(PhysicalQuantity physicalQuantity)
+  {
+    Double result = null;
+    for (PhysicalQuantityValues physicalQuantityValue : relatedQuantityValues)
+    {
+      Double trialValue = physicalQuantityValue.getValue(physicalQuantity);
+      if (result == null || (trialValue != null && trialValue > result))
+      {
+        result = trialValue;
       }
     }
     return result;

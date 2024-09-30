@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import com.github.thomasfox.boatcalculator.calculate.impl.*;
 import org.slf4j.MDC;
 
-import com.github.thomasfox.boatcalculator.interpolate.QuantityRelation;
 import com.github.thomasfox.boatcalculator.interpolate.QuantityRelationsCalculator;
 import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 
@@ -63,11 +62,7 @@ public class CombinedCalculator
     calculators.add(new BrakingForceForBentWingCalculator());
     calculators.add(new TorqueForBentWingCalculator());
     calculators.add(new WingSpanFromFixedAreaLoadAndAreaCalculator());
-  }
-
-  public void setQuantityRelations(List<QuantityRelation> quantityRelationsList)
-  {
-    quantityRelationsCalculator.setQuantityRelations(quantityRelationsList);
+    calculators.add(new ChordFromReynoldsNumberCalculator());
   }
 
   public Set<String> calculate(ValueSet valueSet, PhysicalQuantity wantedQuantity, int step)

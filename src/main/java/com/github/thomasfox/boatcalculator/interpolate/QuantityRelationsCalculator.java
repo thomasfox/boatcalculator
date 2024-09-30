@@ -1,10 +1,8 @@
 package com.github.thomasfox.boatcalculator.interpolate;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -28,14 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 public class QuantityRelationsCalculator
 {
   private final Interpolator interpolator = new Interpolator();
-
-  private final List<QuantityRelation> quantityRelationsList = new ArrayList<>();
-
-  public void setQuantityRelations(List<QuantityRelation> quantityRelationsList)
-  {
-    this.quantityRelationsList.clear();
-    this.quantityRelationsList.addAll(quantityRelationsList);
-  }
 
   public Set<String> applyQuantityRelations(ValueSet valueSet)
   {
@@ -83,25 +73,25 @@ public class QuantityRelationsCalculator
    *         The values of the map contains the quantity relations which has the nonmatching fixed quantities
    *         in the corresponding key.
    */
-  protected Map<PhysicalQuantityValues, QuantityRelation> getFixedValueInterpolationCandidates(
+  public Map<PhysicalQuantityValues, QuantityRelation> getFixedValueInterpolationCandidates(
       ValueSet valueSet)
   {
     int minimalNumberOfNonmatchingQuantities = Integer.MAX_VALUE;
     Map<PhysicalQuantityValues, QuantityRelation> interpolationCandidates = new HashMap<>();
-    for (QuantityRelation quantityRelations : quantityRelationsList)
+    for (QuantityRelation quantityRelation : valueSet.getQuantityRelations())
     {
       PhysicalQuantityValues nonmatchingFixedValues
-          = quantityRelations.getNonmatchingFixedQuantities(valueSet);
+          = quantityRelation.getNonmatchingFixedQuantities(valueSet);
       int numberOfMissingQuantities = nonmatchingFixedValues.size();
       if (numberOfMissingQuantities <= minimalNumberOfNonmatchingQuantities
-          && quantityRelations.getUnknownOrTrialRelatedQuantities(valueSet).size() > 0)
+          && quantityRelation.getUnknownOrTrialRelatedQuantities(valueSet).size() > 0)
       {
         if (numberOfMissingQuantities < minimalNumberOfNonmatchingQuantities)
         {
           interpolationCandidates.clear();
         }
         minimalNumberOfNonmatchingQuantities = numberOfMissingQuantities;
-        interpolationCandidates.put(nonmatchingFixedValues, quantityRelations);
+        interpolationCandidates.put(nonmatchingFixedValues, quantityRelation);
       }
     }
 

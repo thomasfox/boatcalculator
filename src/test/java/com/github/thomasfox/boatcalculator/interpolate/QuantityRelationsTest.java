@@ -180,7 +180,7 @@ public class QuantityRelationsTest
   }
 
   @Test
-  public void testGetAvailableQuantities()
+  public void testGetCalculateableQuantities()
   {
     // arrange
     List<PhysicalQuantityValues> relatedValues = new ArrayList<>();
@@ -199,7 +199,7 @@ public class QuantityRelationsTest
     valueSet.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.FORCE, 50000d), "me", true);
 
     // act
-    Set<PhysicalQuantity> result = sut.getAvailableQuantities(valueSet, PhysicalQuantity.ANGLE_OF_ATTACK);
+    Set<PhysicalQuantity> result = sut.getCalculateableQuantities(valueSet, PhysicalQuantity.ANGLE_OF_ATTACK);
 
     // assert
     assertThat(result).containsOnly(
@@ -207,7 +207,7 @@ public class QuantityRelationsTest
   }
 
   @Test
-  public void testGetAvailableQuantities_providedQuantityIsTrial()
+  public void testGetCalculateableQuantities_providedQuantityIsTrial()
   {
     // arrange
     List<PhysicalQuantityValues> relatedValues = new ArrayList<>();
@@ -226,7 +226,7 @@ public class QuantityRelationsTest
     valueSet.setCalculatedValue(new SimplePhysicalQuantityValue(PhysicalQuantity.FORCE, 50000d), "me", true);
 
     // act
-    Set<PhysicalQuantity> result = sut.getAvailableQuantities(valueSet, PhysicalQuantity.ANGLE_OF_ATTACK);
+    Set<PhysicalQuantity> result = sut.getCalculateableQuantities(valueSet, PhysicalQuantity.ANGLE_OF_ATTACK);
 
     // assert
     assertThat(result).containsOnly(
@@ -235,7 +235,7 @@ public class QuantityRelationsTest
 
 
   @Test
-  public void testGetAvailableQuantities_noKnownValue()
+  public void testGetCalculateableQuantities_noKnownValue()
   {
     // arrange
     List<PhysicalQuantityValues> relatedValues = new ArrayList<>();
@@ -251,7 +251,7 @@ public class QuantityRelationsTest
     valueSet.setStartValueNoOverwrite(new SimplePhysicalQuantityValue(PhysicalQuantity.FLOW_DIRECTION, 0d));
 
     // act
-    Set<PhysicalQuantity> result = sut.getAvailableQuantities(valueSet, PhysicalQuantity.ANGLE_OF_ATTACK);
+    Set<PhysicalQuantity> result = sut.getCalculateableQuantities(valueSet, PhysicalQuantity.ANGLE_OF_ATTACK);
 
     // assert
     assertThat(result).containsOnly(

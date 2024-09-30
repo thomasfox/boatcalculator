@@ -443,7 +443,6 @@ public class ValuesAndCalculationRules
     for (ValueSet valueSet : getValueSets())
     {
       CombinedCalculator combinedCalculator = new CombinedCalculator();
-      combinedCalculator.setQuantityRelations(valueSet.getQuantityRelations());
       if (valueSet.getId().equals(soughtValue.getSetId()))
       {
         List<Calculator> calculatorsWithOutput = combinedCalculator.getCalculatorsWithOutput(soughtValue.getPhysicalQuantity());

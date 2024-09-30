@@ -252,7 +252,6 @@ public class LiftAndAngleOfAttackStrategy implements StepComputationStrategy
             getCalculatedByDescription(allValues),
             true,
             getWeightSourceValuesWithSetId(allValues));
-        quantityRelationsCalculator.setQuantityRelations(liftValueSet.getQuantityRelations());
         quantityRelationsCalculator.applyQuantityRelations(liftValueSet);
         if (liftValueSet.getKnownQuantityValue(PhysicalQuantity.LIFT_COEFFICIENT) != null)
         {

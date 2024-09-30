@@ -98,7 +98,6 @@ public class MothRideoutHeelAngleStrategy implements StepComputationStrategy
             getClass().getSimpleName() + " trial Value",
             true);
       }
-      quantityRelationsCalculator.setQuantityRelations(rigg.getQuantityRelations());
       quantityRelationsCalculator.applyQuantityRelations(rigg);
       new LiftCalculator().apply(rigg);
       // the following is needed because otherwise LiftCoefficient3DFromLiftCoefficientCalculator

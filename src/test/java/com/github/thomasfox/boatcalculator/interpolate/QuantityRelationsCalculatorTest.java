@@ -655,13 +655,11 @@ public class QuantityRelationsCalculatorTest
   private void givenQuantityRelationsContainRe100000QuantityRelation()
   {
     daggerboardOrKeel.getQuantityRelations().add(reynolds100000QuantityRelation);
-    quantityRelationsCalculator.setQuantityRelations(daggerboardOrKeel.getQuantityRelations());
   }
 
   private void givenQuantityRelationsContainRe200000QuantityRelation()
   {
     daggerboardOrKeel.getQuantityRelations().add(reynolds200000QuantityRelation);
-    quantityRelationsCalculator.setQuantityRelations(daggerboardOrKeel.getQuantityRelations());
   }
 
   private void givenDaggerboardHasRe150000()

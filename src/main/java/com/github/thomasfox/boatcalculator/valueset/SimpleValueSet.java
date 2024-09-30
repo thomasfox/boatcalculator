@@ -275,8 +275,6 @@ public class SimpleValueSet implements ValueSet
   @Override
   public Set<String> calculateSinglePass(ValuesAndCalculationRules allValues, PhysicalQuantity wantedQuantity, int step)
   {
-    combinedCalculator.setQuantityRelations(quantityRelations);
-
     Set<String> changed = combinedCalculator.calculate(this, wantedQuantity, step);
     return changed;
   }
