@@ -23,11 +23,15 @@ public enum PhysicalQuantity
   BRAKING_FORCE("Bremskraft", "N", true),
   FORWARD_FORCE("Gesamtkraft Vorwärts", "N", true),
   REYNOLDS_NUMBER("Reynoldszahl", null, false),
-  HALFWING_SPAN("Spannweite des Flügels", "m", false, "quer zur Profilierung, von einem Ende zum anderen, ein Ende ist die Mitte"),
+  HALFWING_SPAN("Halbe Spannweite des Flügels", "m", false, "quer zur Profilierung, von einem Ende zum anderen, ein Ende ist die Mitte"),
   WING_SPAN("Spannweite des Flügels", "m", false, "quer zur Profilierung, von einem Ende zum anderen"),
   WING_SPAN_IN_MEDIUM("Spannweite im Medium", "m", false, "quer zur Profilierung, die Länge die im dichten Medium (Wasser) ist"),
   AREA_IN_MEDIUM("Fläche im Medium", "m^2", true),
   WING_CHORD("Tiefe des Flügels", "m", false, "quer zur Spannweite, gleich über die geamte Spannweite"),
+  WING_INNER_CHORD("Innere Tiefe des Flügels", "m", false, "quer zur Spannweite, für einen trapezförmigen Flügel"),
+  WING_OUTER_CHORD("Äußere Tiefe des Flügels", "m", false, "quer zur Spannweite, für einen trapezförmigen Flügel"),
+  WING_INNER_OUTER_CHORD_RATIO("Verhältnis innerer zu äußerer Tiefe des Flügels", null, false, "quer zur Spannweite, für einen trapezförmigen Flügel"),
+  TRAPEZOIDAL_WING_BENDING_CORRECTION_FACTOR("Korrekturfaktor für Durchbiegung bzgl. innerre Tiefe", null, false, "quer zur Spannweite, für einen trapezförmigen Flügel"),
   SEMIWING_ASPECT_RATIO("Halbflügelstreckung", null, false),
   WING_THICKNESS("Dicke des Flügels", "m", false, "Dicke an der dicksten Stelle"),
   WING_RELATIVE_THICKNESS("Relative Dicke des Flügels", null, false, "Dicke an der dicksten Stelle geteilt durch Profiltiefe"),
@@ -77,37 +81,40 @@ public enum PhysicalQuantity
   RIDING_HEIGHT("Flughöhe", "m", null, "Abstand Wasseroberfläche zum Boden des Bootes (wo das Schwert beginnt)"),
   PROFILE("Profil", null, false);
 
-  private String displayName;
+  private final String displayName;
 
-  private String unit;
+  private final String unit;
 
-  private String description;
+  private final String description;
 
-  private Double fixedValue;
+  private final Double fixedValue;
 
   /**
    * Whether two parts together have the same value (false)
    * or double the value (true)
    * or whether this question cannot easily be answered (null);
    */
-  private Boolean additive;
+  private final Boolean additive;
 
-  private PhysicalQuantity(String displayName, String unit, Boolean additive)
+  PhysicalQuantity(String displayName, String unit, Boolean additive)
   {
     this.displayName = displayName;
     this.unit = unit;
     this.additive = additive;
+    this.description = null;
+    this.fixedValue = null;
   }
 
-  private PhysicalQuantity(String displayName, String unit, Boolean additive, String description)
+  PhysicalQuantity(String displayName, String unit, Boolean additive, String description)
   {
     this.displayName = displayName;
     this.unit = unit;
     this.description = description;
     this.additive = additive;
+    this.fixedValue = null;
   }
 
-  private PhysicalQuantity(String displayName, String unit, Boolean additive, String description, Double fixedValue)
+  PhysicalQuantity(String displayName, String unit, Boolean additive, String description, Double fixedValue)
   {
     this.displayName = displayName;
     this.unit = unit;
@@ -139,11 +146,6 @@ public enum PhysicalQuantity
   public Boolean getAdditive()
   {
     return additive;
-  }
-
-  public boolean isStrictlyAdditive()
-  {
-    return additive != null && additive;
   }
 
   public String getDisplayNameIncludingUnit()

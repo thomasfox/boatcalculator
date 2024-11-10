@@ -6,7 +6,7 @@ import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 
 /**
  * Gibt die Durchbiegung eines Flügels, das an einem Ende fest gelagert
- * und am anderen Ende mit einer Kraft Quer zum Flügel belastet wird, zurück.
+ * und am anderen Ende mit einer Kraft quer zum Flügel belastet wird, zurück.
  * Siehe Joos, Lehrbuch der Theoretischen Physik, 15. Auflage, S. 169
  */
 public class PointLoadBendingCalculator extends Calculator

@@ -3,15 +3,23 @@ package com.github.thomasfox.boatcalculator.calculate.impl;
 import com.github.thomasfox.boatcalculator.calculate.Calculator;
 import com.github.thomasfox.boatcalculator.calculate.PhysicalQuantity;
 import com.github.thomasfox.boatcalculator.calculate.integrate.Integrate;
+import com.github.thomasfox.boatcalculator.interpolate.QuantityRelation;
+import com.github.thomasfox.boatcalculator.value.CalculatedPhysicalQuantityValues;
+import com.github.thomasfox.boatcalculator.value.PhysicalQuantityValues;
+import com.github.thomasfox.boatcalculator.value.SimplePhysicalQuantityValue;
 import com.github.thomasfox.boatcalculator.valueset.ValueSet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Gibt die Durchbiegung eines Flügels, der in der Mitte fest gelagert ist an den Enden frei ist, zurück.
  * Der Flügel ist über die gesamte Fläche gleichmäßig belastet.
- * TODO WING_SPAN und WING_SPAN_IN_MEDIUM - wie soll das hier verwendet werden?
  */
 public class AreaLoadFixedMiddleTrapezoidalWingBendingCalculator extends Calculator
 {
+  private final QuantityRelation correctionFactors;
+
   public AreaLoadFixedMiddleTrapezoidalWingBendingCalculator()
   {
     super(PhysicalQuantity.BENDING,
@@ -20,7 +28,23 @@ public class AreaLoadFixedMiddleTrapezoidalWingBendingCalculator extends Calcula
         PhysicalQuantity.WING_OUTER_CHORD,
         PhysicalQuantity.LIFT,
         PhysicalQuantity.MODULUS_OF_ELASTICITY,
-        PhysicalQuantity.SECOND_MOMENT_OF_AREA);
+        PhysicalQuantity.NORMALIZED_SECOND_MOMENT_OF_AREA);
+
+    List<PhysicalQuantityValues> relatedQuantities = new ArrayList<>();
+    for (int i=0; i <= 500; i++)
+    {
+      double x = i / 100d;
+      double correction = calculateFactorForTrapezoidalWing(x);
+      PhysicalQuantityValues point = new PhysicalQuantityValues();
+      point.setValue(PhysicalQuantity.WING_INNER_OUTER_CHORD_RATIO, x);
+      point.setValue(PhysicalQuantity.TRAPEZOIDAL_WING_BENDING_CORRECTION_FACTOR, correction);
+      relatedQuantities.add(point);
+    }
+    correctionFactors = new QuantityRelation(
+        "correctionFactor",
+        new PhysicalQuantityValues(),
+        relatedQuantities,
+        PhysicalQuantity.WING_INNER_OUTER_CHORD_RATIO);
   }
 
   @Override
@@ -36,7 +60,19 @@ public class AreaLoadFixedMiddleTrapezoidalWingBendingCalculator extends Calcula
     double wingOuterChord = valueSet.getKnownQuantityValue(PhysicalQuantity.WING_OUTER_CHORD).getValue();
     double chordRatio = wingOuterChord / wingInnerChord;
 
-    return bendingForce*beamLength*beamLength*beamLength*calculateFactorForTrapezoidalWing(chordRatio)
+    //double correctionFactor = calculateFactorForTrapezoidalWing(chordRatio);
+    CalculatedPhysicalQuantityValues correctionFactorValues = correctionFactors.getRelatedQuantityValues(
+        new SimplePhysicalQuantityValue(PhysicalQuantity.WING_INNER_OUTER_CHORD_RATIO, chordRatio));
+    double correctionFactor;
+    try {
+      correctionFactor = correctionFactorValues.getValue(PhysicalQuantity.TRAPEZOIDAL_WING_BENDING_CORRECTION_FACTOR);
+    }
+    catch (RuntimeException e)
+    {
+      System.out.println(e);
+      throw e;
+    }
+    return bendingForce*beamLength*beamLength*beamLength*correctionFactor
         /(8*modulusOfElasicity*normalizedSecondMomentOfArea*wingInnerChord*wingInnerChord*wingInnerChord*wingInnerChord);
   }
 

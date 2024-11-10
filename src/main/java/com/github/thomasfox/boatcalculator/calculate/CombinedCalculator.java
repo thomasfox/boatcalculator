@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.github.thomasfox.boatcalculator.calculate.impl.*;
+import com.github.thomasfox.boatcalculator.interpolate.FoilPolarCalculator;
 import org.slf4j.MDC;
 
 import com.github.thomasfox.boatcalculator.interpolate.QuantityRelationsCalculator;
@@ -21,17 +22,21 @@ public class CombinedCalculator
 
   private final QuantityRelationsCalculator quantityRelationsCalculator = new QuantityRelationsCalculator();
 
+  FoilPolarCalculator foilPolarCalculator = new FoilPolarCalculator();
+
   public CombinedCalculator()
   {
     calculators.add(new AngleOfAttackFromAngleToHorizontalCalculator());
     calculators.add(new AreaInMediumCalculator());
+    calculators.add(new AreaInMediumTrapezoidalWingCalculator());
     calculators.add(new SemiwingAspectRatioCalculator());
     calculators.add(new WingChordFromAreaAndSpanInMediumCalculator());
     calculators.add(new ReynoldsNumberCalculator());
     calculators.add(new InducedDragCoefficientCalculator());
     calculators.add(new InducedDragCalculator());
     calculators.add(new ParasiticDragCalculator());
-    calculators.add(new AreaLoadFixedMiddleBendingCalculator());
+    // calculators.add(new AreaLoadFixedMiddleBendingCalculator()); TODO must be readded
+    calculators.add(new AreaLoadFixedMiddleTrapezoidalWingBendingCalculator());
     calculators.add(new SecondMomentOfAreaCalculator());
     calculators.add(new LiftCoefficient3DCalculator());
     calculators.add(new LiftCoefficient3DFromLiftCoefficientCalculator());
@@ -63,11 +68,11 @@ public class CombinedCalculator
     calculators.add(new TorqueForBentWingCalculator());
     calculators.add(new WingSpanFromFixedAreaLoadAndAreaCalculator());
     calculators.add(new ChordFromReynoldsNumberCalculator());
+    calculators.add(new HalfwingSpanCalculator());
   }
 
   public Set<String> calculate(ValueSet valueSet, PhysicalQuantity wantedQuantity, int step)
   {
-    Set<String> changed = new HashSet<>();
     try
     {
       MDC.put("valueSet", valueSet.getId());
@@ -83,6 +88,8 @@ public class CombinedCalculator
           log.debug("changedInCurrentIteration is " + changedInCurrentIteration + " after applying calculators");
           changedInCurrentIteration.addAll(quantityRelationsCalculator.applyQuantityRelations(valueSet));
           log.debug("changedInCurrentIteration is " + changedInCurrentIteration + " after applying quantity Relations");
+
+          foilPolarCalculator.replaceFoilPolar(valueSet);
         }
         finally
         {

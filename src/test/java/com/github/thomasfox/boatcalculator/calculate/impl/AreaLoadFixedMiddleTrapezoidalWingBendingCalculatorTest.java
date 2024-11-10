@@ -32,9 +32,9 @@ public class AreaLoadFixedMiddleTrapezoidalWingBendingCalculatorTest
   @Test
   public void print()
   {
-    for (int i=0; i <= 10; i++)
+    for (int i=0; i <= 100; i++)
     {
-      double x = i / 10d;
+      double x = i / 100d;
       double areaFactor = 0.5d + 0.5d * x;
       double correction = new AreaLoadFixedMiddleTrapezoidalWingBendingCalculator().calculateFactorForTrapezoidalWing(x);
       System.out.println(x + " : " + correction + "(" + correction*areaFactor*areaFactor*areaFactor*areaFactor + ")");

@@ -75,7 +75,7 @@ public class QuantityRelationsCalculatorTest
 
     Set<String> changed = quantityRelationsCalculator.applyQuantityRelations(daggerboardOrKeel);
 
-    assertThat(changed).containsOnly("DaggerboardOrKeel:XFOIL Calculated polar for: XY 123");
+    assertThat(changed).containsOnly("DaggerboardOrKeel:Calculated polar for: XY 123");
 
     assertThat(daggerboardOrKeel.getCalculatedValues().getAsList()).hasSize(2);
 
@@ -85,7 +85,7 @@ public class QuantityRelationsCalculatorTest
     assertThat(liftCoefficient.getPhysicalQuantity()).isEqualTo(PhysicalQuantity.LIFT_COEFFICIENT);
     assertThat(liftCoefficient.getValue()).isEqualTo(0d);
     assertThat(liftCoefficient.isTrial()).isFalse();
-    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("XFOIL Calculated polar for: XY 123");
+    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("Calculated polar for: XY 123");
     assertThat(liftCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(
             new SimplePhysicalQuantityValue(PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -100,7 +100,7 @@ public class QuantityRelationsCalculatorTest
         .isEqualTo(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT);
     assertThat(profileDragCoefficient.getValue()).isEqualTo(0.05d);
     assertThat(profileDragCoefficient.isTrial()).isFalse();
-    assertThat(profileDragCoefficient.getCalculatedBy()).isEqualTo("XFOIL Calculated polar for: XY 123");
+    assertThat(profileDragCoefficient.getCalculatedBy()).isEqualTo("Calculated polar for: XY 123");
     assertThat(profileDragCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(new SimplePhysicalQuantityValue(
             PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -125,7 +125,7 @@ public class QuantityRelationsCalculatorTest
 
     Set<String> changed = quantityRelationsCalculator.applyQuantityRelations(daggerboardOrKeel);
 
-    assertThat(changed).containsOnly("DaggerboardOrKeel:XFOIL Calculated polar for: XY 123");
+    assertThat(changed).containsOnly("DaggerboardOrKeel:Calculated polar for: XY 123");
 
     assertThat(daggerboardOrKeel.getCalculatedValues().getAsList()).hasSize(2);
 
@@ -135,7 +135,7 @@ public class QuantityRelationsCalculatorTest
     assertThat(liftCoefficient.getPhysicalQuantity()).isEqualTo(PhysicalQuantity.LIFT_COEFFICIENT);
     assertThat(liftCoefficient.getValue()).isEqualTo(0d);
     assertThat(liftCoefficient.isTrial()).isFalse();
-    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("XFOIL Calculated polar for: XY 123");
+    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("Calculated polar for: XY 123");
     assertThat(liftCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(new SimplePhysicalQuantityValue(
             PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -150,7 +150,7 @@ public class QuantityRelationsCalculatorTest
         .isEqualTo(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT);
     assertThat(profileDragCoefficient.getValue()).isEqualTo(0.1d);
     assertThat(profileDragCoefficient.isTrial()).isFalse();
-    assertThat(profileDragCoefficient.getCalculatedBy()).isEqualTo("XFOIL Calculated polar for: XY 123");
+    assertThat(profileDragCoefficient.getCalculatedBy()).isEqualTo("Calculated polar for: XY 123");
     assertThat(profileDragCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(new SimplePhysicalQuantityValue(
             PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -171,7 +171,7 @@ public class QuantityRelationsCalculatorTest
 
     Set<String> changed = quantityRelationsCalculator.applyQuantityRelations(daggerboardOrKeel);
 
-    assertThat(changed).containsOnly("DaggerboardOrKeel:XFOIL Calculated polar for: XY 123");
+    assertThat(changed).containsOnly("DaggerboardOrKeel:Calculated polar for: XY 123");
 
     assertThat(daggerboardOrKeel.getCalculatedValues().getAsList()).hasSize(2);
 
@@ -182,7 +182,7 @@ public class QuantityRelationsCalculatorTest
     assertThat(liftCoefficient.getValue()).isEqualTo(0d);
     assertThat(liftCoefficient.isTrial()).isFalse();
     assertThat(liftCoefficient.getCalculatedBy()).isEqualTo(
-        "XFOIL Calculated polar for: XY 123 and XFOIL Calculated polar for: XY 123");
+        "Calculated polar for: XY 123 and Calculated polar for: XY 123");
     assertThat(liftCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(new SimplePhysicalQuantityValue(
             PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -198,7 +198,7 @@ public class QuantityRelationsCalculatorTest
     assertThat(profileDragCoefficient.getValue()).isEqualTo((0.1d + 0.05d) / 2);
     assertThat(profileDragCoefficient.isTrial()).isFalse();
     assertThat(profileDragCoefficient.getCalculatedBy()).isEqualTo(
-        "XFOIL Calculated polar for: XY 123 and XFOIL Calculated polar for: XY 123");
+        "Calculated polar for: XY 123 and Calculated polar for: XY 123");
     assertThat(profileDragCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(new SimplePhysicalQuantityValue(
             PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -219,7 +219,7 @@ public class QuantityRelationsCalculatorTest
 
     Set<String> changed = quantityRelationsCalculator.applyQuantityRelations(daggerboardOrKeel);
 
-    assertThat(changed).containsOnly("DaggerboardOrKeel:XFOIL Calculated polar for: XY 123");
+    assertThat(changed).containsOnly("DaggerboardOrKeel:Calculated polar for: XY 123");
 
     assertThat(daggerboardOrKeel.getCalculatedValues().getAsList()).hasSize(2);
 
@@ -229,7 +229,7 @@ public class QuantityRelationsCalculatorTest
     assertThat(liftCoefficient.getPhysicalQuantity()).isEqualTo(PhysicalQuantity.LIFT_COEFFICIENT);
     assertThat(liftCoefficient.getValue()).isEqualTo(0d);
     assertThat(liftCoefficient.isTrial()).isFalse();
-    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("XFOIL Calculated polar for: XY 123");
+    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("Calculated polar for: XY 123");
     assertThat(liftCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(
             new SimplePhysicalQuantityValue(PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -244,7 +244,7 @@ public class QuantityRelationsCalculatorTest
         .isEqualTo(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT);
     assertThat(profileDragCoefficient.getValue()).isEqualTo(0.05d);
     assertThat(profileDragCoefficient.isTrial()).isFalse();
-    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("XFOIL Calculated polar for: XY 123");
+    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("Calculated polar for: XY 123");
     assertThat(profileDragCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(new SimplePhysicalQuantityValue(
             PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -264,7 +264,7 @@ public class QuantityRelationsCalculatorTest
 
     Set<String> changed = quantityRelationsCalculator.applyQuantityRelations(daggerboardOrKeel);
 
-    assertThat(changed).containsOnly("DaggerboardOrKeel:XFOIL Calculated polar for: XY 123");
+    assertThat(changed).containsOnly("DaggerboardOrKeel:Calculated polar for: XY 123");
 
     assertThat(daggerboardOrKeel.getCalculatedValues().getAsList()).hasSize(2);
 
@@ -274,7 +274,7 @@ public class QuantityRelationsCalculatorTest
     assertThat(liftCoefficient.getPhysicalQuantity()).isEqualTo(PhysicalQuantity.LIFT_COEFFICIENT);
     assertThat(liftCoefficient.getValue()).isEqualTo(1.1d/2);
     assertThat(liftCoefficient.isTrial()).isFalse();
-    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("XFOIL Calculated polar for: XY 123");
+    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("Calculated polar for: XY 123");
     assertThat(liftCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(
             new SimplePhysicalQuantityValue(PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -289,7 +289,7 @@ public class QuantityRelationsCalculatorTest
         .isEqualTo(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT);
     assertThat(profileDragCoefficient.getValue()).isEqualTo((0.05d + 0.1d)/2);
     assertThat(profileDragCoefficient.isTrial()).isFalse();
-    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("XFOIL Calculated polar for: XY 123");
+    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("Calculated polar for: XY 123");
     assertThat(profileDragCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(
             new SimplePhysicalQuantityValue(PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -320,7 +320,7 @@ public class QuantityRelationsCalculatorTest
     assertThat(liftCoefficient.getPhysicalQuantity()).isEqualTo(PhysicalQuantity.LIFT_COEFFICIENT);
     assertThat(liftCoefficient.getValue()).isEqualTo(1.1d/2);
     assertThat(liftCoefficient.isTrial()).isFalse();
-    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("XFOIL Calculated polar for: XY 123");
+    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("Calculated polar for: XY 123");
     assertThat(liftCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(
             new SimplePhysicalQuantityValue(PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -335,7 +335,7 @@ public class QuantityRelationsCalculatorTest
         .isEqualTo(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT);
     assertThat(profileDragCoefficient.getValue()).isEqualTo((0.05d + 0.1d)/2);
     assertThat(profileDragCoefficient.isTrial()).isFalse();
-    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("XFOIL Calculated polar for: XY 123");
+    assertThat(liftCoefficient.getCalculatedBy()).isEqualTo("Calculated polar for: XY 123");
     assertThat(profileDragCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(
             new SimplePhysicalQuantityValue(PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -356,7 +356,7 @@ public class QuantityRelationsCalculatorTest
 
     Set<String> changed = quantityRelationsCalculator.applyQuantityRelations(daggerboardOrKeel);
 
-    assertThat(changed).containsOnly("DaggerboardOrKeel:XFOIL Calculated polar for: XY 123");
+    assertThat(changed).containsOnly("DaggerboardOrKeel:Calculated polar for: XY 123");
     assertThat(daggerboardOrKeel.getCalculatedValues().getAsList()).hasSize(2);
 
     // values from xfoil-200000.txt interpolated for angle of attack 5
@@ -366,7 +366,7 @@ public class QuantityRelationsCalculatorTest
     assertThat(liftCoefficient.getValue()).isCloseTo((1d + 1.1d)/4, offset(0.00001));
     assertThat(liftCoefficient.isTrial()).isFalse();
     assertThat(liftCoefficient.getCalculatedBy()).isEqualTo(
-        "XFOIL Calculated polar for: XY 123 and XFOIL Calculated polar for: XY 123");
+        "Calculated polar for: XY 123 and Calculated polar for: XY 123");
     assertThat(liftCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(
             new SimplePhysicalQuantityValue(PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -382,7 +382,7 @@ public class QuantityRelationsCalculatorTest
     assertThat(profileDragCoefficient.getValue()).isCloseTo((0.05d + 0.1d + 0.1d + 0.2d)/4, offset(0.00001));
     assertThat(profileDragCoefficient.isTrial()).isFalse();
     assertThat(profileDragCoefficient.getCalculatedBy()).isEqualTo(
-        "XFOIL Calculated polar for: XY 123 and XFOIL Calculated polar for: XY 123");
+        "Calculated polar for: XY 123 and Calculated polar for: XY 123");
     assertThat(profileDragCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(
             new SimplePhysicalQuantityValue(PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -414,7 +414,7 @@ public class QuantityRelationsCalculatorTest
     assertThat(liftCoefficient.getValue()).isCloseTo((1d + 1.1d)/4, offset(0.00001));
     assertThat(liftCoefficient.isTrial()).isFalse();
     assertThat(liftCoefficient.getCalculatedBy()).isEqualTo(
-        "XFOIL Calculated polar for: XY 123 and XFOIL Calculated polar for: XY 123");
+        "Calculated polar for: XY 123 and Calculated polar for: XY 123");
     assertThat(liftCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(
             new SimplePhysicalQuantityValue(PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -430,7 +430,7 @@ public class QuantityRelationsCalculatorTest
     assertThat(profileDragCoefficient.getValue()).isCloseTo((0.05d + 0.1d + 0.1d + 0.2d)/4, offset(0.00001));
     assertThat(profileDragCoefficient.isTrial()).isFalse();
     assertThat(profileDragCoefficient.getCalculatedBy()).isEqualTo(
-        "XFOIL Calculated polar for: XY 123 and XFOIL Calculated polar for: XY 123");
+        "Calculated polar for: XY 123 and Calculated polar for: XY 123");
     assertThat(profileDragCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(
             new SimplePhysicalQuantityValue(PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -614,7 +614,7 @@ public class QuantityRelationsCalculatorTest
         .isEqualTo(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT);
     assertThat(profileDragCoefficient.getValue()).isCloseTo((0.05d + 0.1d)/2, offset(0.00001));
     assertThat(profileDragCoefficient.isTrial()).isTrue();
-    assertThat(profileDragCoefficient.getCalculatedBy()).isEqualTo("XFOIL Calculated polar for: XY 123");
+    assertThat(profileDragCoefficient.getCalculatedBy()).isEqualTo("Calculated polar for: XY 123");
     assertThat(profileDragCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(
             new SimplePhysicalQuantityValue(PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
@@ -641,7 +641,7 @@ public class QuantityRelationsCalculatorTest
         .isEqualTo(PhysicalQuantity.PROFILE_DRAG_COEFFICIENT);
     assertThat(profileDragCoefficient.getValue()).isCloseTo((0.05d + 0.1d)/2, offset(0.00001));
     assertThat(profileDragCoefficient.isTrial()).isTrue();
-    assertThat(profileDragCoefficient.getCalculatedBy()).isEqualTo("XFOIL Calculated polar for: XY 123");
+    assertThat(profileDragCoefficient.getCalculatedBy()).isEqualTo("Calculated polar for: XY 123");
     assertThat(profileDragCoefficient.getCalculatedFrom().getAsList()).containsOnly(
         new SimplePhysicalQuantityValueWithSetId(
             new SimplePhysicalQuantityValue(PhysicalQuantity.NCRIT, 9d), DaggerboardOrKeel.ID),
