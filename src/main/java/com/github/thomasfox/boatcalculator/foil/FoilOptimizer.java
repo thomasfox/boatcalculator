@@ -13,8 +13,10 @@ import com.github.thomasfox.boatcalculator.valueset.SimpleValueSet;
 import com.github.thomasfox.boatcalculator.valueset.ValueSet;
 
 import java.io.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class FoilOptimizer
 {
@@ -33,11 +35,14 @@ public class FoilOptimizer
   private static final double RELATIVE_CUTOFF = 0.001;
 
   private static final int REMAINING_STEPS_START = 200;
-  private static final int MATRIX_STEPS = 5;
+  private static final int MATRIX_STEPS = 3;
 
   private static final QuantityRelation kinematicViscosityRelation;
 
   private static final ProfileSelector profileSelector = new ProfileSelector();
+
+  private static final Set<String> profilesToUse = new HashSet<>();
+  public static final String PROFILE_NAMES_CLASSPATH_PATH = "/profileNames.txt";
 
   private List<QuantityRelation> profilePolars;
 
@@ -49,6 +54,7 @@ public class FoilOptimizer
         = new InputStreamReader(FoilOptimizer.class.getResourceAsStream("/kinematicViscosity_water.txt"));
     kinematicViscosityRelation =
         new QuantityRelationLoader().load(kinematicViscosityWaterReader, "kinematicViscosityWater");
+    fillProfilesToUse();
   }
 
   public static void main(String[] argv) throws IOException
@@ -333,10 +339,10 @@ public class FoilOptimizer
 
     for (String profileName : profileNames)
     {
-//      if (!profileName.equals("fx61163-il"))
-//      {
-//        continue;
-//      }
+      if (!profilesToUse.isEmpty() && !profilesToUse.contains(profileName))
+      {
+        continue;
+      }
       if (!initForProfile(profileName))
       {
         continue;
@@ -396,5 +402,43 @@ public class FoilOptimizer
     System.out.println("total drag: " + smallestOverallPenalty.getTotalDrag() + " total bending: " + smallestOverallPenalty.getTotalBending());
     System.out.println("inner chord: " + smallestOverallPenalty.getInnerChord() + " outer chord: " + smallestOverallPenalty.getOuterChord() + " span: " + smallestOverallPenalty.getSpan());
     writer.close();
+  }
+
+  private static void fillProfilesToUse()
+  {
+    BufferedReader bufferedReader = null;
+    try
+    {
+      InputStream profileNamesStream = FoilOptimizer.class.getResourceAsStream(PROFILE_NAMES_CLASSPATH_PATH);
+      if (profileNamesStream == null)
+      {
+        System.out.println("no file " + PROFILE_NAMES_CLASSPATH_PATH + " found in classpath, using all profiles");
+        return;
+      }
+      bufferedReader = new BufferedReader(new InputStreamReader(profileNamesStream));
+      String line;
+      while ((line = bufferedReader.readLine()) != null)
+      {
+        profilesToUse.add(line.trim());
+      }
+    }
+    catch (IOException e)
+    {
+      throw new RuntimeException(e);
+    }
+    finally
+    {
+      if (bufferedReader != null )
+      {
+        try {
+          bufferedReader.close();
+        }
+        catch (IOException e)
+        {
+          System.out.println("[WARN] could not close "+ PROFILE_NAMES_CLASSPATH_PATH );
+          e.printStackTrace();
+        }
+      }
+    }
   }
 }
